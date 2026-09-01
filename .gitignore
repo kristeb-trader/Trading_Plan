@@ -27,3 +27,6 @@ desktop.ini
 Thumbs.db
 __pycache__/
 *.pyc
+
+# el ejemplo SI va al repositorio: documenta los nombres, nunca los valores
+!.env.example

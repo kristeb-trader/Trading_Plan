@@ -1,0 +1,17 @@
+{
+  "name": "chaumer-portal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Portal de revision del plan de trading Chaumer. Renderiza 01_Plan/ - no anade metodologia.",
+  "scripts": {
+    "sync": "node scripts/sync.mjs",
+    "dev": "npm run sync && astro dev",
+    "build": "npm run sync && astro build",
+    "preview": "astro preview",
+    "fuentes": "node scripts/contar-fuentes.mjs"
+  },
+  "devDependencies": {
+    "astro": "^7.2.10"
+  }
+}
