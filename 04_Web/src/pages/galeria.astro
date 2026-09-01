@@ -1,0 +1,236 @@
+---
+/**
+ * Galeria de casos.
+ *
+ * 21 casos reales. La cabecera del documento dice 11: se cuenta lo que hay y
+ * el archivo no se toca.
+ *
+ * La imagen se resuelve SOLO por nombre de archivo, y las graficas de
+ * sesiones/ ganan siempre porque llevan el estandar visual vigente. Un caso
+ * sin imagen se muestra igual, con su texto: nada de placeholders.
+ */
+import Marco from '../componentes/Marco.astro';
+import Icono from '../componentes/Icono.astro';
+import * as P from '../lib/parsers.mjs';
+
+const casos = P.galeria().map((c) => ({ ...c, html: P.markdownRico(c.cuerpo) }));
+const conImagen = casos.filter((c) => c.imagen).length;
+const conEstandar = casos.filter((c) => c.estandarActual).length;
+
+// Reglas citadas por algun caso, para el filtro. Ordenadas por numero.
+const reglasCitadas = [...new Set(casos.flatMap((c) => c.reglas))]
+  .sort((a, b) => Number(a.slice(2)) - Number(b.slice(2)));
+---
+
+<Marco titulo="Galería">
+  <header class="cab entra">
+    <h1>{casos.length} casos reales</h1>
+    <p class="lead">
+      Capturas del gráfico del operador, etiquetadas con las reglas que las
+      explican. Es el material con el que se entrena el ojo y con el que se
+      resuelven las dudas de marcado.
+    </p>
+    <p class="apunte">
+      {conImagen} llevan gráfica, {conEstandar} con el estándar visual vigente.
+      La cabecera del documento dice 11 casos porque no se actualizó: aquí se
+      cuenta lo que hay.
+    </p>
+  </header>
+
+  <div class="filtros entra">
+    <span class="etiqueta">Filtrar por regla</span>
+    <div class="chips" role="group" aria-label="Filtrar por regla">
+      <button class="chip activa" type="button" data-regla="">Todos</button>
+      {reglasCitadas.map((id) => (
+        <button class="chip mono" type="button" data-regla={id}>{id}</button>
+      ))}
+    </div>
+    <p class="vacio" data-vacio hidden>Ningún caso cita esa regla.</p>
+  </div>
+
+  <div class="casos">
+    {casos.map((c, i) => (
+      <article class="caso entra" id={c.id} data-reglas={c.reglas.join(' ')}
+               style={`--retraso:${Math.min(i, 6) * 45}ms`}>
+        <header class="c-cab">
+          <span class="c-id mono">{c.id}</span>
+          <h2 class="c-t">{c.titulo}</h2>
+          {c.estandarActual
+            ? <span class="marca-estado ok c-est">estándar vigente</span>
+            : c.imagen && <span class="marca-estado info c-est">gráfica anterior</span>}
+        </header>
+
+        {c.imagen && (
+          <button class="c-fig" type="button" data-lupa={c.imagen} data-titulo={c.titulo}>
+            <img src={c.imagen} alt={`Gráfico del caso ${c.id}: ${c.titulo}`} loading="lazy" />
+            <span class="c-lupa"><Icono nombre="magnifying-glass-plus" /> Ampliar</span>
+          </button>
+        )}
+
+        <div class="c-cuerpo md" set:html={c.html} />
+
+        {c.reglas.length > 0 && (
+          <footer class="c-pie">
+            <span class="etiqueta">Reglas que lo explican</span>
+            <span class="c-refs">
+              {c.reglas.map((id) => <a class="ref" href={`/reglas/${id}`}>{id}</a>)}
+            </span>
+          </footer>
+        )}
+      </article>
+    ))}
+  </div>
+
+  <!-- Lupa. dialog nativo: cierra con Esc y devuelve el foco solo. -->
+  <dialog class="lupa" data-lupa-dlg aria-label="Gráfico ampliado">
+    <button class="lupa-x" type="button" data-lupa-cerrar aria-label="Cerrar">
+      <Icono nombre="x" />
+    </button>
+    <img data-lupa-img src="" alt="" />
+    <p class="lupa-t meta" data-lupa-titulo></p>
+  </dialog>
+</Marco>
+
+<script is:inline>
+  (function () {
+    // ── filtro por regla ────────────────────────────────────────────────
+    var casos = document.querySelectorAll('.caso');
+    var vacio = document.querySelector('[data-vacio]');
+    document.querySelectorAll('[data-regla]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('[data-regla]').forEach(function (o) { o.classList.remove('activa'); });
+        b.classList.add('activa');
+        var id = b.getAttribute('data-regla');
+        var n = 0;
+        casos.forEach(function (c) {
+          var ver = !id || (' ' + c.getAttribute('data-reglas') + ' ').indexOf(' ' + id + ' ') >= 0;
+          c.hidden = !ver;
+          if (ver) n++;
+        });
+        vacio.hidden = n > 0;
+      });
+    });
+
+    // ── lupa ────────────────────────────────────────────────────────────
+    var dlg = document.querySelector('[data-lupa-dlg]');
+    var img = document.querySelector('[data-lupa-img]');
+    var tit = document.querySelector('[data-lupa-titulo]');
+    if (!dlg) return;
+    document.querySelectorAll('[data-lupa]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        img.src = b.getAttribute('data-lupa');
+        img.alt = b.getAttribute('data-titulo') || '';
+        tit.textContent = b.getAttribute('data-titulo') || '';
+        dlg.showModal();
+      });
+    });
+    document.querySelector('[data-lupa-cerrar]').addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', function () { img.src = ''; });
+  })();
+</script>
+
+<style>
+  .cab { max-width: 46rem; margin-bottom: var(--e-6); }
+  .lead { font-size: var(--t-5); color: var(--texto-2); margin: var(--e-4) 0 var(--e-4); }
+
+  .filtros { margin-bottom: var(--e-7); }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--e-2); margin-top: var(--e-3); }
+  .chip {
+    padding: var(--e-2) var(--e-3);
+    border-radius: var(--radio-pill);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--borde-sutil);
+    color: var(--texto-2);
+    font: inherit; font-size: var(--t-2); cursor: pointer;
+    transition: background var(--normal), border-color var(--normal), color var(--normal);
+  }
+  .chip:hover { background: rgba(255, 255, 255, 0.08); color: var(--texto); }
+  .chip.activa {
+    background: color-mix(in srgb, var(--acento) 20%, transparent);
+    border-color: color-mix(in srgb, var(--acento) 45%, transparent);
+    color: var(--texto);
+  }
+  .vacio { color: var(--texto-2); font-size: var(--t-3); margin: var(--e-5) 0 0; }
+
+  /* ── casos ───────────────────────────────────────────────────────────── */
+  .casos { display: grid; gap: var(--e-6); }
+  .caso {
+    padding: var(--e-6);
+    border-radius: var(--radio-4);
+    background: var(--vidrio-fondo);
+    background-image: var(--vidrio-brillo);
+    border: 1px solid var(--vidrio-borde);
+    scroll-margin-top: 6rem;
+  }
+  .caso[hidden] { display: none; }
+  .caso:target { box-shadow: var(--halo-azul); }
+
+  .c-cab { display: flex; align-items: baseline; gap: var(--e-3); flex-wrap: wrap; margin-bottom: var(--e-5); }
+  .c-id {
+    font-size: var(--t-2); font-weight: var(--peso-fuerte); color: var(--acento);
+    padding: var(--e-1) var(--e-3);
+    border-radius: var(--radio-1);
+    background: color-mix(in srgb, var(--acento) 14%, transparent);
+  }
+  .c-t { margin: 0; font-size: var(--t-6); flex: 1; min-width: 12rem; }
+  .c-est { flex: none; }
+
+  /* La gráfica es el contenido: ocupa el ancho y se amplía al pulsarla. */
+  .c-fig {
+    position: relative; display: block; width: 100%;
+    padding: 0; margin: 0 0 var(--e-5);
+    border: 1px solid var(--vidrio-borde);
+    border-radius: var(--radio-3);
+    overflow: hidden;
+    background: var(--n-950);
+    cursor: zoom-in;
+    transition: border-color var(--normal), box-shadow var(--normal);
+  }
+  .c-fig:hover { border-color: color-mix(in srgb, var(--acento) 45%, transparent); box-shadow: var(--halo-azul); }
+  .c-fig img { width: 100%; display: block; }
+  .c-lupa {
+    position: absolute; right: var(--e-3); bottom: var(--e-3);
+    display: inline-flex; align-items: center; gap: var(--e-2);
+    padding: var(--e-2) var(--e-3);
+    border-radius: var(--radio-pill);
+    background: rgba(10, 12, 17, 0.82);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--vidrio-borde);
+    font-size: var(--t-1); color: var(--texto-2);
+    opacity: 0; transition: opacity var(--normal);
+  }
+  .c-fig:hover .c-lupa, .c-fig:focus-visible .c-lupa { opacity: 1; }
+
+  .c-pie {
+    display: flex; align-items: baseline; gap: var(--e-3); flex-wrap: wrap;
+    margin-top: var(--e-5); padding-top: var(--e-4);
+    border-top: 1px solid var(--borde-sutil);
+  }
+  .c-refs { display: flex; flex-wrap: wrap; gap: var(--e-2); }
+
+  /* ── lupa ────────────────────────────────────────────────────────────── */
+  .lupa {
+    width: min(96vw, 100rem); max-width: none;
+    padding: 0; border: 0; background: none;
+    color: var(--texto);
+  }
+  .lupa::backdrop { background: rgba(5, 8, 14, 0.88); backdrop-filter: blur(4px); }
+  .lupa img { width: 100%; border-radius: var(--radio-3); border: 1px solid var(--vidrio-borde); }
+  .lupa-t { margin: var(--e-3) 0 0; text-align: center; }
+  .lupa-x {
+    position: absolute; top: var(--e-3); right: var(--e-3); z-index: 2;
+    display: flex; padding: var(--e-2);
+    border-radius: var(--radio-pill);
+    background: rgba(10, 12, 17, 0.75);
+    border: 1px solid var(--vidrio-borde);
+    color: var(--texto-2); cursor: pointer;
+    transition: background var(--normal), color var(--normal);
+  }
+  .lupa-x:hover { background: var(--elevado); color: var(--texto); }
+
+  @media (max-width: 760px) {
+    .caso { padding: var(--e-5); }
+    .c-lupa { opacity: 1; }
+  }
+</style>
