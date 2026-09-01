@@ -2,7 +2,8 @@
 
 **Qué es esto:** la metodología de trading de Alfredo Chaumer para NQ/MNQ en NinjaTrader 8, extraída durante la fase 1 a un plan mecánico de **38 reglas medibles**.
 
-**Fase actual:** 🚧 **FASE 2 — construir el portal web** en `04_Web\`.
+**Fase actual:** 🚧 **FASE 2 — el portal web**, en `04_Web\`. **Publicado** en https://plan-operativo-nq.pages.dev
+➡️ **El seguimiento de esta fase vive en `04_Web\ESTADO_FASE_2.md`. Léelo antes de tocar nada del portal:** dice qué hay hecho, qué falta y qué errores ya se pagaron una vez.
 **Fase 1:** 🏁 cerrada el 2026-09-01. Ver `01_Plan\CIERRE_FASE_1.md`.
 
 **Operador:** Christian. **Uso:** personal.
@@ -69,7 +70,7 @@ El plan está **escrito y contrastado**, pero **no probado**. Cuatro cosas falta
 
 > 🔴 **Una observación de Alfredo no es una regla.** El plan solo cambia si el operador cambia `01_Plan\`. El portal deja constancia; no toca la fuente.
 
-Diseño completo en `04_Web\DISENO_PORTAL.md`. El brief y el guion de arranque de esa carpeta son **anteriores** a esta decisión: donde se contradigan, manda el diseño.
+Estado y seguimiento en **`04_Web\ESTADO_FASE_2.md`**, que manda sobre todo lo demás de esa carpeta. El diseño de partida está en `DISENO_PORTAL.md`; el brief y el guion de arranque son **anteriores** a la redefinición del portal y se conservan solo como historia.
 
 ---
 

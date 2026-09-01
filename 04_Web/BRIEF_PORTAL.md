@@ -1,5 +1,9 @@
 # BRIEF DEL PORTAL — Fase 2
 
+> 🔴 **DOCUMENTO SUPERADO — se conserva solo como historia.**
+> Lo que vale hoy está en **`ESTADO_FASE_2.md`**. No trabajes contra este archivo.
+
+
 **Fecha:** 2026-09-01 · **Actualizado:** 2026-09-01, tras la decisión del operador del 31/08.
 **Estado:** punto de partida. La especificación viva es `DISENO_PORTAL.md`.
 **Antes de leer esto:** `..\01_Plan\CIERRE_FASE_1.md` y `..\CLAUDE.md`.

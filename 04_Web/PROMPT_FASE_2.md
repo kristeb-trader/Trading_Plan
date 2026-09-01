@@ -1,5 +1,9 @@
 # PROMPT — FASE 2: MÓDULO WEB DEL TRADING PLAN (Claude Code)
 
+> 🔴 **DOCUMENTO SUPERADO — se conserva solo como historia.**
+> Lo que vale hoy está en **`ESTADO_FASE_2.md`**. No trabajes contra este archivo.
+
+
 > ⚠️ **ESTE GUION ESTÁ PARCIALMENTE SUPERADO. Lee antes `DISENO_PORTAL.md`.**
 >
 > Se escribió el 31/08/2026 por la mañana. Esa misma tarde el operador redefinió el portal y **tres puntos de aquí dejaron de valer**:
