@@ -3,7 +3,7 @@
 # El repositorio NO se conecta a Cloudflare: se suben los archivos ya
 # compilados de dist/, nada mas. El codigo se queda privado en GitHub.
 
-name = "trading-plan"
+name = "plan-operativo-nq"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-09-01"
 

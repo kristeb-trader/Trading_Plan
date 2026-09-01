@@ -52,11 +52,11 @@ Guárdala. Es la que te deja **responder, marcar, exportar y borrar**.
 
 ```
 npm run build
-npx wrangler pages deploy dist --project-name=trading-plan
+npx wrangler pages deploy dist --project-name=plan-operativo-nq
 ```
 
 La primera vez pregunta si crear el proyecto: acepta. Al terminar imprime la
-dirección, del tipo `https://trading-plan-18i.pages.dev`.
+dirección, del tipo `https://plan-operativo-nq.pages.dev`.
 
 > Las direcciones `.pages.dev` son únicas en el mundo. Si `trading-plan` está
 > cogido, elige otro nombre y úsalo también en `--project-name`.
@@ -64,7 +64,7 @@ dirección, del tipo `https://trading-plan-18i.pages.dev`.
 ### 6 · Guardar la clave como secreto
 
 ```
-npx wrangler pages secret put CLAVE_OPERADOR --project-name=trading-plan
+npx wrangler pages secret put CLAVE_OPERADOR --project-name=plan-operativo-nq
 ```
 
 Pega la clave del paso 4. **No va al repositorio ni al navegador.**
@@ -77,7 +77,7 @@ Pega la clave del paso 4. **No va al repositorio ni al navegador.**
 firmadas sin que él escriba nada:
 
 ```
-https://trading-plan-18i.pages.dev/?a=Alfredo
+https://plan-operativo-nq.pages.dev/?a=Alfredo
 ```
 
 Lo abre una vez y su navegador lo recuerda. Después le vale la dirección a secas.
@@ -86,7 +86,7 @@ Lo abre una vez y su navegador lo recuerda. Después le vale la dirección a sec
 marcar, exportar y borrar:
 
 ```
-https://trading-plan-18i.pages.dev/observaciones?k=TU_CLAVE
+https://plan-operativo-nq.pages.dev/observaciones?k=TU_CLAVE
 ```
 
 También se recuerda. **No lo compartas**: quien lo tenga puede responder y
@@ -98,7 +98,7 @@ borrar en tu nombre.
 
 ```
 npm run build
-npx wrangler pages deploy dist --project-name=trading-plan
+npx wrangler pages deploy dist --project-name=plan-operativo-nq
 ```
 
 Eso es todo. `build` sincroniza `01_Plan/` y `02_Assets/`, así que cualquier
