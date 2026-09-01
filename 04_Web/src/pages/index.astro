@@ -20,13 +20,15 @@ const desviaciones = P.desviaciones();
 const params = P.parametros();
 const bt = P.backtesting();
 
+// `ancho` marca las dos tarjetas que dominan la rejilla. Sin una pieza que
+// mande, seis cajas iguales se leen como una plantilla.
 const cifras = [
-  { n: reglas.length, etiqueta: 'reglas medibles', nota: `en ${cats.length} categorías` },
+  { n: reglas.length, etiqueta: 'reglas medibles', nota: `en ${cats.length} categorías`, ancho: true },
   { n: subfases.length, etiqueta: 'sub-fases', nota: 'el plan completo' },
   { n: glosario.length, etiqueta: 'términos', nota: 'con definición medible' },
   { n: galeria.length, etiqueta: 'casos reales', nota: `${galeria.filter((c) => c.imagen).length} con gráfica` },
   { n: params.size, etiqueta: 'parámetros', nota: 'en un solo sitio' },
-  { n: abiertos.length, etiqueta: 'puntos abiertos', nota: `${desviaciones.length} desviaciones` },
+  { n: abiertos.length, etiqueta: 'puntos abiertos', nota: `${desviaciones.length} desviaciones conscientes`, ancho: true },
 ];
 
 const MOTIVOS = [
@@ -38,9 +40,9 @@ const MOTIVOS = [
 ---
 
 <Marco titulo="Portada" ancho="total">
-  <header class="hero">
+  <header class="hero entra">
     <span class="pastilla aviso">no probado</span>
-    <h1>El plan está escrito.<br />No está probado.</h1>
+    <h1>El plan está escrito.<br /><em>No está probado.</em></h1>
     <p class="lead">
       La metodología de <strong>Alfredo Chaumer</strong> para NQ y MNQ, traducida
       a {reglas.length} reglas medibles y contrastada contra 11 sesiones reales
@@ -50,17 +52,19 @@ const MOTIVOS = [
   </header>
 
   <section class="cifras" aria-label="El plan en números">
-    {cifras.map((c) => (
-      <article class="tarjeta kpi">
-        <span class="kpi-n num">{c.n}</span>
-        <span class="kpi-e">{c.etiqueta}</span>
-        <span class="kpi-nota meta">{c.nota}</span>
+    {cifras.map((c, i) => (
+      <article class:list={['bisel', 'kpi', { ancho: c.ancho }, 'entra']} style={`--retraso:${i * 60}ms`}>
+        <div class="kpi-in">
+          <span class="etiqueta">{c.etiqueta}</span>
+          <span class="kpi-n num">{c.n}</span>
+          <span class="kpi-nota">{c.nota}</span>
+        </div>
       </article>
     ))}
   </section>
 
   <section class="bloque">
-    <div class="bloque-cab">
+    <div class="bloque-cab entra">
       <h2>Los cuatro huecos declarados</h2>
       <p class="apunte">
         Ninguno es un olvido. La fase 1 se cerró <strong>sabiendo</strong> que
@@ -70,7 +74,7 @@ const MOTIVOS = [
 
     <ol class="huecos">
       {bt.huecos.map((h, i) => (
-        <li class="tarjeta hueco">
+        <li class="hueco entra" style={`--retraso:${i * 70}ms`}>
           <span class="hueco-n num">{String(i + 1).padStart(2, '0')}</span>
           <h3 class="hueco-t" set:html={P.tituloAHtml(P.sinNumeracion(h.titulo))} />
         </li>
@@ -79,110 +83,126 @@ const MOTIVOS = [
   </section>
 
   <section class="bloque">
-    <div class="bloque-cab">
+    <div class="bloque-cab entra">
       <h2>Lo que dio el backtesting</h2>
-      <p class="apunte">
-        La cifra y los motivos por los que no vale, siempre juntos.
-      </p>
+      <p class="apunte">La cifra y los motivos por los que no vale, siempre juntos.</p>
     </div>
 
-    <div class="tarjeta bt">
-      <div class="bt-cifra">
-        <span class="etiqueta">resultado acumulado</span>
-        <span class="bt-n num">{bt.total}</span>
-        <span class="meta">{bt.operaciones} operaciones · 11 sesiones reconstruidas al tick</span>
-        <p class="bt-titular">Esta cifra no mide la estrategia.</p>
+    <div class="bisel bt entra">
+      <div class="bt-in">
+        <div class="bt-cifra">
+          <span class="etiqueta">resultado acumulado</span>
+          <span class="bt-n num">{bt.total}</span>
+          <span class="bt-sub">{bt.operaciones} operaciones · 11 sesiones al tick</span>
+          <p class="bt-titular">Esta cifra no mide la estrategia.</p>
+        </div>
+        <ul class="motivos">
+          {MOTIVOS.map(([t, d]) => (
+            <li class="motivo">
+              <span class="motivo-t">{t}</span>
+              <span class="motivo-d">{d}</span>
+            </li>
+          ))}
+        </ul>
       </div>
-      <ul class="motivos">
-        {MOTIVOS.map(([t, d]) => (
-          <li class="motivo">
-            <span class="motivo-t">{t}</span>
-            <span class="motivo-d">{d}</span>
-          </li>
-        ))}
-      </ul>
     </div>
   </section>
 
-  <p class="meta pie-nota">
+  <p class="meta pie-nota entra">
     Plan versión {v.version}, actualizado el {v.fecha}. Los contadores se leen de
-    los archivos en cada compilación: si mañana hay una regla más, aquí sale una más.
+    los archivos en cada compilación.
   </p>
 </Marco>
 
 <style>
   /* ── hero ────────────────────────────────────────────────────────────── */
-  .hero { max-width: 42rem; margin-bottom: var(--e-7); }
-  .hero h1 { margin: var(--e-4) 0 var(--e-4); font-size: var(--t-8); letter-spacing: var(--track-cifra); }
+  .hero { max-width: 44rem; margin-bottom: var(--e-8); }
+  .hero h1 {
+    margin: var(--e-5) 0 var(--e-5);
+    font-size: clamp(var(--t-7), 5.5vw, var(--t-9));
+    letter-spacing: var(--track-cifra);
+  }
+  /* La segunda linea en otro tono: contraste editorial sin cambiar de fuente. */
+  .hero h1 em { font-style: normal; color: var(--texto-3); }
   .lead { font-size: var(--t-5); color: var(--texto-2); margin: 0; }
 
-  /* ── cifras ──────────────────────────────────────────────────────────── */
+  /* ── cifras · rejilla asimetrica ─────────────────────────────────────── */
   .cifras {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--e-3);
     margin-bottom: var(--e-8);
   }
-  .kpi { display: flex; flex-direction: column; gap: var(--e-1); padding: var(--e-4) var(--e-5); }
+  .kpi.ancho { grid-column: span 2; }
+  .kpi-in { display: flex; flex-direction: column; padding: var(--e-4) var(--e-5) var(--e-5); }
   .kpi-n {
     font-size: var(--t-8); font-weight: var(--peso-max);
     line-height: 1; letter-spacing: var(--track-cifra);
+    margin: var(--e-3) 0 var(--e-2);
   }
-  .kpi-e { font-size: var(--t-3); color: var(--texto-2); margin-top: var(--e-2); }
-  .kpi-nota { font-size: var(--t-1); }
+  .kpi.ancho .kpi-n { font-size: var(--t-9); }
+  .kpi-nota { font-size: var(--t-3); color: var(--texto-3); }
 
   /* ── bloques ─────────────────────────────────────────────────────────── */
   .bloque { margin-bottom: var(--e-8); }
-  .bloque-cab { margin-bottom: var(--e-5); max-width: 40rem; }
-  .bloque-cab h2 { margin-top: 0; }
+  .bloque-cab { margin-bottom: var(--e-5); }
+  .bloque-cab h2 { margin: 0 0 var(--e-3); }
   .bloque-cab p { margin: 0; }
 
-  /* ── huecos ──────────────────────────────────────────────────────────── */
-  .huecos {
-    list-style: none; padding: 0; margin: 0;
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-    gap: var(--e-3);
+  /* ── huecos · lista con filete, sin tarjetas ─────────────────────────── */
+  /* Cuatro tarjetas mas aqui serian cajas dentro de cajas. Una lista con
+     filete separa igual y deja respirar la rejilla de arriba. */
+  .huecos { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--hilo); }
+  .hueco {
+    display: flex; gap: var(--e-5); align-items: baseline;
+    padding: var(--e-5) var(--e-2);
+    border-bottom: 1px solid var(--hilo);
+    transition: background var(--transicion);
   }
-  .hueco { display: flex; gap: var(--e-4); align-items: flex-start; padding: var(--e-4) var(--e-5); }
+  .hueco:hover { background: var(--sup-1); }
+  .hueco > * { transition: transform var(--transicion); }
+  .hueco:hover > * { transform: translateX(var(--e-2)); }
   .hueco-n {
     font-family: var(--fuente-mono); font-size: var(--t-2);
-    color: var(--oro); padding-top: 0.15em; flex: none;
+    color: var(--oro); flex: none; letter-spacing: 0.05em;
   }
-  .hueco-t { margin: 0; font-size: var(--t-4); font-weight: var(--peso-medio); line-height: 1.4; }
+  .hueco-t { margin: 0; font-size: var(--t-4); font-weight: var(--peso-medio); max-width: var(--medida); }
   .hueco-t :global(code) { color: var(--texto-3); font-size: var(--t-2); }
 
   /* ── backtesting ─────────────────────────────────────────────────────── */
-  .bt {
-    display: grid; grid-template-columns: minmax(14rem, 20rem) 1fr;
+  .bt-in {
+    display: grid; grid-template-columns: minmax(15rem, 22rem) minmax(0, 1fr);
     gap: var(--e-6);
-    padding: var(--e-5) var(--e-6);
+    padding: var(--e-5) var(--e-6) var(--e-6);
   }
-  .bt-cifra { display: flex; flex-direction: column; gap: var(--e-1); }
+  .bt-cifra { display: flex; flex-direction: column; }
   .bt-n {
-    font-size: var(--t-8); font-weight: var(--peso-max);
+    font-size: var(--t-9); font-weight: var(--peso-max);
     color: var(--rojo); line-height: 1;
-    letter-spacing: var(--track-cifra); margin: var(--e-2) 0 var(--e-1);
+    letter-spacing: var(--track-cifra); margin: var(--e-3) 0 var(--e-2);
   }
+  .bt-sub { font-size: var(--t-3); color: var(--texto-3); }
   .bt-titular {
-    margin: var(--e-4) 0 0; font-size: var(--t-3);
+    margin: var(--e-5) 0 0; font-size: var(--t-3);
     font-weight: var(--peso-fuerte); color: var(--oro);
   }
 
-  .motivos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-3); }
-  .motivo {
-    margin: 0; padding-left: var(--e-4);
-    border-left: 2px solid var(--hilo-fuerte);
+  /* Sin barra de color a la izquierda: la numeracion ya ordena. */
+  .motivos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-5); counter-reset: m; }
+  .motivo { counter-increment: m; margin: 0; display: grid; grid-template-columns: 1.75rem minmax(0, 1fr); }
+  .motivo::before {
+    content: counter(m, decimal-leading-zero);
+    font-family: var(--fuente-mono); font-size: var(--t-1);
+    color: var(--texto-3); padding-top: 0.25em;
   }
-  .motivo-t {
-    display: block; font-size: var(--t-3);
-    font-weight: var(--peso-fuerte); color: var(--texto);
-  }
-  .motivo-d { display: block; font-size: var(--t-3); color: var(--texto-2); }
+  .motivo-t { display: block; font-size: var(--t-3); font-weight: var(--peso-fuerte); }
+  .motivo-d { display: block; font-size: var(--t-3); color: var(--texto-2); overflow-wrap: anywhere; }
 
-  .pie-nota { margin-top: var(--e-7); }
+  .pie-nota { margin-top: var(--e-8); }
 
-  @media (max-width: 800px) {
-    .hero h1 { font-size: var(--t-7); }
-    .bt { grid-template-columns: 1fr; gap: var(--e-5); padding: var(--e-5); }
+  @media (max-width: 900px) {
+    .cifras { grid-template-columns: repeat(2, 1fr); }
+    .kpi.ancho { grid-column: span 2; }
+    .bt-in { grid-template-columns: 1fr; gap: var(--e-5); padding: var(--e-5); }
   }
 </style>

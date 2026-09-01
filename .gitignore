@@ -30,3 +30,11 @@ __pycache__/
 
 # el ejemplo SI va al repositorio: documenta los nombres, nunca los valores
 !.env.example
+
+# auditor temporal, no se versiona
+04_Web/public/_detector.js
+
+# skills de terceros: se reinstalan con su CLI, no se versionan
+.claude/skills/
+.agents/
+.agent/

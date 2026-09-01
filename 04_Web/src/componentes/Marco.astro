@@ -63,7 +63,7 @@ const activa = (href: string) =>
     <title>{titulo} · Plan Chaumer</title>
   </head>
 
-  <body>
+  <body class="sin-js">
     <a class="saltar" href="#contenido">Saltar al contenido</a>
 
     <div class="marco">
@@ -115,6 +115,28 @@ const activa = (href: string) =>
       </div>
     </div>
 
+    <script is:inline>
+      // Entrada al aparecer en pantalla. IntersectionObserver, nunca un
+      // listener de scroll: eso provoca reflujo continuo.
+      document.body.classList.remove('sin-js');
+      (function () {
+        var objetivos = document.querySelectorAll('.entra');
+        if (!('IntersectionObserver' in window) ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          objetivos.forEach(function (e) { e.classList.add('visible'); });
+          return;
+        }
+        var obs = new IntersectionObserver(function (filas) {
+          filas.forEach(function (f) {
+            if (!f.isIntersecting) return;
+            f.target.classList.add('visible');
+            obs.unobserve(f.target);
+          });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+        objetivos.forEach(function (e) { obs.observe(e); });
+      })();
+    </script>
+
     <style>
       .saltar {
         position: fixed; left: var(--e-3); top: var(--e-3); z-index: 10;
@@ -147,11 +169,11 @@ const activa = (href: string) =>
       }
       .marca-s {
         display: block; font-size: var(--t-1); color: var(--texto-3);
-        font-family: var(--fuente-mono); margin-top: var(--e-1);
+        font-family: var(--fuente-mono); margin-top: var(--e-2);
       }
 
       .nav { display: flex; flex-direction: column; gap: var(--e-5); flex: 1; }
-      .nav-g { display: flex; flex-direction: column; gap: 1px; }
+      .nav-g { display: flex; flex-direction: column; gap: 2px; }
       .nav-t { margin: 0 0 var(--e-2); padding-left: var(--e-3); }
 
       .nav-i {
@@ -196,7 +218,7 @@ const activa = (href: string) =>
       .contenido.total { max-width: var(--ancho-total); }
 
       .pie { border-top: 1px solid var(--hilo); padding: var(--e-4) var(--e-6); }
-      .pie p { max-width: var(--ancho-total); margin: 0 auto; }
+      .pie p { max-width: var(--medida); margin: 0 auto; }
 
       /* ── por debajo de 900px la barra pasa arriba ──────────────────── */
       @media (max-width: 900px) {

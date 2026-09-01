@@ -38,20 +38,21 @@
   --hilo-fuerte:rgba(255, 255, 255, 0.12);
 
   /* ── tinta ───────────────────────────────────────────────────────────── */
+  /* Contraste verificado con el detector: sobre --fondo y sobre --sup-3 los
+     tres tonos pasan WCAG AA (4,5:1). El #6B7386 anterior daba 3,4:1. */
   --texto:   #FFFFFF;
-  --texto-2: #A6AEC0;  /* secundario, mas claro que --gris para leer mejor */
-  --texto-3: #6B7386;  /* metadatos, contadores, ejes */
+  --texto-2: #B4BCCC;  /* secundario */
+  --texto-3: #949DB1;  /* metadatos, contadores, ejes */
 
   /* ── espacio ─────────────────────────────────────────────────────────── */
   --e-1: 0.25rem;  --e-2: 0.5rem;   --e-3: 0.75rem;  --e-4: 1rem;
   --e-5: 1.5rem;   --e-6: 2rem;     --e-7: 3rem;     --e-8: 4.5rem;
 
   /* ── tipografia ──────────────────────────────────────────────────────── */
-  /* Del sistema: ni una peticion a un CDN. */
-  --fuente: "Segoe UI Variable Display", "Segoe UI", ui-sans-serif, system-ui,
-            -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
-  --fuente-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "SF Mono",
-                 Menlo, Consolas, monospace;
+  /* Geist y Geist Mono, servidas desde public/fuentes/ — SIL OFL 1.1.
+     NI UNA peticion a un CDN: el archivo viaja con el portal. */
+  --fuente: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --fuente-mono: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
 
   --t-1: 0.6875rem;  /* etiqueta de tarjeta, en mayusculas */
   --t-2: 0.75rem;    /* metadatos */
@@ -60,7 +61,8 @@
   --t-5: 1.0625rem;  /* enunciado destacado */
   --t-6: 1.375rem;   /* titulo de seccion */
   --t-7: 2rem;       /* titulo de pagina */
-  --t-8: 2.75rem;    /* cifra protagonista */
+  --t-8: 2.75rem;    /* cifra */
+  --t-9: 4rem;       /* cifra protagonista y titulo de portada */
 
   --peso-normal: 400;  --peso-medio: 500;
   --peso-fuerte: 600;  --peso-max: 700;
@@ -77,7 +79,9 @@
   /* ── forma ───────────────────────────────────────────────────────────── */
   --radio-1: 6px;
   --radio-2: 10px;
-  --radio-3: 14px;   /* tarjetas */
+  --radio-3: 14px;   /* tarjeta simple */
+  --radio-4: 20px;   /* carcasa del doble bisel */
+  --bisel-p: 5px;    /* separacion carcasa/nucleo; el radio interior se calcula */
   --radio-pill: 999px;
 
   /* Sombra y brillo, muy contenidos. Dan volumen; no se ven como sombra. */
@@ -91,9 +95,15 @@
     radial-gradient(680px 420px at -8% 8%,  rgba(34, 211, 238, 0.045), transparent 60%);
 
   /* ── medida ──────────────────────────────────────────────────────────── */
-  --ancho-texto: 48rem;   /* medida de lectura del plan largo */
-  --ancho-total: 76rem;
+  /* 68ch: el detector marcaba lineas de 144 caracteres. Lo comodo es <80. */
+  --medida: 52ch;
+  --ancho-texto: 48rem;   /* columna del plan largo */
+  --ancho-total: 78rem;
   --rail: 15.5rem;        /* barra lateral en escritorio */
 
-  --transicion: 140ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* ── movimiento ──────────────────────────────────────────────────────── */
+  /* Curva con masa: arranca rapido y frena largo. Nada de ease-in-out. */
+  --curva: cubic-bezier(0.32, 0.72, 0, 1);
+  --transicion: 180ms var(--curva);
+  --entrada: 700ms var(--curva);
 }

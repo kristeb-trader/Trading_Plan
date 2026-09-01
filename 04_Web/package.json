@@ -13,5 +13,8 @@
   },
   "devDependencies": {
     "astro": "^7.2.10"
+  },
+  "dependencies": {
+    "geist": "^1.7.2"
   }
 }
