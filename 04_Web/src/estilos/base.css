@@ -21,6 +21,11 @@ html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
+  /* Explícito a propósito. La cabecera y el marco van UNO DEBAJO DE OTRO.
+     Si algo externo convierte el body en grid o flex (una extensión, un
+     panel de vista previa), los dos se colocarían en paralelo y la página
+     se vería corrida a la derecha. Esto lo impide. */
+  display: block;
   margin: 0;
   min-height: 100dvh;
   background: var(--fondo);
