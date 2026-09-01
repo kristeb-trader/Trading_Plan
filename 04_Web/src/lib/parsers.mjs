@@ -547,3 +547,16 @@ export function notasParametros() {
 export function documentoCierre() {
   return documento('CIERRE_FASE_1.md');
 }
+
+/** Quita las referencias de codigo de un titulo ya renderizado.
+ *
+ *  «El test ciego no se ejecuto · F1.11 · P-29»  ->  «El test ciego no se ejecuto»
+ *
+ *  Se usa en las pantallas de entendimiento, donde un codigo no aporta nada
+ *  y obliga a navegar. En las de detalle el titulo se muestra entero. */
+export function sinCodigos(html) {
+  return String(html)
+    .replace(/\s*[·|]?\s*<code>[^<]*<\/code>/g, '')
+    .replace(/\s*·\s*$/, '')
+    .trim();
+}

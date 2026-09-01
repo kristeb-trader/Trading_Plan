@@ -27,14 +27,19 @@ const GRUPOS = [
   {
     grupo: 'Empieza aquí',
     items: [
+      { icono: 'house', href: '/', texto: 'Inicio', lista: true },
       { icono: 'compass', href: '/como-funciona', texto: 'Cómo funciona', lista: true },
       { icono: 'images', href: '/galeria', texto: 'Casos reales', lista: true, cuenta: P.galeria().length },
     ],
   },
   {
+    // Solo aparece en modo técnico. Es el detalle de auditoría: al revisor
+    // le sobra, y tenerlo delante invita a perderse en las 38 fichas.
     grupo: 'Todo el detalle',
+    soloTecnico: true,
     items: [
       { icono: 'list-checks', href: '/plan-completo', texto: 'El plan completo', lista: true },
+      { icono: 'list-checks', href: '/reglas', texto: 'Las reglas', lista: true, cuenta: P.reglas().length },
     ],
   },
   {
@@ -85,7 +90,7 @@ const activa = (href: string) =>
       <aside class="rail">
         <nav class="nav" aria-label="Secciones">
           {GRUPOS.map((g) => (
-            <div class="nav-g">
+            <div class:list={['nav-g', { 'solo-tecnico': g.soloTecnico }]}>
               <p class="etiqueta nav-t">{g.grupo}</p>
               {g.items.map((s) => (
                 s.lista
@@ -174,6 +179,18 @@ const activa = (href: string) =>
         var btn = document.querySelector('[data-tecnico]');
         var on = false;
         try { on = localStorage.getItem(CLAVE) === '1'; } catch (e) { /* sin almacenamiento */ }
+
+        // El operador abre su enlace con ?tecnico=1 una vez y su navegador
+        // lo recuerda. Es el mismo mecanismo que el nombre del revisor.
+        try {
+          var u = new URL(window.location.href);
+          if (u.searchParams.has('tecnico')) {
+            on = u.searchParams.get('tecnico') !== '0';
+            localStorage.setItem(CLAVE, on ? '1' : '0');
+            u.searchParams.delete('tecnico');
+            history.replaceState({}, '', u.pathname + u.search + u.hash);
+          }
+        } catch (e) { /* sin almacenamiento */ }
 
         function pintar() {
           document.body.classList.toggle('tecnico', on);

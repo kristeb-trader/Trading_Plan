@@ -5,8 +5,6 @@ import { defineConfig } from 'astro/config';
 // dinamicas (las observaciones de Alfredo) viven en funciones de Cloudflare,
 // fuera de este build.
 export default defineConfig({
-  // La entrada del portal es la explicación, no un índice de secciones.
-  redirects: { '/': '/como-funciona' },
   output: 'static',
   outDir: './dist',
   srcDir: './src',
