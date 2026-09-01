@@ -60,7 +60,7 @@ const conCuerpo = secciones.filter((s) => s.tieneCuerpo).length;
         <section class="sub entra" id={s.id} style={`--retraso:${Math.min(i, 6) * 30}ms`}
                  data-obs-tipo="subfase" data-obs-id={s.id} data-obs-titulo={s.titulo}>
           <header class="s-cab">
-            <span class="s-id mono">{s.id}</span>
+            <span class="s-id mono solo-tecnico">{s.id}</span>
             <h2 class="s-t" set:html={P.tituloAHtml(s.titulo)} />
             <span class="s-estado meta" set:html={P.tituloAHtml(s.estado)} />
           </header>

@@ -299,3 +299,18 @@ body::after {
   overflow-x: auto;
 }
 .diagrama svg { width: 100%; height: auto; max-width: 100%; display: block; }
+
+
+/* ═══════════ códigos de regla: ocultos salvo en modo técnico ═══════════
+   «R-22» no le dice nada a quien llega nuevo, y tenerlo delante obliga a
+   navegar para saber qué es. El identificador sigue en el HTML, así que el
+   enlace y la búsqueda siguen funcionando: solo deja de verse.            */
+body:not(.tecnico) .solo-tecnico { display: none; }
+
+/* Las referencias dentro del texto no se pueden esconder sin romper la
+   frase, así que se apagan y llevan el enunciado en el título emergente. */
+body:not(.tecnico) .ref {
+  color: var(--texto-3);
+  border-bottom-color: var(--borde);
+}
+body:not(.tecnico) .ref:hover { color: var(--acento); }

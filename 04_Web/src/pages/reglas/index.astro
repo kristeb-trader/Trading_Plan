@@ -65,7 +65,7 @@ const ETIQUETA_CAT = {
           data-txt={[r.id, r.enunciado, r.accion, r.nota, r.categoria].filter(Boolean).join(' ').toLowerCase()}>
         <a class="regla" href={`/reglas/${r.id}`}>
           <span class="r-cab">
-            <span class="r-id mono">{r.id}</span>
+            <span class="r-id mono solo-tecnico">{r.id}</span>
             <span class="r-cat">{ETIQUETA_CAT[r.categoria] ?? r.categoria}</span>
             {manifiesto.has(r.id) && <span class="r-mark" title="Tiene diagrama"><Icono nombre="image-square" /></span>}
           </span>

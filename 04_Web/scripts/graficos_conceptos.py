@@ -42,6 +42,8 @@ TXT = "#F2F5F9"
 TENUE = "#A8B0BF"
 ORO = "#F5C542"
 ROJO = "#FF5C5C"
+TICK = 0.25       # el tick del NQ, de PARAMETROS.md
+TOPE_STOP = 80.0  # STOP_MAX, de PARAMETROS.md. Si se supera, no se opera
 VERDE = "#4ADE80"
 
 plt.rcParams["font.family"] = ["DejaVu Sans"]
@@ -170,6 +172,9 @@ def main():
     print("velas cargadas:", len(V))
 
     DIA = "20260713"
+    # Sesiones validadas al tick por el operador, para buscar los casos.
+    DIAS = ["20260713", "20260716", "20260715", "20260720", "20260710",
+            "20260709", "20260708", "20260707", "20260706", "20260717"]
     i0, i1 = ventana_sesion(V, DIA)
     if i0 is None:
         print("No hay datos para " + DIA)
@@ -239,6 +244,109 @@ def main():
         break
     if not hecho:
         print("  aviso: no se encontró un cruce con confirmación en esta sesión")
+
+    # ── 5 · cruzar sin confirmar ────────────────────────────────────────
+    for z in sorted(zonas, key=lambda z: z["vela"]):
+        arriba = z["tipo"] == "R"
+        borde = z["hi"] if arriba else z["lo"]
+        rot = next((i for i in range(z["vela"] + 2, min(z["vela"] + 45, i1))
+                    if (V[i]["h"] > borde if arriba else V[i]["l"] < borde)), None)
+        if rot is None or rot + 8 >= i1:
+            continue
+        # que NINGUNA de las siguientes pase del extremo de la que cruzó
+        if any((V[j]["h"] > V[rot]["h"] if arriba else V[j]["l"] < V[rot]["l"])
+               for j in range(rot + 1, min(rot + 6, i1))):
+            continue
+        a, b = max(z["vela"] - 5, i0), min(rot + 16, i1)
+        dibujar(V, a, b,
+                "Si no se confirma, no ha pasado nada",
+                "La vela cruza la zona, pero ninguna de las siguientes la supera. La zona sigue viva.",
+                os.path.join(SALIDA, "05-sin-confirmar.png"),
+                zonas=[z],
+                marcas=[(rot, V[rot]["h"] if arriba else V[rot]["l"],
+                         "Cruza la zona", ORO, 0.20 if arriba else -0.20)],
+                tramos=[(rot + 1, min(rot + 5, i1 - 1), "NINGUNA LA SUPERA", TENUE)])
+        break
+
+    # ── 6, 7 y 8 · la entrada, el stop y el descarte por tope ───────────
+    #
+    # OJO: un setup cuyo stop pase del tope NO SE OPERA. Ensenarlo como
+    # ejemplo de «asi va el stop» seria enganoso, asi que se buscan los dos
+    # casos por separado: uno dentro del tope para explicar la operacion, y
+    # uno fuera para explicar por que a veces no se opera.
+    dentro = fuera = None
+    for dia in DIAS:
+        j0, j1 = ventana_sesion(V, dia)
+        if j0 is None:
+            continue
+        for z in sorted(motor.estructura(V, j0, j1), key=lambda z: z["vela"]):
+            arriba = z["tipo"] == "R"
+            borde = z["hi"] if arriba else z["lo"]
+            rot = next((i for i in range(z["vela"] + 2, min(z["vela"] + 45, j1))
+                        if (V[i]["h"] > borde if arriba else V[i]["l"] < borde)), None)
+            if rot is None or rot + 14 >= j1:
+                continue
+            conf = next((j for j in range(rot + 1, min(rot + 6, j1))
+                         if (V[j]["h"] > V[rot]["h"] if arriba else V[j]["l"] < V[rot]["l"])), None)
+            if conf is None:
+                continue
+
+            # La orden espera un tick mas alla del extremo de la vela que cruzo.
+            entrada = V[rot]["h"] + TICK if arriba else V[rot]["l"] - TICK
+            # El stop, al extremo alcanzado desde que nacio la zona.
+            tramo = range(z["vela"], conf + 1)
+            stop = min(V[i]["l"] for i in tramo) if arriba else max(V[i]["h"] for i in tramo)
+            riesgo = abs(entrada - stop)
+            caso = (z, rot, conf, entrada, stop, riesgo, j0, j1)
+            if riesgo <= TOPE_STOP and dentro is None:
+                dentro = caso
+            elif riesgo > TOPE_STOP and fuera is None:
+                fuera = caso
+            if dentro and fuera:
+                break
+        if dentro and fuera:
+            break
+
+    if dentro:
+        z, rot, conf, entrada, stop, riesgo, j0, j1 = dentro
+        arriba = z["tipo"] == "R"
+        objetivo = entrada + (entrada - stop)          # la misma distancia
+        a, b = max(z["vela"] - 4, j0), min(conf + 24, j1)
+
+        dibujar(V, a, b,
+                "La entrada se coloca por adelantado",
+                "La orden espera un tick más allá de la vela que cruzó. El mercado la ejecuta solo.",
+                os.path.join(SALIDA, "06-entrada.png"),
+                zonas=[z],
+                marcas=[(rot, entrada, "Aquí espera la orden", ALCISTA, 0.24 if arriba else -0.24),
+                        (conf, V[conf]["h"] if arriba else V[conf]["l"],
+                         "Aquí se llena", VERDE, 0.38 if arriba else -0.38)])
+
+        dibujar(V, a, b,
+                "El stop no se elige: lo pone la estructura",
+                "Rojo lo que se arriesga, verde lo que se busca. El objetivo recorre la misma distancia.",
+                os.path.join(SALIDA, "07-stop-objetivo.png"),
+                zonas=[z],
+                operacion=(conf, entrada, stop, objetivo),
+                marcas=[(conf, stop, "Stop, a %.2f puntos" % riesgo, ROJO, -0.13),
+                        (conf, objetivo, "Objetivo, la misma distancia", VERDE, 0.13)])
+    else:
+        print("  aviso: no se encontró un setup dentro del tope de stop")
+
+    if fuera:
+        z, rot, conf, entrada, stop, riesgo, j0, j1 = fuera
+        arriba = z["tipo"] == "R"
+        a, b = max(z["vela"] - 4, j0), min(conf + 20, j1)
+        dibujar(V, a, b,
+                "Si el stop pasa del tope, no se opera",
+                "Aquí el stop mediría %.0f puntos y el tope son %.0f. El setup se descarta entero."
+                % (riesgo, TOPE_STOP),
+                os.path.join(SALIDA, "08-descarte.png"),
+                zonas=[z],
+                marcas=[(conf, entrada, "La entrada estaría aquí", TENUE, 0.16 if arriba else -0.16),
+                        (conf, stop, "Pero el stop llega hasta aquí", ROJO, -0.18 if arriba else 0.18)])
+    else:
+        print("  aviso: no se encontró un setup fuera del tope de stop")
 
     print("\nlistos en public/conceptos/")
     return 0

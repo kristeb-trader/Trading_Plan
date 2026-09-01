@@ -46,7 +46,7 @@ const rico = (t) => P.enriquecer(t, { sinEnlaceA: regla.id });
   <article class="ficha" data-obs-tipo="regla" data-obs-id={regla.id} data-obs-titulo={regla.enunciado.slice(0,120)}>
     <header class="f-cab entra">
       <div class="f-meta">
-        <span class="f-id mono">{regla.id}</span>
+        <span class="f-id mono solo-tecnico">{regla.id}</span>
         <span class="f-cat">{ETIQUETA_CAT[regla.categoria] ?? regla.categoria}</span>
         {regla.prioridad && <span class="f-pri meta">prioridad {regla.prioridad}</span>}
       </div>

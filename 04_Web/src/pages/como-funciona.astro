@@ -67,6 +67,8 @@ const PASOS = [
     entrada: 'Que el precio atraviese una zona no significa nada por sí solo. Hace falta que la vela siguiente pase del extremo de la que cruzó. Sin esa confirmación, no ha pasado nada.',
     grafico: '/conceptos/04-romper-confirmar.png',
     pie: 'Una vela cruza. Solo cuenta cuando la siguiente lo confirma.',
+    grafico2: '/conceptos/05-sin-confirmar.png',
+    pie2: 'Y el caso contrario: cruza, pero ninguna la supera. No ha pasado nada.',
     claves: [
       ['Cruzar', 'Basta con que la mecha pase un tick del borde'],
       ['Confirmar', 'La vela siguiente pasa del extremo de la que cruzó'],
@@ -78,8 +80,8 @@ const PASOS = [
     id: 'entradas',
     titulo: 'Solo hay dos formas de entrar',
     entrada: 'Con lo anterior ya se pueden reconocer las dos únicas entradas del método. Una va a favor del movimiento; la otra, en contra de un movimiento que falló.',
-    grafico: img('G-01') ?? img('G-02'),
-    pie: 'Entrada de continuación sobre un caso real del gráfico del operador.',
+    grafico: '/conceptos/06-entrada.png',
+    pie: 'La orden se deja puesta y el mercado la ejecuta al confirmarse.',
     claves: [
       ['A favor', 'El precio confirma la zona y sigue. Se entra en esa dirección'],
       ['En contra', 'Confirmó y no siguió. El precio recupera la zona entera y se entra al revés'],
@@ -91,8 +93,10 @@ const PASOS = [
     id: 'riesgo',
     titulo: 'Cuánto se arriesga, y dónde va el stop',
     entrada: 'La entrada se coloca por adelantado y el mercado la ejecuta solo. El stop no se elige: lo pone la estructura. Y si esa distancia pasa del tope, la operación no se hace.',
-    grafico: img('G-16') ?? img('G-10'),
-    pie: 'Una operación real: entrada, stop y objetivo sobre el gráfico.',
+    grafico: '/conceptos/07-stop-objetivo.png',
+    pie: 'Rojo lo que se arriesga, verde lo que se busca. La misma distancia.',
+    grafico2: '/conceptos/08-descarte.png',
+    pie2: 'Y cuando el stop pasa del tope, el setup se descarta entero.',
     claves: [
       ['Tope de riesgo', v('STOP_MAX', '80 puntos') + '. Si el stop pasa de ahí, no se opera'],
       ['Objetivo', v('RATIO_TARGET', '1:1') + ': recorre lo mismo que el stop'],
@@ -149,6 +153,13 @@ const bt = P.backtesting();
         <figure class="p-fig entra">
           <img src={p.grafico} alt={p.titulo} loading={i < 2 ? 'eager' : 'lazy'} />
           {p.pie && <figcaption class="meta">{p.pie}</figcaption>}
+        </figure>
+      )}
+
+      {p.grafico2 && (
+        <figure class="p-fig entra">
+          <img src={p.grafico2} alt={p.pie2 ?? p.titulo} loading="lazy" />
+          {p.pie2 && <figcaption class="meta">{p.pie2}</figcaption>}
         </figure>
       )}
 

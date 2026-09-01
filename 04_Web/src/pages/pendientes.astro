@@ -70,7 +70,7 @@ const conCuerpo = (p) => ({ ...p, html: P.markdownRico(p.cuerpo) });
                  style={`--retraso:${Math.min(i, 6) * 30}ms`}
                  data-obs-tipo="pendiente" data-obs-id={p.id} data-obs-titulo={p.titulo.slice(0, 120)}>
           <header class="i-cab">
-            <span class="i-id mono">{p.id}</span>
+            <span class="i-id mono solo-tecnico">{p.id}</span>
             {p.hueco && <span class="marca-estado aviso">hueco declarado</span>}
           </header>
           <h3 class="i-t" set:html={P.tituloAHtml(p.titulo.replace(/^[PD]-\d{1,2}\s*[·-]?\s*/, ''))} />
@@ -90,7 +90,7 @@ const conCuerpo = (p) => ({ ...p, html: P.markdownRico(p.cuerpo) });
       {desviaciones.map(conCuerpo).map((p, i) => (
         <article class="item desviacion entra" id={p.id} style={`--retraso:${Math.min(i, 6) * 25}ms`}
                  data-obs-tipo="pendiente" data-obs-id={p.id} data-obs-titulo={p.titulo.slice(0, 120)}>
-          <header class="i-cab"><span class="i-id mono">{p.id}</span></header>
+          <header class="i-cab"><span class="i-id mono solo-tecnico">{p.id}</span></header>
           <h3 class="i-t" set:html={P.tituloAHtml(p.titulo.replace(/^[PD]-\d{1,2}\s*[·-]?\s*/, ''))} />
           <div class="md" set:html={p.html} />
         </article>
@@ -109,7 +109,7 @@ const conCuerpo = (p) => ({ ...p, html: P.markdownRico(p.cuerpo) });
       <div class="lista">
         {cerrados.map(conCuerpo).map((p) => (
           <article class="item cerrado" id={p.id}>
-            <header class="i-cab"><span class="i-id mono">{p.id}</span></header>
+            <header class="i-cab"><span class="i-id mono solo-tecnico">{p.id}</span></header>
             <h3 class="i-t" set:html={P.tituloAHtml(p.titulo.replace(/^[PD]-\d{1,2}\s*[·-]?\s*/, ''))} />
             <div class="md" set:html={p.html} />
           </article>

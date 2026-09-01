@@ -328,6 +328,19 @@ export function markdownRico(md, opciones = {}) {
   return enriquecerHtml(html, opciones);
 }
 
+
+/** Enunciado de cada regla, para que una referencia dentro del texto diga
+ *  lo que es al pasar por encima. Un codigo sin explicacion obliga a
+ *  navegar; con el enunciado en el titulo, deja de ser un obstaculo. */
+let _enunciados = null;
+function enunciadoDe(id) {
+  if (!_enunciados) {
+    _enunciados = new Map(reglas().map((r) => [r.id, r.enunciado]));
+  }
+  const e = _enunciados.get(id);
+  return e ? e.replace(/"/g, '&quot;').slice(0, 180) : id;
+}
+
 export function enriquecerHtml(html, { sinEnlaceA } = {}) {
   const params = parametros();
   const nombres = [...params.keys()].sort((a, b) => b.length - a.length);
@@ -352,7 +365,8 @@ export function enriquecerHtml(html, { sinEnlaceA } = {}) {
   // entre comillas de codigo. Sin esto, el glosario enlazaba una sola.
   html = String(html)
     .replace(/<code>(R-\d{1,2})<\/code>/g, (m, id) =>
-      id === sinEnlaceA ? m : '<a class="ref" href="/reglas/' + id + '">' + id + '</a>')
+      id === sinEnlaceA ? m
+        : '<a class="ref" href="/reglas/' + id + '" title="' + enunciadoDe(id) + '">' + id + '</a>')
     .replace(/<code>(G-\d{1,2})<\/code>/g, (m, id) =>
       '<a class="ref" href="/galeria#' + id + '">' + id + '</a>');
 
@@ -376,7 +390,8 @@ export function enriquecerHtml(html, { sinEnlaceA } = {}) {
       });
     }
     s = s.replace(/(^|[^A-Za-z0-9-])(R-\d{1,2})\b/g, (m, pre, id) =>
-      id === sinEnlaceA ? m : pre + '<a class="ref" href="/reglas/' + id + '">' + id + '</a>');
+      id === sinEnlaceA ? m
+        : pre + '<a class="ref" href="/reglas/' + id + '" title="' + enunciadoDe(id) + '">' + id + '</a>');
     s = s.replace(/(^|[^A-Za-z0-9-])(G-\d{1,2})\b/g, (m, pre, id) =>
       pre + '<a class="ref" href="/galeria#' + id + '">' + id + '</a>');
     return s;
@@ -497,7 +512,8 @@ export function enriquecer(texto, { sinEnlaceA } = {}) {
   }
 
   html = html.replace(/(^|[^A-Za-z0-9-])(R-\d{1,2})\b/g, (m, pre, id) =>
-    id === sinEnlaceA ? m : pre + '<a class="ref" href="/reglas/' + id + '">' + id + '</a>');
+    id === sinEnlaceA ? m
+      : pre + '<a class="ref" href="/reglas/' + id + '" title="' + enunciadoDe(id) + '">' + id + '</a>');
   html = html.replace(/(^|[^A-Za-z0-9-])(G-\d{1,2})\b/g, (m, pre, id) =>
     pre + '<a class="ref" href="/galeria#' + id + '">' + id + '</a>');
 
