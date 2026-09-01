@@ -99,7 +99,7 @@
   /* ── medida ──────────────────────────────────────────────────────── */
   --medida: 62ch;
   --ancho: 72rem;
-  --rail: 15rem;
+  --rail: 17.5rem;  /* con icono, contador y texto sin cortar */
 
   /* ── movimiento · hover 200-250ms, como pide el sistema ──────────── */
   --curva: cubic-bezier(0.4, 0, 0.2, 1);

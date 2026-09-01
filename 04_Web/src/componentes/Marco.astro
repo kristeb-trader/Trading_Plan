@@ -10,6 +10,7 @@
  * puede esconderlo.
  */
 import * as P from '../lib/parsers.mjs';
+import Icono from './Icono.astro';
 import '../estilos/tokens.css';
 import '../estilos/base.css';
 
@@ -25,26 +26,26 @@ const GRUPOS = [
   {
     grupo: 'El plan',
     items: [
-      { href: '/', texto: 'Inicio', lista: true },
-      { href: '/plan', texto: 'Recorrido completo', lista: false },
-      { href: '/reglas', texto: 'Reglas', lista: false, cuenta: P.reglas().length },
-      { href: '/parametros', texto: 'Parámetros', lista: false, cuenta: P.parametros().size },
-      { href: '/glosario', texto: 'Glosario', lista: false, cuenta: P.glosario().length },
+      { icono: 'house', href: '/', texto: 'Inicio', lista: true },
+      { icono: 'compass', href: '/plan', texto: 'Recorrido', lista: false },
+      { icono: 'list-checks', href: '/reglas', texto: 'Reglas', lista: false, cuenta: P.reglas().length },
+      { icono: 'sliders-horizontal', href: '/parametros', texto: 'Parámetros', lista: false, cuenta: P.parametros().size },
+      { icono: 'book-open', href: '/glosario', texto: 'Glosario', lista: false, cuenta: P.glosario().length },
     ],
   },
   {
     grupo: 'Cómo se aplica',
     items: [
-      { href: '/checklist', texto: 'Checklist diaria', lista: false },
-      { href: '/galeria', texto: 'Casos reales', lista: false, cuenta: P.galeria().length },
+      { icono: 'check-square', href: '/checklist', texto: 'Checklist', lista: false },
+      { icono: 'images', href: '/galeria', texto: 'Casos reales', lista: false, cuenta: P.galeria().length },
     ],
   },
   {
     grupo: 'Lo que sigue abierto',
     items: [
-      { href: '/pendientes', texto: 'Pendientes', lista: false, cuenta: P.pendientesAbiertos().length },
-      { href: '/contextualizacion', texto: 'Contextualización', lista: false },
-      { href: '/cierre', texto: 'Acta de cierre', lista: false },
+      { icono: 'warning-diamond', href: '/pendientes', texto: 'Pendientes', lista: false, cuenta: P.pendientesAbiertos().length },
+      { icono: 'chart-line', href: '/contextualizacion', texto: 'Contexto', lista: false },
+      { icono: 'seal-check', href: '/cierre', texto: 'Cierre de la fase 1', lista: false },
     ],
   },
 ];
@@ -87,24 +88,36 @@ const activa = (href: string) =>
 
     <div class="marco">
       <aside class="rail">
-        <nav aria-label="Secciones">
+        <nav class="nav" aria-label="Secciones">
           {GRUPOS.map((g) => (
             <div class="nav-g">
               <p class="etiqueta nav-t">{g.grupo}</p>
               {g.items.map((s) => (
                 s.lista
                   ? <a href={s.href} class:list={['nav-i', { activa: activa(s.href) }]}>
-                      <span>{s.texto}</span>
+                      <span class="nav-ic"><Icono nombre={s.icono} /></span>
+                      <span class="nav-x">{s.texto}</span>
                       {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
                     </a>
                   : <span class="nav-i pendiente" aria-disabled="true">
-                      <span>{s.texto}</span>
+                      <span class="nav-ic"><Icono nombre={s.icono} /></span>
+                      <span class="nav-x">{s.texto}</span>
                       {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
+                      <span class="nav-pronto">pronto</span>
                     </span>
               ))}
             </div>
           ))}
         </nav>
+
+        <!-- Estado del plan, siempre a la vista al pie del rail. -->
+        <a class="rail-estado" href="/cierre">
+          <span class="re-cab">
+            <span class="re-punto" aria-hidden="true"></span>
+            <span class="re-t">Plan no probado</span>
+          </span>
+          <span class="re-x">{bt.huecos.length} huecos declarados. v{v.version}</span>
+        </a>
       </aside>
 
       <div class="cuerpo">
@@ -320,27 +333,105 @@ const activa = (href: string) =>
       .rail {
         position: sticky; top: 3.75rem; align-self: start;
         height: calc(100dvh - 3.75rem);
-        padding: var(--e-6) var(--e-4) var(--e-6) var(--e-6);
+        display: flex; flex-direction: column; gap: var(--e-4);
+        padding: var(--e-4) var(--e-3);
+        margin: var(--e-4) 0 var(--e-4) var(--e-4);
+        border-radius: var(--radio-4);
+        background: var(--vidrio-fondo);
+        background-image: var(--vidrio-brillo);
+        backdrop-filter: var(--desenfoque);
+        border: 1px solid var(--vidrio-borde);
         overflow-y: auto;
       }
-      .nav-g { margin-bottom: var(--e-6); }
+      .nav { flex: 1; }
+      .nav-g { margin-bottom: var(--e-4); }
+      .nav-g + .nav-g { padding-top: var(--e-4); border-top: 1px solid var(--borde-sutil); }
       .nav-t { margin: 0 0 var(--e-2); padding-left: var(--e-3); }
 
       .nav-i {
-        display: flex; align-items: center; justify-content: space-between;
-        gap: var(--e-3);
+        position: relative;
+        display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center; gap: var(--e-3);
         padding: var(--e-2) var(--e-3);
-        border-radius: var(--radio-1);
+        border-radius: var(--radio-2);
         font-size: var(--t-3);
         color: var(--texto-2);
-        transition: background var(--rapido), color var(--rapido);
+        transition: background var(--normal), color var(--normal), transform var(--normal);
       }
-      .nav-i:hover { background: var(--superficie); color: var(--texto); }
-      .nav-i.activa { background: var(--acento-flojo); color: var(--texto); font-weight: var(--peso-medio); }
-      /* Pendiente: opacidad y cursor, no solo color. */
-      .nav-i.pendiente { color: var(--texto-3); opacity: 0.5; cursor: not-allowed; }
+      .nav-ic { display: flex; color: var(--texto-3); transition: color var(--normal), transform var(--normal); }
+      .nav-x { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+      .nav-i:hover { background: rgba(255, 255, 255, 0.05); color: var(--texto); }
+      .nav-i:hover .nav-ic { color: var(--acento); transform: scale(1.08); }
+
+      /* Activa: fondo en degradado, icono en color y una barra de luz a la
+         izquierda. Tres senales, no solo el color de fondo. */
+      .nav-i.activa {
+        color: var(--texto); font-weight: var(--peso-medio);
+        background: linear-gradient(90deg,
+                    color-mix(in srgb, var(--acento) 22%, transparent),
+                    color-mix(in srgb, var(--acento) 6%, transparent));
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acento) 22%, transparent);
+      }
+      .nav-i.activa::before {
+        content: '';
+        position: absolute; left: 0; top: 20%; bottom: 20%;
+        width: 2px; border-radius: var(--radio-pill);
+        background: var(--acento);
+        box-shadow: 0 0 10px 1px color-mix(in srgb, var(--acento) 75%, transparent);
+      }
+      .nav-i.activa .nav-ic { color: var(--acento); }
+
+      /* Pendiente: apagada, con etiqueta y cursor. Nunca solo por color. */
+      .nav-i.pendiente { color: var(--texto-3); cursor: not-allowed; }
+      .nav-i.pendiente .nav-ic { opacity: 0.45; }
       .nav-i.pendiente:hover { background: none; color: var(--texto-3); }
-      .nav-c { font-size: var(--t-1); color: var(--texto-3); }
+      .nav-i.pendiente:hover .nav-ic { color: var(--texto-3); transform: none; }
+      .nav-pronto {
+        grid-column: 3; font-size: var(--t-1); color: var(--texto-3);
+        opacity: 0; transition: opacity var(--normal);
+      }
+      .nav-i.pendiente:hover .nav-pronto { opacity: 0.8; }
+      .nav-i.pendiente:hover .nav-c { display: none; }
+
+      .nav-c {
+        font-size: var(--t-1); color: var(--texto-3);
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: var(--radio-pill);
+        padding: 1px var(--e-2); min-width: 1.6rem; text-align: center;
+      }
+      .nav-i.activa .nav-c { background: color-mix(in srgb, var(--acento) 26%, transparent); color: var(--texto); }
+
+      /* ── estado al pie del rail ────────────────────────────────────── */
+      .rail-estado {
+        display: block;
+        padding: var(--e-3) var(--e-4);
+        border-radius: var(--radio-2);
+        background: color-mix(in srgb, var(--aviso) 9%, transparent);
+        border: 1px solid color-mix(in srgb, var(--aviso) 24%, transparent);
+        color: var(--texto-2);
+        transition: background var(--normal), border-color var(--normal);
+      }
+      .rail-estado:hover {
+        background: color-mix(in srgb, var(--aviso) 15%, transparent);
+        border-color: color-mix(in srgb, var(--aviso) 45%, transparent);
+        color: var(--texto-2);
+      }
+      .re-cab { display: flex; align-items: center; gap: var(--e-2); }
+      /* Este punto si comunica un estado real, y late para que se note. */
+      .re-punto {
+        width: 7px; height: 7px; border-radius: 50%;
+        background: var(--aviso); flex: none;
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--aviso) 60%, transparent);
+        animation: latido 2.6s var(--curva) infinite;
+      }
+      @keyframes latido {
+        0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--aviso) 55%, transparent); }
+        70%  { box-shadow: 0 0 0 7px rgba(0, 0, 0, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+      }
+      .re-t { font-size: var(--t-2); font-weight: var(--peso-fuerte); color: var(--aviso); }
+      .re-x { display: block; margin-top: var(--e-1); font-size: var(--t-1); color: var(--texto-3); }
 
       /* ── contenido ─────────────────────────────────────────────────── */
       .cuerpo { display: flex; flex-direction: column; min-width: 0; }
