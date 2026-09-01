@@ -2,10 +2,11 @@
 
 **Qué es esto:** la metodología de trading de Alfredo Chaumer para NQ/MNQ en NinjaTrader 8, extraída durante la fase 1 a un plan mecánico de **38 reglas medibles**.
 
-**Fase actual:** 🚧 **FASE 2 — construir el portal web** en `04_Web\` (hoy vacía).
+**Fase actual:** 🚧 **FASE 2 — construir el portal web** en `04_Web\`.
 **Fase 1:** 🏁 cerrada el 2026-09-01. Ver `01_Plan\CIERRE_FASE_1.md`.
 
 **Operador:** Christian. **Uso:** personal.
+**Repositorio:** `kristeb-trader/Trading_Plan` — **privado, y se queda privado**.
 
 ---
 
@@ -26,7 +27,7 @@
 | `01_Plan\reglas.json` | **la fuente de verdad legible por máquina.** 38 reglas con id, categoría, enunciado, condiciones medibles, acción, excepciones, prioridad y estado. **El portal se construye contra este archivo.** |
 | `01_Plan\TRADING_PLAN_CHAUMER.md` | el texto largo: razonamiento, casos reales y por qué cada regla dice lo que dice |
 | `01_Plan\PARAMETROS.md` | los números que pueden cambiar, en un solo sitio. Las reglas citan el **nombre** del parámetro, no el valor |
-| `01_Plan\GLOSARIO.md` | 24 términos con definición medible |
+| `01_Plan\GLOSARIO.md` | vocabulario medible: **23 encabezados** de término *(rompimiento y consecución comparten uno, de ahí el «24» de otros documentos)* |
 | `01_Plan\CHECKLIST_DIARIA.md` | la secuencia real del día en 4 bloques |
 | `01_Plan\GALERIA.md` | 21 casos reales etiquetados |
 | `01_Plan\PENDIENTES.md` | lo que sigue abierto |
@@ -48,6 +49,27 @@ El plan está **escrito y contrastado**, pero **no probado**. Cuatro cosas falta
 4. **Las cifras del backtesting no miden la estrategia** (`P-27`): 9 operaciones, reglas que cambiaron durante la propia revisión, sin filtro de noticias rojas y sin capa de contexto.
 
 > Si el portal muestra el resultado del backtesting (−91,00 pts en 9 operaciones), **debe mostrar estos motivos en la misma pantalla**.
+
+---
+
+## Qué es el portal de la fase 2 — decidido por el operador el 31/08/2026
+
+**No es una herramienta de operación.** Es la página donde **Alfredo Chaumer revisa las reglas** que se extrajeron de su metodología y **deja observaciones escritas** para que el operador las lea después. No se usa mientras se opera.
+
+| | |
+|---|---|
+| Dónde vive | **internet**, en Cloudflare Pages |
+| Quién entra | el operador y Alfredo, por **lista blanca de correo** (Cloudflare Access) |
+| Qué hace | lectura del plan **+ observaciones que se guardan** en Supabase |
+| Qué se comparte | **la dirección del portal**, nunca el repositorio |
+
+**Dos puntos del brief original quedaron derogados por el operador:** el módulo ya no es 100 % estático *(las observaciones necesitan persistencia)*, y el portal se publica ya *(con puerta, porque su razón de ser es que Alfredo entre)*.
+
+**Lo que NO queda derogado y se cumple al pie de la letra:** ninguna escritura desde el cliente y **ninguna clave en el paquete que descarga el navegador**. El navegador nunca habla con Supabase: habla con una función de Cloudflare que comprueba la identidad y escribe. Sin la puerta configurada, **no se despliega**.
+
+> 🔴 **Una observación de Alfredo no es una regla.** El plan solo cambia si el operador cambia `01_Plan\`. El portal deja constancia; no toca la fuente.
+
+Diseño completo en `04_Web\DISENO_PORTAL.md`. El brief y el guion de arranque de esa carpeta son **anteriores** a esta decisión: donde se contradigan, manda el diseño.
 
 ---
 
@@ -91,8 +113,9 @@ Definiciones completas y medibles en `01_Plan\GLOSARIO.md`.
 ## Datos y motor
 
 - Datos: `05_Backtesting\datos\NQ 09-26.Last.txt` — formato `yyyyMMdd HHmmss;o;h;l;c;v`, **en UTC**.
-- **Horario:** el gráfico del operador es hora Colombia (UTC−5). Ventana operativa **08:31–10:30 Col = 13:31–15:30 UTC**.
-- `05_Backtesting\lector.py` — el motor que reproduce el marcado de zonas y detecta los setups.
-- `05_Backtesting\dia.py` — genera la gráfica estándar de una jornada.
+- **Horario:** el ancla es la **apertura americana — 09:30–11:30 ET**, nunca el número del reloj. El gráfico del operador va en hora Colombia (UTC−5 fijo), así que en pantalla la ventana es **08:30–10:30 Col en verano NY** y **09:30–11:30 Col en invierno NY**. La primera vela de la ventana es la **08:31**.
+  > ⚠️ **La equivalencia en UTC se desplaza una hora el 1 de noviembre de 2026.** Hasta esa fecha, 13:30–15:30 UTC; desde el 2 de noviembre, 14:30–16:30 UTC. No la escribas fija en ningún sitio: calcúlala desde la apertura americana.
+- `05_Backtesting\lector.py` · `motor.py` · `dia.py` · `dibujo.py` — motor de marcado de zonas, detección de setups y generación de la gráfica estándar.
+  > Python **no está en el PATH** de este equipo a fecha 2026-09-01: los scripts no se pueden ejecutar sin instalarlo antes.
 
 Los dos son **auditoría**. Sirven para verificar el plan, no para operar.

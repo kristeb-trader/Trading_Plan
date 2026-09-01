@@ -628,11 +628,61 @@ Nueve operaciones · **−91,00 pts**. Sin valor estadístico, por los cuatro mo
 
 # ▶️ FASE 2 — PORTAL WEB
 
-**Dónde:** `04_Web\` (vacía a esta fecha).
+**Dónde:** `04_Web\`.
 **Cómo se arranca:** abrir Claude Code en `E:\Proyectos\Chaumer`. `CLAUDE.md` se carga solo.
-**Qué leer primero:** `01_Plan\CIERRE_FASE_1.md` → `04_Web\BRIEF_PORTAL.md`.
+**Qué leer primero:** `01_Plan\CIERRE_FASE_1.md` → `04_Web\DISENO_PORTAL.md`.
 **Fuente de verdad del portal:** `01_Plan\reglas.json`.
 
-**Primera conversación pendiente con el operador:** las cinco decisiones del brief — portal
-local o accesible desde fuera · si lo consulta mientras opera · dónde vive la bitácora · si
-lee datos de NinjaTrader · si genera gráficas o solo las muestra.
+---
+
+## 31/08/2026 · el operador redefine el portal
+
+Las **cinco decisiones** del brief quedan contestadas, y una de ellas cambia lo que el portal es:
+
+| Decisión | Respuesta |
+|---|---|
+| ¿Local o accesible desde fuera? | **En internet** — Cloudflare Pages con puerta de Access y lista blanca de correo |
+| ¿Lo consulta mientras opera? | **No.** Antes y después |
+| ¿La bitácora vive en el portal? | **No.** Sigue donde está |
+| ¿Lee datos de NinjaTrader? | **No.** Ninguno |
+| ¿Genera gráficas? | **No genera nada.** Muestra las 21 que ya existen |
+
+**El portal deja de ser una herramienta de operación y pasa a ser la mesa de revisión de las
+reglas:** Alfredo Chaumer entra, lee el plan y **deja observaciones escritas** ancladas a lo
+que está mirando. El operador las revisa, responde y las exporta. Una observación **no
+modifica el plan**: el plan solo cambia si el operador cambia `01_Plan\`.
+
+Dos puntos del brief quedan **derogados** con constancia: el módulo ya no es 100 % estático
+—las observaciones van a **Supabase**— y el portal se publica ya, con puerta. Lo que **no**
+queda derogado: ninguna escritura desde el cliente y ninguna clave en el paquete. Sin la
+puerta configurada, no se despliega.
+
+Diseño íntegro en `04_Web\DISENO_PORTAL.md` (v2).
+
+---
+
+## 01/09/2026 · arranque de la construcción
+
+**Repositorio:** `kristeb-trader/Trading_Plan` — **privado**, verificado antes de subir nada.
+Rama `main`. Fuera del repositorio quedan `00_Guias\` (1,3 GB de PDFs y vídeo de terceros),
+los datos de mercado y las transcripciones.
+
+**Corregido en `reglas.json`:** el archivo estaba escrito íntegramente en ASCII, sin una sola
+tilde en 60.785 bytes. Restauradas **168 cadenas**. Verificado que quitarle los acentos al
+archivo nuevo devuelve el anterior carácter por carácter: mismas 38 reglas, mismos
+identificadores, mismas cifras. El campo `categoria` se deja en ASCII a propósito — alimenta
+el filtro del portal.
+
+**Desajustes contados sobre los archivos, que el portal muestra sin corregir el origen:**
+
+| Documento | Dice la cabecera | Hay |
+|---|---|---|
+| `GALERIA.md` | 11 casos | **21** |
+| `PENDIENTES.md` | 8 puntos abiertos | **16** |
+| `TRADING_PLAN_CHAUMER.md` | 12 sub-fases | **13 filas** en el índice, 11 secciones en el cuerpo |
+| `GLOSARIO.md` | 24 términos | **23 encabezados** *(rompimiento y consecución comparten uno)* |
+| `CONTEXTUALIZACION.md` | 10 elementos | 10 conceptos en **12 encabezados**: dos identificadores usados dos veces |
+| Diagramas Mermaid | «exactamente 2» | **4** — 2 en el plan maestro y 2 en el documento de `F1.0` |
+
+**No se renumera ni se corrige nada de `01_Plan\`.** El portal cuenta el contenido real y
+enseña el número real.

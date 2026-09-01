@@ -1,5 +1,19 @@
 # PROMPT — FASE 2: MÓDULO WEB DEL TRADING PLAN (Claude Code)
 
+> ⚠️ **ESTE GUION ESTÁ PARCIALMENTE SUPERADO. Lee antes `DISENO_PORTAL.md`.**
+>
+> Se escribió el 31/08/2026 por la mañana. Esa misma tarde el operador redefinió el portal y **tres puntos de aquí dejaron de valer**:
+>
+> | Dice este guion | Vigente desde el 31/08/2026 |
+> |---|---|
+> | *«Módulo 100 % estático. No toca base de datos»* | **Toca Supabase.** Las observaciones de Alfredo necesitan guardarse |
+> | *«El repositorio es privado… se publicará más adelante para que Alfredo lo revise»* | El repositorio (`kristeb-trader/Trading_Plan`) **es privado y se queda privado**. Lo que se comparte es **la dirección del portal**, con puerta de Access |
+> | El portal es la herramienta que se usa **mientras se opera** | Es una **herramienta de revisión**. Alfredo lee las reglas y comenta. No se usa operando |
+>
+> El **paso 4 de «ANTES DE PROGRAMAR»** ya está cumplido: las cinco decisiones abiertas están contestadas en `BRIEF_PORTAL.md`. **No las vuelvas a preguntar.**
+>
+> Todo lo demás de este guion sigue vigente, y en especial las restricciones: no inventar reglas, no completar vacíos, ningún adjetivo como criterio, no tocar `01_Plan\` ni `02_Assets\`, y los cuatro huecos declarados siempre visibles.
+
 **Cómo usarlo:** abre PowerShell, sitúate en **`E:\Proyectos\Chaumer`** (la raíz, **no** en `04_Web`) y lanza Claude Code desde ahí. Pega todo lo que sigue como primer mensaje.
 
 > **Por qué desde la raíz.** Claude Code trata su carpeta de arranque como "el proyecto": lo que queda fuera lo lee pidiendo permiso archivo por archivo, y **sus búsquedas no llegan ahí**. Todo el material fuente (`01_Plan\`, `02_Assets\`) está fuera de `04_Web`, el script de sincronización cruza esa frontera en cada ejecución, y el repositorio git está en la raíz. Arrancando en `04_Web` no encontraría nada al buscar.
@@ -92,8 +106,8 @@ Dos frases del operador que valen como criterio: *"entre más limpio sea el grá
 
 ## SEGURIDAD Y CONTENIDO
 
-- **Módulo 100 % estático.** No toca base de datos.
-- **El repositorio es privado hasta nuevo aviso.** El riesgo aquí **no son solo las claves: es el contenido.** Este plan es metodología de un tercero (Alfredo Chaumer) y es un plan **no validado**.
+- ~~**Módulo 100 % estático.** No toca base de datos.~~ → **DEROGADO 31/08/2026.** El plan se sirve estático, pero las observaciones de Alfredo se guardan en **Supabase**. La escritura la hace un servidor de Cloudflare que valida la identidad; **el navegador nunca habla con la base**.
+- **El repositorio es privado — y se queda privado.** El riesgo aquí **no son solo las claves: es el contenido.** Este plan es metodología de un tercero (Alfredo Chaumer) y es un plan **no validado**. Lo único que se comparte es **la dirección del portal**, detrás de la puerta de Access.
 - ⚠️ **`00_Guias\` no puede acabar en el repositorio.** Contiene PDFs de terceros y **1,4 GB de video** de sesiones de Chaumer. Añádelo al `.gitignore`. Además, GitHub rechaza archivos de más de 100 MB y esos mp4 pasan de 200 MB cada uno: el push fallaría.
 - **Revisa el `.gitignore` como primera tarea.** Hoy dice `04_Web/` (hay que quitarlo) y no dice `00_Guias/` (hay que añadirlo). Añade también `node_modules/`, `dist/`, `.env*`.
 - Cuando lleguen los módulos de backtesting: **nada de escritura desde el cliente**. Lectura vía RLS con políticas explícitas; escritura autenticada.
