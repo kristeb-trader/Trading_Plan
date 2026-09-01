@@ -312,3 +312,77 @@ export function indiceBusqueda() {
   }
   return items;
 }
+
+// ──────────────────────────────── la regla dentro del documento largo
+/** Mapa id -> { titulo, cuerpo } con la seccion que explica cada regla en
+ *  TRADING_PLAN_CHAUMER.md. No todas las reglas tienen una. */
+export function seccionesDeReglas() {
+  const t = documento('TRADING_PLAN_CHAUMER.md');
+  const mapa = new Map();
+  for (const b of partirPorEncabezado(t, [2, 3])) {
+    const limpio = tituloLimpio(b.titulo);
+    const m = limpio.match(/^(R-\d{1,2})\b/);
+    if (!m) continue;
+    mapa.set(m[1], {
+      titulo: limpio.replace(/^R-\d{1,2}\s*[·-]?\s*/, ''),
+      cuerpo: b.cuerpo.trim(),
+    });
+  }
+  return mapa;
+}
+
+/** Casos de la galeria que citan cada regla. Calculado, no escrito a mano. */
+export function casosPorRegla() {
+  const mapa = new Map();
+  for (const c of galeria()) {
+    for (const id of c.reglas) {
+      if (!mapa.has(id)) mapa.set(id, []);
+      mapa.get(id).push({ id: c.id, titulo: c.titulo });
+    }
+  }
+  return mapa;
+}
+
+// ─────────────────────────────────────────── enlazado y pastillas
+/**
+ * Convierte texto plano del plan en HTML enriquecido:
+ *
+ *   STOP_MAX  ->  pastilla con el VALOR VIGENTE resuelto de PARAMETROS.md
+ *   R-14      ->  enlace a la ficha de esa regla
+ *   G-11      ->  enlace al caso de la galeria
+ *
+ * Asi una regla deja de decir «el tope de stop» sin decir nunca que son
+ * 80 puntos. El valor no se escribe a mano en ningun sitio.
+ */
+export function enriquecer(texto, { sinEnlaceA } = {}) {
+  if (texto == null) return '';
+  const params = parametros();
+  let html = String(texto)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // Pastillas de parametro. Se ordenan de mas largo a mas corto para que
+  // STOP_MAX no se coma la mitad de otro nombre que lo contenga.
+  const nombres = [...params.keys()].sort((a, b) => b.length - a.length);
+  if (nombres.length) {
+    const re = new RegExp('(^|[^A-Za-z0-9_])(' + nombres.join('|') + ')(?![A-Za-z0-9_])', 'g');
+    html = html.replace(re, (m, pre, nombre) => {
+      const p = params.get(nombre);
+      return pre + '<a class="pastilla-par" href="/parametros#' + nombre + '" title="'
+        + nombre + '">' + nombre + '<span class="pp-v">' + p.valor + '</span></a>';
+    });
+  }
+
+  html = html.replace(/(^|[^A-Za-z0-9-])(R-\d{1,2})\b/g, (m, pre, id) =>
+    id === sinEnlaceA ? m : pre + '<a class="ref" href="/reglas/' + id + '">' + id + '</a>');
+  html = html.replace(/(^|[^A-Za-z0-9-])(G-\d{1,2})\b/g, (m, pre, id) =>
+    pre + '<a class="ref" href="/galeria#' + id + '">' + id + '</a>');
+
+  return html;
+}
+
+/** Imagenes asociadas a cada regla, resueltas SOLO por nombre de archivo.
+ *  Si una regla no tiene imagen, no hay imagen: ni hueco ni sustituto. */
+export function imagenesDeReglas() {
+  const m = json('manifiesto.json');
+  return new Map(Object.entries(m.reglas || {}));
+}

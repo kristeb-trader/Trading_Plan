@@ -28,7 +28,7 @@ const GRUPOS = [
     items: [
       { icono: 'house', href: '/', texto: 'Inicio', lista: true },
       { icono: 'compass', href: '/plan', texto: 'Recorrido', lista: false },
-      { icono: 'list-checks', href: '/reglas', texto: 'Reglas', lista: false, cuenta: P.reglas().length },
+      { icono: 'list-checks', href: '/reglas', texto: 'Reglas', lista: true, cuenta: P.reglas().length },
       { icono: 'sliders-horizontal', href: '/parametros', texto: 'Parámetros', lista: false, cuenta: P.parametros().size },
       { icono: 'book-open', href: '/glosario', texto: 'Glosario', lista: false, cuenta: P.glosario().length },
     ],
@@ -103,7 +103,7 @@ const activa = (href: string) =>
                       <span class="nav-ic"><Icono nombre={s.icono} /></span>
                       <span class="nav-x">{s.texto}</span>
                       {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
-                      <span class="nav-pronto">pronto</span>
+                      <span class="nav-pronto" aria-hidden="true">pronto</span>
                     </span>
               ))}
             </div>

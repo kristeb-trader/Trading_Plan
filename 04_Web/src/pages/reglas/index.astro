@@ -1,0 +1,210 @@
+---
+/**
+ * Las 38 reglas, con filtro por texto y por categoria.
+ *
+ * Las categorias son las 12 reales de reglas.json. No se renombran, no se
+ * agrupan y no se inventan: el filtro se construye contando el archivo.
+ *
+ * El filtrado ocurre en el navegador sobre lo ya renderizado, asi que sin
+ * JavaScript se ven las 38 igual.
+ */
+import Marco from '../../componentes/Marco.astro';
+import Icono from '../../componentes/Icono.astro';
+import * as P from '../../lib/parsers.mjs';
+
+const reglas = P.reglas();
+const cats = P.categorias();
+const casos = P.casosPorRegla();
+const secciones = P.seccionesDeReglas();
+const manifiesto = P.imagenesDeReglas();
+
+const ETIQUETA_CAT = {
+  contexto: 'Contexto', gestion: 'Gestión', filtro: 'Filtros', entrada: 'Entrada',
+  setup: 'Setup', marcado_zonas: 'Marcado de zonas', riesgo: 'Riesgo',
+  proceso: 'Proceso', estructura: 'Estructura', zonas: 'Zonas',
+  contexto_operativo: 'Contexto operativo', vigencia_zonas: 'Vigencia de zonas',
+};
+---
+
+<Marco titulo="Reglas">
+  <header class="cab entra">
+    <h1>Las {reglas.length} reglas</h1>
+    <p class="lead">
+      Cada una con sus condiciones medibles y su acción. Sin adjetivos: solo
+      ticks, puntos, número de velas y horas exactas. Reparto en {cats.length} categorías,
+      contadas del archivo.
+    </p>
+  </header>
+
+  <div class="filtros entra">
+    <label class="campo">
+      <Icono nombre="magnifying-glass" />
+      <input type="search" data-filtro autocomplete="off" spellcheck="false"
+             placeholder="Filtrar por texto o por número de regla" />
+      <span class="campo-n meta" data-contador>{reglas.length}</span>
+    </label>
+    <div class="chips" role="group" aria-label="Filtrar por categoría">
+      <button class="chip activa" type="button" data-cat="">Todas</button>
+      {cats.map((c) => (
+        <button class="chip" type="button" data-cat={c.id}>
+          {ETIQUETA_CAT[c.id] ?? c.id}
+          <span class="chip-n">{c.n}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <p class="vacio" data-vacio hidden>
+    Ninguna regla coincide con ese filtro. Prueba con otra palabra o quita la categoría.
+  </p>
+
+  <ul class="lista" data-lista>
+    {reglas.map((r, i) => (
+      <li class="celda entra" style={`--retraso:${Math.min(i, 10) * 25}ms`}
+          data-cat={r.categoria}
+          data-txt={[r.id, r.enunciado, r.accion, r.nota, r.categoria].filter(Boolean).join(' ').toLowerCase()}>
+        <a class="regla" href={`/reglas/${r.id}`}>
+          <span class="r-cab">
+            <span class="r-id mono">{r.id}</span>
+            <span class="r-cat">{ETIQUETA_CAT[r.categoria] ?? r.categoria}</span>
+            {manifiesto.has(r.id) && <span class="r-mark" title="Tiene diagrama"><Icono nombre="image-square" /></span>}
+          </span>
+          <span class="r-e">{r.enunciado}</span>
+          <span class="r-pie meta">
+            <span>{r.condiciones.length} condiciones</span>
+            {casos.has(r.id) && <span>{casos.get(r.id).length} casos</span>}
+            {secciones.has(r.id) && <span>explicada en el plan</span>}
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Marco>
+
+<script is:inline>
+  (function () {
+    var campo = document.querySelector('[data-filtro]');
+    var chips = document.querySelectorAll('[data-cat]');
+    var celdas = document.querySelectorAll('.celda');
+    var contador = document.querySelector('[data-contador]');
+    var vacio = document.querySelector('[data-vacio]');
+    if (!campo) return;
+    var cat = '';
+
+    function aplicar() {
+      var q = campo.value.trim().toLowerCase();
+      var n = 0;
+      celdas.forEach(function (c) {
+        var okCat = !cat || c.getAttribute('data-cat') === cat;
+        var okTxt = !q || c.getAttribute('data-txt').indexOf(q) >= 0;
+        var ver = okCat && okTxt;
+        c.hidden = !ver;
+        if (ver) n++;
+      });
+      contador.textContent = n;
+      vacio.hidden = n > 0;
+    }
+
+    campo.addEventListener('input', aplicar);
+    document.querySelectorAll('.chip').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('.chip').forEach(function (o) { o.classList.remove('activa'); });
+        b.classList.add('activa');
+        cat = b.getAttribute('data-cat');
+        aplicar();
+      });
+    });
+  })();
+</script>
+
+<style>
+  .cab { max-width: 44rem; margin-bottom: var(--e-7); }
+  .lead { font-size: var(--t-5); color: var(--texto-2); margin: var(--e-4) 0 0; }
+
+  /* ── filtros ─────────────────────────────────────────────────────────── */
+  .filtros { display: grid; gap: var(--e-4); margin-bottom: var(--e-6); }
+  .campo {
+    display: flex; align-items: center; gap: var(--e-3);
+    max-width: 30rem;
+    padding: var(--e-3) var(--e-4);
+    background: var(--vidrio-fondo);
+    border: 1px solid var(--vidrio-borde);
+    border-radius: var(--radio-2);
+    backdrop-filter: var(--desenfoque);
+    color: var(--texto-3);
+    transition: border-color var(--normal);
+  }
+  .campo:focus-within { border-color: color-mix(in srgb, var(--acento) 60%, transparent); }
+  .campo input {
+    flex: 1; background: none; border: 0; outline: none;
+    color: var(--texto); font: inherit; font-size: var(--t-3);
+  }
+  .campo input::placeholder { color: var(--texto-3); }
+  .campo input::-webkit-search-cancel-button { display: none; }
+  .campo-n { font-variant-numeric: tabular-nums; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: var(--e-2); }
+  .chip {
+    display: inline-flex; align-items: center; gap: var(--e-2);
+    padding: var(--e-2) var(--e-3);
+    border-radius: var(--radio-pill);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--borde-sutil);
+    color: var(--texto-2);
+    font: inherit; font-size: var(--t-2); cursor: pointer;
+    transition: background var(--normal), border-color var(--normal), color var(--normal);
+  }
+  .chip:hover { background: rgba(255, 255, 255, 0.08); color: var(--texto); }
+  .chip.activa {
+    background: color-mix(in srgb, var(--acento) 20%, transparent);
+    border-color: color-mix(in srgb, var(--acento) 45%, transparent);
+    color: var(--texto);
+  }
+  .chip-n { font-size: var(--t-1); color: var(--texto-3); font-variant-numeric: tabular-nums; }
+  .chip.activa .chip-n { color: var(--texto-2); }
+
+  .vacio { color: var(--texto-2); font-size: var(--t-3); padding: var(--e-6) 0; }
+
+  /* ── lista ───────────────────────────────────────────────────────────── */
+  .lista {
+    list-style: none; padding: 0; margin: 0; max-width: none;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: var(--e-3);
+  }
+  .celda { margin: 0; }
+  .celda[hidden] { display: none; }
+
+  .regla {
+    display: flex; flex-direction: column; gap: var(--e-3);
+    height: 100%;
+    padding: var(--e-4) var(--e-5) var(--e-5);
+    border-radius: var(--radio-3);
+    background: var(--vidrio-fondo);
+    background-image: var(--vidrio-brillo);
+    border: 1px solid var(--vidrio-borde);
+    color: var(--texto-2);
+    transition: transform var(--normal), box-shadow var(--normal), border-color var(--normal);
+  }
+  .regla:hover {
+    transform: translateY(-2px);
+    color: var(--texto-2);
+    box-shadow: var(--halo-azul);
+  }
+
+  .r-cab { display: flex; align-items: center; gap: var(--e-3); }
+  .r-id {
+    font-size: var(--t-2); font-weight: var(--peso-fuerte);
+    color: var(--acento); letter-spacing: 0.02em;
+  }
+  .r-cat {
+    font-size: var(--t-1); color: var(--texto-3);
+    letter-spacing: var(--track-etiqueta); text-transform: uppercase;
+  }
+  .r-mark { margin-left: auto; color: var(--texto-3); --i: 1rem; display: flex; }
+
+  .r-e {
+    font-size: var(--t-4); color: var(--texto);
+    line-height: 1.45; font-weight: var(--peso-medio);
+  }
+  .r-pie { display: flex; flex-wrap: wrap; gap: var(--e-4); margin-top: auto; padding-top: var(--e-2); }
+</style>
