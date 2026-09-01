@@ -112,7 +112,7 @@ const activa = (href: string) =>
 
         <!-- Modo tecnico: ensena los codigos de regla. Apagado por defecto,
              porque a quien llega nuevo «R-22» solo le interrumpe. -->
-        <button class="tecnico" type="button" data-tecnico aria-pressed="false">
+        <button class="conmutador-tec" type="button" data-tecnico aria-pressed="false">
           <span class="tec-luz" aria-hidden="true"></span>
           <span class="tec-t">Modo técnico</span>
           <span class="tec-x meta">códigos de regla</span>
@@ -373,8 +373,12 @@ const activa = (href: string) =>
 
       .estado { display: block; }
 
-      /* ── modo técnico ──────────────────────────────────────────────── */
-      .tecnico {
+      /* ── modo técnico ──────────────────────────────────────────────────
+         El nombre de esta clase NO puede ser «tecnico»: esa es la que el
+         guion le pone al body para encender el modo, y como el body también
+         vive en este componente, la regla le caía encima y lo convertía en
+         una rejilla de dos columnas. La página se veía partida por la mitad. */
+      .conmutador-tec {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
         grid-template-rows: auto auto;
@@ -390,7 +394,7 @@ const activa = (href: string) =>
         cursor: pointer;
         transition: border-color var(--normal), background var(--normal);
       }
-      .tecnico:hover { border-color: var(--n-600); background: rgba(255, 255, 255, 0.03); }
+      .conmutador-tec:hover { border-color: var(--n-600); background: rgba(255, 255, 255, 0.03); }
 
       .tec-luz {
         grid-row: 1 / span 2;
@@ -408,16 +412,16 @@ const activa = (href: string) =>
         background: var(--n-500);
         transition: transform var(--normal), background var(--normal);
       }
-      .tecnico[aria-pressed='true'] .tec-luz {
+      .conmutador-tec[aria-pressed='true'] .tec-luz {
         background: color-mix(in srgb, var(--acento) 35%, transparent);
         border-color: color-mix(in srgb, var(--acento) 55%, transparent);
       }
-      .tecnico[aria-pressed='true'] .tec-luz::after {
+      .conmutador-tec[aria-pressed='true'] .tec-luz::after {
         transform: translateX(0.8rem); background: var(--acento);
       }
       .tec-t { grid-column: 2; font-size: var(--t-2); color: var(--texto-2); }
       .tec-x { grid-column: 2; font-size: var(--t-1); }
-      .tecnico[aria-pressed='true'] .tec-t { color: var(--texto); }
+      .conmutador-tec[aria-pressed='true'] .tec-t { color: var(--texto); }
 
       /* ── rail ──────────────────────────────────────────────────────── */
       .marco { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); }
