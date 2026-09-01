@@ -6,6 +6,7 @@
  * Si la cabecera de un documento dice «11 casos» y hay 21, aqui salen 21.
  * El desajuste se muestra en pantalla; el archivo de origen no se toca.
  */
+import { marked } from 'marked';
 import { documento, json, subfasesSueltas, partirPorEncabezado, tituloLimpio, contarMermaid } from './fuentes.mjs';
 
 // ────────────────────────────────────────────────── markdown en una linea
@@ -240,23 +241,76 @@ export function parametros() {
   const t = documento('PARAMETROS.md');
   const mapa = new Map();
   let seccion = null;
+  let columnas = [];
   for (const linea of t.split(/\r?\n/)) {
     const h = linea.match(/^##\s+(.*)$/);
-    if (h) { seccion = tituloLimpio(h[1]); continue; }
+    if (h) { seccion = tituloLimpio(h[1]); columnas = []; continue; }
     if (!/^\|/.test(linea)) continue;
+
     const celdas = linea.split('|').slice(1, -1).map((c) => c.trim());
     if (celdas.length < 2) continue;
+
+    // Cabecera de la tabla: se guarda para poder etiquetar cada celda.
+    if (/^Par[aá]metro$/i.test(celdas[0])) { columnas = celdas; continue; }
+    if (/^[-: ]+$/.test(celdas[0])) continue; // fila separadora
+
     const nombre = celdas[0].match(/`([A-Z0-9_]+)`/);
     if (!nombre) continue;
+
     const limpiar = (c) => (c || '').replace(/\*\*/g, '').trim();
+    // Las celdas a partir de la segunda, cada una con su encabezado real.
+    const detalle = celdas.slice(2)
+      .map((c, i) => ({ etiqueta: columnas[i + 2] || '', valor: limpiar(c) }))
+      .filter((d) => d.valor && !/^[—–-]+$/.test(d.valor));
+
     mapa.set(nombre[1], {
       nombre: nombre[1],
       valor: limpiar(celdas[1]),
-      resto: celdas.slice(2).map(limpiar).filter(Boolean),
+      detalle,
+      resto: detalle.map((d) => d.valor), // compatibilidad con el buscador
       seccion,
     });
   }
   return mapa;
+}
+
+// ────────────────────────────────── markdown de los documentos a HTML
+/** Renderiza markdown y despues enriquece SOLO el texto, nunca las etiquetas,
+ *  para no romper el HTML ya generado ni anidar enlaces dentro de enlaces. */
+export function markdownRico(md, opciones = {}) {
+  const html = marked.parse(String(md || ''), { mangle: false, headerIds: false });
+  return enriquecerHtml(html, opciones);
+}
+
+export function enriquecerHtml(html, { sinEnlaceA } = {}) {
+  const params = parametros();
+  const nombres = [...params.keys()].sort((a, b) => b.length - a.length);
+  const rePar = nombres.length
+    ? new RegExp('(^|[^A-Za-z0-9_])(' + nombres.join('|') + ')(?![A-Za-z0-9_])', 'g') : null;
+
+  let dentro = 0; // profundidad de <a> y <code>: ahi no se toca nada
+  return String(html).split(/(<[^>]+>)/).map((trozo) => {
+    if (trozo.startsWith('<')) {
+      if (/^<(a|code|pre)\b/i.test(trozo)) dentro++;
+      else if (/^<\/(a|code|pre)>/i.test(trozo)) dentro = Math.max(0, dentro - 1);
+      return trozo;
+    }
+    if (dentro > 0) return trozo;
+
+    let s = trozo;
+    if (rePar) {
+      s = s.replace(rePar, (m, pre, nombre) => {
+        const p = params.get(nombre);
+        return pre + '<a class="pastilla-par" href="/parametros#' + nombre + '">'
+          + nombre + '<span class="pp-v">' + p.valor + '</span></a>';
+      });
+    }
+    s = s.replace(/(^|[^A-Za-z0-9-])(R-\d{1,2})\b/g, (m, pre, id) =>
+      id === sinEnlaceA ? m : pre + '<a class="ref" href="/reglas/' + id + '">' + id + '</a>');
+    s = s.replace(/(^|[^A-Za-z0-9-])(G-\d{1,2})\b/g, (m, pre, id) =>
+      pre + '<a class="ref" href="/galeria#' + id + '">' + id + '</a>');
+    return s;
+  }).join('');
 }
 
 // ─────────────────────────────────────────────────────────────── diagramas
@@ -385,4 +439,20 @@ export function enriquecer(texto, { sinEnlaceA } = {}) {
 export function imagenesDeReglas() {
   const m = json('manifiesto.json');
   return new Map(Object.entries(m.reglas || {}));
+}
+
+/** Las advertencias en cita que acompanan a cada seccion de PARAMETROS.md.
+ *  Son parte del documento y explican por que un numero es lo que es. */
+export function notasParametros() {
+  const t = documento('PARAMETROS.md');
+  const salida = [];
+  for (const b of partirPorEncabezado(t, [2])) {
+    const citas = b.cuerpo.split(/\n(?=>)/).filter((x) => /^>/.test(x.trim()));
+    if (!citas.length) continue;
+    salida.push({
+      seccion: tituloLimpio(b.titulo),
+      html: markdownRico(citas.join('\n\n').replace(/^>\s?/gm, '')),
+    });
+  }
+  return salida;
 }

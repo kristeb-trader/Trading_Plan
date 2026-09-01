@@ -253,3 +253,36 @@ body::after {
   border-bottom: 1px solid color-mix(in srgb, var(--acento) 35%, transparent);
 }
 .ref:hover { color: var(--texto); border-bottom-color: var(--texto); }
+
+/* ═══════════ markdown renderado de los documentos ═══════════════════════
+   Llega por set:html, asi que va global.                                  */
+.md { color: var(--texto-2); font-size: var(--t-4); }
+.md > :first-child { margin-top: 0; }
+.md > :last-child { margin-bottom: 0; }
+.md p { max-width: var(--medida); }
+.md h2, .md h3, .md h4 { color: var(--texto); }
+.md h3 { font-size: var(--t-5); margin-top: var(--e-6); }
+.md h4 { font-size: var(--t-4); margin-top: var(--e-5); }
+.md strong { color: var(--texto); }
+.md ul, .md ol { max-width: var(--medida); }
+.md li { margin-bottom: var(--e-2); }
+.md table {
+  display: block; max-width: 100%; overflow-x: auto;
+  border-collapse: collapse; margin: var(--e-4) 0; font-size: var(--t-3);
+}
+.md th, .md td { padding: var(--e-2) var(--e-4) var(--e-2) 0; text-align: left; vertical-align: top; }
+.md thead th {
+  position: static; background: none;
+  border-bottom: 1px solid var(--borde);
+  color: var(--texto-3); font-size: var(--t-1);
+  letter-spacing: var(--track-etiqueta); text-transform: uppercase;
+}
+.md tbody tr { border-bottom: 1px solid var(--borde-sutil); background: none; }
+.md tbody tr:last-child { border-bottom: 0; }
+.md blockquote {
+  margin: var(--e-4) 0; padding: var(--e-4) var(--e-5);
+  background: rgba(255, 255, 255, 0.03); border-radius: var(--radio-2);
+}
+.md code { color: var(--info); }
+.md img { border-radius: var(--radio-2); margin: var(--e-4) 0; }
+.md hr { margin: var(--e-5) 0; }
