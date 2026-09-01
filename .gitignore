@@ -38,3 +38,6 @@ __pycache__/
 .claude/skills/
 .agents/
 .agent/
+
+# diagramas dibujados en la compilacion, se regeneran solos
+04_Web/.diagramas/

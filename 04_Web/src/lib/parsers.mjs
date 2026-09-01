@@ -6,8 +6,11 @@
  * Si la cabecera de un documento dice «11 casos» y hay 21, aqui salen 21.
  * El desajuste se muestra en pantalla; el archivo de origen no se toca.
  */
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
 import { marked } from 'marked';
-import { documento, json, subfasesSueltas, partirPorEncabezado, tituloLimpio, contarMermaid } from './fuentes.mjs';
+import { documento, json, subfasesSueltas, partirPorEncabezado, tituloLimpio, contarMermaid, CONTENIDO_DIAGRAMAS } from './fuentes.mjs';
 
 // ────────────────────────────────────────────────── markdown en una linea
 /**
@@ -295,11 +298,33 @@ export function parametros() {
   return mapa;
 }
 
+
+// ─────────────────────────────────────────────────────── diagramas
+/**
+ * Los diagramas del plan vienen escritos en mermaid dentro del documento.
+ * scripts/diagramas.mjs ya los dibujo a SVG durante la compilacion; aqui
+ * se sustituye el bloque de codigo por el dibujo, pegado en linea.
+ *
+ * Si un diagrama no se pudo dibujar, se deja el codigo tal cual: es feo,
+ * pero es honesto y no rompe la pagina.
+ */
+const RE_MERMAID = /```mermaid\r?\n([\s\S]*?)```/g;
+
+function insertarDiagramas(md) {
+  return String(md).replace(RE_MERMAID, (completo, codigo) => {
+    const h = crypto.createHash('sha256').update(codigo.trim()).digest('hex').slice(0, 16);
+    const ruta = path.join(CONTENIDO_DIAGRAMAS, h + '.svg');
+    if (!fs.existsSync(ruta)) return completo;
+    const svg = fs.readFileSync(ruta, 'utf8');
+    return '\n\n<figure class="diagrama">' + svg + '</figure>\n\n';
+  });
+}
+
 // ────────────────────────────────── markdown de los documentos a HTML
 /** Renderiza markdown y despues enriquece SOLO el texto, nunca las etiquetas,
  *  para no romper el HTML ya generado ni anidar enlaces dentro de enlaces. */
 export function markdownRico(md, opciones = {}) {
-  const html = marked.parse(String(md || ''), { mangle: false, headerIds: false });
+  const html = marked.parse(insertarDiagramas(md || ''), { mangle: false, headerIds: false });
   return enriquecerHtml(html, opciones);
 }
 
@@ -309,11 +334,35 @@ export function enriquecerHtml(html, { sinEnlaceA } = {}) {
   const rePar = nombres.length
     ? new RegExp('(^|[^A-Za-z0-9_])(' + nombres.join('|') + ')(?![A-Za-z0-9_])', 'g') : null;
 
+  // Los documentos escriben los parametros entre comillas de codigo, y el
+  // recorrido de abajo salta lo que hay dentro de <code> para no estropear
+  // ejemplos. Sin este paso previo, la pastilla con el valor vigente casi
+  // nunca apareceria en las paginas de documento, que es justo donde hace
+  // falta. Se sustituye solo el <code> que contiene EXACTAMENTE un nombre
+  // de parametro conocido.
+  if (nombres.length) {
+    html = String(html).replace(
+      new RegExp('<code>(' + nombres.join('|') + ')</code>', 'g'),
+      (m, nombre) => '<a class="pastilla-par" href="/parametros#' + nombre + '">'
+        + nombre + '<span class="pp-v">' + params.get(nombre).valor + '</span></a>',
+    );
+  }
+
+  // Lo mismo con las referencias: los documentos escriben `R-13` y `G-11`
+  // entre comillas de codigo. Sin esto, el glosario enlazaba una sola.
+  html = String(html)
+    .replace(/<code>(R-\d{1,2})<\/code>/g, (m, id) =>
+      id === sinEnlaceA ? m : '<a class="ref" href="/reglas/' + id + '">' + id + '</a>')
+    .replace(/<code>(G-\d{1,2})<\/code>/g, (m, id) =>
+      '<a class="ref" href="/galeria#' + id + '">' + id + '</a>');
+
   let dentro = 0; // profundidad de <a> y <code>: ahi no se toca nada
   return String(html).split(/(<[^>]+>)/).map((trozo) => {
     if (trozo.startsWith('<')) {
-      if (/^<(a|code|pre)\b/i.test(trozo)) dentro++;
-      else if (/^<\/(a|code|pre)>/i.test(trozo)) dentro = Math.max(0, dentro - 1);
+      // svg incluido: inyectar enlaces dentro de un diagrama depende del
+      // navegador y no aporta nada. El diagrama se deja tal como se dibujo.
+      if (/^<(a|code|pre|svg)\b/i.test(trozo)) dentro++;
+      else if (/^<\/(a|code|pre|svg)>/i.test(trozo)) dentro = Math.max(0, dentro - 1);
       return trozo;
     }
     if (dentro > 0) return trozo;

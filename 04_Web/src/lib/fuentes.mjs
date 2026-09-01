@@ -25,6 +25,9 @@ function raizDelModulo() {
 
 export const CONTENIDO = path.join(raizDelModulo(), 'src', 'content');
 
+/** Donde quedan los SVG ya dibujados por scripts/diagramas.mjs. */
+export const CONTENIDO_DIAGRAMAS = path.join(raizDelModulo(), '.diagramas');
+
 const cache = new Map();
 
 /** Lee un documento sincronizado. Falla ruidosamente: un documento que falta

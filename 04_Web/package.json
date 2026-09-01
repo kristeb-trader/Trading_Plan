@@ -6,12 +6,14 @@
   "description": "Portal de revision del plan de trading Chaumer. Renderiza 01_Plan/ - no anade metodologia.",
   "scripts": {
     "sync": "node scripts/sync.mjs",
-    "dev": "npm run sync && astro dev",
-    "build": "npm run sync && astro build",
+    "dev": "npm run sync && npm run diagramas && astro dev",
+    "build": "npm run sync && npm run diagramas && astro build",
     "preview": "astro preview",
-    "fuentes": "node scripts/contar-fuentes.mjs"
+    "fuentes": "node scripts/contar-fuentes.mjs",
+    "diagramas": "node scripts/diagramas.mjs"
   },
   "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.16.0",
     "astro": "^7.2.10",
     "wrangler": "^4.127.1"
   },

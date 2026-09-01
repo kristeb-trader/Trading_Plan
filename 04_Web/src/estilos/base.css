@@ -286,3 +286,16 @@ body::after {
 .md code { color: var(--info); }
 .md img { border-radius: var(--radio-2); margin: var(--e-4) 0; }
 .md hr { margin: var(--e-5) 0; }
+
+/* ═══════════════════ diagramas del plan ═══════════════════════════════
+   Dibujados a SVG en la compilacion desde el mermaid del documento. El
+   navegador no descarga ninguna libreria: el dibujo viaja en el HTML.   */
+.diagrama {
+  margin: var(--e-6) 0;
+  padding: var(--e-5);
+  border-radius: var(--radio-3);
+  background: var(--superficie);
+  border: 1px solid var(--borde-sutil);
+  overflow-x: auto;
+}
+.diagrama svg { width: 100%; height: auto; max-width: 100%; display: block; }
