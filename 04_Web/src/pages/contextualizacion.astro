@@ -42,12 +42,14 @@ const ids = new Set(items.map((i) => i.id));
   </section>
 
   {duplicados.length > 0 && (
-    <p class="aviso-dup entra">
-      <Icono nombre="info" />
-      El documento de origen usa {duplicados.length === 1 ? 'un identificador' : 'los identificadores'}
-      {' '}<strong>{duplicados.join(' y ')}</strong> dos veces, para elementos
-      distintos. No se renumera nada: aparecen los dos, tal como están escritos.
-    </p>
+    <span class="solo-tecnico">
+      <p class="aviso-dup entra">
+        <Icono nombre="info" />
+        {duplicados.length === 1 ? 'El identificador' : 'Los identificadores'}
+        {' '}<strong>{duplicados.join(' y ')}</strong> {duplicados.length === 1 ? 'está usado' : 'están usados'}
+        {' '}dos veces, para elementos distintos.
+      </p>
+    </span>
   )}
 
   <div class="rejilla">

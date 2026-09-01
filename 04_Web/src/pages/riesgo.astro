@@ -1,0 +1,191 @@
+---
+/**
+ * Modulo 8 — Riesgo y tamano.
+ *
+ * Cierra el recorrido con lo que cuesta cada operacion y con el unico hueco
+ * del metodo que se ve desde dentro de la operativa: no hay regla de parada.
+ * La tabla de rachas no es un aviso del portal, es aritmetica del propio plan.
+ */
+import Modulo from '../componentes/Modulo.astro';
+import * as P from '../lib/parsers.mjs';
+
+const par = P.parametros();
+const v = (n, alt) => par.get(n)?.valor ?? alt;
+
+const SECCIONES = [
+  { id: 'cuanto', t: 'Cuánto se arriesga' },
+  { id: 'cuantas', t: 'Cuántas veces' },
+  { id: 'tamano', t: 'Con cuántos contratos' },
+  { id: 'parada', t: 'No hay regla de parada' },
+];
+
+// La tabla sale de la aritmetica declarada en el propio plan, no de un
+// calculo del portal.
+const RACHAS = [
+  { dias: 4, perdida: '$640', capital: '$2.360', caida: '−21 %', recuperar: '+27 %' },
+  { dias: 6, perdida: '$960', capital: '$2.040', caida: '−32 %', recuperar: '+47 %' },
+  { dias: 10, perdida: '$1.600', capital: '$1.400', caida: '−53 %', recuperar: '+114 %', duro: true },
+  { dias: 15, perdida: '$2.400', capital: '$600', caida: '−80 %', recuperar: '+400 %', duro: true },
+];
+---
+
+<Modulo slug="riesgo" secciones={SECCIONES}>
+  <section class="ap" id="cuanto">
+    <h2>Cuánto se arriesga <span class="solo-tecnico mono ref-cod">R-08</span></h2>
+    <p>
+      El riesgo de cada operación no lo decide una cuenta: lo decide la
+      estructura del mercado. Lo único que hay es un techo.
+    </p>
+
+    <dl class="datos">
+      <dt>Tope de stop</dt>
+      <dd><strong>{v('STOP_MAX', '80 puntos')}</strong> = 320 ticks = <span class="cifra-en">$160</span> en MNQ</dd>
+      <dt>Objetivo</dt>
+      <dd>La misma distancia, al otro lado. Relación {v('RATIO_TARGET', '1:1')}</dd>
+      <dt>Sobre la cuenta objetivo de $3.000</dt>
+      <dd><strong>5,3 %</strong> por operación</dd>
+    </dl>
+
+    <div class="duro">
+      <p>
+        <strong>El tope es una línea dura.</strong> Un stop de 79,75 puntos se
+        opera igual que uno de 30. Y si el stop estructural sale a 80,25, no se
+        opera, por buena que sea la figura.
+      </p>
+    </div>
+
+    <p>
+      Con una sola operación al día y una relación de uno a uno, hace falta
+      acertar <strong>más de la mitad de las veces</strong> solo para no perder
+      dinero.
+    </p>
+  </section>
+
+  <section class="ap" id="cuantas">
+    <h2>Cuántas veces <span class="solo-tecnico mono ref-cod">R-03</span></h2>
+
+    <dl class="datos">
+      <dt>Operaciones por sesión</dt>
+      <dd><strong>{v('OPS_POR_SESION', '1')}, como máximo</strong></dd>
+      <dt>¿Y si la orden se cancela sin llenarse?</dt>
+      <dd>No consume el cupo. Se puede esperar otro setup</dd>
+      <dt>¿Cambia algo el resultado?</dt>
+      <dd>No. Ganada o perdida, el día terminó igual</dd>
+    </dl>
+
+    <p>
+      Una operación al día es también lo que hace lenta la recuperación: no hay
+      forma de compensar un mal día dentro del mismo día, y eso es
+      deliberado.
+    </p>
+  </section>
+
+  <section class="ap" id="tamano">
+    <h2>Con cuántos contratos <span class="solo-tecnico mono ref-cod">R-26</span></h2>
+
+    <div class="duro">
+      <p>
+        <strong>Siempre {v('CONTRATOS', '1')} contrato de MNQ.</strong> No sube
+        porque la cuenta crezca. No baja tras una mala racha. No cambia por
+        convicción.
+      </p>
+      <p>El tamaño solo se puede revisar una vez al año.</p>
+    </div>
+
+    <p>
+      Esto tiene una consecuencia aritmética que conviene tener presente: con el
+      tamaño fijo y el tope de riesgo fijo en dólares,
+      <strong>el riesgo porcentual crece a medida que la cuenta cae</strong>. Los
+      mismos $160 son el 5 % de $3.000 y el 11 % de $1.400.
+    </p>
+  </section>
+
+  <section class="ap" id="parada">
+    <h2>No hay regla de parada</h2>
+    <p>
+      Este es un hueco declarado del método, y se enseña aquí porque es el único
+      que se nota desde dentro de la operativa.
+    </p>
+
+    <div class="veto">
+      <p><strong>El plan no dice cuándo se deja de operar.</strong></p>
+      <p>
+        No hay límite de pérdida semanal. No hay límite mensual. No hay corte
+        tras una racha de pérdidas. No hay reducción de tamaño cuando la cuenta
+        cae.
+      </p>
+    </div>
+
+    <p>
+      La consecuencia se ve mejor con números. Cada una de estas filas es una
+      racha de días perdedores seguidos, todos con su setup válido y su stop
+      correcto:
+    </p>
+
+    <div class="tabla-env">
+      <table class="rachas">
+        <thead>
+          <tr>
+            <th>Días malos seguidos</th>
+            <th>Pérdida</th>
+            <th>Capital</th>
+            <th>Caída</th>
+            <th>Para recuperarlo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {RACHAS.map((r) => (
+            <tr class:list={{ duro: r.duro }}>
+              <td class="num">{r.dias}</td>
+              <td class="num">{r.perdida}</td>
+              <td class="num">{r.capital}</td>
+              <td class="num neg">{r.caida}</td>
+              <td class="num">{r.recuperar}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="duro">
+      <p>
+        <strong>Ninguna regla del método se rompe en esa tabla.</strong> Cada día
+        fue un setup válido, ejecutado exactamente como está escrito. El plan
+        permite ese recorrido entero sin emitir una sola señal de alarma.
+      </p>
+      <p>
+        Y una racha de seis pérdidas seguidas, acertando la mitad de las veces,
+        aparece en unos cinco meses de operativa con una probabilidad cercana a
+        la mitad. No es un caso extremo: es lo normal.
+      </p>
+    </div>
+
+    <p>
+      El operador dejó esta decisión abierta a propósito, para tomarla con datos
+      reales del registro en vez de con un número inventado.
+    </p>
+  </section>
+</Modulo>
+
+<style>
+  .ref-cod { margin-left: var(--e-2); font-size: var(--t-1); color: var(--texto-3); }
+
+  .tabla-env { overflow-x: auto; margin: var(--e-5) 0; }
+  .rachas { width: 100%; border-collapse: collapse; font-size: var(--t-3); min-width: 32rem; }
+  .rachas th, .rachas td {
+    padding: var(--e-3) var(--e-4);
+    text-align: right;
+    border-bottom: 1px solid var(--borde-sutil);
+  }
+  .rachas th:first-child, .rachas td:first-child { text-align: left; }
+  .rachas thead th {
+    font-size: var(--t-1);
+    letter-spacing: var(--track-etiqueta);
+    text-transform: uppercase;
+    color: var(--texto-3);
+    border-bottom-color: var(--borde);
+  }
+  .rachas td { color: var(--texto-2); font-variant-numeric: tabular-nums; }
+  .rachas tr.duro td { color: var(--texto); }
+  .rachas .neg { color: var(--negativo); }
+</style>

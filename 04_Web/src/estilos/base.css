@@ -319,3 +319,130 @@ body:not(.tecnico) .ref {
   border-bottom-color: var(--borde);
 }
 body:not(.tecnico) .ref:hover { color: var(--acento); }
+
+
+/* ═══════════════════ piezas de los ocho módulos ═══════════════════════
+   Vocabulario visual compartido por los ocho pasos del método. Vive aquí y
+   no en cada página para que los ocho se lean igual: un apartado es un
+   apartado, una regla dura es una regla dura, y no cambian de aspecto al
+   pasar de un módulo al siguiente.                                      */
+
+/* Un apartado del módulo. El ancla del índice lateral. */
+.ap { margin-bottom: var(--e-8); scroll-margin-top: var(--e-6); }
+.ap > h2 {
+  margin: 0 0 var(--e-4);
+  font-size: var(--t-7);
+  letter-spacing: var(--track-titulo);
+}
+.ap > h3 { margin: var(--e-6) 0 var(--e-3); font-size: var(--t-6); }
+.ap > p { color: var(--texto-2); }
+.ap > p:first-of-type { font-size: var(--t-5); color: var(--texto-2); }
+
+/* Gráfico con su pie. Ancho completo del cuerpo, sin marco pesado. */
+.gr { margin: var(--e-6) 0; }
+.gr img {
+  width: 100%; display: block;
+  border-radius: var(--radio-3);
+  border: 1px solid var(--borde-sutil);
+  background: var(--n-950);
+}
+.gr figcaption { margin-top: var(--e-3); }
+
+/* Ficha de datos: lo medible de un apartado, en dos columnas. */
+.datos {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  gap: 1px;
+  margin: var(--e-5) 0;
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-3);
+  overflow: hidden;
+  background: var(--borde-sutil);
+}
+.datos > dt, .datos > dd {
+  margin: 0;
+  padding: var(--e-3) var(--e-4);
+  background: var(--superficie);
+  font-size: var(--t-3);
+}
+.datos > dt { color: var(--texto-3); }
+.datos > dd { color: var(--texto); }
+.datos > dd strong { font-weight: var(--peso-fuerte); }
+
+/* Secuencia numerada: los pasos de un procedimiento, en orden. */
+.secuencia { list-style: none; margin: var(--e-5) 0; padding: 0; counter-reset: sec; max-width: none; }
+.secuencia > li {
+  counter-increment: sec;
+  position: relative;
+  margin: 0 0 var(--e-4);
+  padding-left: var(--e-7);
+  color: var(--texto-2);
+  font-size: var(--t-4);
+}
+.secuencia > li::before {
+  content: counter(sec);
+  position: absolute; left: 0; top: 0.05em;
+  width: 1.6rem; height: 1.6rem;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--borde);
+  background: var(--superficie);
+  font-family: var(--fuente-mono);
+  font-size: var(--t-1);
+  color: var(--acento);
+  letter-spacing: 0;
+}
+.secuencia > li > strong { color: var(--texto); font-weight: var(--peso-medio); }
+
+/* Regla dura: lo que no admite excepción. Oro, que es advertencia. */
+.duro {
+  margin: var(--e-5) 0;
+  padding: var(--e-4) var(--e-5);
+  border-left: 2px solid var(--aviso);
+  border-radius: 0 var(--radio-2) var(--radio-2) 0;
+  background: rgba(227, 179, 65, 0.05);
+}
+.duro > p { margin: 0; color: var(--texto-2); font-size: var(--t-4); }
+.duro > p + p { margin-top: var(--e-2); }
+.duro strong { color: var(--aviso); }
+
+/* Prohibición: lo que directamente no se hace. */
+.veto {
+  margin: var(--e-5) 0;
+  padding: var(--e-4) var(--e-5);
+  border-left: 2px solid var(--negativo);
+  border-radius: 0 var(--radio-2) var(--radio-2) 0;
+  background: rgba(239, 95, 99, 0.05);
+}
+.veto > p { margin: 0; color: var(--texto-2); font-size: var(--t-4); }
+.veto > p + p { margin-top: var(--e-2); }
+.veto strong { color: var(--negativo); }
+
+/* Rejilla de tarjetas: casos, filtros, variantes. */
+.rejilla { display: grid; gap: var(--e-4); margin: var(--e-5) 0; }
+.rejilla.dos { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+.rejilla.tres { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+.tarj {
+  padding: var(--e-5);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-3);
+  background: var(--superficie);
+}
+.tarj > h3, .tarj > h4 { margin: 0 0 var(--e-2); font-size: var(--t-4); color: var(--texto); }
+.tarj > p { margin: 0; color: var(--texto-2); font-size: var(--t-3); }
+.tarj > p + p { margin-top: var(--e-2); }
+.tarj-n {
+  display: inline-block;
+  margin-bottom: var(--e-2);
+  font-family: var(--fuente-mono);
+  font-size: var(--t-1);
+  letter-spacing: var(--track-cifra);
+  color: var(--acento);
+}
+
+/* Cifra suelta dentro del texto: un número que importa. */
+.cifra-en {
+  font-family: var(--fuente-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--texto);
+  letter-spacing: var(--track-cifra);
+}

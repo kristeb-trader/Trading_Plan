@@ -1,0 +1,288 @@
+---
+/**
+ * Modulo 2 — Marcacion de zonas.
+ *
+ * El modulo mas largo del recorrido, y con razon: casi todo el plan se apoya
+ * en que una zona este bien dibujada. Se explica en el orden en que ocurre en
+ * el grafico: primero el movimiento, luego la zona que deja, luego que la
+ * mata y por ultimo como conviven varias.
+ */
+import Modulo from '../componentes/Modulo.astro';
+import * as P from '../lib/parsers.mjs';
+
+const par = P.parametros();
+const v = (n, alt) => par.get(n)?.valor ?? alt;
+
+const SECCIONES = [
+  { id: 'movimiento', t: 'Avanzar y descansar' },
+  { id: 'nace', t: 'De dónde sale la zona' },
+  { id: 'traspaso', t: 'Romper y confirmar' },
+  { id: 'cinco', t: 'Cuando no se confirma' },
+  { id: 'convivencia', t: 'Varias zonas a la vez' },
+  { id: 'caduca', t: 'Cuándo deja de contar' },
+];
+---
+
+<Modulo slug="zonas" secciones={SECCIONES}>
+  <section class="ap" id="movimiento">
+    <h2>Avanzar y descansar <span class="solo-tecnico mono ref-cod">R-10 · R-11</span></h2>
+    <p>
+      El mercado solo hace dos cosas: avanza un tramo y después se para a
+      descansar. Al tramo que avanza se le llama <strong>corrida</strong>. Al
+      descanso, <strong>retroceso</strong>. No hay un tercer estado.
+    </p>
+
+    <figure class="gr">
+      <img src="/conceptos/02-corrida-retroceso.png" alt="Un movimiento real separado en su corrida y su retroceso" loading="eager" />
+      <figcaption class="meta">El mismo movimiento, separado en sus dos partes.</figcaption>
+    </figure>
+
+    <dl class="datos">
+      <dt>Cuándo nace una corrida</dt>
+      <dd>Cuando una vela supera el extremo de la anterior</dd>
+      <dt>Mientras vive</dt>
+      <dd>Cada vela respeta el extremo contrario de la anterior. Si empatan, sigue viva</dd>
+      <dt>Cuándo muere</dt>
+      <dd>En la primera vela que va en contra, aunque sea <span class="cifra-en">1</span> tick</dd>
+      <dt>Cuántas velas dura</dt>
+      <dd>Mínimo dos. Máximo, ninguno</dd>
+      <dt>El color de la vela</dt>
+      <dd>No importa en absoluto</dd>
+    </dl>
+
+    <p>
+      La vela que mata la corrida <strong>ya es la primera del retroceso</strong>.
+      No hay hueco entre una cosa y la otra.
+    </p>
+
+    <div class="duro">
+      <p>
+        <strong>Un retroceso no tiene tamaño mínimo ni máximo de velas.</strong>
+        Puede ser una sola vela. No se descarta un movimiento por parecer
+        demasiado corto o demasiado largo.
+      </p>
+    </div>
+
+    <p>
+      Del retroceso interesa un punto concreto: <strong>su extremo</strong> — el
+      más bajo si el tramo era alcista, el más alto si era bajista. Ahí irá el
+      stop cuando llegue el momento, y ese punto reaparece en casi todas las
+      decisiones que vienen después.
+    </p>
+  </section>
+
+  <section class="ap" id="nace">
+    <h2>De dónde sale la zona <span class="solo-tecnico mono ref-cod">R-12 · R-33</span></h2>
+    <p>
+      Cuando una corrida termina, deja un rastro en el gráfico: una franja de
+      precio que se llama zona. No se dibuja a ojo. Sale siempre de la misma
+      vela y con los mismos límites.
+    </p>
+
+    <figure class="gr">
+      <img src="/conceptos/03-zona.png" alt="La vela extrema de un tramo y la zona que deja, extendida hacia la derecha" loading="eager" />
+      <figcaption class="meta">La zona nace de la vela que hizo el extremo del tramo y se extiende hacia la derecha.</figcaption>
+    </figure>
+
+    <ol class="secuencia">
+      <li><strong>Se busca la vela extrema</strong> del tramo: la del máximo más alto si fue alcista, la del mínimo más bajo si fue bajista. Se busca desde el origen del tramo hasta la vela que disparó el retroceso, esa incluida.</li>
+      <li><strong>Se dibuja del borde del cuerpo a la punta de la mecha</strong> de esa vela. Ese es todo el criterio.</li>
+      <li><strong>Se extiende hacia la derecha</strong>, a lo largo del gráfico.</li>
+    </ol>
+
+    <dl class="datos">
+      <dt>Tramo alcista</dt>
+      <dd>Deja <strong>resistencia</strong> arriba</dd>
+      <dt>Tramo bajista</dt>
+      <dd>Deja <strong>soporte</strong> abajo</dd>
+      <dt>Y su retroceso</dt>
+      <dd>El retroceso de un tramo alcista deja <strong>soporte</strong>; el de uno bajista, resistencia</dd>
+      <dt>Vela sin mecha</dt>
+      <dd>La zona es una línea en el extremo de la vela</dd>
+      <dt>Vela sin cuerpo</dt>
+      <dd>De ese precio a la punta de la mecha</dd>
+    </dl>
+
+    <h3>Cuándo se dibuja cada una</h3>
+    <p>
+      Las dos zonas de un movimiento no nacen a la vez, y confundirlo lleva a
+      operar algo que todavía no existe:
+    </p>
+    <div class="rejilla dos">
+      <div class="tarj">
+        <h3>La zona del tramo</h3>
+        <p>Se dibuja <strong>en cuanto aparece el retroceso</strong>, en vivo. Ya se puede operar.</p>
+      </div>
+      <div class="tarj">
+        <h3>La zona del retroceso</h3>
+        <p>Mientras el retroceso vive es solo una <strong>línea provisional</strong> que se mueve con cada vela. Se convierte en zona cuando el retroceso queda confirmado.</p>
+      </div>
+    </div>
+
+    <div class="veto">
+      <p>
+        <strong>Una línea provisional no opera.</strong> No admite rompimiento,
+        ni confirmación, ni reingreso. Hasta que no es zona, no existe para el
+        método.
+      </p>
+    </div>
+  </section>
+
+  <section class="ap" id="traspaso">
+    <h2>Romper y confirmar <span class="solo-tecnico mono ref-cod">R-13 · R-37 · R-38</span></h2>
+    <p>
+      Superar una zona son dos cosas, no una. Y el mismo mecanismo que mata una
+      zona es el que después dispara la entrada.
+    </p>
+
+    <div class="rejilla dos">
+      <div class="tarj">
+        <span class="tarj-n">1</span>
+        <h3>Rompimiento</h3>
+        <p>El precio pasa el borde de la zona por al menos <strong>un tick</strong>.</p>
+        <p>Basta la mecha. <strong>El cierre da igual.</strong></p>
+      </div>
+      <div class="tarj">
+        <span class="tarj-n">2</span>
+        <h3>Confirmación</h3>
+        <p>Una vela posterior pasa por un tick el <strong>extremo de la vela que rompió</strong>.</p>
+        <p>Recién ahí la zona quedó superada.</p>
+      </div>
+    </div>
+
+    <div class="duro">
+      <p>
+        <strong>Un rompimiento solo, sin confirmación, no invalida nada.</strong>
+        La zona sigue viva y sigue contando para todo.
+      </p>
+      <p>
+        Y la vela que confirma un traspaso no abre a la vez el rompimiento del
+        lado contrario: eso se busca a partir de la siguiente.
+      </p>
+    </div>
+
+    <p>
+      La confirmación puede tardar. Para invalidar una zona
+      <strong>no hay plazo</strong>: el rompimiento queda pendiente
+      indefinidamente y la confirmación lo cierra cuando llegue. El plazo de
+      {v('PLAZO_CONSECUCION', '5 velas')} que viene a continuación gobierna
+      otra cosa: la forma de la zona y la vida de la orden.
+    </p>
+  </section>
+
+  <section class="ap" id="cinco">
+    <h2>Cuando no se confirma <span class="solo-tecnico mono ref-cod">R-15 · R-16 · R-19</span></h2>
+    <p>
+      Si el precio rompe una zona y pasan {v('PLAZO_CONSECUCION', '5 velas')} sin
+      que llegue la confirmación, la zona cambia de forma. Cómo cambia depende
+      de si la vela que rompió lo hizo con la mecha o con el cuerpo.
+    </p>
+
+    <figure class="gr">
+      <img src="/conceptos/10-zona-apendice.png" alt="Rompimiento con cuerpo que no se confirma y la zona apéndice que deja" loading="lazy" />
+      <figcaption class="meta">Rompimiento con cuerpo sin confirmar: la zona original se queda como estaba y nace una segunda sobre la mecha de la vela que rompió.</figcaption>
+    </figure>
+
+    <div class="rejilla dos">
+      <div class="tarj">
+        <h3>Rompió con la mecha</h3>
+        <p>El cierre se quedó dentro de la zona.</p>
+        <p><strong>La zona se estira</strong> hasta la punta de esa mecha. El otro borde no se mueve. Sigue habiendo una sola zona, más grande.</p>
+      </div>
+      <div class="tarj">
+        <h3>Rompió con el cuerpo</h3>
+        <p>El cierre quedó fuera de la zona.</p>
+        <p><strong>Nace una zona apéndice</strong> sobre la mecha de esa vela. La original se queda intacta. Ahora hay dos.</p>
+      </div>
+    </div>
+
+    <div class="duro">
+      <p>
+        <strong>Las {v('PLAZO_CONSECUCION', '5 velas')} son un tope, no una espera obligatoria.</strong>
+        Si antes de que se cumplan aparece una estructura nueva —un retroceso
+        nuevo—, se marca zona en ese momento y no se espera más.
+      </p>
+      <p>Actúa lo que llegue primero.</p>
+    </div>
+  </section>
+
+  <section class="ap" id="convivencia">
+    <h2>Varias zonas a la vez <span class="solo-tecnico mono ref-cod">R-17 · R-18 · R-35 · R-36</span></h2>
+    <p>
+      En una jornada aparecen muchas zonas candidatas. Tres reglas evitan que
+      el gráfico se llene de rectángulos y que se acabe operando ruido.
+    </p>
+
+    <h3>Si se tocan, se funden</h3>
+    <p>
+      Si la zona que se iba a marcar toca una que ya existe —basta que se
+      rocen los bordes— <strong>no se crea una nueva</strong>: se estira la que
+      ya estaba hasta el extremo nuevo. El otro borde no se mueve, y la zona
+      conserva su historial de rompimientos.
+    </p>
+
+    <h3>Entre dos zonas, solo si no cruza la mitad</h3>
+    <p>
+      Cuando hay una zona por arriba y otra por abajo, se calcula el punto
+      medio entre sus bordes internos. Solo se marca zona nueva si el
+      movimiento que la genera <strong>se queda entero de un lado</strong> de
+      esa mitad.
+    </p>
+    <div class="duro">
+      <p>
+        <strong>Lo que se mide es el recorrido del precio, no el rectángulo.</strong>
+        Si el movimiento cruzó la mitad en algún punto, no se marca — aunque la
+        caja de la zona quede entera a un lado.
+      </p>
+    </div>
+
+    <h3>Una sola por franja y por jornada</h3>
+    <p>
+      La franja entre dos zonas admite <strong>una zona en todo el día</strong>,
+      y el turno lo resuelve el primer retroceso que aparezca dentro. Si ese
+      primero respeta la mitad, se marca; si no la respeta, no se marca. En los
+      dos casos <strong>la franja queda cerrada</strong> para el resto de la
+      jornada, y no se reabre aunque las zonas que la formaban se mueran.
+    </p>
+    <p>
+      Cualquier zona viva sirve de borde de la franja, incluidas las que se
+      marcaron de madrugada por volumen.
+    </p>
+
+    <div class="veto">
+      <p>
+        <strong>Salir de una zona es romper y confirmar, no geometría.</strong>
+        Mientras un rompimiento espera su confirmación, no se marca zona al
+        otro lado de esa zona.
+      </p>
+    </div>
+  </section>
+
+  <section class="ap" id="caduca">
+    <h2>Cuándo deja de contar <span class="solo-tecnico mono ref-cod">R-14</span></h2>
+    <p>
+      Una zona muere cuando ha sido superada <strong>en las dos direcciones</strong>:
+      rompimiento y confirmación hacia un lado, y rompimiento y confirmación
+      hacia el otro.
+    </p>
+
+    <dl class="datos">
+      <dt>Superada en un solo sentido</dt>
+      <dd>Sigue viva. Cambia de papel: el soporte pasa a resistencia y al revés</dd>
+      <dt>Superada en los dos</dt>
+      <dd><strong>No cuenta para nada.</strong> Ni bloquea un objetivo, ni sirve para entrar, ni cuenta para medir la mitad entre zonas</dd>
+      <dt>En pantalla</dt>
+      <dd>Se deja dibujada en tono muy tenue, solo como recuerdo</dd>
+    </dl>
+
+    <p>
+      Esa distinción importa más de lo que parece: una zona que sigue viva
+      puede impedir una entrada perfectamente válida, porque se cruza en el
+      camino del objetivo.
+    </p>
+  </section>
+</Modulo>
+
+<style>
+  .ref-cod { margin-left: var(--e-2); font-size: var(--t-1); color: var(--texto-3); }
+</style>

@@ -44,6 +44,7 @@ ORO = "#F5C542"
 ROJO = "#FF5C5C"
 TICK = 0.25       # el tick del NQ, de PARAMETROS.md
 TOPE_STOP = 80.0  # STOP_MAX, de PARAMETROS.md. Si se supera, no se opera
+UMBRAL_VOL_NQ = 2000  # UMBRAL_VOL_NQ, de PARAMETROS.md. Solo en premercado
 VERDE = "#4ADE80"
 
 plt.rcParams["font.family"] = ["DejaVu Sans"]
@@ -51,8 +52,14 @@ plt.rcParams["font.family"] = ["DejaVu Sans"]
 
 def ventana_sesion(V, dia):
     """Índices de la ventana operativa. El ancla es la apertura americana:
-       13:30-15:30 UTC en horario de verano de Nueva York."""
-    idx = [i for i, k in enumerate(V) if k["d"] == dia and 1330 <= int(k["t"][:4]) <= 1530]
+       13:31-15:30 UTC en horario de verano de Nueva York.
+
+       Empieza en 1331, no en 1330: las velas del archivo van marcadas al
+       CIERRE, así que la vela «13:31» es la que cubre el minuto de la
+       apertura. Se ve en el volumen — 641 contratos en la 13:30 y 4.333 en
+       la 13:31 del 13/07 — y es la misma cuenta que hace lector.py, que la
+       llama «la vela base 08:31»."""
+    idx = [i for i, k in enumerate(V) if k["d"] == dia and 1331 <= int(k["t"][:4]) <= 1530]
     return (idx[0], idx[-1] + 1) if idx else (None, None)
 
 
@@ -119,11 +126,16 @@ def dibujar(V, i0, i1, titulo, explicacion, salida,
                 fontsize=14, ha="center", va="top", weight="bold", zorder=7)
 
     if operacion:
-        xe, entrada, stop, objetivo = operacion
+        # El estandar del operador: las franjas van SOLO sobre el tramo de la
+        # operacion, no de lado a lado del grafico. Con la vela de salida se
+        # cortan ahi; sin ella llegan hasta el borde.
+        xe, entrada, stop, objetivo = operacion[:4]
+        xs = operacion[4] if len(operacion) > 4 else None
         x = xe - i0
-        ax.add_patch(Rectangle((x, min(entrada, stop)), n - x + 1,
+        ancho = (xs - i0 - x + 1) if xs is not None else (n - x + 1)
+        ax.add_patch(Rectangle((x, min(entrada, stop)), ancho,
                                abs(stop - entrada), facecolor=ROJO, alpha=0.14, zorder=2))
-        ax.add_patch(Rectangle((x, min(entrada, objetivo)), n - x + 1,
+        ax.add_patch(Rectangle((x, min(entrada, objetivo)), ancho,
                                abs(objetivo - entrada), facecolor=VERDE, alpha=0.14, zorder=2))
 
     for mk in (marcas or []):
@@ -347,6 +359,207 @@ def main():
                         (conf, stop, "Pero el stop llega hasta aquí", ROJO, -0.18 if arriba else 0.18)])
     else:
         print("  aviso: no se encontró un setup fuera del tope de stop")
+
+    # ── 9 · zona de premercado por volumen ──────────────────────────────
+    #
+    # La ventana de premercado empieza a las 19:00 hora Colombia del dia
+    # ANTERIOR, que en UTC es la medianoche del dia en curso. Por eso basta
+    # con filtrar el mismo dia por debajo de la hora de apertura.
+    pre, cand = [], []
+    for dia in [DIA] + DIAS:
+        pre = [i for i, k in enumerate(V) if k["d"] == dia and int(k["t"][:4]) < 1330]
+        cand = [i for i in pre if V[i]["v"] > UMBRAL_VOL_NQ]
+        if cand:
+            break
+    if cand:
+        # La de mas volumen de todas: es la que mejor ensena el concepto.
+        i = max(cand, key=lambda i: V[i]["v"])
+        k = V[i]
+        alcista = k["c"] >= k["o"]
+        lo, hi = (max(k["o"], k["c"]), k["h"]) if alcista else (k["l"], min(k["o"], k["c"]))
+        a, b = max(i - 26, pre[0]), min(i + 34, pre[-1] + 1)
+        dibujar(V, a, b,
+                "De madrugada, el volumen deja zona",
+                "Toda vela por encima de %s contratos deja zona. Alcista deja resistencia, bajista deja soporte."
+                % "{:,}".format(UMBRAL_VOL_NQ).replace(",", "."),
+                os.path.join(SALIDA, "09-zona-volumen.png"),
+                zonas=[dict(vela=i, lo=lo, hi=hi, tipo="R" if alcista else "S")],
+                marcas=[(i, (lo + hi) / 2,
+                         "%s contratos en un minuto" % "{:,}".format(k["v"]).replace(",", "."),
+                         ORO, 0.22 if alcista else -0.22)])
+    else:
+        print("  aviso: ninguna vela de premercado supera el umbral ese dia")
+
+    # ── 10 · zona apéndice ──────────────────────────────────────────────
+    #
+    # Rompimiento CON CUERPO (el cierre queda fuera) que no se confirma en 5
+    # velas: la zona original se queda igual y nace una segunda sobre la
+    # mecha de la vela que rompio.
+    puesto = False
+    for dia in DIAS:
+        j0, j1 = ventana_sesion(V, dia)
+        if j0 is None:
+            continue
+        for z in sorted(motor.estructura(V, j0, j1), key=lambda z: z["vela"]):
+            arriba = z["tipo"] == "R"
+            borde = z["hi"] if arriba else z["lo"]
+            rot = next((i for i in range(z["vela"] + 2, min(z["vela"] + 45, j1))
+                        if (V[i]["h"] > borde if arriba else V[i]["l"] < borde)), None)
+            if rot is None or rot + 10 >= j1:
+                continue
+            # con cuerpo: el CIERRE queda mas alla del borde
+            con_cuerpo = V[rot]["c"] > borde if arriba else V[rot]["c"] < borde
+            if not con_cuerpo:
+                continue
+            # y ninguna de las 5 siguientes pasa de su extremo
+            if any((V[j]["h"] > V[rot]["h"] if arriba else V[j]["l"] < V[rot]["l"])
+                   for j in range(rot + 1, min(rot + 6, j1))):
+                continue
+            kr = V[rot]
+            ap_lo, ap_hi = ((max(kr["o"], kr["c"]), kr["h"]) if arriba
+                            else (kr["l"], min(kr["o"], kr["c"])))
+            a, b = max(z["vela"] - 4, j0), min(rot + 14, j1)
+            dibujar(V, a, b,
+                    "Rompió con el cuerpo y no se confirmó",
+                    "Pasadas cinco velas sin confirmación, la zona original se queda igual y nace una segunda sobre la mecha.",
+                    os.path.join(SALIDA, "10-zona-apendice.png"),
+                    zonas=[z, dict(vela=rot, lo=ap_lo, hi=ap_hi, tipo=z["tipo"])],
+                    marcas=[(z["vela"], (z["lo"] + z["hi"]) / 2, "La zona original", TENUE, -0.22 if arriba else 0.22),
+                            (rot, (ap_lo + ap_hi) / 2, "La zona apéndice", ORO, 0.24 if arriba else -0.24)],
+                    tramos=[(rot + 1, min(rot + 5, j1 - 1), "CINCO VELAS SIN CONFIRMAR", TENUE)])
+            puesto = True
+            break
+        if puesto:
+            break
+    if not puesto:
+        print("  aviso: no se encontró un rompimiento con cuerpo sin confirmar")
+
+    # ── 11 · reingreso ──────────────────────────────────────────────────
+    #
+    # Rompimiento CONFIRMADO que falla: el precio se da la vuelta, atraviesa
+    # la zona entera y sale por el borde contrario.
+    puesto = False
+    for dia in DIAS:
+        j0, j1 = ventana_sesion(V, dia)
+        if j0 is None:
+            continue
+        for z in sorted(motor.estructura(V, j0, j1), key=lambda z: z["vela"]):
+            arriba = z["tipo"] == "R"
+            borde = z["hi"] if arriba else z["lo"]
+            contra = z["lo"] if arriba else z["hi"]
+            rot = next((i for i in range(z["vela"] + 2, min(z["vela"] + 40, j1))
+                        if (V[i]["h"] > borde if arriba else V[i]["l"] < borde)), None)
+            if rot is None:
+                continue
+            conf = next((j for j in range(rot + 1, min(rot + 6, j1))
+                         if (V[j]["h"] > V[rot]["h"] if arriba else V[j]["l"] < V[rot]["l"])), None)
+            if conf is None or conf + 12 >= j1:
+                continue
+            # el precio vuelve y SALE por el borde contrario
+            rein = next((i for i in range(conf + 1, min(conf + 30, j1))
+                         if (V[i]["l"] < contra if arriba else V[i]["h"] > contra)), None)
+            if rein is None or rein + 6 >= j1:
+                continue
+            ent = next((j for j in range(rein + 1, min(rein + 4, j1))
+                        if (V[j]["l"] < V[rein]["l"] if arriba else V[j]["h"] > V[rein]["h"])), None)
+            if ent is None:
+                continue
+            # El plan pide que el rompimiento NO continue. Eso no es un
+            # adjetivo: el stop del reingreso va al extremo de la corrida
+            # fallida, y si esa corrida se fue lejos el stop no cabe en el
+            # tope y el reingreso NO SE OPERA. Ensenar uno asi enganaria.
+            ent_nivel = V[rein]["l"] - TICK if arriba else V[rein]["h"] + TICK
+            fallida = range(rot, rein + 1)
+            stop_re = (max(V[i]["h"] for i in fallida) if arriba
+                       else min(V[i]["l"] for i in fallida))
+            if abs(ent_nivel - stop_re) > TOPE_STOP:
+                continue
+            a, b = max(z["vela"] - 3, j0), min(ent + 14, j1)
+            dibujar(V, a, b,
+                    "El rompimiento falló: se opera la vuelta",
+                    "Se confirmó y no siguió. El precio atraviesa la zona entera, sale por el otro lado y ahí entra.",
+                    os.path.join(SALIDA, "11-reingreso.png"),
+                    zonas=[z],
+                    marcas=[(conf, V[conf]["h"] if arriba else V[conf]["l"],
+                             "Rompió y confirmó", TENUE, 0.20 if arriba else -0.20),
+                            (rein, contra, "Atraviesa la zona entera", ORO, -0.24 if arriba else 0.24),
+                            (ent, V[ent]["l"] if arriba else V[ent]["h"],
+                             "Aquí entra el reingreso", VERDE, -0.36 if arriba else 0.36)])
+            puesto = True
+            break
+        if puesto:
+            break
+    if not puesto:
+        print("  aviso: no se encontró un reingreso completo")
+
+    # ── 12 · la primera vela de la sesión ───────────────────────────────
+    #
+    # Se busca una sesion cuya primera vela tenga cuerpo de verdad: con una
+    # vela plana el concepto («declara la direccion con su propio cuerpo»)
+    # no se ve, y un grafico que no ensena lo que dice sobra.
+    mejor = None
+    for dia in [DIA] + DIAS:
+        j0, j1 = ventana_sesion(V, dia)
+        if j0 is None:
+            continue
+        k = V[j0]
+        cuerpo = abs(k["c"] - k["o"])
+        rango_v = k["h"] - k["l"]
+        if rango_v <= 0:
+            continue
+        # cuerpo que ocupe al menos la mitad de la vela, y vela con tamano
+        proporcion = cuerpo / rango_v
+        if proporcion >= 0.5 and cuerpo >= 4:
+            mejor = (j0, j1, k)
+            break
+    if mejor:
+        j0, j1, k0 = mejor
+        sube = k0["c"] >= k0["o"]
+        dibujar(V, j0 - 2, min(j0 + 16, j1),
+                "La primera vela declara la dirección",
+                "Cierra %s de su apertura, así que el día empieza %s. Y es el origen desde el que se mide el primer tramo."
+                % ("por encima" if sube else "por debajo", "alcista" if sube else "bajista"),
+                os.path.join(SALIDA, "12-vela-0831.png"),
+                marcas=[(j0, k0["c"],
+                         "Cierra %s de su apertura" % ("por encima" if sube else "por debajo"),
+                         VERDE if sube else ROJO, 0.30 if sube else -0.30),
+                        (j0, k0["l"] if sube else k0["h"],
+                         "Y aquí empieza a medirse el primer tramo", ALCISTA,
+                         -0.30 if sube else 0.30)],
+                franja=(j0, j0 + 1, ORO, "PRIMERA VELA"))
+    else:
+        print("  aviso: ninguna primera vela con cuerpo suficiente")
+
+    # ── 13 · la operación de principio a fin ────────────────────────────
+    if dentro:
+        z, rot, conf, entrada, stop, riesgo, j0, j1 = dentro
+        arriba = z["tipo"] == "R"
+        objetivo = entrada + (entrada - stop)
+        # hasta donde llega: primera vela que toca el objetivo o el stop
+        fin = j1 - 1
+        for i in range(conf + 1, j1):
+            toca_obj = V[i]["h"] >= objetivo if arriba else V[i]["l"] <= objetivo
+            toca_stop = V[i]["l"] <= stop if arriba else V[i]["h"] >= stop
+            if toca_obj or toca_stop:
+                fin = i
+                resultado = "objetivo" if toca_obj else "stop"
+                break
+        else:
+            resultado = None
+        a, b = max(conf - 8, j0), min(fin + 4, j1)
+        marcas = [(conf, entrada, "Se llena aquí", ALCISTA, 0.16 if arriba else -0.16)]
+        if resultado:
+            marcas.append((fin, objetivo if resultado == "objetivo" else stop,
+                           "Sale en el " + resultado,
+                           VERDE if resultado == "objetivo" else ROJO,
+                           0.16 if arriba else -0.16))
+        dibujar(V, a, b,
+                "Colocados el stop y el objetivo, no se toca nada",
+                "Solo hay dos salidas. Ni punto de entrada, ni cierre a mano, ni cierre por hora.",
+                os.path.join(SALIDA, "13-dentro.png"),
+                zonas=[z],
+                operacion=(conf, entrada, stop, objetivo, fin),
+                marcas=marcas)
 
     print("\nlistos en public/conceptos/")
     return 0

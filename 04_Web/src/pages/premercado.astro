@@ -1,0 +1,199 @@
+---
+/**
+ * Modulo 1 — Premercado.
+ *
+ * Todo lo que se decide antes de que abra el mercado americano. El orden no
+ * es casual: primero el estado del operador (si falla, el dia se cierra ahi),
+ * despues el calendario, despues la plataforma y solo al final el grafico.
+ *
+ * Las cifras salen de PARAMETROS.md. Ni una escrita a mano.
+ */
+import Modulo from '../componentes/Modulo.astro';
+import * as P from '../lib/parsers.mjs';
+
+const par = P.parametros();
+const v = (n, alt) => par.get(n)?.valor ?? alt;
+
+const SECCIONES = [
+  { id: 'estado', t: 'Cómo estoy hoy' },
+  { id: 'noticias', t: 'El calendario' },
+  { id: 'instrumento', t: 'Los dos gráficos' },
+  { id: 'atm', t: 'La ATM' },
+  { id: 'zonas-vol', t: 'Zonas por volumen' },
+];
+---
+
+<Modulo slug="premercado" secciones={SECCIONES}>
+  <section class="ap" id="estado">
+    <h2>Cómo estoy hoy <span class="solo-tecnico mono ref-cod">R-28</span></h2>
+    <p>
+      La primera pregunta del día no es sobre el mercado. Es sobre uno mismo:
+      ¿estoy bien, física y mentalmente?
+    </p>
+    <div class="veto">
+      <p><strong>Si la respuesta es no, no se opera.</strong> El día se cierra ahí, sin abrir la plataforma.</p>
+      <p>Es la única condición del método que no tiene una medida. No la tiene a propósito: la decide el operador y nadie más la puede comprobar por él.</p>
+    </div>
+    <p>
+      Esta pregunta se contesta <strong>antes de abrir NinjaTrader</strong>. Con
+      el gráfico delante ya no es la misma pregunta.
+    </p>
+  </section>
+
+  <section class="ap" id="noticias">
+    <h2>El calendario <span class="solo-tecnico mono ref-cod">R-21 · R-27</span></h2>
+    <p>
+      Se mira Forex Factory, y solo Forex Factory. Un único calendario evita
+      el problema de dos fuentes que no siempre coinciden.
+    </p>
+
+    <h3>Qué se anota</h3>
+    <ol class="secuencia">
+      <li><strong>¿Hay hoy un evento de la Fed en rojo?</strong> Si lo hay, el día entero cambia de reglas: ver abajo.</li>
+      <li><strong>La hora exacta de cada noticia roja.</strong> Naranja y amarillo no cuentan, no bloquean nada.</li>
+      <li><strong>La ventana de cada una:</strong> cinco minutos antes y cinco después. Once minutos en total.</li>
+      <li><strong>Cuáles caen dentro del horario de operativa.</strong> Las que caen fuera no molestan.</li>
+    </ol>
+
+    <div class="duro">
+      <p><strong>Día con la Fed en rojo:</strong> ese día no se opera el setup de continuación. Solo se permite el Reingreso, con todas sus condiciones normales.</p>
+      <p>El veto dura <strong>el día entero</strong>, no solo la hora del anuncio.</p>
+    </div>
+
+    <p>
+      El nivel «rojo» lo decide el icono de Forex Factory, no el criterio
+      propio. Si está en rojo, cuenta; si no, no.
+    </p>
+  </section>
+
+  <section class="ap" id="instrumento">
+    <h2>Los dos gráficos <span class="solo-tecnico mono ref-cod">R-01 · R-09</span></h2>
+    <p>
+      Se trabaja con dos instrumentos a la vez, y cada uno tiene un papel
+      distinto. No son intercambiables.
+    </p>
+
+    <div class="rejilla dos">
+      <div class="tarj">
+        <span class="tarj-n">NQ</span>
+        <h3>Para mirar</h3>
+        <p>Aquí se marcan las zonas y se lee el volumen. Es el gráfico del análisis.</p>
+      </div>
+      <div class="tarj">
+        <span class="tarj-n">MNQ</span>
+        <h3>Para operar</h3>
+        <p>Aquí se leen los niveles reales de entrada, stop y objetivo, y desde aquí se manda la orden. La ejecución es siempre en MNQ.</p>
+      </div>
+    </div>
+
+    <p>
+      Los dos van a <strong>un minuto</strong>. No hay ningún otro marco
+      temporal en el método: ni cinco minutos para «ver el contexto», ni
+      diario para «ver la tendencia».
+    </p>
+
+    <dl class="datos">
+      <dt>Indicadores en pantalla</dt>
+      <dd><strong>Uno solo: Volume Up Down.</strong> Nada más</dd>
+      <dt>Prohibidos</dt>
+      <dd>Medias, osciladores, VWAP, perfil de volumen</dd>
+      <dt>Qué vale un punto</dt>
+      <dd>MNQ: <span class="cifra-en">$2,00</span> · NQ: <span class="cifra-en">$20,00</span></dd>
+      <dt>Qué vale un tick</dt>
+      <dd><span class="cifra-en">0,25</span> puntos · MNQ: <span class="cifra-en">$0,50</span></dd>
+      <dt>Diferencia entre los dos</dt>
+      <dd>Hasta <span class="cifra-en">3</span> ticks. Por eso los niveles se leen en MNQ y no se copian de NQ</dd>
+    </dl>
+  </section>
+
+  <section class="ap" id="atm">
+    <h2>La ATM <span class="solo-tecnico mono ref-cod">R-08</span></h2>
+    <p>
+      La estrategia ATM de NinjaTrader se deja configurada antes de empezar y
+      no se toca durante la sesión.
+    </p>
+
+    <dl class="datos">
+      <dt>Cuál</dt>
+      <dd><strong>K1</strong></dd>
+      <dt>Contratos</dt>
+      <dd><strong>{v('CONTRATOS', '1')} MNQ</strong></dd>
+      <dt>Auto Breakeven</dt>
+      <dd><strong>Apagado</strong></dd>
+      <dt>Auto Trail</dt>
+      <dd><strong>Apagado</strong></dd>
+      <dt>Stop y objetivo por defecto</dt>
+      <dd><strong>{v('ATM_DEFECTO', '320 ticks')}</strong> = 80 puntos = $160</dd>
+    </dl>
+
+    <p>
+      Ese valor por defecto no es el stop de la operación: es lo que protege
+      la posición <strong>entre el llenado y el ajuste a mano</strong>, que son
+      unos segundos. El stop de verdad se coloca después, y sale de la
+      estructura del mercado.
+    </p>
+
+    <div class="duro">
+      <p>
+        <strong>El valor por defecto es igual al tope de stop a propósito.</strong>
+        Si fuera más ajustado, el mercado podría sacar de una operación
+        todavía viva antes de haber movido el stop a su sitio.
+      </p>
+      <p>Si algún día cambia el tope, hay que cambiar la ATM con él.</p>
+    </div>
+  </section>
+
+  <section class="ap" id="zonas-vol">
+    <h2>Zonas por volumen <span class="solo-tecnico mono ref-cod">R-20</span></h2>
+    <p>
+      Antes de la apertura hay una forma de marcar zonas que no existe durante
+      la sesión: por volumen. Es la única manera de que nazca una zona sin que
+      haya habido un tramo y su descanso.
+    </p>
+
+    <figure class="gr">
+      <img src="/conceptos/09-zona-volumen.png" alt="Vela de premercado con volumen por encima del umbral y la zona que deja" loading="eager" />
+      <figcaption class="meta">Una vela de premercado por encima del umbral y la zona que deja. La zona se comporta después como cualquier otra.</figcaption>
+    </figure>
+
+    <ol class="secuencia">
+      <li><strong>Se escanea desde las 19:00 hora Colombia</strong> del día anterior, que es la apertura de Tokio, hasta la apertura americana.</li>
+      <li><strong>Toda vela que supere el umbral de volumen deja zona.</strong> Todas, no solo las más altas o las más bajas del grupo.</li>
+      <li><strong>El color de la vela decide el tipo:</strong> vela alcista deja resistencia sobre su mecha superior; vela bajista deja soporte sobre su mecha inferior.</li>
+      <li><strong>Los límites son los de siempre:</strong> del borde del cuerpo a la punta de la mecha.</li>
+    </ol>
+
+    <dl class="datos">
+      <dt>Umbral en NQ</dt>
+      <dd><strong>{v('UMBRAL_VOL_NQ', '> 2.000 contratos')}</strong> en una vela de un minuto</dd>
+      <dt>Umbral en MNQ</dt>
+      <dd><strong>{v('UMBRAL_VOL_MNQ', '> 6.000 contratos')}</strong></dd>
+      <dt>Desde cuándo</dt>
+      <dd>{v('PREMERCADO_INICIO', '19:00 hora Colombia')}</dd>
+      <dt>Hasta cuándo</dt>
+      <dd>La apertura del mercado americano</dd>
+    </dl>
+
+    <div class="duro">
+      <p>
+        <strong>En la apertura, la regla del volumen se apaga.</strong> A partir
+        de ahí las zonas solo nacen de la estructura, por alto que sea el
+        volumen de una vela.
+      </p>
+      <p>
+        No es un corte arbitrario: dos mil contratos en un minuto es raro de
+        madrugada y completamente normal en sesión.
+      </p>
+    </div>
+
+    <p>
+      Estas zonas se comportan luego <strong>igual que cualquier otra</strong>:
+      se rompen igual, se estiran igual, caducan igual y sirven de borde para
+      medir las que vengan después.
+    </p>
+  </section>
+</Modulo>
+
+<style>
+  .ref-cod { margin-left: var(--e-2); font-size: var(--t-1); color: var(--texto-3); }
+</style>
