@@ -1,102 +1,151 @@
 /**
- * BASE — reset corto y estilos de documento.
+ * BASE — reset corto, documento y piezas reutilizables.
  * Ni un valor literal: todo sale de tokens.css.
  */
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
   margin: 0;
+  min-height: 100dvh;
   background: var(--fondo);
+  background-image: var(--halo);
+  background-attachment: fixed;
   color: var(--texto);
   font-family: var(--fuente);
   font-size: var(--t-4);
   line-height: var(--alto-linea);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
+/* ── titulos ───────────────────────────────────────────────────────────── */
 h1, h2, h3, h4 {
   line-height: var(--alto-corto);
+  letter-spacing: var(--track-titulo);
   font-weight: var(--peso-fuerte);
   margin: var(--e-6) 0 var(--e-3);
   text-wrap: balance;
 }
-h1 { font-size: var(--t-7); margin-top: 0; }
+h1 { font-size: var(--t-7); margin-top: 0; font-weight: var(--peso-max); }
 h2 { font-size: var(--t-6); }
 h3 { font-size: var(--t-5); }
 h4 { font-size: var(--t-4); color: var(--texto-2); }
 
 p, ul, ol { margin: 0 0 var(--e-4); }
 ul, ol { padding-left: var(--e-5); }
-li { margin-bottom: var(--e-1); }
+li { margin-bottom: var(--e-2); }
+li::marker { color: var(--texto-3); }
 
+/* ── enlaces ───────────────────────────────────────────────────────────── */
 a {
   color: var(--azul);
-  text-decoration-color: color-mix(in srgb, var(--azul) 40%, transparent);
-  text-underline-offset: 0.2em;
-  transition: color var(--transicion);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--azul) 30%, transparent);
+  transition: color var(--transicion), border-color var(--transicion);
 }
-a:hover { color: var(--texto); text-decoration-color: currentColor; }
+a:hover { color: var(--texto); border-bottom-color: var(--texto); }
 
-/* Foco visible en todo lo tabulable. No se quita nunca. */
 :focus-visible {
   outline: 2px solid var(--azul);
-  outline-offset: 2px;
-  border-radius: var(--radio-chico);
+  outline-offset: 3px;
+  border-radius: var(--radio-1);
 }
 
 strong, b { font-weight: var(--peso-fuerte); }
 
-code, kbd, samp {
-  font-family: var(--fuente-mono);
-  font-size: 0.9em;
-}
+code, kbd, samp { font-family: var(--fuente-mono); font-size: 0.875em; }
 
 blockquote {
   margin: var(--e-4) 0;
   padding: var(--e-3) var(--e-4);
   border-left: 2px solid var(--linea);
-  background: var(--fondo-sutil);
+  border-radius: 0 var(--radio-1) var(--radio-1) 0;
+  background: var(--sup-1);
   color: var(--texto-2);
 }
 blockquote > :last-child { margin-bottom: 0; }
 
-hr {
-  border: 0;
-  border-top: var(--borde);
-  margin: var(--e-6) 0;
-}
+hr { border: 0; border-top: 1px solid var(--hilo); margin: var(--e-6) 0; }
 
-/* ---- tablas: hacen scroll dentro de su contenedor, nunca la pagina ---- */
-.tabla-scroll { overflow-x: auto; margin: var(--e-4) 0; }
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: var(--t-3);
+/* ── tablas: scroll dentro del contenedor, nunca la pagina ─────────────── */
+.tabla-scroll {
+  overflow-x: auto;
+  margin: var(--e-4) 0;
+  border: 1px solid var(--hilo);
+  border-radius: var(--radio-2);
 }
-th, td {
-  text-align: left;
-  padding: var(--e-2) var(--e-3);
-  border-bottom: var(--borde);
-  vertical-align: top;
-}
+table { border-collapse: collapse; width: 100%; font-size: var(--t-3); }
+th, td { text-align: left; padding: var(--e-3); border-bottom: 1px solid var(--hilo); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
 th {
-  color: var(--texto-2);
-  font-weight: var(--peso-medio);
-  font-size: var(--t-2);
-  letter-spacing: 0.02em;
+  position: sticky; top: 0;
+  background: var(--sup-2);
+  color: var(--texto-3);
+  font-weight: var(--peso-fuerte);
+  font-size: var(--t-1);
+  letter-spacing: var(--track-etiqueta);
   text-transform: uppercase;
   white-space: nowrap;
 }
-/* Toda columna numerica con digitos que no bailan. */
-td.num, .num { font-variant-numeric: tabular-nums; }
+.num, td.num { font-variant-numeric: tabular-nums; }
 
 img { max-width: 100%; height: auto; display: block; }
 
-/* ---- utilidades minimas ---- */
+/* ── piezas reutilizables ──────────────────────────────────────────────── */
+
+/* Tarjeta. El brillo de arriba es lo que da volumen; sin el se ve plana. */
+.tarjeta {
+  background-color: var(--sup-2);
+  background-image: var(--brillo-tarjeta);
+  border: 1px solid var(--hilo);
+  border-radius: var(--radio-3);
+  box-shadow: var(--sombra);
+  padding: var(--e-5);
+}
+
+/* Etiqueta de tarjeta: mayusculas, pequena, muy espaciada. */
+.etiqueta {
+  font-size: var(--t-1);
+  font-weight: var(--peso-fuerte);
+  letter-spacing: var(--track-etiqueta);
+  text-transform: uppercase;
+  color: var(--texto-3);
+}
+
+/* Pastilla de estado. Nunca comunica solo con color: lleva punto y texto. */
+.pastilla {
+  display: inline-flex; align-items: center; gap: var(--e-2);
+  padding: var(--e-1) var(--e-3);
+  border-radius: var(--radio-pill);
+  font-size: var(--t-2);
+  font-weight: var(--peso-medio);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.pastilla::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; flex: none;
+}
+.pastilla.aviso {
+  color: var(--oro);
+  background: color-mix(in srgb, var(--oro) 10%, transparent);
+  border-color: color-mix(in srgb, var(--oro) 26%, transparent);
+}
+.pastilla.ok {
+  color: var(--verde);
+  background: color-mix(in srgb, var(--verde) 10%, transparent);
+  border-color: color-mix(in srgb, var(--verde) 26%, transparent);
+}
+.pastilla.dato {
+  color: var(--cian);
+  background: color-mix(in srgb, var(--cian) 10%, transparent);
+  border-color: color-mix(in srgb, var(--cian) 26%, transparent);
+}
+
 .apunte { color: var(--texto-2); font-size: var(--t-3); }
 .meta   { color: var(--texto-3); font-size: var(--t-2); }
 .mono   { font-family: var(--fuente-mono); }

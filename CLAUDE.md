@@ -104,7 +104,19 @@ Viene de las gráficas de backtesting que él validó una por una.
 
 **La regla:** si escribes un color, un radio, una sombra, un espaciado o un tamaño de fuente que **no sale de un token**, estás creando un segundo lenguaje visual. Se añade el token; no se pone el valor suelto. Excepción legítima: un valor que de verdad solo tiene sentido en un sitio, con un comentario que diga por qué.
 
-**Prohibido por el estándar:** degradados, sombras de tarjeta, cuadrícula y emojis decorativos. La jerarquía se hace con **peso tipográfico y espacio**, no con cajas. Los emojis del texto fuente sí se respetan: son del documento.
+**Dónde se aplica cada regla — corregido el 01/09/2026:**
+
+| | Dentro de una gráfica | En el marco del portal |
+|---|---|---|
+| Degradados y sombras | **prohibidos** — manda el estándar de arriba | **permitidos, muy sutiles**: es lo que da volumen y aspecto moderno |
+| Cuadrícula | **prohibida** | no aplica |
+| Emojis decorativos | prohibidos | prohibidos *(los del texto fuente sí se respetan: son del documento)* |
+
+El operador pidió explícitamente una estética moderna para el portal. El estándar de gráficas **no cambia**: nace de las gráficas de backtesting que validó una por una y se respeta al pie de la letra allí donde se dibuje una.
+
+**Escritorio primero.** El portal se usa en computador: barra lateral fija con las secciones agrupadas. Por debajo de 900 px pasa a barra superior. Funciona en móvil, pero el móvil no manda las decisiones.
+
+**El rojo no es para avisar.** Queda reservado a un dato negativo real (el resultado del backtesting). El aviso de *«plan no probado»* va en **oro**, que es advertencia, no error.
 
 **Además:** columnas numéricas siempre con `tabular-nums`; las tablas anchas hacen scroll dentro de su contenedor y la página nunca en horizontal; el color nunca comunica solo —siempre acompañado de texto, forma o icono—; y foco visible en todo lo que se pueda tabular.
 

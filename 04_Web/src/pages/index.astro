@@ -2,9 +2,9 @@
 /**
  * Portada.
  *
- * Ningun numero de esta pagina esta escrito a mano: todos se cuentan de
- * 01_Plan/ en cada compilacion. Y las cifras del backtesting no aparecen
- * nunca sin sus cuatro motivos al lado.
+ * Ningun numero esta escrito a mano: todos se cuentan de 01_Plan/ en cada
+ * compilacion. Y las cifras del backtesting no aparecen nunca sin sus cuatro
+ * motivos en el mismo bloque.
  */
 import Marco from '../componentes/Marco.astro';
 import * as P from '../lib/parsers.mjs';
@@ -17,140 +17,172 @@ const glosario = P.glosario();
 const galeria = P.galeria();
 const abiertos = P.pendientesAbiertos();
 const desviaciones = P.desviaciones();
-const ctx = P.contextualizacion();
 const params = P.parametros();
 const bt = P.backtesting();
 
 const cifras = [
-  { n: reglas.length, etiqueta: 'reglas medibles', nota: cats.length + ' categorías' },
+  { n: reglas.length, etiqueta: 'reglas medibles', nota: `en ${cats.length} categorías` },
   { n: subfases.length, etiqueta: 'sub-fases', nota: 'el plan completo' },
   { n: glosario.length, etiqueta: 'términos', nota: 'con definición medible' },
-  { n: galeria.length, etiqueta: 'casos reales', nota: galeria.filter((c) => c.imagen).length + ' con gráfica' },
+  { n: galeria.length, etiqueta: 'casos reales', nota: `${galeria.filter((c) => c.imagen).length} con gráfica` },
   { n: params.size, etiqueta: 'parámetros', nota: 'en un solo sitio' },
-  { n: abiertos.length, etiqueta: 'puntos abiertos', nota: desviaciones.length + ' desviaciones' },
+  { n: abiertos.length, etiqueta: 'puntos abiertos', nota: `${desviaciones.length} desviaciones` },
+];
+
+const MOTIVOS = [
+  ['Muestra insuficiente', `${bt.operaciones} operaciones no dicen nada estadísticamente.`],
+  ['Reglas en movimiento', 'Los primeros días se leyeron con reglas que después resultaron incorrectas.'],
+  ['Sin filtro de noticias', 'Ninguna operación se descartó por noticia roja.'],
+  ['Sin capa de contexto', 'Es la que quita varios de esos días, y todavía no existe.'],
 ];
 ---
 
-<Marco titulo="Portada">
-  <h1>El plan está escrito. No está probado.</h1>
-
-  <p class="entrada">
-    La metodología de trading de Alfredo Chaumer para NQ y MNQ, traducida a {reglas.length} reglas
-    medibles durante la fase 1 y contrastada contra sesiones reales al tick. Esta
-    página no añade metodología: renderiza los documentos del plan tal como están
-    escritos.
-  </p>
+<Marco titulo="Portada" ancho="total">
+  <header class="hero">
+    <span class="pastilla aviso">no probado</span>
+    <h1>El plan está escrito.<br />No está probado.</h1>
+    <p class="lead">
+      La metodología de <strong>Alfredo Chaumer</strong> para NQ y MNQ, traducida
+      a {reglas.length} reglas medibles y contrastada contra 11 sesiones reales
+      al tick. Esta página no añade metodología: renderiza los documentos del
+      plan tal como están escritos.
+    </p>
+  </header>
 
   <section class="cifras" aria-label="El plan en números">
     {cifras.map((c) => (
-      <div class="cifra">
-        <span class="cifra-n num">{c.n}</span>
-        <span class="cifra-e">{c.etiqueta}</span>
-        <span class="cifra-nota meta">{c.nota}</span>
-      </div>
+      <article class="tarjeta kpi">
+        <span class="kpi-n num">{c.n}</span>
+        <span class="kpi-e">{c.etiqueta}</span>
+        <span class="kpi-nota meta">{c.nota}</span>
+      </article>
     ))}
   </section>
 
-  <h2 id="huecos">Los cuatro huecos declarados</h2>
-  <p class="apunte">
-    Ninguno es un olvido. La fase 1 se cerró <strong>sabiendo</strong> que estos
-    cuatro puntos quedaban abiertos, y el portal no puede presentarse como si
-    estuvieran resueltos.
-  </p>
-
-  <ol class="huecos">
-    {bt.huecos.map((h) => (
-      <li class="hueco">
-        <h3 class="hueco-t" set:html={P.tituloAHtml(P.sinNumeracion(h.titulo))} />
-      </li>
-    ))}
-  </ol>
-
-  <h2>Lo que dio el backtesting</h2>
-
-  <div class="bt">
-    <div class="bt-cifra">
-      <span class="bt-n num">{bt.total}</span>
-      <span class="meta">en {bt.operaciones} operaciones · 11 sesiones reconstruidas</span>
+  <section class="bloque">
+    <div class="bloque-cab">
+      <h2>Los cuatro huecos declarados</h2>
+      <p class="apunte">
+        Ninguno es un olvido. La fase 1 se cerró <strong>sabiendo</strong> que
+        estos cuatro puntos quedaban abiertos.
+      </p>
     </div>
-    <div class="bt-aviso">
-      <p class="bt-titular">Esta cifra NO mide la estrategia.</p>
-      <ul class="bt-motivos">
-        <li>{bt.operaciones} operaciones no dicen nada estadísticamente.</li>
-        <li>Las reglas cambiaron durante la propia revisión: los primeros días
-          se leyeron con reglas que después resultaron incorrectas.</li>
-        <li>No hubo filtro de noticias rojas. Ninguna operación se descartó por noticia.</li>
-        <li>Falta la capa de contextualización, que es la que quita varios de esos días.</li>
+
+    <ol class="huecos">
+      {bt.huecos.map((h, i) => (
+        <li class="tarjeta hueco">
+          <span class="hueco-n num">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="hueco-t" set:html={P.tituloAHtml(P.sinNumeracion(h.titulo))} />
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="bloque">
+    <div class="bloque-cab">
+      <h2>Lo que dio el backtesting</h2>
+      <p class="apunte">
+        La cifra y los motivos por los que no vale, siempre juntos.
+      </p>
+    </div>
+
+    <div class="tarjeta bt">
+      <div class="bt-cifra">
+        <span class="etiqueta">resultado acumulado</span>
+        <span class="bt-n num">{bt.total}</span>
+        <span class="meta">{bt.operaciones} operaciones · 11 sesiones reconstruidas al tick</span>
+        <p class="bt-titular">Esta cifra no mide la estrategia.</p>
+      </div>
+      <ul class="motivos">
+        {MOTIVOS.map(([t, d]) => (
+          <li class="motivo">
+            <span class="motivo-t">{t}</span>
+            <span class="motivo-d">{d}</span>
+          </li>
+        ))}
       </ul>
     </div>
-  </div>
+  </section>
 
-  <p class="meta cierre-nota">
+  <p class="meta pie-nota">
     Plan versión {v.version}, actualizado el {v.fecha}. Los contadores se leen de
     los archivos en cada compilación: si mañana hay una regla más, aquí sale una más.
   </p>
 </Marco>
 
 <style>
-  .entrada { font-size: var(--t-5); color: var(--texto-2); max-width: 40rem; }
+  /* ── hero ────────────────────────────────────────────────────────────── */
+  .hero { max-width: 42rem; margin-bottom: var(--e-7); }
+  .hero h1 { margin: var(--e-4) 0 var(--e-4); font-size: var(--t-8); letter-spacing: var(--track-cifra); }
+  .lead { font-size: var(--t-5); color: var(--texto-2); margin: 0; }
 
-  /* ---- cifras: grid, no flex, para que las columnas no se desalineen ---- */
+  /* ── cifras ──────────────────────────────────────────────────────────── */
   .cifras {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-    gap: var(--e-4);
-    margin: var(--e-6) 0;
-    padding: var(--e-5) 0;
-    border-top: var(--borde);
-    border-bottom: var(--borde);
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: var(--e-3);
+    margin-bottom: var(--e-8);
   }
-  .cifra { display: flex; flex-direction: column; gap: var(--e-1); }
-  .cifra-n {
-    font-size: var(--t-7); font-weight: var(--peso-fuerte);
-    line-height: 1; font-variant-numeric: tabular-nums;
+  .kpi { display: flex; flex-direction: column; gap: var(--e-1); padding: var(--e-4) var(--e-5); }
+  .kpi-n {
+    font-size: var(--t-8); font-weight: var(--peso-max);
+    line-height: 1; letter-spacing: var(--track-cifra);
   }
-  .cifra-e { font-size: var(--t-3); color: var(--texto-2); }
-  .cifra-nota { font-size: var(--t-1); }
+  .kpi-e { font-size: var(--t-3); color: var(--texto-2); margin-top: var(--e-2); }
+  .kpi-nota { font-size: var(--t-1); }
 
-  /* ---- huecos ---- */
-  .huecos { list-style: none; padding: 0; margin: var(--e-4) 0 var(--e-6); counter-reset: h; }
-  .hueco {
-    counter-increment: h;
-    display: flex; gap: var(--e-3); align-items: baseline;
-    padding: var(--e-3) 0;
-    border-bottom: var(--borde);
+  /* ── bloques ─────────────────────────────────────────────────────────── */
+  .bloque { margin-bottom: var(--e-8); }
+  .bloque-cab { margin-bottom: var(--e-5); max-width: 40rem; }
+  .bloque-cab h2 { margin-top: 0; }
+  .bloque-cab p { margin: 0; }
+
+  /* ── huecos ──────────────────────────────────────────────────────────── */
+  .huecos {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--e-3);
   }
-  .hueco::before {
-    content: counter(h);
+  .hueco { display: flex; gap: var(--e-4); align-items: flex-start; padding: var(--e-4) var(--e-5); }
+  .hueco-n {
     font-family: var(--fuente-mono); font-size: var(--t-2);
-    color: var(--rojo); min-width: 1.25rem;
+    color: var(--oro); padding-top: 0.15em; flex: none;
   }
-  .hueco-t { margin: 0; font-size: var(--t-4); font-weight: var(--peso-medio); }
-  /* Los codigos de regla son referencias, no titulo: se apagan y se enlazaran. */
-  .hueco-t :global(code) { color: var(--cian); font-size: var(--t-2); }
+  .hueco-t { margin: 0; font-size: var(--t-4); font-weight: var(--peso-medio); line-height: 1.4; }
+  .hueco-t :global(code) { color: var(--texto-3); font-size: var(--t-2); }
 
-  /* ---- backtesting: la cifra y sus motivos, siempre en el mismo bloque ---- */
+  /* ── backtesting ─────────────────────────────────────────────────────── */
   .bt {
-    display: grid; grid-template-columns: minmax(11rem, auto) 1fr;
-    gap: var(--e-5);
-    margin: var(--e-4) 0 var(--e-6);
-    padding: var(--e-4);
-    border: 1px solid color-mix(in srgb, var(--rojo) 30%, transparent);
-    border-radius: var(--radio);
-    background: var(--fondo-sutil);
+    display: grid; grid-template-columns: minmax(14rem, 20rem) 1fr;
+    gap: var(--e-6);
+    padding: var(--e-5) var(--e-6);
   }
   .bt-cifra { display: flex; flex-direction: column; gap: var(--e-1); }
   .bt-n {
-    font-size: var(--t-7); font-weight: var(--peso-fuerte);
-    color: var(--rojo); line-height: 1; font-variant-numeric: tabular-nums;
+    font-size: var(--t-8); font-weight: var(--peso-max);
+    color: var(--rojo); line-height: 1;
+    letter-spacing: var(--track-cifra); margin: var(--e-2) 0 var(--e-1);
   }
-  .bt-titular { color: var(--rojo); font-weight: var(--peso-fuerte); margin: 0 0 var(--e-2); }
-  .bt-motivos { margin: 0; padding-left: var(--e-4); font-size: var(--t-3); color: var(--texto-2); }
-  .bt-motivos li { margin-bottom: var(--e-2); }
+  .bt-titular {
+    margin: var(--e-4) 0 0; font-size: var(--t-3);
+    font-weight: var(--peso-fuerte); color: var(--oro);
+  }
 
-  .cierre-nota { margin-top: var(--e-7); }
+  .motivos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-3); }
+  .motivo {
+    margin: 0; padding-left: var(--e-4);
+    border-left: 2px solid var(--hilo-fuerte);
+  }
+  .motivo-t {
+    display: block; font-size: var(--t-3);
+    font-weight: var(--peso-fuerte); color: var(--texto);
+  }
+  .motivo-d { display: block; font-size: var(--t-3); color: var(--texto-2); }
 
-  @media (max-width: 600px) {
-    .bt { grid-template-columns: 1fr; }
+  .pie-nota { margin-top: var(--e-7); }
+
+  @media (max-width: 800px) {
+    .hero h1 { font-size: var(--t-7); }
+    .bt { grid-template-columns: 1fr; gap: var(--e-5); padding: var(--e-5); }
   }
 </style>
