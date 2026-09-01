@@ -1,4 +1,29 @@
-﻿04_Web/
-99_Archivo/
-*.tmp
+# --- material de terceros y archivos grandes: NUNCA al repositorio ---
+# PDFs de Chaumer y ~1,4 GB de video de sus sesiones.
+# Aparte del tema de derechos, GitHub rechaza archivos de más de 100 MB.
+00_Guias/
 
+# --- trabajo interno ---
+99_Archivo/
+03_Materia_Prima/transcripciones/
+
+# --- datos de mercado exportados de NinjaTrader ---
+05_Backtesting/datos/
+
+# --- módulo web (fase 2) ---
+04_Web/node_modules/
+04_Web/dist/
+04_Web/.astro/
+04_Web/src/content/
+04_Web/public/assets/
+
+# --- general ---
+node_modules/
+dist/
+.env
+.env.*
+*.tmp
+desktop.ini
+Thumbs.db
+__pycache__/
+*.pyc
