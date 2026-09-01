@@ -28,7 +28,7 @@ const GRUPOS = [
     grupo: 'El plan',
     items: [
       { icono: 'house', href: '/', texto: 'Inicio', lista: true },
-      { icono: 'compass', href: '/plan', texto: 'Recorrido', lista: false },
+      { icono: 'compass', href: '/plan', texto: 'Recorrido', lista: true },
       { icono: 'list-checks', href: '/reglas', texto: 'Reglas', lista: true, cuenta: P.reglas().length },
       { icono: 'sliders-horizontal', href: '/parametros', texto: 'Parámetros', lista: true, cuenta: P.parametros().size },
       { icono: 'book-open', href: '/glosario', texto: 'Glosario', lista: true, cuenta: P.glosario().length },
@@ -37,16 +37,16 @@ const GRUPOS = [
   {
     grupo: 'Cómo se aplica',
     items: [
-      { icono: 'check-square', href: '/checklist', texto: 'Checklist', lista: false },
+      { icono: 'check-square', href: '/checklist', texto: 'Checklist', lista: true },
       { icono: 'images', href: '/galeria', texto: 'Casos reales', lista: true, cuenta: P.galeria().length },
     ],
   },
   {
     grupo: 'Lo que sigue abierto',
     items: [
-      { icono: 'warning-diamond', href: '/pendientes', texto: 'Pendientes', lista: false, cuenta: P.pendientesAbiertos().length },
-      { icono: 'chart-line', href: '/contextualizacion', texto: 'Contexto', lista: false },
-      { icono: 'seal-check', href: '/cierre', texto: 'Cierre de la fase 1', lista: false },
+      { icono: 'warning-diamond', href: '/pendientes', texto: 'Pendientes', lista: true, cuenta: P.pendientesAbiertos().length },
+      { icono: 'chart-line', href: '/contextualizacion', texto: 'Contexto', lista: true },
+      { icono: 'seal-check', href: '/cierre', texto: 'Cierre de la fase 1', lista: true },
     ],
   },
   {

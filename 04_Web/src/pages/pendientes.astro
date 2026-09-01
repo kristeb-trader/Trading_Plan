@@ -1,0 +1,186 @@
+---
+/**
+ * Lo que sigue abierto.
+ *
+ * Tres cosas distintas que no hay que confundir:
+ *   - los CUATRO HUECOS DECLARADOS, que son por lo que el plan no esta probado
+ *   - los PENDIENTES ABIERTOS, preguntas que el plan aun no responde
+ *   - las DESVIACIONES, decisiones conscientes de apartarse del material
+ *     del curso. No son dudas: estan tomadas.
+ */
+import Marco from '../componentes/Marco.astro';
+import Icono from '../componentes/Icono.astro';
+import * as P from '../lib/parsers.mjs';
+
+const todos = P.pendientes();
+const abiertos = todos.filter((p) => p.abierto);
+const desviaciones = P.desviaciones();
+const cerrados = todos.filter((p) => p.estado === 'cerrado' && p.vigente);
+const bt = P.backtesting();
+
+const conCuerpo = (p) => ({ ...p, html: P.markdownRico(p.cuerpo) });
+---
+
+<Marco titulo="Pendientes">
+  <header class="cab entra">
+    <h1>Lo que sigue abierto</h1>
+    <p class="lead">
+      El plan está escrito y contrastado. No está probado, y estas son las
+      razones. Ninguna es un olvido: la fase 1 se cerró sabiéndolas.
+    </p>
+  </header>
+
+  <!-- Los cuatro huecos van primero: son la razon de que el plan no este
+       probado, y condicionan como se lee todo lo demas. -->
+  <section class="huecos-s entra">
+    <h2>Los cuatro huecos declarados</h2>
+    <ol class="huecos">
+      {bt.huecos.map((h) => (
+        <li class="hueco">
+          <h3 class="hueco-t" set:html={P.tituloAHtml(P.sinNumeracion(h.titulo))} />
+          <div class="md hueco-x" set:html={P.markdownRico(h.cuerpo)} />
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <div class="resumen entra">
+    <a class="r-c" href="#abiertos">
+      <span class="r-n num">{abiertos.length}</span>
+      <span class="r-t">sin cerrar</span>
+      <span class="r-x">Preguntas que el plan todavía no responde</span>
+    </a>
+    <a class="r-c" href="#desviaciones">
+      <span class="r-n num">{desviaciones.length}</span>
+      <span class="r-t">desviaciones</span>
+      <span class="r-x">Decisiones tomadas de apartarse del material del curso</span>
+    </a>
+    <a class="r-c" href="#cerrados">
+      <span class="r-n num">{cerrados.length}</span>
+      <span class="r-t">cerrados</span>
+      <span class="r-x">Resueltos durante la construcción del plan</span>
+    </a>
+  </div>
+
+  <section class="grupo" id="abiertos">
+    <h2 class="entra">Sin cerrar</h2>
+    <div class="lista">
+      {abiertos.map(conCuerpo).map((p, i) => (
+        <article class:list={['item', 'entra', { esHueco: p.hueco }]} id={p.id}
+                 style={`--retraso:${Math.min(i, 6) * 30}ms`}
+                 data-obs-tipo="pendiente" data-obs-id={p.id} data-obs-titulo={p.titulo.slice(0, 120)}>
+          <header class="i-cab">
+            <span class="i-id mono">{p.id}</span>
+            {p.hueco && <span class="marca-estado aviso">hueco declarado</span>}
+          </header>
+          <h3 class="i-t" set:html={P.tituloAHtml(p.titulo.replace(/^[PD]-\d{1,2}\s*[·-]?\s*/, ''))} />
+          <div class="md" set:html={p.html} />
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="grupo" id="desviaciones">
+    <h2 class="entra">Desviaciones conscientes</h2>
+    <p class="apunte entra">
+      No son dudas. Son decisiones ya tomadas de apartarse de lo que decía el
+      material del curso, cada una con su motivo.
+    </p>
+    <div class="lista">
+      {desviaciones.map(conCuerpo).map((p, i) => (
+        <article class="item desviacion entra" id={p.id} style={`--retraso:${Math.min(i, 6) * 25}ms`}
+                 data-obs-tipo="pendiente" data-obs-id={p.id} data-obs-titulo={p.titulo.slice(0, 120)}>
+          <header class="i-cab"><span class="i-id mono">{p.id}</span></header>
+          <h3 class="i-t" set:html={P.tituloAHtml(p.titulo.replace(/^[PD]-\d{1,2}\s*[·-]?\s*/, ''))} />
+          <div class="md" set:html={p.html} />
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="grupo" id="cerrados">
+    <h2 class="entra">Cerrados</h2>
+    <p class="apunte entra">
+      Se resolvieron durante la construcción. Se conservan porque explican por
+      qué el plan dice lo que dice.
+    </p>
+    <details class="plegable entra">
+      <summary>Ver los {cerrados.length} cerrados</summary>
+      <div class="lista">
+        {cerrados.map(conCuerpo).map((p) => (
+          <article class="item cerrado" id={p.id}>
+            <header class="i-cab"><span class="i-id mono">{p.id}</span></header>
+            <h3 class="i-t" set:html={P.tituloAHtml(p.titulo.replace(/^[PD]-\d{1,2}\s*[·-]?\s*/, ''))} />
+            <div class="md" set:html={p.html} />
+          </article>
+        ))}
+      </div>
+    </details>
+  </section>
+</Marco>
+
+<style>
+  .cab { max-width: 44rem; margin-bottom: var(--e-7); }
+  .lead { font-size: var(--t-5); color: var(--texto-2); margin: var(--e-4) 0 0; }
+
+  /* ── huecos ──────────────────────────────────────────────────────────── */
+  .huecos-s { margin-bottom: var(--e-8); }
+  .huecos-s h2 { margin: 0 0 var(--e-5); color: var(--aviso); }
+  .huecos { list-style: none; padding: 0; margin: 0; max-width: none; display: grid; gap: var(--e-3); counter-reset: h; }
+  .hueco {
+    counter-increment: h; margin: 0;
+    padding: var(--e-5);
+    border-radius: var(--radio-3);
+    background: color-mix(in srgb, var(--aviso) 7%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aviso) 22%, transparent);
+  }
+  .hueco-t { margin: 0 0 var(--e-3); font-size: var(--t-5); }
+  .hueco-t::before {
+    content: counter(h, decimal-leading-zero) '  ';
+    font-family: var(--fuente-mono); font-size: var(--t-2); color: var(--aviso);
+  }
+  .hueco-x { font-size: var(--t-3); }
+
+  /* ── resumen ─────────────────────────────────────────────────────────── */
+  .resumen { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--e-3); margin-bottom: var(--e-8); }
+  .r-c {
+    display: flex; flex-direction: column; gap: var(--e-1);
+    padding: var(--e-5);
+    border-radius: var(--radio-3);
+    background: var(--vidrio-fondo);
+    border: 1px solid var(--vidrio-borde);
+    color: var(--texto-2);
+    transition: border-color var(--normal), transform var(--normal);
+  }
+  .r-c:hover { border-color: var(--n-600); transform: translateY(-2px); color: var(--texto-2); }
+  .r-n { font-size: var(--t-9); font-weight: var(--peso-max); color: var(--texto); line-height: 1; letter-spacing: var(--track-cifra); }
+  .r-t { font-size: var(--t-3); color: var(--texto); margin-top: var(--e-2); }
+  .r-x { font-size: var(--t-2); color: var(--texto-3); }
+
+  /* ── grupos ──────────────────────────────────────────────────────────── */
+  .grupo { margin-bottom: var(--e-8); scroll-margin-top: 6rem; }
+  .grupo h2 { margin: 0 0 var(--e-3); }
+  .lista { display: grid; gap: var(--e-3); margin-top: var(--e-5); }
+
+  .item {
+    padding: var(--e-5);
+    border-radius: var(--radio-3);
+    background: var(--vidrio-fondo);
+    border: 1px solid var(--vidrio-borde);
+    border-left: 2px solid var(--acento);
+    scroll-margin-top: 6rem;
+  }
+  .item.esHueco { border-left-color: var(--aviso); }
+  .item.desviacion { border-left-color: var(--info); }
+  .item.cerrado { border-left-color: var(--texto-3); opacity: 0.75; }
+
+  .i-cab { display: flex; align-items: center; gap: var(--e-3); margin-bottom: var(--e-3); }
+  .i-id { font-size: var(--t-2); font-weight: var(--peso-fuerte); color: var(--texto-3); }
+  .i-t { margin: 0 0 var(--e-3); font-size: var(--t-5); }
+
+  .plegable summary {
+    cursor: pointer; font-size: var(--t-3); color: var(--texto-2);
+    padding: var(--e-3) 0;
+  }
+  .plegable summary:hover { color: var(--texto); }
+</style>

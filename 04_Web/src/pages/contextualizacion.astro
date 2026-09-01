@@ -1,0 +1,122 @@
+---
+/**
+ * Contextualizacion.
+ *
+ * ESTO NO ES REGLA, y la pantalla lo dice en la cabecera y en cada tarjeta.
+ * Son elementos que quedaron FUERA del plan mecanico a proposito, porque el
+ * operador dijo que no tienen numero. Mostrarlos como si fueran condiciones
+ * automaticas seria convertir en regla lo que se decidio que no lo fuera.
+ *
+ * Dos identificadores estan usados dos veces en el documento de origen para
+ * elementos distintos. No se renumera: se avisa.
+ */
+import Marco from '../componentes/Marco.astro';
+import Icono from '../componentes/Icono.astro';
+import * as P from '../lib/parsers.mjs';
+
+const { items, duplicados } = P.contextualizacion();
+const conCuerpo = items.map((i) => ({ ...i, html: P.markdownRico(i.cuerpo) }));
+const ids = new Set(items.map((i) => i.id));
+---
+
+<Marco titulo="Contextualización">
+  <header class="cab entra">
+    <span class="marca-estado aviso">Esto no es regla</span>
+    <h1>La capa de contextualización</h1>
+    <p class="lead">
+      {ids.size} elementos que quedaron <strong>fuera del plan mecánico a
+      propósito</strong>, porque el operador dijo que no tienen número. Se
+      muestran como recordatorio de criterio, nunca como condición automática.
+    </p>
+  </header>
+
+  <section class="porque entra">
+    <span class="p-cab"><Icono nombre="warning-diamond" /> Por qué importan igual</span>
+    <p>
+      En las sesiones grabadas, esta capa decidió <strong>2 de cada 4 días</strong>
+      de «hoy no opero». Un ejecutor que aplique solo las reglas mecánicas
+      operará días que el operador no operaría. Es uno de los cuatro huecos
+      declarados del plan.
+    </p>
+    <a class="p-ir" href="/pendientes">Ver los cuatro huecos</a>
+  </section>
+
+  {duplicados.length > 0 && (
+    <p class="aviso-dup entra">
+      <Icono nombre="info" />
+      El documento de origen usa {duplicados.length === 1 ? 'un identificador' : 'los identificadores'}
+      {' '}<strong>{duplicados.join(' y ')}</strong> dos veces, para elementos
+      distintos. No se renumera nada: aparecen los dos, tal como están escritos.
+    </p>
+  )}
+
+  <div class="rejilla">
+    {conCuerpo.map((c, i) => (
+      <article class:list={['elem', 'entra', { repetido: c.repetido }]} id={`${c.id}-${i}`}
+               style={`--retraso:${Math.min(i, 8) * 30}ms`}
+               data-obs-tipo="contexto" data-obs-id={c.id} data-obs-titulo={c.titulo}>
+        <header class="e-cab">
+          <span class="e-id mono">{c.id}</span>
+          {c.repetido && <span class="e-rep">identificador repetido</span>}
+        </header>
+        <h2 class="e-t" set:html={P.tituloAHtml(c.titulo)} />
+        <div class="md" set:html={c.html} />
+        <footer class="e-pie">
+          <span class="etiqueta">No es una condición del plan</span>
+        </footer>
+      </article>
+    ))}
+  </div>
+</Marco>
+
+<style>
+  .cab { max-width: 44rem; margin-bottom: var(--e-6); }
+  .cab h1 { margin: var(--e-4) 0 0; }
+  .lead { font-size: var(--t-5); color: var(--texto-2); margin: var(--e-4) 0 0; }
+
+  .porque {
+    display: block;
+    padding: var(--e-5);
+    margin-bottom: var(--e-5);
+    border-radius: var(--radio-3);
+    background: color-mix(in srgb, var(--aviso) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aviso) 24%, transparent);
+  }
+  .p-cab {
+    display: flex; align-items: center; gap: var(--e-2);
+    font-size: var(--t-3); font-weight: var(--peso-fuerte); color: var(--aviso);
+    margin-bottom: var(--e-3);
+  }
+  .porque p { font-size: var(--t-3); color: var(--texto-2); }
+  .p-ir { font-size: var(--t-3); }
+
+  .aviso-dup {
+    display: flex; align-items: flex-start; gap: var(--e-3);
+    padding: var(--e-4) var(--e-5);
+    margin-bottom: var(--e-6);
+    border-radius: var(--radio-2);
+    background: color-mix(in srgb, var(--info) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--info) 22%, transparent);
+    font-size: var(--t-3); color: var(--texto-2); max-width: none;
+  }
+
+  .rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr)); gap: var(--e-3); }
+
+  .elem {
+    display: flex; flex-direction: column;
+    padding: var(--e-5);
+    border-radius: var(--radio-3);
+    background: var(--vidrio-fondo);
+    border: 1px solid var(--vidrio-borde);
+    /* Sin barra azul de acento: no es una regla y no debe parecerlo. */
+    scroll-margin-top: 6rem;
+  }
+  .elem.repetido { border-color: color-mix(in srgb, var(--info) 35%, transparent); }
+
+  .e-cab { display: flex; align-items: center; gap: var(--e-3); margin-bottom: var(--e-2); }
+  .e-id { font-size: var(--t-2); font-weight: var(--peso-fuerte); color: var(--texto-3); }
+  .e-rep { font-size: var(--t-1); color: var(--info); letter-spacing: var(--track-etiqueta); text-transform: uppercase; }
+  .e-t { margin: 0 0 var(--e-4); font-size: var(--t-5); }
+
+  .e-pie { margin-top: auto; padding-top: var(--e-4); border-top: 1px solid var(--borde-sutil); }
+</style>

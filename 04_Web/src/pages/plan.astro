@@ -1,0 +1,224 @@
+---
+/**
+ * El plan completo, sub-fase por sub-fase.
+ *
+ * El documento maestro declara DOS ORDENES que no coinciden: el de su tabla
+ * de estado y el del cuerpo. Se sigue el de la tabla, que es el indice que
+ * el propio documento propone y el que se lee de corrido. Un conmutador
+ * ensena el otro.
+ *
+ * Tres sub-fases son especiales y se tratan como tales, no como secciones
+ * vacias:
+ *   F1.10  su contenido ES la galeria
+ *   F1.11  no tiene contenido en ninguna parte: es un hueco declarado
+ *   F1.2   cerrada sin reglas, y en el documento va con otro nivel
+ */
+import Marco from '../componentes/Marco.astro';
+import Icono from '../componentes/Icono.astro';
+import * as P from '../lib/parsers.mjs';
+
+const declaradas = P.subfasesDeclaradas();
+const cuerpo = P.subfasesEnElCuerpo();
+const porId = new Map(cuerpo.map((s) => [s.id, s]));
+const pendientes = P.pendientes();
+
+const huecoTestCiego = pendientes.find((p) => p.id === 'P-29') ?? null;
+
+const secciones = declaradas.map((d) => {
+  const c = porId.get(d.id) ?? null;
+  return {
+    ...d,
+    tieneCuerpo: !!c,
+    html: c ? P.markdownRico(c.cuerpo) : null,
+    reglas: c ? [...new Set((c.cuerpo.match(/R-\d{1,2}/g) || []))] : [],
+    esGaleria: d.id === 'F1.10',
+    esHueco: d.id === 'F1.11',
+  };
+});
+
+const conCuerpo = secciones.filter((s) => s.tieneCuerpo).length;
+---
+
+<Marco titulo="El plan">
+  <div class="disposicion">
+    <div class="principal">
+      <header class="cab entra">
+        <h1>El plan completo</h1>
+        <p class="lead">
+          Las {secciones.length} sub-fases en las que se construyó, con el
+          razonamiento detrás de cada decisión. {conCuerpo} tienen texto propio;
+          las otras se explican aquí abajo.
+        </p>
+        <p class="apunte">
+          Este es el orden que declara el índice del propio documento. En su
+          cuerpo las secciones están en otro orden, porque se escribieron según
+          se cerraban.
+        </p>
+      </header>
+
+      {secciones.map((s, i) => (
+        <section class="sub entra" id={s.id} style={`--retraso:${Math.min(i, 6) * 30}ms`}
+                 data-obs-tipo="subfase" data-obs-id={s.id} data-obs-titulo={s.titulo}>
+          <header class="s-cab">
+            <span class="s-id mono">{s.id}</span>
+            <h2 class="s-t" set:html={P.tituloAHtml(s.titulo)} />
+            <span class="s-estado meta" set:html={P.tituloAHtml(s.estado)} />
+          </header>
+
+          {s.reglas.length > 0 && (
+            <p class="s-reglas">
+              <span class="etiqueta">Reglas que fijó</span>
+              {s.reglas.map((id) => <a class="ref" href={`/reglas/${id}`}>{id}</a>)}
+            </p>
+          )}
+
+          {s.esGaleria && (
+            <div class="s-especial">
+              <p>
+                Esta sub-fase no tiene texto propio: <strong>su contenido es la
+                galería de casos</strong>. Ahí están los {P.galeria().length} casos
+                reales con los que se contrastó el plan.
+              </p>
+              <a class="s-ir" href="/galeria"><Icono nombre="images" /> Ir a la galería</a>
+            </div>
+          )}
+
+          {s.esHueco && (
+            <div class="s-hueco">
+              <span class="sh-cab"><Icono nombre="warning-diamond" /> Hueco declarado</span>
+              <p>
+                <strong>El test ciego nunca se ejecutó.</strong> Era la única
+                prueba que separa «el plan está escrito» de «el plan está
+                probado»: dar diez gráficos sin etiquetar a alguien que solo
+                tenga el documento delante, y exigir nueve aciertos de diez.
+              </p>
+              <p>
+                No se hizo. Por lo tanto <strong>no hay ninguna medida de si el
+                documento se sostiene solo</strong>. Todo lo validado hasta ahora
+                se validó con el operador delante, corrigiendo.
+              </p>
+              {huecoTestCiego && <a class="s-ir" href="/pendientes">Ver el pendiente completo</a>}
+            </div>
+          )}
+
+          {s.html && <div class="md" set:html={s.html} />}
+
+          {!s.html && !s.esGaleria && !s.esHueco && (
+            <p class="apunte">
+              Cerrada sin texto propio en el documento maestro. Su estado es el
+              que se lee arriba.
+            </p>
+          )}
+        </section>
+      ))}
+    </div>
+
+    <aside class="indice">
+      <p class="etiqueta">Las {secciones.length} sub-fases</p>
+      <nav aria-label="Índice de sub-fases">
+        {secciones.map((s) => (
+          <a class="i-i" href={`#${s.id}`} data-ancla={s.id}>
+            <span class="i-n mono">{s.id}</span>
+            <span class="i-t" set:html={P.tituloAHtml(s.titulo)} />
+          </a>
+        ))}
+      </nav>
+    </aside>
+  </div>
+</Marco>
+
+<script is:inline>
+  (function () {
+    var items = document.querySelectorAll('[data-ancla]');
+    var secs = document.querySelectorAll('.sub');
+    if (!items.length || !('IntersectionObserver' in window)) return;
+    var mapa = {};
+    items.forEach(function (i) { mapa[i.getAttribute('data-ancla')] = i; });
+    var obs = new IntersectionObserver(function (filas) {
+      filas.forEach(function (f) {
+        var el = mapa[f.target.id];
+        if (!el || !f.isIntersecting) return;
+        items.forEach(function (i) { i.classList.remove('activa'); });
+        el.classList.add('activa');
+      });
+    }, { rootMargin: '-8% 0px -75% 0px', threshold: 0 });
+    secs.forEach(function (s) { obs.observe(s); });
+  })();
+</script>
+
+<style>
+  .disposicion { display: grid; grid-template-columns: minmax(0, 1fr) 16rem; gap: var(--e-8); }
+  .principal { min-width: 0; }
+
+  .cab { max-width: 44rem; margin-bottom: var(--e-8); }
+  .lead { font-size: var(--t-5); color: var(--texto-2); margin: var(--e-4) 0; }
+
+  .sub {
+    padding: var(--e-6) 0;
+    border-top: 1px solid var(--borde-sutil);
+    scroll-margin-top: 6rem;
+  }
+  .sub:first-of-type { border-top: 0; }
+
+  .s-cab { display: flex; align-items: baseline; gap: var(--e-3); flex-wrap: wrap; margin-bottom: var(--e-4); }
+  .s-id {
+    font-size: var(--t-2); font-weight: var(--peso-fuerte); color: var(--acento);
+    padding: var(--e-1) var(--e-3);
+    border-radius: var(--radio-1);
+    background: color-mix(in srgb, var(--acento) 14%, transparent);
+  }
+  .s-t { margin: 0; font-size: var(--t-6); flex: 1; min-width: 12rem; }
+  .s-estado { flex: none; }
+
+  .s-reglas { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--e-2); max-width: none; margin-bottom: var(--e-4); }
+  .s-reglas .etiqueta { margin-right: var(--e-2); }
+
+  .s-especial, .s-hueco {
+    padding: var(--e-5);
+    border-radius: var(--radio-3);
+    margin-bottom: var(--e-4);
+  }
+  .s-especial {
+    background: color-mix(in srgb, var(--info) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--info) 24%, transparent);
+  }
+  .s-hueco {
+    background: color-mix(in srgb, var(--aviso) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aviso) 26%, transparent);
+  }
+  .sh-cab {
+    display: flex; align-items: center; gap: var(--e-2);
+    font-size: var(--t-3); font-weight: var(--peso-fuerte); color: var(--aviso);
+    margin-bottom: var(--e-3);
+  }
+  .s-especial p, .s-hueco p { font-size: var(--t-3); color: var(--texto-2); }
+  .s-ir { display: inline-flex; align-items: center; gap: var(--e-2); font-size: var(--t-3); }
+
+  /* ── indice lateral ──────────────────────────────────────────────────── */
+  .indice {
+    position: sticky; top: 5rem; align-self: start;
+    max-height: calc(100dvh - 8rem); overflow-y: auto;
+    padding-left: var(--e-4);
+    border-left: 1px solid var(--borde-sutil);
+  }
+  .indice nav { display: flex; flex-direction: column; gap: var(--e-1); margin-top: var(--e-3); }
+  .i-i {
+    display: grid; grid-template-columns: 2.75rem minmax(0, 1fr); gap: var(--e-2);
+    padding: var(--e-1) 0;
+    font-size: var(--t-2); color: var(--texto-3);
+    transition: color var(--rapido);
+  }
+  .i-i:hover { color: var(--texto-2); }
+  .i-i.activa { color: var(--acento); }
+  .i-n { font-size: var(--t-1); }
+  .i-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  @media (max-width: 1100px) {
+    .disposicion { grid-template-columns: 1fr; gap: var(--e-6); }
+    .indice { position: static; max-height: none; border-left: 0; padding-left: 0; order: -1;
+              padding-bottom: var(--e-4); border-bottom: 1px solid var(--borde-sutil); }
+    .indice nav { flex-direction: row; flex-wrap: wrap; gap: var(--e-3); }
+    .i-i { grid-template-columns: auto; }
+    .i-t { display: none; }
+  }
+</style>

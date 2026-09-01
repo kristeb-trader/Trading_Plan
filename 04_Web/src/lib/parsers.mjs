@@ -67,19 +67,40 @@ export function subfasesDeclaradas() {
   return filas;
 }
 
-/** Las secciones que existen de verdad en el cuerpo, en el orden del documento. */
+/**
+ * Las secciones que existen de verdad en el cuerpo, en el orden del documento.
+ *
+ * OJO: dentro de una sub-fase hay encabezados del MISMO nivel, porque cada
+ * regla es un encabezado de nivel 2. Si se corta por nivel, cada sub-fase se
+ * queda en su entradilla y se pierde toda la explicacion. Por eso se corta de
+ * un encabezado de sub-fase al siguiente, sea cual sea el nivel de lo que
+ * haya en medio.
+ */
 export function subfasesEnElCuerpo() {
   const t = documento('TRADING_PLAN_CHAUMER.md');
-  const bloques = partirPorEncabezado(t, [1, 2]);
-  return bloques
-    .map((b) => ({ ...b, limpio: tituloLimpio(b.titulo) }))
-    .filter((b) => /^F1\.\d{1,2}\b/.test(b.limpio))
-    .map((b) => ({
-      id: b.limpio.match(/^(F1\.\d{1,2})/)[1],
-      titulo: b.limpio.replace(/^F1\.\d{1,2}\s*[·-]?\s*/, ''),
-      nivel: b.nivel,
-      cuerpo: b.cuerpo,
-    }));
+  const lineas = t.split(/\r?\n/);
+
+  const marcas = [];
+  let enCodigo = false;
+  lineas.forEach((linea, i) => {
+    if (/^\s*```/.test(linea)) enCodigo = !enCodigo;
+    if (enCodigo) return;
+    const m = linea.match(/^(#{1,3})\s+(.*)$/);
+    if (!m) return;
+    const limpio = tituloLimpio(m[2]);
+    const id = limpio.match(/^(F1\.\d{1,2})\b/);
+    if (id) marcas.push({ i, nivel: m[1].length, id: id[1], limpio });
+  });
+
+  return marcas.map((m, k) => {
+    const hasta = k + 1 < marcas.length ? marcas[k + 1].i : lineas.length;
+    return {
+      id: m.id,
+      titulo: m.limpio.replace(/^F1\.\d{1,2}\s*[·-]?\s*/, ''),
+      nivel: m.nivel,
+      cuerpo: lineas.slice(m.i + 1, hasta).join('\n').trim(),
+    };
+  });
 }
 
 // ─────────────────────────────────────────────────────────────── glosario
@@ -455,4 +476,9 @@ export function notasParametros() {
     });
   }
   return salida;
+}
+
+/** El acta de cierre completa, para renderizarla entera. */
+export function documentoCierre() {
+  return documento('CIERRE_FASE_1.md');
 }
