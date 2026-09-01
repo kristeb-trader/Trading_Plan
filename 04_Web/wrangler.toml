@@ -14,7 +14,7 @@ compatibility_date = "2026-09-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "trading-plan-observaciones"
-database_id = "PENDIENTE_DE_CREAR"
+database_id = "86e396a1-4b29-4f88-99c4-3872fb418a8d"
 
 # CLAVE_OPERADOR no va aqui: se pone como secreto con
 #   npx wrangler pages secret put CLAVE_OPERADOR

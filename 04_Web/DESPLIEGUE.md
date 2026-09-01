@@ -15,7 +15,7 @@ cuenta, sin claves viajando entre servicios.
 
 Desde `04_Web/`, en una terminal.
 
-### 1 · Entrar en Cloudflare
+### 1 · Entrar en Cloudflare  ✅ HECHO
 
 ```
 npx wrangler login
@@ -23,7 +23,7 @@ npx wrangler login
 
 Abre el navegador y pide autorizar. Es la cuenta que ya tienes.
 
-### 2 · Crear la base de las observaciones
+### 2 · Crear la base  ✅ HECHA. database_id ya está en wrangler.toml
 
 ```
 npx wrangler d1 create trading-plan-observaciones
@@ -32,7 +32,7 @@ npx wrangler d1 create trading-plan-observaciones
 Devuelve un `database_id`. **Pégalo en `wrangler.toml`**, sustituyendo
 `PENDIENTE_DE_CREAR`.
 
-### 3 · Crear la tabla
+### 3 · Crear la tabla  ✅ HECHA y verificada de extremo a extremo
 
 ```
 npx wrangler d1 execute trading-plan-observaciones --remote --file=./d1/0001_observaciones.sql
@@ -48,7 +48,7 @@ node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"
 
 Guárdala. Es la que te deja **responder, marcar, exportar y borrar**.
 
-### 5 · Publicar por primera vez
+### 5 · Publicar  ✅ HECHO el 02/09/2026
 
 ```
 npm run build
@@ -56,7 +56,7 @@ npx wrangler pages deploy dist --project-name=trading-plan
 ```
 
 La primera vez pregunta si crear el proyecto: acepta. Al terminar imprime la
-dirección, del tipo `https://trading-plan.pages.dev`.
+dirección, del tipo `https://trading-plan-18i.pages.dev`.
 
 > Las direcciones `.pages.dev` son únicas en el mundo. Si `trading-plan` está
 > cogido, elige otro nombre y úsalo también en `--project-name`.
@@ -77,7 +77,7 @@ Pega la clave del paso 4. **No va al repositorio ni al navegador.**
 firmadas sin que él escriba nada:
 
 ```
-https://trading-plan.pages.dev/?a=Alfredo
+https://trading-plan-18i.pages.dev/?a=Alfredo
 ```
 
 Lo abre una vez y su navegador lo recuerda. Después le vale la dirección a secas.
@@ -86,7 +86,7 @@ Lo abre una vez y su navegador lo recuerda. Después le vale la dirección a sec
 marcar, exportar y borrar:
 
 ```
-https://trading-plan.pages.dev/observaciones?k=TU_CLAVE
+https://trading-plan-18i.pages.dev/observaciones?k=TU_CLAVE
 ```
 
 También se recuerda. **No lo compartas**: quien lo tenga puede responder y
