@@ -1,0 +1,295 @@
+---
+/**
+ * Cómo funciona — la capa 1 del portal.
+ *
+ * Siete pasos, uno por concepto. Un gráfico grande y unas pocas frases.
+ * CERO CODIGOS DE REGLA: quien llega nuevo no sabe qué es R-22 y tenerlo
+ * delante solo interrumpe.
+ *
+ * El detalle medible sigue existiendo entero en la capa 2, sin tocar. Aquí
+ * no se resume el plan: se explica. Cada paso enlaza al detalle por si
+ * alguien quiere bajar.
+ *
+ * Las cifras que aparecen (el tope de stop, las operaciones por sesión) se
+ * leen de PARAMETROS.md como en todo el portal. Ni una escrita a mano.
+ */
+import Marco from '../componentes/Marco.astro';
+import Icono from '../componentes/Icono.astro';
+import * as P from '../lib/parsers.mjs';
+
+const par = P.parametros();
+const v = (n, alt) => (par.get(n)?.valor ?? alt);
+const galeria = P.galeria();
+const img = (id) => galeria.find((c) => c.id === id)?.imagen ?? null;
+
+const PASOS = [
+  {
+    id: 'cuando',
+    titulo: 'Solo se opera dos horas al día',
+    entrada: 'La sesión empieza con la apertura americana y dura dos horas. Fuera de esa ventana no se coloca ninguna orden, pase lo que pase.',
+    grafico: '/conceptos/01-ventana.png',
+    pie: 'Una jornada real. La franja marca las dos horas en las que se opera.',
+    claves: [
+      ['Cuánto dura', v('VENTANA_OPERATIVA', '09:30–11:30 ET') + ', dos horas'],
+      ['Cuántas operaciones', 'Una por sesión. Se llena y el día termina'],
+      ['Con cuánto', v('CONTRATOS', '1 MNQ') + ', siempre igual'],
+    ],
+    nota: 'El tamaño no sube porque la cuenta crezca, ni baja tras una mala racha. Es el mismo todos los días.',
+  },
+  {
+    id: 'movimiento',
+    titulo: 'El precio avanza y descansa',
+    entrada: 'Todo el método se apoya en algo muy simple: el mercado sube o baja un tramo, y después se para a descansar. Al tramo que avanza se le llama corrida. Al descanso, retroceso.',
+    grafico: '/conceptos/02-corrida-retroceso.png',
+    pie: 'El mismo movimiento, separado en sus dos partes.',
+    claves: [
+      ['Corrida', 'Mientras cada vela supere el extremo de la anterior'],
+      ['Retroceso', 'Empieza en cuanto una vela va en contra, aunque sea poco'],
+    ],
+    nota: 'No hay más estados. En cualquier momento el mercado está en uno de los dos.',
+  },
+  {
+    id: 'zonas',
+    titulo: 'Cada tramo deja un rastro',
+    entrada: 'Cuando una corrida termina, la vela que marcó el extremo deja una franja en el gráfico. Esa franja es una zona, y es lo que se opera después. No se dibuja a ojo: sale siempre de la misma vela.',
+    grafico: '/conceptos/03-zona.png',
+    pie: 'La zona nace de la vela que hizo el extremo del tramo.',
+    claves: [
+      ['De dónde sale', 'Del cuerpo al extremo de la mecha de esa vela'],
+      ['Cuánto dura', 'Hasta que el precio la supere en los dos sentidos'],
+      ['Cuántas caben', 'Una por franja de precio y por jornada'],
+    ],
+    nota: 'Las zonas no envejecen: una de hace dos horas vale igual que una de hace cinco minutos.',
+  },
+  {
+    id: 'confirmacion',
+    titulo: 'Cruzar una zona no basta',
+    entrada: 'Que el precio atraviese una zona no significa nada por sí solo. Hace falta que la vela siguiente pase del extremo de la que cruzó. Sin esa confirmación, no ha pasado nada.',
+    grafico: '/conceptos/04-romper-confirmar.png',
+    pie: 'Una vela cruza. Solo cuenta cuando la siguiente lo confirma.',
+    claves: [
+      ['Cruzar', 'Basta con que la mecha pase un tick del borde'],
+      ['Confirmar', 'La vela siguiente pasa del extremo de la que cruzó'],
+      ['Si no confirma', 'La zona sigue viva y el intento no cuenta'],
+    ],
+    nota: 'Esta es la pieza que más cuesta y la que evita casi todas las entradas malas.',
+  },
+  {
+    id: 'entradas',
+    titulo: 'Solo hay dos formas de entrar',
+    entrada: 'Con lo anterior ya se pueden reconocer las dos únicas entradas del método. Una va a favor del movimiento; la otra, en contra de un movimiento que falló.',
+    grafico: img('G-01') ?? img('G-02'),
+    pie: 'Entrada de continuación sobre un caso real del gráfico del operador.',
+    claves: [
+      ['A favor', 'El precio confirma la zona y sigue. Se entra en esa dirección'],
+      ['En contra', 'Confirmó y no siguió. El precio recupera la zona entera y se entra al revés'],
+    ],
+    nota: 'La segunda es inmediata o no es: si el precio sigue de largo, la oportunidad se cerró.',
+    mas: { texto: 'Ver los dos casos completos', href: '/galeria#G-01' },
+  },
+  {
+    id: 'riesgo',
+    titulo: 'Cuánto se arriesga, y dónde va el stop',
+    entrada: 'La entrada se coloca por adelantado y el mercado la ejecuta solo. El stop no se elige: lo pone la estructura. Y si esa distancia pasa del tope, la operación no se hace.',
+    grafico: img('G-16') ?? img('G-10'),
+    pie: 'Una operación real: entrada, stop y objetivo sobre el gráfico.',
+    claves: [
+      ['Tope de riesgo', v('STOP_MAX', '80 puntos') + '. Si el stop pasa de ahí, no se opera'],
+      ['Objetivo', v('RATIO_TARGET', '1:1') + ': recorre lo mismo que el stop'],
+      ['El stop', 'Va al extremo alcanzado desde que nació la zona'],
+    ],
+    nota: 'El tope es una línea dura. Un stop de 79 puntos se opera igual que uno de 30; uno de 81, no se opera.',
+  },
+  {
+    id: 'nunca',
+    titulo: 'Lo que no se hace nunca',
+    entrada: 'La última pieza no es una técnica, son cuatro prohibiciones. Son las que convierten el método en algo repetible.',
+    grafico: null,
+    claves: [
+      ['No se toca la posición', 'Una vez puestos stop y objetivo, no se mueven. Ni a favor'],
+      ['No se opera con noticia roja', 'Cinco minutos antes y cinco después, nada'],
+      ['No se opera enfermo', 'Ni sin estar bien de cabeza'],
+      ['Al llenarse, se acaba el día', 'No solo la operativa: también el análisis'],
+    ],
+    nota: 'Estas cuatro no admiten excepción, y son las que más cuesta cumplir.',
+  },
+];
+
+const bt = P.backtesting();
+---
+
+<Marco titulo="Cómo funciona">
+  <header class="portada entra">
+    <span class="marca-estado aviso frase">Escrito y contrastado. No probado.</span>
+    <h1>Cómo funciona la estrategia</h1>
+    <p class="lead">
+      Siete ideas. Con estas se entiende el método completo, sin tecnicismos y
+      sin números de regla. Unos quince minutos de lectura.
+    </p>
+    <nav class="indice-pasos" aria-label="Los siete pasos">
+      {PASOS.map((p, i) => (
+        <a class="ip" href={`#${p.id}`}>
+          <span class="ip-n num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="ip-t">{p.titulo}</span>
+        </a>
+      ))}
+    </nav>
+  </header>
+
+  {PASOS.map((p, i) => (
+    <section class="paso" id={p.id}>
+      <header class="p-cab entra">
+        <span class="p-n num">{String(i + 1).padStart(2, '0')}</span>
+        <h2>{p.titulo}</h2>
+      </header>
+
+      <p class="p-entrada entra">{p.entrada}</p>
+
+      {p.grafico && (
+        <figure class="p-fig entra">
+          <img src={p.grafico} alt={p.titulo} loading={i < 2 ? 'eager' : 'lazy'} />
+          {p.pie && <figcaption class="meta">{p.pie}</figcaption>}
+        </figure>
+      )}
+
+      <dl class="p-claves entra">
+        {p.claves.map(([k, t]) => (
+          <div class="clave">
+            <dt>{k}</dt>
+            <dd>{t}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {p.nota && <p class="p-nota entra">{p.nota}</p>}
+
+      <div class="p-pie entra">
+        {p.mas && <a class="p-mas" href={p.mas.href}>{p.mas.texto}</a>}
+        {i + 1 < PASOS.length
+          ? <a class="p-sig" href={`#${PASOS[i + 1].id}`}>
+              Siguiente: {PASOS[i + 1].titulo} <Icono nombre="arrow-right" />
+            </a>
+          : <a class="p-sig" href="/galeria">Ver los casos reales <Icono nombre="arrow-right" /></a>}
+      </div>
+    </section>
+  ))}
+
+  <section class="cierre entra">
+    <h2>Con esto ya se entiende el método</h2>
+    <p>
+      Lo que falta es el detalle medible: los umbrales exactos, los casos
+      límite y las excepciones. Está todo, sin resumir, en el plan completo.
+    </p>
+    <div class="cierre-b">
+      <a class="btn-1" href="/casos">Ver los {galeria.length} casos reales</a>
+      <a class="btn-2" href="/plan-completo">El plan completo, con todo el detalle</a>
+    </div>
+    <p class="apunte">
+      Y una cosa que conviene saber antes de juzgarlo: el plan está escrito y
+      contrastado contra sesiones reales, pero <strong>no está probado</strong>.
+      Se cerró con {bt.huecos.length} huecos declarados, y el portal no los
+      esconde. <a href="/cierre">Están aquí</a>.
+    </p>
+  </section>
+</Marco>
+
+<style>
+  .marca-estado.frase { text-transform: none; letter-spacing: 0; font-size: var(--t-2); }
+
+  /* ── portada ─────────────────────────────────────────────────────────── */
+  .portada { max-width: 46rem; margin-bottom: var(--e-9); }
+  .portada h1 { margin: var(--e-4) 0; font-size: clamp(var(--t-7), 3.4vw, 2.75rem); }
+  .lead { font-size: var(--t-5); color: var(--texto-2); }
+
+  .indice-pasos {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: var(--e-2); margin-top: var(--e-6);
+  }
+  .ip {
+    display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: var(--e-2);
+    align-items: baseline;
+    padding: var(--e-3);
+    border-radius: var(--radio-2);
+    color: var(--texto-2); font-size: var(--t-3);
+    transition: background var(--normal), color var(--normal);
+  }
+  .ip:hover { background: var(--vidrio-fondo); color: var(--texto); }
+  .ip-n { font-size: var(--t-1); color: var(--acento); }
+
+  /* ── cada paso ───────────────────────────────────────────────────────── */
+  .paso {
+    max-width: 58rem;
+    padding-bottom: var(--e-9);
+    margin-bottom: var(--e-8);
+    border-bottom: 1px solid var(--borde-sutil);
+    scroll-margin-top: 5rem;
+  }
+  .paso:last-of-type { border-bottom: 0; }
+
+  .p-cab { display: flex; align-items: baseline; gap: var(--e-4); margin-bottom: var(--e-5); }
+  .p-n {
+    font-size: var(--t-6); font-weight: var(--peso-max);
+    color: var(--acento); line-height: 1;
+  }
+  .p-cab h2 { margin: 0; font-size: var(--t-7); }
+
+  .p-entrada { font-size: var(--t-5); color: var(--texto-2); max-width: 46ch; margin-bottom: var(--e-6); }
+
+  .p-fig { margin: 0 0 var(--e-6); }
+  .p-fig img {
+    width: 100%; border-radius: var(--radio-3);
+    border: 1px solid var(--vidrio-borde);
+    background: var(--n-950);
+  }
+  .p-fig figcaption { margin-top: var(--e-3); }
+
+  /* Las claves: lo que hay que recordar, en tres o cuatro líneas. */
+  .p-claves {
+    display: grid; gap: 0; margin: 0 0 var(--e-5);
+    border-top: 1px solid var(--borde-sutil);
+  }
+  .clave {
+    display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: var(--e-4);
+    padding: var(--e-4) 0;
+    border-bottom: 1px solid var(--borde-sutil);
+  }
+  .clave dt { font-size: var(--t-3); font-weight: var(--peso-fuerte); color: var(--texto); }
+  .clave dd { margin: 0; font-size: var(--t-4); color: var(--texto-2); }
+
+  .p-nota {
+    font-size: var(--t-3); color: var(--texto-2);
+    padding: var(--e-4) var(--e-5);
+    background: var(--vidrio-fondo);
+    border-radius: var(--radio-2);
+    max-width: 52ch;
+  }
+
+  .p-pie { display: flex; align-items: center; gap: var(--e-5); flex-wrap: wrap; margin-top: var(--e-6); }
+  .p-mas { font-size: var(--t-3); }
+  .p-sig {
+    display: inline-flex; align-items: center; gap: var(--e-2);
+    margin-left: auto;
+    font-size: var(--t-3); font-weight: var(--peso-medio);
+  }
+
+  /* ── cierre ──────────────────────────────────────────────────────────── */
+  .cierre { max-width: 46rem; }
+  .cierre h2 { margin-top: 0; }
+  .cierre-b { display: flex; gap: var(--e-3); flex-wrap: wrap; margin: var(--e-5) 0 var(--e-6); }
+  .btn-1, .btn-2 {
+    display: inline-flex; align-items: center;
+    padding: var(--e-3) var(--e-5);
+    border-radius: var(--radio-2);
+    font-size: var(--t-3); font-weight: var(--peso-medio);
+    transition: background var(--normal);
+  }
+  .btn-1 { background: var(--acento); color: #06121F; box-shadow: 0 8px 24px -10px rgba(76,141,255,.7); }
+  .btn-1:hover { background: #6AA0FF; color: #06121F; }
+  .btn-2 { background: var(--vidrio-fondo); border: 1px solid var(--vidrio-borde); color: var(--texto); }
+  .btn-2:hover { background: rgba(255,255,255,.08); color: var(--texto); }
+
+  @media (max-width: 700px) {
+    .clave { grid-template-columns: 1fr; gap: var(--e-1); }
+    .p-sig { margin-left: 0; }
+  }
+</style>

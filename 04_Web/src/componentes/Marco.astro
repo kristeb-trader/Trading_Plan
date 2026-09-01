@@ -25,28 +25,16 @@ const indice = P.indiceBusqueda();
 // `lista: false` = todavia no construida. Apagada, nunca un enlace roto.
 const GRUPOS = [
   {
-    grupo: 'El plan',
+    grupo: 'Empieza aquí',
     items: [
-      { icono: 'house', href: '/', texto: 'Inicio', lista: true },
-      { icono: 'compass', href: '/plan', texto: 'Recorrido', lista: true },
-      { icono: 'list-checks', href: '/reglas', texto: 'Reglas', lista: true, cuenta: P.reglas().length },
-      { icono: 'sliders-horizontal', href: '/parametros', texto: 'Parámetros', lista: true, cuenta: P.parametros().size },
-      { icono: 'book-open', href: '/glosario', texto: 'Glosario', lista: true, cuenta: P.glosario().length },
-    ],
-  },
-  {
-    grupo: 'Cómo se aplica',
-    items: [
-      { icono: 'check-square', href: '/checklist', texto: 'Checklist', lista: true },
+      { icono: 'compass', href: '/como-funciona', texto: 'Cómo funciona', lista: true },
       { icono: 'images', href: '/galeria', texto: 'Casos reales', lista: true, cuenta: P.galeria().length },
     ],
   },
   {
-    grupo: 'Lo que sigue abierto',
+    grupo: 'Todo el detalle',
     items: [
-      { icono: 'warning-diamond', href: '/pendientes', texto: 'Pendientes', lista: true, cuenta: P.pendientesAbiertos().length },
-      { icono: 'chart-line', href: '/contextualizacion', texto: 'Contexto', lista: true },
-      { icono: 'seal-check', href: '/cierre', texto: 'Cierre de la fase 1', lista: true },
+      { icono: 'list-checks', href: '/plan-completo', texto: 'El plan completo', lista: true },
     ],
   },
   {
@@ -74,7 +62,7 @@ const activa = (href: string) =>
     <a class="saltar" href="#contenido">Saltar al contenido</a>
 
     <header class="cabecera">
-      <a class="marca" href="/">
+      <a class="marca" href="/como-funciona">
         <span class="marca-n">Plan Chaumer</span>
         <span class="marca-s">NQ, MNQ, NinjaTrader 8</span>
       </a>
