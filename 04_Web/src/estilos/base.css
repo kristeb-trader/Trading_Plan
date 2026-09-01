@@ -166,3 +166,59 @@ kbd.tecla {
   *, *::before, *::after { transition: none !important; animation: none !important; }
   .entra { opacity: 1 !important; transform: none !important; }
 }
+
+/* ═══════════════════════════ piezas con profundidad ═══════════════════ */
+
+/* Fondo vivo. Va en un pseudoelemento fijo para no repintar al hacer scroll. */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -2;
+  background-image: var(--aurora);
+  pointer-events: none;
+}
+/* Grano finisimo: quita el aspecto de degradado digital plano. */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: -1; opacity: 0.05;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Cristal: la superficie por defecto de las piezas destacadas. */
+.vidrio {
+  position: relative;
+  background-color: var(--vidrio-fondo);
+  background-image: var(--vidrio-brillo);
+  backdrop-filter: var(--desenfoque);
+  border: 1px solid var(--vidrio-borde);
+  border-radius: var(--radio-4);
+  box-shadow: var(--sombra-2);
+}
+
+/* Borde vivo: un degradado de un pixel alrededor de la pieza principal. */
+.borde-vivo { position: relative; }
+.borde-vivo::before {
+  content: '';
+  position: absolute; inset: 0;
+  padding: 1px; border-radius: inherit;
+  background: var(--borde-vivo);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Una sola frase por pantalla en degradado. Mas es ruido. */
+.degradado {
+  background: var(--texto-degradado);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+
+/* Marco de grafico: la imagen es el contenido, el marco solo la sostiene. */
+.marco-gr {
+  border-radius: var(--radio-3);
+  overflow: hidden;
+  border: 1px solid var(--vidrio-borde);
+  background: var(--n-950);
+}
+.marco-gr img { width: 100%; display: block; }

@@ -86,6 +86,7 @@
   --radio-1: 6px;
   --radio-2: 10px;
   --radio-3: 14px;
+  --radio-4: 20px;   /* piezas de cristal */
   --radio-pill: 999px;
 
   /* Sombras teñidas, nunca negro puro: dan profundidad sin ensuciar. */
@@ -106,4 +107,36 @@
   --rapido: 140ms var(--curva);
   --normal: 220ms var(--curva);
   --entrada: 480ms var(--curva-salida);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CAPA DE PROFUNDIDAD (02/09/2026)
+   El operador pidio cuatro veces algo mas moderno y menos plano. Lo que
+   faltaba no era tipografia: era PROFUNDIDAD, COLOR e IMAGEN. Aqui viven
+   los degradados, el cristal y los halos que dan volumen real.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Aurora de fondo: tres focos de color muy diluidos que se mueven lento.
+     Es lo que separa una pagina con vida de un rectangulo oscuro. */
+  --aurora:
+    radial-gradient(58rem 34rem at 78% -8%,  rgba(76, 141, 255, 0.20), transparent 62%),
+    radial-gradient(46rem 30rem at 8% 12%,   rgba(56, 189, 212, 0.13), transparent 60%),
+    radial-gradient(52rem 32rem at 52% 96%,  rgba(120, 96, 255, 0.10), transparent 64%);
+
+  /* Cristal: superficie translucida con desenfoque por detras. */
+  --vidrio-fondo: rgba(255, 255, 255, 0.035);
+  --vidrio-borde: rgba(255, 255, 255, 0.10);
+  --vidrio-brillo: linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0) 42%);
+  --desenfoque: blur(18px);
+
+  /* Halos de color para piezas destacadas. */
+  --halo-azul: 0 0 0 1px rgba(76, 141, 255, 0.22), 0 18px 50px -12px rgba(76, 141, 255, 0.35);
+  --halo-oro:  0 0 0 1px rgba(227, 179, 65, 0.22), 0 18px 50px -12px rgba(227, 179, 65, 0.22);
+
+  /* Degradado de texto para una sola frase por pantalla, no mas. */
+  --texto-degradado: linear-gradient(96deg, #FFFFFF 8%, #9CC2FF 46%, #5BE1F0 92%);
+
+  --borde-vivo: linear-gradient(140deg,
+                rgba(76,141,255,0.55), rgba(56,189,212,0.25) 38%,
+                rgba(255,255,255,0.06) 62%, rgba(76,141,255,0.30));
 }
