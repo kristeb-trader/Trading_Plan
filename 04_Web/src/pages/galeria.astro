@@ -50,7 +50,7 @@ const reglasCitadas = [...new Set(casos.flatMap((c) => c.reglas))]
 
   <div class="casos">
     {casos.map((c, i) => (
-      <article class="caso entra" id={c.id} data-reglas={c.reglas.join(' ')}
+      <article class="caso entra" id={c.id} data-reglas={c.reglas.join(' ')} data-obs-tipo="caso" data-obs-id={c.id} data-obs-titulo={c.titulo}
                style={`--retraso:${Math.min(i, 6) * 45}ms`}>
         <header class="c-cab">
           <span class="c-id mono">{c.id}</span>

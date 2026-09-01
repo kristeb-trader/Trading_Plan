@@ -46,7 +46,7 @@ for (const p of params) {
       <h2 class="sec-t entra">{s.nombre}</h2>
       <div class="rejilla">
         {s.items.map((p, i) => (
-          <article class="par entra" id={p.nombre} style={`--retraso:${Math.min(i, 6) * 40}ms`}>
+          <article class="par entra" id={p.nombre} data-obs-tipo="parametro" data-obs-id={p.nombre} data-obs-titulo={p.nombre} style={`--retraso:${Math.min(i, 6) * 40}ms`}>
             <header class="p-cab">
               <h3 class="p-n mono">{p.nombre}</h3>
               <a class="p-enlace" href={`#${p.nombre}`} aria-label={`Enlace a ${p.nombre}`}>

@@ -11,6 +11,7 @@
  */
 import * as P from '../lib/parsers.mjs';
 import Icono from './Icono.astro';
+import Observaciones from './Observaciones.astro';
 import '../estilos/tokens.css';
 import '../estilos/base.css';
 
@@ -46,6 +47,12 @@ const GRUPOS = [
       { icono: 'warning-diamond', href: '/pendientes', texto: 'Pendientes', lista: false, cuenta: P.pendientesAbiertos().length },
       { icono: 'chart-line', href: '/contextualizacion', texto: 'Contexto', lista: false },
       { icono: 'seal-check', href: '/cierre', texto: 'Cierre de la fase 1', lista: false },
+    ],
+  },
+  {
+    grupo: 'Revisión',
+    items: [
+      { icono: 'chat-teardrop-text', href: '/observaciones', texto: 'Observaciones', lista: true },
     ],
   },
 ];
@@ -155,6 +162,8 @@ const activa = (href: string) =>
         </div>
       </div>
     </dialog>
+
+    <Observaciones />
 
     <script type="application/json" data-indice set:html={JSON.stringify(indice)} />
 

@@ -43,7 +43,7 @@ const rico = (t) => P.enriquecer(t, { sinEnlaceA: regla.id });
 <Marco titulo={regla.id} ancho="texto">
   <a class="volver" href="/reglas"><Icono nombre="arrow-left" /> Todas las reglas</a>
 
-  <article class="ficha">
+  <article class="ficha" data-obs-tipo="regla" data-obs-id={regla.id} data-obs-titulo={regla.enunciado.slice(0,120)}>
     <header class="f-cab entra">
       <div class="f-meta">
         <span class="f-id mono">{regla.id}</span>

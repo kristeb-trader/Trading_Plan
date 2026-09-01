@@ -36,7 +36,7 @@ const terminos = P.glosario().map((t) => ({
       </header>
 
       {terminos.map((t, i) => (
-        <article class="termino entra" id={t.ancla} style={`--retraso:${Math.min(i, 8) * 30}ms`}>
+        <article class="termino entra" id={t.ancla} data-obs-tipo="termino" data-obs-id={t.termino} data-obs-titulo={t.termino} style={`--retraso:${Math.min(i, 8) * 30}ms`}>
           <header class="t-cab">
             <h2 class="t-t">{t.termino}</h2>
             <a class="t-enlace" href={`#${t.ancla}`} aria-label={`Enlace a ${t.termino}`}>

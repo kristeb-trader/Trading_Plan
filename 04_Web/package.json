@@ -12,7 +12,8 @@
     "fuentes": "node scripts/contar-fuentes.mjs"
   },
   "devDependencies": {
-    "astro": "^7.2.10"
+    "astro": "^7.2.10",
+    "wrangler": "^4.127.1"
   },
   "dependencies": {
     "@phosphor-icons/core": "^2.1.1",

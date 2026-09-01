@@ -1,0 +1,22 @@
+# Cloudflare Pages. Se publica desde el equipo del operador con un comando.
+#
+# El repositorio NO se conecta a Cloudflare: se suben los archivos ya
+# compilados de dist/, nada mas. El codigo se queda privado en GitHub.
+
+name = "trading-plan"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-09-01"
+
+# Base de datos de las observaciones. Misma plataforma que la web: sin
+# claves que viajen entre servicios.
+#
+# El database_id lo devuelve `wrangler d1 create` y se pega aqui.
+[[d1_databases]]
+binding = "DB"
+database_name = "trading-plan-observaciones"
+database_id = "PENDIENTE_DE_CREAR"
+
+# CLAVE_OPERADOR no va aqui: se pone como secreto con
+#   npx wrangler pages secret put CLAVE_OPERADOR
+# Sin ella, la API solo permite leer y escribir observaciones; responder,
+# marcar, exportar y borrar quedan cerrados.
