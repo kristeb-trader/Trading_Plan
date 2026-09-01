@@ -1,22 +1,19 @@
 /**
- * BASE — reset corto, documento y piezas reutilizables.
+ * BASE — reset, documento y piezas del lenguaje suizo/terminal.
  * Ni un valor literal: todo sale de tokens.css.
  */
 
 /* ── tipografia servida desde el propio portal ─────────────────────────── */
-/* Geist · SIL OFL 1.1 · licencia en public/fuentes/LICENCIA-GEIST.txt
-   Peso variable: un solo archivo cubre de 100 a 900. Cero CDN. */
+/* Geist · SIL OFL 1.1 · licencia en public/fuentes/LICENCIA-GEIST.txt */
 @font-face {
   font-family: 'Geist';
   src: url('/fuentes/geist.woff2') format('woff2-variations');
-  font-weight: 100 900;
-  font-display: swap;
+  font-weight: 100 900; font-display: swap;
 }
 @font-face {
   font-family: 'Geist Mono';
   src: url('/fuentes/geist-mono.woff2') format('woff2-variations');
-  font-weight: 100 900;
-  font-display: swap;
+  font-weight: 100 900; font-display: swap;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -28,178 +25,126 @@ body {
   margin: 0;
   min-height: 100dvh;
   background: var(--fondo);
-  background-image: var(--halo);
-  background-attachment: fixed;
   color: var(--texto);
   font-family: var(--fuente);
   font-size: var(--t-4);
   line-height: var(--alto-linea);
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
-/* ── titulos ───────────────────────────────────────────────────────────── */
+/* ── titulares · muy cerrados, como en prensa ──────────────────────────── */
 h1, h2, h3, h4 {
   line-height: var(--alto-corto);
   letter-spacing: var(--track-titulo);
   font-weight: var(--peso-fuerte);
-  margin: var(--e-6) 0 var(--e-3);
+  margin: var(--e-6) 0 var(--e-4);
   text-wrap: balance;
 }
-h1 { font-size: var(--t-7); margin-top: 0; font-weight: var(--peso-max); }
+h1 { font-size: var(--t-8); margin-top: 0; font-weight: var(--peso-max); }
 h2 { font-size: var(--t-6); }
-h3 { font-size: var(--t-5); }
+h3 { font-size: var(--t-5); line-height: 1.25; }
 h4 { font-size: var(--t-4); color: var(--texto-2); }
 
-/* Medida de lectura: el detector marcaba parrafos de 144 caracteres. */
 p { margin: 0 0 var(--e-4); max-width: var(--medida); }
 ul, ol { margin: 0 0 var(--e-4); padding-left: var(--e-5); max-width: var(--medida); }
 li { margin-bottom: var(--e-2); }
 li::marker { color: var(--texto-3); }
 
-/* ── enlaces ───────────────────────────────────────────────────────────── */
+/* ── enlaces · subrayado que crece, sin cambiar la maquetacion ─────────── */
 a {
   color: var(--azul);
   text-decoration: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--azul) 30%, transparent);
-  transition: color var(--transicion), border-color var(--transicion);
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--azul) 40%, transparent);
+  transition: color var(--transicion), box-shadow var(--transicion);
 }
-a:hover { color: var(--texto); border-bottom-color: var(--texto); }
+a:hover { color: var(--texto); box-shadow: inset 0 -2px 0 var(--texto); }
 
-:focus-visible {
-  outline: 2px solid var(--azul);
-  outline-offset: 3px;
-  border-radius: var(--radio-1);
-}
+:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
 
 strong, b { font-weight: var(--peso-fuerte); }
-
 code, kbd, samp { font-family: var(--fuente-mono); font-size: 0.875em; }
 
-/* Sin barra de color a la izquierda: el detector la señala como el indicio
-   mas reconocible de una interfaz generada. Se marca con fondo y sangria. */
+/* Cita: sangrada y sobre franja, sin barra de color al lado. */
 blockquote {
   margin: var(--e-5) 0;
   padding: var(--e-4) var(--e-5);
-  border-radius: var(--radio-2);
   background: var(--sup-1);
   color: var(--texto-2);
 }
 blockquote > :last-child { margin-bottom: 0; }
 
-hr { border: 0; border-top: 1px solid var(--hilo); margin: var(--e-6) 0; }
+hr { border: 0; border-top: 1px solid var(--filete); margin: var(--e-7) 0; }
 
-/* ── tablas: scroll dentro del contenedor, nunca la pagina ─────────────── */
-.tabla-scroll {
-  overflow-x: auto;
-  margin: var(--e-4) 0;
-  border: 1px solid var(--hilo);
-  border-radius: var(--radio-2);
-}
+/* ── tablas ────────────────────────────────────────────────────────────── */
+.tabla-scroll { overflow-x: auto; margin: var(--e-5) 0; border-top: 1px solid var(--filete-fuerte); }
 table { border-collapse: collapse; width: 100%; font-size: var(--t-3); }
-th, td { text-align: left; padding: var(--e-3); border-bottom: 1px solid var(--hilo); vertical-align: top; }
-tr:last-child td { border-bottom: 0; }
+th, td { text-align: left; padding: var(--e-3) var(--e-4) var(--e-3) 0; border-bottom: 1px solid var(--filete-tenue); vertical-align: top; }
 th {
-  position: sticky; top: 0;
-  background: var(--sup-2);
-  color: var(--texto-3);
-  font-weight: var(--peso-fuerte);
-  font-size: var(--t-1);
-  letter-spacing: var(--track-etiqueta);
-  text-transform: uppercase;
-  white-space: nowrap;
+  position: sticky; top: 0; background: var(--fondo);
+  font-family: var(--fuente-mono); font-size: var(--t-1);
+  font-weight: var(--peso-fuerte); color: var(--texto-3);
+  letter-spacing: var(--track-etiqueta); text-transform: uppercase;
+  white-space: nowrap; border-bottom-color: var(--filete);
 }
-.num, td.num { font-variant-numeric: tabular-nums; }
-.mono, th { font-family: var(--fuente-mono); }
+.num, td.num { font-variant-numeric: tabular-nums; font-family: var(--fuente-mono); }
 
 img { max-width: 100%; height: auto; display: block; }
 
-/* ── piezas reutilizables ──────────────────────────────────────────────── */
-
-/* ── doble bisel ───────────────────────────────────────────────────────────
-   Una tarjeta apoyada plana sobre el fondo se ve de plantilla. El doble
-   bisel la convierte en una pieza fisica: una carcasa exterior con su
-   borde y su radio grande, y dentro un nucleo con su propio fondo, su
-   brillo interior y un radio menor calculado para que las curvas sean
-   concentricas.  carcasa = .bisel   ·   nucleo = .bisel > *              */
-.bisel {
-  background: rgba(255, 255, 255, 0.022);
-  border: 1px solid var(--hilo);
-  border-radius: var(--radio-4);
-  padding: var(--bisel-p);
-}
-.bisel > * {
-  background-color: var(--sup-2);
-  background-image: var(--brillo-tarjeta);
-  border-radius: calc(var(--radio-4) - var(--bisel-p));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), var(--sombra);
-  height: 100%;
+/* ── rejilla de 12 columnas ────────────────────────────────────────────── */
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(var(--columnas), minmax(0, 1fr));
+  gap: var(--calle);
 }
 
-/* Tarjeta simple, para cuando el doble bisel es demasiado. */
-.tarjeta {
-  background-color: var(--sup-2);
-  background-image: var(--brillo-tarjeta);
-  border: 1px solid var(--hilo);
-  border-radius: var(--radio-3);
-  box-shadow: var(--sombra);
-  padding: var(--e-5);
+/* ── etiqueta mono en mayusculas: la voz del terminal ──────────────────── */
+.etiqueta {
+  font-family: var(--fuente-mono);
+  font-size: var(--t-1);
+  font-weight: var(--peso-medio);
+  letter-spacing: var(--track-etiqueta);
+  text-transform: uppercase;
+  color: var(--texto-3);
 }
 
-/* ── entrada ───────────────────────────────────────────────────────────────
-   Nada aparece de golpe. Sube, se enfoca y aparece, con la curva con masa.
-   Solo transform y opacity: no provoca reflujo.                            */
-.entra { opacity: 0; transform: translateY(1.25rem); }
+/* ── corte de seccion: filete grueso + numero + titulo ─────────────────── */
+.corte {
+  display: flex; align-items: baseline; gap: var(--e-4);
+  padding-top: var(--e-3);
+  border-top: 2px solid var(--filete-fuerte);
+  margin-bottom: var(--e-6);
+}
+.corte-n { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--azul); letter-spacing: var(--track-etiqueta); }
+.corte h2 { margin: 0; flex: 1; }
+
+/* ── pastilla de estado · unica forma redondeada del sistema ───────────── */
+.pastilla {
+  display: inline-flex; align-items: center; gap: var(--e-2);
+  padding: var(--e-1) var(--e-3);
+  border-radius: var(--radio-pill);
+  font-family: var(--fuente-mono);
+  font-size: var(--t-1);
+  letter-spacing: var(--track-etiqueta);
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.pastilla::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex: none; }
+.pastilla.aviso { color: var(--oro); border-color: color-mix(in srgb, var(--oro) 40%, transparent); }
+.pastilla.ok    { color: var(--verde); border-color: color-mix(in srgb, var(--verde) 40%, transparent); }
+.pastilla.dato  { color: var(--cian); border-color: color-mix(in srgb, var(--cian) 40%, transparent); }
+
+/* ── entrada ───────────────────────────────────────────────────────────── */
+.entra { opacity: 0; transform: translateY(0.75rem); }
 .entra.visible {
   opacity: 1; transform: none;
   transition: opacity var(--entrada), transform var(--entrada);
   transition-delay: var(--retraso, 0ms);
 }
-/* Sin JS se ve igual, solo que sin animar. */
 .sin-js .entra { opacity: 1; transform: none; }
 
-/* Etiqueta de tarjeta: mayusculas, pequena, muy espaciada. */
-.etiqueta {
-  font-family: var(--fuente-mono);
-  font-size: var(--t-1);
-  font-weight: var(--peso-fuerte);
-  letter-spacing: var(--track-etiqueta);
-  text-transform: uppercase;
-  color: var(--texto-3);
-}
-
-/* Pastilla de estado. Nunca comunica solo con color: lleva punto y texto. */
-.pastilla {
-  display: inline-flex; align-items: center; gap: var(--e-2);
-  padding: var(--e-1) var(--e-3);
-  border-radius: var(--radio-pill);
-  font-size: var(--t-2);
-  font-weight: var(--peso-medio);
-  border: 1px solid transparent;
-  white-space: nowrap;
-}
-.pastilla::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%;
-  background: currentColor; flex: none;
-}
-.pastilla.aviso {
-  color: var(--oro);
-  background: color-mix(in srgb, var(--oro) 10%, transparent);
-  border-color: color-mix(in srgb, var(--oro) 26%, transparent);
-}
-.pastilla.ok {
-  color: var(--verde);
-  background: color-mix(in srgb, var(--verde) 10%, transparent);
-  border-color: color-mix(in srgb, var(--verde) 26%, transparent);
-}
-.pastilla.dato {
-  color: var(--cian);
-  background: color-mix(in srgb, var(--cian) 10%, transparent);
-  border-color: color-mix(in srgb, var(--cian) 26%, transparent);
-}
-
 .apunte { color: var(--texto-2); font-size: var(--t-3); }
-.meta   { color: var(--texto-3); font-size: var(--t-2); }
+.meta   { color: var(--texto-3); font-size: var(--t-2); font-family: var(--fuente-mono); }
 .mono   { font-family: var(--fuente-mono); }
 
 .solo-lectores {
@@ -210,6 +155,5 @@ img { max-width: 100%; height: auto; display: block; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
-  /* Quien pide menos movimiento ve el contenido, no una pagina en blanco. */
   .entra { opacity: 1 !important; transform: none !important; }
 }

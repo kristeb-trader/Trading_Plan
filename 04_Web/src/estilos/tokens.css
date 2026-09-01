@@ -1,109 +1,95 @@
 /**
  * TOKENS — el unico sitio donde vive un valor literal.
  *
- * COLOR: los nueve colores base son los del estandar visual que el operador
- * validó sobre las graficas de backtesting (CLAUDE.md). No se eligen: se
- * heredan. Lo que se anade aqui son SUPERFICIES derivadas de ese fondo, que
- * es lo que da profundidad sin inventar colores nuevos.
+ * DIRECCION VISUAL (01/09/2026, tras ui-ux-pro-max):
+ *   Swiss Modernism · Minimalist Monochrome · Data-Dense Dashboard
  *
- * FORMA: el "sin degradados ni sombras" del estandar es una regla de GRAFICA.
- * En el marco del portal si se usan, muy sutiles, porque el operador pidio
- * explicitamente una estetica moderna (01/09/2026). Dentro de una grafica,
- * manda el estandar y no se toca.
+ *   Rejilla de 12 columnas y espaciado matematico. RADIO CERO en todo.
+ *   Sin sombras y sin degradados: la separacion se hace con FILETES y con
+ *   cambio de fondo, como en la imprenta. Contraste tipografico extremo:
+ *   cifras enormes contra etiquetas diminutas en monoespaciada.
  *
- * ESCRITORIO PRIMERO: el portal se usa en computador. El movil funciona, pero
- * no manda las decisiones.
+ *   Es un terminal, no una coleccion de tarjetas.
+ *
+ * COLOR: los nueve del estandar visual que el operador validó sobre las
+ * graficas de backtesting (CLAUDE.md). No se eligen: se heredan.
+ *
+ * ESCRITORIO PRIMERO: el portal se usa en computador.
  */
 :root {
   color-scheme: dark;
 
   /* ── color base · estandar visual del operador ───────────────────────── */
   --azul:   #2E86FF;  /* alcista · acento · interactivo */
-  --gris:   #8B93A7;  /* zonas · texto secundario */
+  --gris:   #8B93A7;  /* zonas */
   --oro:    #F5C542;  /* aviso · pendiente · «no probado» */
-  --rojo:   #FF5C5C;  /* solo dato negativo real · prohibicion */
+  --rojo:   #FF5C5C;  /* solo dato negativo real */
   --verde:  #4ADE80;  /* confirmado */
   --cian:   #22D3EE;  /* referencia cruzada · glosario */
 
-  /* ── superficies en capas · derivadas del fondo #0B0E14 ──────────────── */
-  --fondo:    #0B0E14;  /* la pagina */
-  --sup-1:    #10141D;  /* barra lateral, bloques citados */
-  --sup-2:    #141926;  /* tarjetas */
-  --sup-3:    #1A2030;  /* elemento elevado, hover, barras de fondo */
+  /* ── superficies ─────────────────────────────────────────────────────── */
+  --fondo:   #0B0E14;
+  --sup-1:   #0E121A;  /* franja alterna, barra lateral */
+  --sup-2:   #12161F;  /* celda destacada */
+  --sup-3:   #191E2A;  /* estado activo, hover */
 
-  /* Bordes de un pixel a muy baja opacidad: es lo que da el aspecto nitido
-     sin dibujar cajas pesadas. --linea es el token del estandar. */
-  --linea:      #3A4256;
-  --hilo:       rgba(255, 255, 255, 0.07);
-  --hilo-fuerte:rgba(255, 255, 255, 0.12);
+  /* ── filetes: aqui vive la estructura ────────────────────────────────── */
+  --filete:        rgba(255, 255, 255, 0.10);  /* separador normal */
+  --filete-tenue:  rgba(255, 255, 255, 0.055); /* division interna */
+  --filete-fuerte: rgba(255, 255, 255, 0.22);  /* corte de seccion */
+  --linea: #3A4256;   /* token del estandar de graficas */
 
-  /* ── tinta ───────────────────────────────────────────────────────────── */
-  /* Contraste verificado con el detector: sobre --fondo y sobre --sup-3 los
-     tres tonos pasan WCAG AA (4,5:1). El #6B7386 anterior daba 3,4:1. */
+  /* ── tinta · contraste verificado con el detector (WCAG AA) ──────────── */
   --texto:   #FFFFFF;
-  --texto-2: #B4BCCC;  /* secundario */
-  --texto-3: #949DB1;  /* metadatos, contadores, ejes */
+  --texto-2: #B4BCCC;
+  --texto-3: #949DB1;
 
-  /* ── espacio ─────────────────────────────────────────────────────────── */
+  /* ── espacio · base 8, escala matematica ─────────────────────────────── */
   --e-1: 0.25rem;  --e-2: 0.5rem;   --e-3: 0.75rem;  --e-4: 1rem;
-  --e-5: 1.5rem;   --e-6: 2rem;     --e-7: 3rem;     --e-8: 4.5rem;
+  --e-5: 1.5rem;   --e-6: 2rem;     --e-7: 3rem;     --e-8: 5rem;
+  --e-9: 7.5rem;   /* corte entre secciones: el aire es parte del estilo */
 
-  /* ── tipografia ──────────────────────────────────────────────────────── */
-  /* Geist y Geist Mono, servidas desde public/fuentes/ — SIL OFL 1.1.
-     NI UNA peticion a un CDN: el archivo viaja con el portal. */
+  /* ── tipografia · Geist, autoalojada, SIL OFL. Cero CDN ──────────────── */
   --fuente: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --fuente-mono: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
 
-  --t-1: 0.6875rem;  /* etiqueta de tarjeta, en mayusculas */
-  --t-2: 0.75rem;    /* metadatos */
-  --t-3: 0.8125rem;  /* interfaz, tablas */
+  /* Contraste extremo: de 11px a 112px. Es lo que da caracter. */
+  --t-1: 0.6875rem;  /* etiqueta mono en mayusculas */
+  --t-2: 0.75rem;    /* dato mono, metadato */
+  --t-3: 0.8125rem;  /* interfaz, tabla */
   --t-4: 0.9375rem;  /* cuerpo */
-  --t-5: 1.0625rem;  /* enunciado destacado */
-  --t-6: 1.375rem;   /* titulo de seccion */
-  --t-7: 2rem;       /* titulo de pagina */
-  --t-8: 2.75rem;    /* cifra */
-  --t-9: 4rem;       /* cifra protagonista y titulo de portada */
+  --t-5: 1.125rem;   /* entradilla */
+  --t-6: 1.5rem;     /* titulo de seccion */
+  --t-7: 2.5rem;
+  --t-8: 4rem;
+  --t-9: 7rem;       /* cifra protagonista y titular */
 
   --peso-normal: 400;  --peso-medio: 500;
   --peso-fuerte: 600;  --peso-max: 700;
 
-  --alto-linea: 1.7;   /* el plan se lee entero: prosa comoda */
-  --alto-corto: 1.25;
+  --alto-linea: 1.65;
+  --alto-corto: 1.05;   /* titulares muy cerrados, como en prensa */
 
-  /* Titulos ligeramente cerrados y cifras muy cerradas: el detalle que mas
-     se nota entre una pagina moderna y una plantilla. */
-  --track-titulo: -0.015em;
-  --track-cifra:  -0.03em;
-  --track-etiqueta: 0.08em;
+  --track-titulo:   -0.03em;
+  --track-cifra:    -0.045em;
+  --track-etiqueta:  0.14em;  /* mayusculas muy abiertas */
 
   /* ── forma ───────────────────────────────────────────────────────────── */
-  --radio-1: 6px;
-  --radio-2: 10px;
-  --radio-3: 14px;   /* tarjeta simple */
-  --radio-4: 20px;   /* carcasa del doble bisel */
-  --bisel-p: 5px;    /* separacion carcasa/nucleo; el radio interior se calcula */
-  --radio-pill: 999px;
+  /* RADIO CERO. Sin excepciones y sin sombras: la estructura son los filetes. */
+  --radio: 0;
+  --radio-pill: 999px;  /* unica excepcion: la pastilla de estado */
 
-  /* Sombra y brillo, muy contenidos. Dan volumen; no se ven como sombra. */
-  --sombra: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.28);
-  --brillo-tarjeta: linear-gradient(180deg,
-                    rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0) 45%);
-
-  /* Halo de fondo: azul del propio acento, casi imperceptible. */
-  --halo:
-    radial-gradient(900px 480px at 82% -12%, rgba(46, 134, 255, 0.10), transparent 62%),
-    radial-gradient(680px 420px at -8% 8%,  rgba(34, 211, 238, 0.045), transparent 60%);
+  /* ── rejilla ─────────────────────────────────────────────────────────── */
+  --columnas: 12;
+  --calle: var(--e-4);
 
   /* ── medida ──────────────────────────────────────────────────────────── */
-  /* 68ch: el detector marcaba lineas de 144 caracteres. Lo comodo es <80. */
   --medida: 52ch;
-  --ancho-texto: 48rem;   /* columna del plan largo */
-  --ancho-total: 78rem;
-  --rail: 15.5rem;        /* barra lateral en escritorio */
+  --ancho-total: 80rem;
+  --rail: 14rem;
 
   /* ── movimiento ──────────────────────────────────────────────────────── */
-  /* Curva con masa: arranca rapido y frena largo. Nada de ease-in-out. */
   --curva: cubic-bezier(0.32, 0.72, 0, 1);
-  --transicion: 180ms var(--curva);
-  --entrada: 700ms var(--curva);
+  --transicion: 160ms var(--curva);
+  --entrada: 620ms var(--curva);
 }

@@ -1,33 +1,31 @@
 ---
 /**
- * Marco — barra lateral, contenido y aviso permanente.
+ * Marco — cinta de estado, rail de navegacion y contenido.
  *
- * ESCRITORIO PRIMERO: barra lateral fija a la izquierda. Diez secciones no
- * caben comodas en una fila de pestanas, y el portal se usa en computador.
- * Por debajo de 900px la barra pasa arriba y se desplaza en horizontal.
+ * Lenguaje: rejilla suiza + terminal de datos. Radio cero, sin sombras.
+ * La estructura la dibujan los FILETES, no las cajas.
  *
- * El aviso de «no probado» lo pone el marco, no la pagina: asi ninguna
- * pantalla puede esconderlo. Va en oro, no en rojo — es una advertencia sobre
- * el estado del plan, no un error. El rojo queda reservado para un dato
- * negativo de verdad.
+ * El aviso de «no probado» lo pone el marco, no la pagina: ninguna pantalla
+ * puede esconderlo. Va en oro — advertencia, no error. El rojo se reserva
+ * para un dato negativo de verdad.
  */
 import * as P from '../lib/parsers.mjs';
 import '../estilos/tokens.css';
 import '../estilos/base.css';
 
 interface Props { titulo: string; ancho?: 'texto' | 'total' }
-const { titulo, ancho = 'texto' } = Astro.props;
+const { titulo, ancho = 'total' } = Astro.props;
 
 const v = P.version();
 const bt = P.backtesting();
 
-// `lista: false` = todavia no construida. Se muestra apagada, no como enlace roto.
+// `lista: false` = todavia no construida. Apagada, nunca un enlace roto.
 const GRUPOS = [
   {
-    grupo: 'El plan',
+    grupo: 'Plan',
     items: [
       { href: '/', texto: 'Portada', lista: true },
-      { href: '/plan', texto: 'Recorrido completo', lista: false },
+      { href: '/plan', texto: 'Recorrido', lista: false },
       { href: '/reglas', texto: 'Reglas', lista: false, cuenta: P.reglas().length },
       { href: '/parametros', texto: 'Parámetros', lista: false, cuenta: P.parametros().size },
       { href: '/glosario', texto: 'Glosario', lista: false, cuenta: P.glosario().length },
@@ -36,16 +34,16 @@ const GRUPOS = [
   {
     grupo: 'Práctica',
     items: [
-      { href: '/checklist', texto: 'Checklist diaria', lista: false },
-      { href: '/galeria', texto: 'Galería de casos', lista: false, cuenta: P.galeria().length },
+      { href: '/checklist', texto: 'Checklist', lista: false },
+      { href: '/galeria', texto: 'Galería', lista: false, cuenta: P.galeria().length },
     ],
   },
   {
-    grupo: 'Lo que falta',
+    grupo: 'Abierto',
     items: [
       { href: '/pendientes', texto: 'Pendientes', lista: false, cuenta: P.pendientesAbiertos().length },
-      { href: '/contextualizacion', texto: 'Contextualización', lista: false },
-      { href: '/cierre', texto: 'Cierre de la fase 1', lista: false },
+      { href: '/contextualizacion', texto: 'Contexto', lista: false },
+      { href: '/cierre', texto: 'Cierre F1', lista: false },
     ],
   },
 ];
@@ -66,11 +64,20 @@ const activa = (href: string) =>
   <body class="sin-js">
     <a class="saltar" href="#contenido">Saltar al contenido</a>
 
+    <!-- Cinta de estado. Como la cabecera de un terminal: solo datos. -->
+    <div class="cinta">
+      <span class="cinta-i"><b>PLAN</b> v{v.version}</span>
+      <span class="cinta-i"><b>ACT</b> {v.fecha}</span>
+      <span class="cinta-i"><b>REGLAS</b> {P.reglas().length}</span>
+      <span class="cinta-i"><b>ESTADO</b> <em class="alerta">NO PROBADO</em></span>
+      <a class="cinta-i cinta-a" href="/cierre">{bt.huecos.length} HUECOS DECLARADOS</a>
+    </div>
+
     <div class="marco">
       <aside class="rail">
         <a class="marca" href="/">
-          <span class="marca-n">Plan Chaumer</span>
-          <span class="marca-s">NQ · MNQ · NinjaTrader 8</span>
+          <span class="marca-n">CHAUMER</span>
+          <span class="marca-s">NQ · MNQ · NT8</span>
         </a>
 
         <nav class="nav" aria-label="Secciones">
@@ -81,23 +88,18 @@ const activa = (href: string) =>
                 s.lista
                   ? <a href={s.href} class:list={['nav-i', { activa: activa(s.href) }]}>
                       <span>{s.texto}</span>
-                      {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
+                      {s.cuenta && <span class="nav-c">{String(s.cuenta).padStart(2, '0')}</span>}
                     </a>
                   : <span class="nav-i pendiente" aria-disabled="true">
                       <span>{s.texto}</span>
-                      {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
+                      {s.cuenta && <span class="nav-c">{String(s.cuenta).padStart(2, '0')}</span>}
                     </span>
               ))}
             </div>
           ))}
         </nav>
 
-        <a class="estado" href="/cierre">
-          <span class="pastilla aviso">plan no probado</span>
-          <span class="estado-d meta">
-            v{v.version} · {bt.huecos.length} huecos declarados
-          </span>
-        </a>
+        <a class="estado" href="/cierre"><span class="pastilla aviso">no probado</span></a>
       </aside>
 
       <div class="cuerpo">
@@ -107,138 +109,174 @@ const activa = (href: string) =>
 
         <footer class="pie">
           <p class="meta">
-            El portal renderiza <code>01_Plan/</code>. No añade metodología, no
-            manda órdenes y no se conecta a la cuenta. Una observación no
-            modifica el plan.
+            Renderiza <code>01_Plan/</code>. No añade metodología, no manda
+            órdenes, no se conecta a la cuenta. Una observación no modifica el plan.
           </p>
         </footer>
       </div>
     </div>
 
     <script is:inline>
-      // Entrada al aparecer en pantalla. IntersectionObserver, nunca un
-      // listener de scroll: eso provoca reflujo continuo.
       document.body.classList.remove('sin-js');
       (function () {
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var hayIO = 'IntersectionObserver' in window;
+
+        // Entrada al aparecer. IntersectionObserver, nunca listener de scroll.
         var objetivos = document.querySelectorAll('.entra');
-        if (!('IntersectionObserver' in window) ||
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (!hayIO || reduce) {
           objetivos.forEach(function (e) { e.classList.add('visible'); });
-          return;
+        } else {
+          var obs = new IntersectionObserver(function (filas) {
+            filas.forEach(function (f) {
+              if (!f.isIntersecting) return;
+              f.target.classList.add('visible');
+              obs.unobserve(f.target);
+            });
+          }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+          objetivos.forEach(function (e) { obs.observe(e); });
         }
-        var obs = new IntersectionObserver(function (filas) {
+
+        // Cifras que cuentan al entrar: detalle de terminal financiero.
+        // El valor final ya esta en el HTML; esto solo lo anima.
+        var cifras = document.querySelectorAll('[data-contar]');
+        if (!cifras.length || reduce || !hayIO) return;
+        var obs2 = new IntersectionObserver(function (filas) {
           filas.forEach(function (f) {
             if (!f.isIntersecting) return;
-            f.target.classList.add('visible');
-            obs.unobserve(f.target);
+            obs2.unobserve(f.target);
+            var fin = parseInt(f.target.getAttribute('data-contar'), 10);
+            if (isNaN(fin)) return;
+            var ini = performance.now(), dur = 700;
+            requestAnimationFrame(function paso(t) {
+              var k = Math.min(1, (t - ini) / dur);
+              k = 1 - Math.pow(1 - k, 3);
+              f.target.textContent = String(Math.round(fin * k));
+              if (k < 1) requestAnimationFrame(paso);
+              else f.target.textContent = String(fin);
+            });
           });
-        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
-        objetivos.forEach(function (e) { obs.observe(e); });
+        }, { threshold: 0.4 });
+        cifras.forEach(function (e) { obs2.observe(e); });
       })();
     </script>
 
     <style>
       .saltar {
-        position: fixed; left: var(--e-3); top: var(--e-3); z-index: 10;
+        position: fixed; left: var(--e-3); top: var(--e-3); z-index: 20;
         padding: var(--e-2) var(--e-3);
-        background: var(--sup-3); border: 1px solid var(--hilo);
-        border-radius: var(--radio-1);
+        background: var(--sup-3); box-shadow: none;
         transform: translateY(-250%);
       }
       .saltar:focus { transform: none; }
 
-      .marco { display: grid; grid-template-columns: var(--rail) 1fr; min-height: 100dvh; }
+      /* ── cinta de estado ───────────────────────────────────────────── */
+      .cinta {
+        display: flex; flex-wrap: wrap; align-items: center;
+        border-bottom: 1px solid var(--filete);
+        font-family: var(--fuente-mono);
+        font-size: var(--t-1);
+        letter-spacing: var(--track-etiqueta);
+        color: var(--texto-3);
+        background: var(--sup-1);
+      }
+      .cinta-i {
+        padding: var(--e-2) var(--e-4);
+        border-right: 1px solid var(--filete-tenue);
+        white-space: nowrap;
+      }
+      .cinta-i b { font-weight: var(--peso-medio); opacity: 0.6; margin-right: var(--e-2); }
+      .cinta .alerta { font-style: normal; color: var(--oro); }
+      .cinta-a {
+        margin-left: auto; border-right: 0;
+        border-left: 1px solid var(--filete-tenue);
+        color: var(--oro); box-shadow: none;
+      }
+      .cinta-a:hover { background: var(--sup-3); color: var(--oro); box-shadow: none; }
 
-      /* ── barra lateral ─────────────────────────────────────────────── */
+      /* ── rail ──────────────────────────────────────────────────────── */
+      .marco { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); min-height: 100dvh; }
+
       .rail {
-        position: sticky; top: 0; align-self: start;
-        height: 100dvh;
-        display: flex; flex-direction: column; gap: var(--e-5);
-        padding: var(--e-5) var(--e-4);
-        background: color-mix(in srgb, var(--sup-1) 82%, transparent);
-        backdrop-filter: blur(12px);
-        border-right: 1px solid var(--hilo);
+        position: sticky; top: 0; align-self: start; height: 100dvh;
+        display: flex; flex-direction: column; gap: var(--e-6);
+        padding: var(--e-5) 0;
+        border-right: 1px solid var(--filete);
         overflow-y: auto;
       }
 
-      .marca { display: block; border: 0; }
-      .marca:hover { color: inherit; }
+      .marca { display: block; padding: 0 var(--e-5); box-shadow: none; }
+      .marca:hover { box-shadow: none; }
       .marca-n {
-        display: block; font-size: var(--t-4); font-weight: var(--peso-max);
-        letter-spacing: var(--track-titulo); color: var(--texto);
+        display: block; font-family: var(--fuente-mono);
+        font-size: var(--t-3); font-weight: var(--peso-max);
+        letter-spacing: var(--track-etiqueta); color: var(--texto);
       }
       .marca-s {
-        display: block; font-size: var(--t-1); color: var(--texto-3);
-        font-family: var(--fuente-mono); margin-top: var(--e-2);
+        display: block; font-family: var(--fuente-mono);
+        font-size: var(--t-1); color: var(--texto-3);
+        letter-spacing: var(--track-etiqueta); margin-top: var(--e-2);
       }
 
-      .nav { display: flex; flex-direction: column; gap: var(--e-5); flex: 1; }
-      .nav-g { display: flex; flex-direction: column; gap: 2px; }
-      .nav-t { margin: 0 0 var(--e-2); padding-left: var(--e-3); }
+      .nav { display: flex; flex-direction: column; gap: var(--e-6); flex: 1; }
+      .nav-g { display: flex; flex-direction: column; }
+      .nav-t { margin: 0 0 var(--e-3); padding: 0 var(--e-5); opacity: 0.7; }
 
       .nav-i {
         display: flex; align-items: center; justify-content: space-between;
-        gap: var(--e-2);
-        padding: var(--e-2) var(--e-3);
-        min-height: 2.25rem;
-        border: 0; border-radius: var(--radio-2);
+        gap: var(--e-3);
+        padding: var(--e-2) var(--e-5);
+        min-height: 2.125rem;
         font-size: var(--t-3);
         color: var(--texto-2);
-        transition: background var(--transicion), color var(--transicion);
+        box-shadow: none;
+        border-left: 2px solid transparent;
+        transition: color var(--transicion), background var(--transicion), border-color var(--transicion);
       }
-      .nav-i:hover { background: var(--sup-3); color: var(--texto); }
+      .nav-i:hover { background: var(--sup-1); color: var(--texto); box-shadow: none; }
       .nav-i.activa {
-        background: color-mix(in srgb, var(--azul) 14%, transparent);
-        color: var(--texto);
+        color: var(--texto); background: var(--sup-2);
+        border-left-color: var(--azul);
         font-weight: var(--peso-medio);
-        box-shadow: inset 2px 0 0 var(--azul);
       }
-      /* Pendiente: se distingue por opacidad y por el cursor, no solo por color. */
-      .nav-i.pendiente { color: var(--texto-3); opacity: 0.5; cursor: not-allowed; }
+      /* Pendiente: opacidad Y cursor, nunca solo color. */
+      .nav-i.pendiente { color: var(--texto-3); opacity: 0.45; cursor: not-allowed; }
       .nav-i.pendiente:hover { background: none; color: var(--texto-3); }
+      .nav-c { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-3); }
 
-      .nav-c {
-        font-size: var(--t-1); color: var(--texto-3);
-        background: var(--sup-3); border-radius: var(--radio-pill);
-        padding: 0 var(--e-2); min-width: 1.5rem; text-align: center;
-      }
-
-      .estado { display: block; border: 0; }
-      .estado:hover { color: inherit; }
-      .estado:hover .pastilla { border-color: var(--oro); }
-      .estado-d { display: block; margin-top: var(--e-2); padding-left: var(--e-1); }
+      .estado { padding: 0 var(--e-5); box-shadow: none; }
+      .estado:hover { box-shadow: none; }
 
       /* ── contenido ─────────────────────────────────────────────────── */
       .cuerpo { display: flex; flex-direction: column; min-width: 0; }
-      .contenido {
-        flex: 1; width: 100%; margin: 0 auto;
-        padding: var(--e-7) var(--e-6) var(--e-8);
-      }
-      .contenido.texto { max-width: var(--ancho-texto); }
+      .contenido { flex: 1; width: 100%; padding: var(--e-8) var(--e-7) var(--e-9); }
+      .contenido.texto { max-width: 56rem; }
       .contenido.total { max-width: var(--ancho-total); }
 
-      .pie { border-top: 1px solid var(--hilo); padding: var(--e-4) var(--e-6); }
-      .pie p { max-width: var(--medida); margin: 0 auto; }
+      .pie { border-top: 1px solid var(--filete); padding: var(--e-5) var(--e-7); }
 
-      /* ── por debajo de 900px la barra pasa arriba ──────────────────── */
+      /* ── por debajo de 900px el rail pasa arriba ───────────────────── */
       @media (max-width: 900px) {
         .marco { grid-template-columns: 1fr; }
         .rail {
           position: static; height: auto;
           flex-direction: row; align-items: center; gap: var(--e-4);
-          border-right: 0; border-bottom: 1px solid var(--hilo);
-          padding: var(--e-3) var(--e-4);
-          overflow-x: auto;
+          border-right: 0; border-bottom: 1px solid var(--filete);
+          padding: var(--e-3) var(--e-4); overflow-x: auto;
         }
-        .nav { flex-direction: row; gap: var(--e-3); flex: 0 0 auto; }
-        .nav-g { flex-direction: row; gap: var(--e-1); }
+        .nav { flex-direction: row; gap: var(--e-4); flex: 0 0 auto; }
+        .nav-g { flex-direction: row; }
         .nav-t { display: none; }
-        .nav-i { white-space: nowrap; }
-        .nav-i.activa { box-shadow: none; }
-        .marca-s, .estado-d { display: none; }
-        .marca, .estado { flex: 0 0 auto; }
-        .contenido { padding: var(--e-6) var(--e-4) var(--e-7); }
-        .pie { padding: var(--e-4); }
+        .nav-i {
+          white-space: nowrap; padding: var(--e-2) var(--e-3);
+          border-left: 0; border-bottom: 2px solid transparent;
+        }
+        .nav-i.activa { border-left: 0; border-bottom-color: var(--azul); }
+        .marca, .estado { flex: 0 0 auto; padding: 0 var(--e-2); }
+        .marca-s { display: none; }
+        .contenido { padding: var(--e-6) var(--e-4) var(--e-8); }
+        .pie { padding: var(--e-5) var(--e-4); }
+        .cinta-i { padding: var(--e-2) var(--e-3); }
       }
     </style>
   </body>
