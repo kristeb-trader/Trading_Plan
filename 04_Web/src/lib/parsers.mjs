@@ -282,3 +282,33 @@ export function backtesting() {
     huecos,
   };
 }
+
+// ─────────────────────────────────────────────── indice para el buscador
+/**
+ * Todo lo consultable en una sola lista, para el buscador de la portada.
+ * Se genera en la compilacion y se filtra en el cliente: sin servidor.
+ */
+export function indiceBusqueda() {
+  const items = [];
+  for (const r of reglas()) {
+    items.push({
+      tipo: 'regla', id: r.id, url: '/reglas/' + r.id,
+      titulo: r.enunciado,
+      extra: r.categoria,
+      texto: [r.enunciado, r.accion, r.nota, r.categoria].filter(Boolean).join(' '),
+    });
+  }
+  for (const t of glosario()) {
+    items.push({ tipo: 'termino', id: t.termino, url: '/glosario', titulo: t.termino, extra: 'glosario', texto: t.termino + ' ' + t.cuerpo.slice(0, 400) });
+  }
+  for (const c of galeria()) {
+    items.push({ tipo: 'caso', id: c.id, url: '/galeria#' + c.id, titulo: c.titulo, extra: c.reglas.join(' '), texto: c.titulo + ' ' + c.cuerpo.slice(0, 300) });
+  }
+  for (const [nombre, p] of parametros()) {
+    items.push({ tipo: 'parametro', id: nombre, url: '/parametros', titulo: nombre, extra: p.valor, texto: nombre + ' ' + p.valor + ' ' + p.resto.join(' ') });
+  }
+  for (const p of pendientesAbiertos()) {
+    items.push({ tipo: 'pendiente', id: p.id, url: '/pendientes', titulo: p.titulo, extra: 'abierto', texto: p.titulo });
+  }
+  return items;
+}

@@ -1,19 +1,17 @@
 ---
 /**
- * Portada.
+ * Inicio. Es un MAPA, no un cartel.
  *
- * Ningun numero esta escrito a mano: todos se cuentan de 01_Plan/ en cada
- * compilacion. Y las cifras del backtesting no aparecen nunca sin sus cuatro
- * motivos en el mismo bloque.
+ * Alfredo llega sin saber que hay dentro. Lo primero que necesita es saber
+ * que puede consultar y donde esta, no una portada que impresione. De ahi
+ * el buscador arriba y el mapa de secciones aqui.
  *
- * Lenguaje: rejilla suiza de 12 columnas, radio cero, sin sombras. Los datos
- * se presentan como en un terminal — filetes, monoespaciada y contraste
- * tipografico extremo — no como tarjetas.
+ * Ningun numero esta escrito a mano: todos se cuentan de 01_Plan/. Y la
+ * cifra del backtesting nunca aparece sin sus cuatro motivos al lado.
  */
 import Marco from '../componentes/Marco.astro';
 import * as P from '../lib/parsers.mjs';
 
-const v = P.version();
 const reglas = P.reglas();
 const cats = P.categorias();
 const subfases = P.subfasesDeclaradas();
@@ -24,219 +22,216 @@ const desviaciones = P.desviaciones();
 const params = P.parametros();
 const bt = P.backtesting();
 
-const cifras = [
-  { n: reglas.length, etiqueta: 'reglas', nota: `${cats.length} categorías` },
-  { n: subfases.length, etiqueta: 'sub-fases', nota: 'plan completo' },
-  { n: glosario.length, etiqueta: 'términos', nota: 'medibles' },
-  { n: galeria.length, etiqueta: 'casos', nota: `${galeria.filter((c) => c.imagen).length} con gráfica` },
-  { n: params.size, etiqueta: 'parámetros', nota: 'un solo sitio' },
-  { n: abiertos.length, etiqueta: 'abiertos', nota: `${desviaciones.length} desviaciones` },
+const DESTINOS = [
+  {
+    href: '/reglas', titulo: 'Las reglas', cuenta: reglas.length, unidad: 'reglas',
+    texto: `Cada regla con sus condiciones medibles, su acción y el caso real que la fijó. Repartidas en ${cats.length} categorías, buscables por texto o por número.`,
+    principal: true,
+  },
+  {
+    href: '/plan', titulo: 'El recorrido completo', cuenta: subfases.length, unidad: 'sub-fases',
+    texto: 'El documento maestro entero, en el orden que declara su propio índice, con el razonamiento detrás de cada decisión.',
+  },
+  {
+    href: '/galeria', titulo: 'Casos reales', cuenta: galeria.length, unidad: 'casos',
+    texto: `Capturas del gráfico del operador, etiquetadas con las reglas que las explican. ${galeria.filter((c) => c.imagen).length} llevan gráfica.`,
+  },
+  {
+    href: '/glosario', titulo: 'El vocabulario', cuenta: glosario.length, unidad: 'términos',
+    texto: 'Corrida, retroceso, rompimiento, consecución, traspaso. Cada término con una definición que se puede medir, no describir.',
+  },
+  {
+    href: '/parametros', titulo: 'Los números', cuenta: params.size, unidad: 'parámetros',
+    texto: 'Todo lo que puede cambiar, en un solo sitio. Las reglas citan el nombre del parámetro, nunca el valor.',
+  },
+  {
+    href: '/checklist', titulo: 'La secuencia del día', cuenta: null, unidad: '4 bloques',
+    texto: 'Antes de abrir la plataforma, premercado, ventana operativa y después del llenado, en su orden real.',
+  },
+  {
+    href: '/pendientes', titulo: 'Lo que sigue abierto', cuenta: abiertos.length, unidad: 'sin cerrar',
+    texto: `Las preguntas que el plan todavía no responde, más ${desviaciones.length} desviaciones conscientes respecto al material del curso.`,
+  },
+  {
+    href: '/contextualizacion', titulo: 'Lo que no es regla', cuenta: null, unidad: 'criterio',
+    texto: 'Diez elementos que quedaron fuera del plan a propósito, porque el operador dijo que no tienen número. Se muestran como criterio, nunca como condición.',
+  },
 ];
 
 const MOTIVOS = [
   ['Muestra insuficiente', `${bt.operaciones} operaciones no dicen nada estadísticamente.`],
-  ['Reglas en movimiento', 'Los primeros días se leyeron con reglas que después resultaron incorrectas.'],
+  ['Las reglas se movían', 'Los primeros días se leyeron con reglas que después resultaron ser incorrectas.'],
   ['Sin filtro de noticias', 'Ninguna operación se descartó por noticia roja.'],
-  ['Sin capa de contexto', 'Es la que quita varios de esos días, y todavía no existe.'],
+  ['Falta la capa de contexto', 'Es la que quita varios de esos días, y todavía no existe.'],
 ];
 ---
 
-<Marco titulo="Portada">
-  <header class="portada entra">
-    <p class="etiqueta pt-e">Metodología Alfredo Chaumer</p>
-    <h1 class="pt-t">
-      El plan está escrito.<br />
-      <span class="pt-neg">No está probado.</span>
-    </h1>
-    <p class="pt-l">
-      {reglas.length} reglas medibles, contrastadas contra 11 sesiones reales al
-      tick. Esta página no añade metodología: renderiza los documentos del plan
-      tal como están escritos.
+<Marco titulo="Inicio">
+  <section class="intro entra">
+    <h1>La metodología de Alfredo Chaumer, regla por regla</h1>
+    <p class="lead">
+      {reglas.length} reglas medibles extraídas de su método para NQ y MNQ, y
+      contrastadas contra 11 sesiones reales reconstruidas al tick. Este portal
+      no añade metodología: muestra los documentos del plan tal como están
+      escritos, para que puedas revisarlos.
     </p>
-  </header>
-
-  <!-- Tira de datos: filetes verticales, como un panel de cotizaciones. -->
-  <section class="tira entra" aria-label="El plan en números">
-    {cifras.map((c) => (
-      <div class="dato">
-        <span class="dato-n num" data-contar={c.n}>{c.n}</span>
-        <span class="etiqueta dato-e">{c.etiqueta}</span>
-        <span class="meta dato-x">{c.nota}</span>
-      </div>
-    ))}
+    <p class="apunte">
+      Usa el buscador de arriba para saltar a cualquier regla, término o caso.
+    </p>
   </section>
 
-  <section class="seccion">
-    <div class="corte entra">
-      <span class="corte-n">01</span>
-      <h2>Los cuatro huecos declarados</h2>
-      <span class="meta">no es un olvido</span>
+  <!-- El estado del plan. Va arriba porque condiciona como se lee todo lo
+       demas, y no puede quedar como letra pequeña al final. -->
+  <section class="estado-plan tarjeta entra">
+    <div class="ep-cab">
+      <h2>El plan está escrito y contrastado. No está probado.</h2>
+      <p class="apunte">
+        La fase 1 se cerró el {P.version().fecha} sabiendo que estos cuatro
+        puntos quedaban abiertos. Ninguno es un olvido.
+      </p>
     </div>
-
-    <ol class="huecos">
-      {bt.huecos.map((h, i) => (
-        <li class="hueco entra" style={`--retraso:${i * 60}ms`}>
-          <span class="hueco-n">{String(i + 1).padStart(2, '0')}</span>
+    <ul class="huecos">
+      {bt.huecos.map((h) => (
+        <li class="hueco">
           <h3 class="hueco-t" set:html={P.tituloAHtml(P.sinNumeracion(h.titulo))} />
-          <span class="hueco-e etiqueta">abierto</span>
         </li>
       ))}
-    </ol>
-    <p class="apunte huecos-p">
-      La fase 1 se cerró <strong>sabiendo</strong> que estos cuatro puntos
-      quedaban abiertos. El portal no puede presentarse como si no existieran.
-    </p>
+    </ul>
+    <a class="ep-mas" href="/cierre">Leer el acta de cierre completa</a>
   </section>
 
-  <section class="seccion">
-    <div class="corte entra">
-      <span class="corte-n">02</span>
-      <h2>Lo que dio el backtesting</h2>
-      <span class="meta">contrastado, no medido</span>
+  <section class="mapa-s">
+    <h2 class="mapa-h entra">Qué hay dentro</h2>
+    <div class="mapa">
+      {DESTINOS.map((d, i) => (
+        <a class:list={['destino', { principal: d.principal }, 'entra']}
+           href={d.href} style={`--retraso:${Math.min(i, 6) * 45}ms`}>
+          <span class="d-cab">
+            <span class="d-t">{d.titulo}</span>
+            <span class="d-c num">{d.cuenta ?? ''}<span class="d-u">{d.unidad}</span></span>
+          </span>
+          <span class="d-x">{d.texto}</span>
+        </a>
+      ))}
     </div>
+  </section>
 
-    <div class="bt entra">
+  <section class="bt-s">
+    <h2 class="entra">Lo que dio el backtesting</h2>
+    <div class="bt tarjeta entra">
       <div class="bt-c">
-        <span class="etiqueta">resultado acumulado</span>
+        <span class="etiqueta">Resultado acumulado</span>
         <span class="bt-n num">{bt.total}</span>
-        <span class="meta bt-s">{bt.operaciones} operaciones · 11 sesiones al tick</span>
+        <span class="meta">{bt.operaciones} operaciones en 11 sesiones</span>
       </div>
       <div class="bt-m">
         <p class="bt-t">Esta cifra no mide la estrategia.</p>
         <dl class="motivos">
           {MOTIVOS.map(([t, d]) => (
             <div class="motivo">
-              <dt class="motivo-t">{t}</dt>
-              <dd class="motivo-d">{d}</dd>
+              <dt>{t}</dt>
+              <dd>{d}</dd>
             </div>
           ))}
         </dl>
       </div>
     </div>
   </section>
-
-  <p class="meta cierre">
-    v{v.version} · {v.fecha} · los contadores se leen de los archivos en cada compilación
-  </p>
 </Marco>
 
 <style>
-  /* ── portada ─────────────────────────────────────────────────────────── */
-  .portada { margin-bottom: var(--e-8); }
-  .pt-e { margin: 0 0 var(--e-5); color: var(--azul); }
-  .pt-t {
-    font-size: clamp(var(--t-7), 7vw, var(--t-9));
-    letter-spacing: var(--track-cifra);
-    margin: 0 0 var(--e-6);
-    max-width: 16ch;
-  }
-  .pt-neg { color: var(--texto-3); }
-  .pt-l { font-size: var(--t-5); color: var(--texto-2); max-width: 46ch; margin: 0; }
+  /* ── intro ───────────────────────────────────────────────────────────── */
+  .intro { max-width: 40rem; margin-bottom: var(--e-8); }
+  .intro h1 { margin-bottom: var(--e-5); }
+  .lead { font-size: var(--t-5); color: var(--texto-2); }
 
-  /* ── tira de datos ───────────────────────────────────────────────────── */
-  /* Filetes verticales entre celdas: panel de cotizaciones, no tarjetas. */
-  .tira {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    border-top: 2px solid var(--filete-fuerte);
-    border-bottom: 1px solid var(--filete);
-    margin-bottom: var(--e-9);
-  }
-  .dato {
-    display: flex; flex-direction: column;
-    padding: var(--e-5) var(--e-4) var(--e-5) 0;
-    border-right: 1px solid var(--filete-tenue);
-  }
-  .dato:last-child { border-right: 0; }
-  .dato-n {
-    font-size: var(--t-8); font-weight: var(--peso-max);
-    line-height: 1; letter-spacing: var(--track-cifra);
-    font-variant-numeric: tabular-nums;
-  }
-  .dato-e { margin-top: var(--e-3); color: var(--texto-2); }
-  .dato-x { margin-top: var(--e-1); }
+  /* ── estado del plan ─────────────────────────────────────────────────── */
+  .estado-plan { padding: var(--e-6); margin-bottom: var(--e-9); }
+  .ep-cab { max-width: 44rem; }
+  .ep-cab h2 { margin: 0 0 var(--e-3); font-size: var(--t-6); color: var(--aviso); }
+  .ep-cab p { margin: 0; }
 
-  /* ── secciones ───────────────────────────────────────────────────────── */
-  .seccion { margin-bottom: var(--e-9); }
-
-  /* ── huecos · lista con filete ───────────────────────────────────────── */
-  .huecos { list-style: none; padding: 0; margin: 0; max-width: none; }
+  .huecos {
+    list-style: none; padding: 0; max-width: none;
+    margin: var(--e-5) 0 var(--e-5);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: var(--e-2);
+  }
   .hueco {
-    display: grid;
-    grid-template-columns: 3rem minmax(0, 1fr) 6rem;
-    gap: var(--e-4);
-    align-items: baseline;
-    padding: var(--e-5) 0;
-    margin: 0;
-    border-bottom: 1px solid var(--filete-tenue);
-    transition: background var(--transicion);
+    margin: 0; padding: var(--e-4);
+    background: var(--superficie);
+    border-radius: var(--radio-2);
   }
-  .hueco:hover { background: var(--sup-1); }
-  .hueco-n {
-    font-family: var(--fuente-mono); font-size: var(--t-2);
-    color: var(--oro); letter-spacing: var(--track-etiqueta);
+  .hueco-t { margin: 0; font-size: var(--t-3); font-weight: var(--peso-medio); color: var(--texto-2); }
+  .hueco-t :global(code) { color: var(--texto-3); font-size: var(--t-1); }
+
+  .ep-mas { font-size: var(--t-3); font-weight: var(--peso-medio); }
+
+  /* ── mapa ────────────────────────────────────────────────────────────── */
+  .mapa-s { margin-bottom: var(--e-9); }
+  .mapa-h { margin: 0 0 var(--e-5); }
+  /* Rejilla asimetrica: el primer destino ocupa el doble. Tres columnas
+     iguales serian la maqueta generica de siempre. */
+  .mapa { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--e-3); }
+  .destino {
+    grid-column: span 2;
+    display: flex; flex-direction: column; gap: var(--e-3);
+    padding: var(--e-5);
+    background: var(--tarjeta);
+    border: 1px solid var(--borde-sutil);
+    border-radius: var(--radio-3);
+    color: var(--texto-2);
+    transition: background var(--normal), border-color var(--normal), transform var(--normal);
   }
-  .hueco-t { margin: 0; font-size: var(--t-5); font-weight: var(--peso-medio); }
-  .hueco-t :global(code) { color: var(--texto-3); font-size: var(--t-2); }
-  .hueco-e { text-align: right; color: var(--oro); opacity: 0.75; }
-  .huecos-p { margin-top: var(--e-5); }
+  .destino:hover {
+    background: var(--elevado);
+    border-color: var(--n-600);
+    color: var(--texto-2);
+    transform: translateY(-2px);
+  }
+  .destino.principal { grid-column: span 4; }
+  .d-cab { display: flex; align-items: baseline; justify-content: space-between; gap: var(--e-4); }
+  .d-t { font-size: var(--t-6); font-weight: var(--peso-fuerte); color: var(--texto); letter-spacing: var(--track-titulo); }
+  .destino:hover .d-t { color: var(--acento); }
+  .d-c {
+    font-size: var(--t-7); font-weight: var(--peso-max);
+    color: var(--texto); letter-spacing: var(--track-cifra);
+    display: flex; align-items: baseline; gap: var(--e-2); flex: none;
+  }
+  .d-u {
+    font-family: var(--fuente); font-size: var(--t-1); font-weight: var(--peso-medio);
+    color: var(--texto-3); letter-spacing: var(--track-etiqueta); text-transform: uppercase;
+  }
+  .d-x { font-size: var(--t-3); max-width: 52ch; }
 
   /* ── backtesting ─────────────────────────────────────────────────────── */
+  .bt-s h2 { margin: 0 0 var(--e-5); }
   .bt {
-    display: grid;
-    grid-template-columns: minmax(16rem, 24rem) minmax(0, 1fr);
-    border-top: 2px solid var(--filete-fuerte);
+    display: grid; grid-template-columns: minmax(13rem, 18rem) minmax(0, 1fr);
+    gap: var(--e-6);
+    padding: var(--e-6);
   }
-  .bt-c {
-    display: flex; flex-direction: column;
-    padding: var(--e-6) var(--e-6) var(--e-6) 0;
-    border-right: 1px solid var(--filete);
-  }
+  .bt-c { display: flex; flex-direction: column; gap: var(--e-2); }
   .bt-n {
-    font-size: clamp(var(--t-7), 4vw, var(--t-8)); font-weight: var(--peso-max);
-    color: var(--rojo); line-height: 0.9;
-    letter-spacing: var(--track-cifra);
-    margin: var(--e-4) 0 var(--e-3);
-    font-variant-numeric: tabular-nums;
+    font-size: var(--t-9); font-weight: var(--peso-max);
+    color: var(--negativo); line-height: 1;
+    letter-spacing: var(--track-cifra); margin: var(--e-2) 0;
   }
-  .bt-m { padding: var(--e-6) 0 var(--e-6) var(--e-6); }
-  .bt-t {
-    margin: 0 0 var(--e-5); font-size: var(--t-5);
-    font-weight: var(--peso-fuerte); color: var(--oro);
-  }
+  .bt-t { margin: 0 0 var(--e-4); font-size: var(--t-5); font-weight: var(--peso-fuerte); color: var(--aviso); }
+  .motivos { margin: 0; display: grid; gap: var(--e-4); }
+  .motivo { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: var(--e-4); }
+  .motivo dt { font-size: var(--t-3); font-weight: var(--peso-fuerte); color: var(--texto); }
+  .motivo dd { margin: 0; font-size: var(--t-3); color: var(--texto-2); overflow-wrap: anywhere; }
 
-  .motivos { margin: 0; display: grid; gap: 0; }
-  .motivo {
-    display: grid; grid-template-columns: 13rem minmax(0, 1fr);
-    gap: var(--e-4);
-    padding: var(--e-4) 0;
-    border-top: 1px solid var(--filete-tenue);
+  @media (max-width: 1000px) {
+    .mapa { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .destino, .destino.principal { grid-column: span 2; }
   }
-  .motivo-t {
-    font-family: var(--fuente-mono); font-size: var(--t-1);
-    letter-spacing: var(--track-etiqueta); text-transform: uppercase;
-    color: var(--texto);
-  }
-  .motivo-d { margin: 0; font-size: var(--t-3); color: var(--texto-2); overflow-wrap: anywhere; }
-
-  .cierre { margin-top: var(--e-8); }
-
-  @media (max-width: 1100px) {
-    .tira { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .dato { border-bottom: 1px solid var(--filete-tenue); }
-    .dato:nth-child(3n) { border-right: 0; }
-  }
-  @media (max-width: 900px) {
-    .hueco { grid-template-columns: 2.5rem minmax(0, 1fr); }
-    .hueco-e { display: none; }
-    .bt { grid-template-columns: 1fr; }
-    .bt-c { border-right: 0; border-bottom: 1px solid var(--filete); padding: var(--e-5) 0; }
-    .bt-m { padding: var(--e-5) 0; }
+  @media (max-width: 760px) {
+    .mapa { grid-template-columns: 1fr; }
+    .destino, .destino.principal { grid-column: span 1; }
+    .bt { grid-template-columns: 1fr; gap: var(--e-5); padding: var(--e-5); }
     .motivo { grid-template-columns: 1fr; gap: var(--e-1); }
-  }
-  @media (max-width: 600px) {
-    .tira { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .dato:nth-child(3n) { border-right: 1px solid var(--filete-tenue); }
-    .dato:nth-child(2n) { border-right: 0; }
+    .estado-plan { padding: var(--e-5); }
   }
 </style>

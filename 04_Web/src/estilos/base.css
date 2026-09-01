@@ -1,10 +1,9 @@
 /**
- * BASE — reset, documento y piezas del lenguaje suizo/terminal.
+ * BASE — reset, documento y piezas compartidas.
  * Ni un valor literal: todo sale de tokens.css.
  */
 
-/* ── tipografia servida desde el propio portal ─────────────────────────── */
-/* Geist · SIL OFL 1.1 · licencia en public/fuentes/LICENCIA-GEIST.txt */
+/* Geist · SIL OFL 1.1 · licencia en public/fuentes/ */
 @font-face {
   font-family: 'Geist';
   src: url('/fuentes/geist.woff2') format('woff2-variations');
@@ -32,17 +31,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── titulares · muy cerrados, como en prensa ──────────────────────────── */
+/* ── titulos · jerarquia por peso y color, no por tamano bruto ─────────── */
 h1, h2, h3, h4 {
   line-height: var(--alto-corto);
   letter-spacing: var(--track-titulo);
   font-weight: var(--peso-fuerte);
-  margin: var(--e-6) 0 var(--e-4);
+  margin: var(--e-6) 0 var(--e-3);
   text-wrap: balance;
 }
-h1 { font-size: var(--t-8); margin-top: 0; font-weight: var(--peso-max); }
-h2 { font-size: var(--t-6); }
-h3 { font-size: var(--t-5); line-height: 1.25; }
+h1 { font-size: var(--t-8); margin-top: 0; }
+h2 { font-size: var(--t-7); }
+h3 { font-size: var(--t-6); }
 h4 { font-size: var(--t-4); color: var(--texto-2); }
 
 p { margin: 0 0 var(--e-4); max-width: var(--medida); }
@@ -50,56 +49,64 @@ ul, ol { margin: 0 0 var(--e-4); padding-left: var(--e-5); max-width: var(--medi
 li { margin-bottom: var(--e-2); }
 li::marker { color: var(--texto-3); }
 
-/* ── enlaces · subrayado que crece, sin cambiar la maquetacion ─────────── */
 a {
-  color: var(--azul);
+  color: var(--acento);
   text-decoration: none;
-  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--azul) 40%, transparent);
-  transition: color var(--transicion), box-shadow var(--transicion);
+  transition: color var(--rapido);
 }
-a:hover { color: var(--texto); box-shadow: inset 0 -2px 0 var(--texto); }
+a:hover { color: var(--texto); }
 
-:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
+:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+  border-radius: var(--radio-1);
+}
 
-strong, b { font-weight: var(--peso-fuerte); }
-code, kbd, samp { font-family: var(--fuente-mono); font-size: 0.875em; }
+strong, b { font-weight: var(--peso-fuerte); color: var(--texto); }
+code, kbd, samp { font-family: var(--fuente-mono); font-size: 0.9em; }
 
-/* Cita: sangrada y sobre franja, sin barra de color al lado. */
 blockquote {
   margin: var(--e-5) 0;
   padding: var(--e-4) var(--e-5);
-  background: var(--sup-1);
+  background: var(--superficie);
+  border-radius: var(--radio-2);
   color: var(--texto-2);
 }
 blockquote > :last-child { margin-bottom: 0; }
 
-hr { border: 0; border-top: 1px solid var(--filete); margin: var(--e-7) 0; }
+hr { border: 0; border-top: 1px solid var(--borde-sutil); margin: var(--e-6) 0; }
 
 /* ── tablas ────────────────────────────────────────────────────────────── */
-.tabla-scroll { overflow-x: auto; margin: var(--e-5) 0; border-top: 1px solid var(--filete-fuerte); }
-table { border-collapse: collapse; width: 100%; font-size: var(--t-3); }
-th, td { text-align: left; padding: var(--e-3) var(--e-4) var(--e-3) 0; border-bottom: 1px solid var(--filete-tenue); vertical-align: top; }
-th {
-  position: sticky; top: 0; background: var(--fondo);
-  font-family: var(--fuente-mono); font-size: var(--t-1);
-  font-weight: var(--peso-fuerte); color: var(--texto-3);
-  letter-spacing: var(--track-etiqueta); text-transform: uppercase;
-  white-space: nowrap; border-bottom-color: var(--filete);
+.tabla-scroll {
+  overflow-x: auto;
+  margin: var(--e-5) 0;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-2);
 }
+table { border-collapse: collapse; width: 100%; font-size: var(--t-3); }
+th, td { text-align: left; padding: var(--e-3) var(--e-4); vertical-align: top; }
+th {
+  position: sticky; top: 0; background: var(--tarjeta);
+  font-size: var(--t-1); font-weight: var(--peso-fuerte);
+  color: var(--texto-3); letter-spacing: var(--track-etiqueta);
+  text-transform: uppercase; white-space: nowrap;
+  border-bottom: 1px solid var(--borde);
+}
+/* Fila alterna en vez de filete bajo cada fila: separa igual y pesa menos. */
+tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.018); }
 .num, td.num { font-variant-numeric: tabular-nums; font-family: var(--fuente-mono); }
 
 img { max-width: 100%; height: auto; display: block; }
 
-/* ── rejilla de 12 columnas ────────────────────────────────────────────── */
-.rejilla {
-  display: grid;
-  grid-template-columns: repeat(var(--columnas), minmax(0, 1fr));
-  gap: var(--calle);
+/* ── piezas ────────────────────────────────────────────────────────────── */
+.tarjeta {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-3);
+  box-shadow: var(--sombra-1);
 }
 
-/* ── etiqueta mono en mayusculas: la voz del terminal ──────────────────── */
 .etiqueta {
-  font-family: var(--fuente-mono);
   font-size: var(--t-1);
   font-weight: var(--peso-medio);
   letter-spacing: var(--track-etiqueta);
@@ -107,44 +114,37 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--texto-3);
 }
 
-/* ── corte de seccion: filete grueso + numero + titulo ─────────────────── */
-.corte {
-  display: flex; align-items: baseline; gap: var(--e-4);
-  padding-top: var(--e-3);
-  border-top: 2px solid var(--filete-fuerte);
-  margin-bottom: var(--e-6);
-}
-.corte-n { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--azul); letter-spacing: var(--track-etiqueta); }
-.corte h2 { margin: 0; flex: 1; }
-
-/* ── pastilla de estado · unica forma redondeada del sistema ───────────── */
-.pastilla {
-  display: inline-flex; align-items: center; gap: var(--e-2);
+/* Distintivo de estado. Sin punto de color decorativo: el color del texto
+   y la palabra ya dicen el estado. */
+.marca-estado {
+  display: inline-flex; align-items: center;
   padding: var(--e-1) var(--e-3);
   border-radius: var(--radio-pill);
-  font-family: var(--fuente-mono);
   font-size: var(--t-1);
+  font-weight: var(--peso-medio);
   letter-spacing: var(--track-etiqueta);
   text-transform: uppercase;
-  border: 1px solid transparent;
-  white-space: nowrap;
+  border: 1px solid;
 }
-.pastilla::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex: none; }
-.pastilla.aviso { color: var(--oro); border-color: color-mix(in srgb, var(--oro) 40%, transparent); }
-.pastilla.ok    { color: var(--verde); border-color: color-mix(in srgb, var(--verde) 40%, transparent); }
-.pastilla.dato  { color: var(--cian); border-color: color-mix(in srgb, var(--cian) 40%, transparent); }
+.marca-estado.aviso    { color: var(--aviso);    border-color: color-mix(in srgb, var(--aviso) 35%, transparent);    background: color-mix(in srgb, var(--aviso) 8%, transparent); }
+.marca-estado.ok       { color: var(--positivo); border-color: color-mix(in srgb, var(--positivo) 35%, transparent); background: color-mix(in srgb, var(--positivo) 8%, transparent); }
+.marca-estado.info     { color: var(--info);     border-color: color-mix(in srgb, var(--info) 35%, transparent);     background: color-mix(in srgb, var(--info) 8%, transparent); }
 
-/* ── entrada ───────────────────────────────────────────────────────────── */
-.entra { opacity: 0; transform: translateY(0.75rem); }
-.entra.visible {
-  opacity: 1; transform: none;
-  transition: opacity var(--entrada), transform var(--entrada);
-  transition-delay: var(--retraso, 0ms);
+/* Tecla, para el atajo del buscador. */
+kbd.tecla {
+  display: inline-block;
+  padding: 1px var(--e-2);
+  border: 1px solid var(--n-600);
+  border-bottom-width: 2px;
+  border-radius: var(--radio-1);
+  background: var(--elevado);
+  font-size: var(--t-1);
+  color: var(--texto-3);
+  line-height: 1.5;
 }
-.sin-js .entra { opacity: 1; transform: none; }
 
 .apunte { color: var(--texto-2); font-size: var(--t-3); }
-.meta   { color: var(--texto-3); font-size: var(--t-2); font-family: var(--fuente-mono); }
+.meta   { color: var(--texto-3); font-size: var(--t-2); }
 .mono   { font-family: var(--fuente-mono); }
 
 .solo-lectores {
@@ -152,6 +152,15 @@ img { max-width: 100%; height: auto; display: block; }
   padding: 0; margin: -1px; overflow: hidden;
   clip-path: inset(50%); white-space: nowrap;
 }
+
+/* ── entrada ───────────────────────────────────────────────────────────── */
+.entra { opacity: 0; transform: translateY(0.5rem); }
+.entra.visible {
+  opacity: 1; transform: none;
+  transition: opacity var(--entrada), transform var(--entrada);
+  transition-delay: var(--retraso, 0ms);
+}
+.sin-js .entra { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }

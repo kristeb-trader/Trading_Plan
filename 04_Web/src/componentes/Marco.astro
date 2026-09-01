@@ -1,13 +1,13 @@
 ---
 /**
- * Marco — cinta de estado, rail de navegacion y contenido.
+ * Marco — cabecera con buscador, rail de secciones y contenido.
  *
- * Lenguaje: rejilla suiza + terminal de datos. Radio cero, sin sombras.
- * La estructura la dibujan los FILETES, no las cajas.
+ * Es un portal de CONSULTA: lo primero es encontrar. Por eso el buscador
+ * esta en la cabecera de todas las paginas y se abre con Ctrl+K, y por eso
+ * el rail agrupa las secciones con su contador.
  *
  * El aviso de «no probado» lo pone el marco, no la pagina: ninguna pantalla
- * puede esconderlo. Va en oro — advertencia, no error. El rojo se reserva
- * para un dato negativo de verdad.
+ * puede esconderlo.
  */
 import * as P from '../lib/parsers.mjs';
 import '../estilos/tokens.css';
@@ -18,32 +18,33 @@ const { titulo, ancho = 'total' } = Astro.props;
 
 const v = P.version();
 const bt = P.backtesting();
+const indice = P.indiceBusqueda();
 
 // `lista: false` = todavia no construida. Apagada, nunca un enlace roto.
 const GRUPOS = [
   {
-    grupo: 'Plan',
+    grupo: 'El plan',
     items: [
-      { href: '/', texto: 'Portada', lista: true },
-      { href: '/plan', texto: 'Recorrido', lista: false },
+      { href: '/', texto: 'Inicio', lista: true },
+      { href: '/plan', texto: 'Recorrido completo', lista: false },
       { href: '/reglas', texto: 'Reglas', lista: false, cuenta: P.reglas().length },
       { href: '/parametros', texto: 'Parámetros', lista: false, cuenta: P.parametros().size },
       { href: '/glosario', texto: 'Glosario', lista: false, cuenta: P.glosario().length },
     ],
   },
   {
-    grupo: 'Práctica',
+    grupo: 'Cómo se aplica',
     items: [
-      { href: '/checklist', texto: 'Checklist', lista: false },
-      { href: '/galeria', texto: 'Galería', lista: false, cuenta: P.galeria().length },
+      { href: '/checklist', texto: 'Checklist diaria', lista: false },
+      { href: '/galeria', texto: 'Casos reales', lista: false, cuenta: P.galeria().length },
     ],
   },
   {
-    grupo: 'Abierto',
+    grupo: 'Lo que sigue abierto',
     items: [
       { href: '/pendientes', texto: 'Pendientes', lista: false, cuenta: P.pendientesAbiertos().length },
-      { href: '/contextualizacion', texto: 'Contexto', lista: false },
-      { href: '/cierre', texto: 'Cierre F1', lista: false },
+      { href: '/contextualizacion', texto: 'Contextualización', lista: false },
+      { href: '/cierre', texto: 'Acta de cierre', lista: false },
     ],
   },
 ];
@@ -64,23 +65,29 @@ const activa = (href: string) =>
   <body class="sin-js">
     <a class="saltar" href="#contenido">Saltar al contenido</a>
 
-    <!-- Cinta de estado. Como la cabecera de un terminal: solo datos. -->
-    <div class="cinta">
-      <span class="cinta-i"><b>PLAN</b> v{v.version}</span>
-      <span class="cinta-i"><b>ACT</b> {v.fecha}</span>
-      <span class="cinta-i"><b>REGLAS</b> {P.reglas().length}</span>
-      <span class="cinta-i"><b>ESTADO</b> <em class="alerta">NO PROBADO</em></span>
-      <a class="cinta-i cinta-a" href="/cierre">{bt.huecos.length} HUECOS DECLARADOS</a>
-    </div>
+    <header class="cabecera">
+      <a class="marca" href="/">
+        <span class="marca-n">Plan Chaumer</span>
+        <span class="marca-s">NQ, MNQ, NinjaTrader 8</span>
+      </a>
+
+      <button class="buscar" type="button" data-abrir-buscador>
+        <svg class="buscar-i" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6" />
+          <path d="M13.5 13.5 17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+        <span class="buscar-t">Buscar una regla, un término, un caso</span>
+        <kbd class="tecla">Ctrl K</kbd>
+      </button>
+
+      <a class="estado" href="/cierre">
+        <span class="marca-estado aviso">no probado</span>
+      </a>
+    </header>
 
     <div class="marco">
       <aside class="rail">
-        <a class="marca" href="/">
-          <span class="marca-n">CHAUMER</span>
-          <span class="marca-s">NQ · MNQ · NT8</span>
-        </a>
-
-        <nav class="nav" aria-label="Secciones">
+        <nav aria-label="Secciones">
           {GRUPOS.map((g) => (
             <div class="nav-g">
               <p class="etiqueta nav-t">{g.grupo}</p>
@@ -88,18 +95,16 @@ const activa = (href: string) =>
                 s.lista
                   ? <a href={s.href} class:list={['nav-i', { activa: activa(s.href) }]}>
                       <span>{s.texto}</span>
-                      {s.cuenta && <span class="nav-c">{String(s.cuenta).padStart(2, '0')}</span>}
+                      {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
                     </a>
                   : <span class="nav-i pendiente" aria-disabled="true">
                       <span>{s.texto}</span>
-                      {s.cuenta && <span class="nav-c">{String(s.cuenta).padStart(2, '0')}</span>}
+                      {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
                     </span>
               ))}
             </div>
           ))}
         </nav>
-
-        <a class="estado" href="/cierre"><span class="pastilla aviso">no probado</span></a>
       </aside>
 
       <div class="cuerpo">
@@ -109,12 +114,36 @@ const activa = (href: string) =>
 
         <footer class="pie">
           <p class="meta">
-            Renderiza <code>01_Plan/</code>. No añade metodología, no manda
-            órdenes, no se conecta a la cuenta. Una observación no modifica el plan.
+            Este portal renderiza los documentos de <code>01_Plan/</code>.
+            No añade metodología, no manda órdenes y no se conecta a la cuenta.
+            Una observación no modifica el plan.
           </p>
+          <p class="meta">Plan v{v.version}, actualizado el {v.fecha}. {bt.huecos.length} huecos declarados.</p>
         </footer>
       </div>
     </div>
+
+    <!-- Buscador. Un dialog nativo: cierra con Esc y atrapa el foco solo. -->
+    <dialog class="paleta" data-paleta aria-label="Buscar en el plan">
+      <div class="paleta-in">
+        <div class="paleta-campo">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6" />
+            <path d="M13.5 13.5 17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+          <input type="search" data-paleta-entrada autocomplete="off" spellcheck="false"
+                 placeholder="Escribe para buscar entre reglas, términos, casos y parámetros" />
+          <kbd class="tecla">Esc</kbd>
+        </div>
+        <div class="paleta-lista" data-paleta-lista role="listbox" aria-label="Resultados"></div>
+        <div class="paleta-pie meta">
+          <span>{indice.length} entradas indexadas</span>
+          <span><kbd class="tecla">↑</kbd> <kbd class="tecla">↓</kbd> moverse, <kbd class="tecla">Enter</kbd> abrir</span>
+        </div>
+      </div>
+    </dialog>
+
+    <script type="application/json" data-indice set:html={JSON.stringify(indice)} />
 
     <script is:inline>
       document.body.classList.remove('sin-js');
@@ -122,7 +151,7 @@ const activa = (href: string) =>
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var hayIO = 'IntersectionObserver' in window;
 
-        // Entrada al aparecer. IntersectionObserver, nunca listener de scroll.
+        // ── entrada al aparecer ─────────────────────────────────────────
         var objetivos = document.querySelectorAll('.entra');
         if (!hayIO || reduce) {
           objetivos.forEach(function (e) { e.classList.add('visible'); });
@@ -133,150 +162,271 @@ const activa = (href: string) =>
               f.target.classList.add('visible');
               obs.unobserve(f.target);
             });
-          }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+          }, { rootMargin: '0px 0px -5% 0px', threshold: 0.05 });
           objetivos.forEach(function (e) { obs.observe(e); });
         }
 
-        // Cifras que cuentan al entrar: detalle de terminal financiero.
-        // El valor final ya esta en el HTML; esto solo lo anima.
-        var cifras = document.querySelectorAll('[data-contar]');
-        if (!cifras.length || reduce || !hayIO) return;
-        var obs2 = new IntersectionObserver(function (filas) {
-          filas.forEach(function (f) {
-            if (!f.isIntersecting) return;
-            obs2.unobserve(f.target);
-            var fin = parseInt(f.target.getAttribute('data-contar'), 10);
-            if (isNaN(fin)) return;
-            var ini = performance.now(), dur = 700;
-            requestAnimationFrame(function paso(t) {
-              var k = Math.min(1, (t - ini) / dur);
-              k = 1 - Math.pow(1 - k, 3);
-              f.target.textContent = String(Math.round(fin * k));
-              if (k < 1) requestAnimationFrame(paso);
-              else f.target.textContent = String(fin);
-            });
-          });
-        }, { threshold: 0.4 });
-        cifras.forEach(function (e) { obs2.observe(e); });
+        // ── buscador ────────────────────────────────────────────────────
+        var dlg = document.querySelector('[data-paleta]');
+        var campo = document.querySelector('[data-paleta-entrada]');
+        var lista = document.querySelector('[data-paleta-lista]');
+        var crudo = document.querySelector('[data-indice]');
+        if (!dlg || !campo || !lista || !crudo) return;
+
+        var datos = JSON.parse(crudo.textContent);
+        var sel = 0, vistos = [];
+
+        var ETIQUETAS = {
+          regla: 'Regla', termino: 'Término', caso: 'Caso',
+          parametro: 'Parámetro', pendiente: 'Pendiente',
+        };
+
+        function normalizar(s) {
+          return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        }
+
+        function buscar(q) {
+          var t = normalizar(q).split(/\s+/).filter(Boolean);
+          if (!t.length) return datos.slice(0, 8);
+          return datos
+            .map(function (d) {
+              var titulo = normalizar(d.titulo), todo = normalizar(d.texto + ' ' + d.id);
+              var p = 0;
+              for (var i = 0; i < t.length; i++) {
+                if (normalizar(d.id) === t[i]) p += 100;
+                else if (normalizar(d.id).indexOf(t[i]) === 0) p += 40;
+                if (titulo.indexOf(t[i]) >= 0) p += 12;
+                if (todo.indexOf(t[i]) >= 0) p += 3;
+                else if (normalizar(d.id).indexOf(t[i]) < 0 && titulo.indexOf(t[i]) < 0) return null;
+              }
+              return { d: d, p: p };
+            })
+            .filter(Boolean)
+            .sort(function (a, b) { return b.p - a.p; })
+            .slice(0, 30)
+            .map(function (x) { return x.d; });
+        }
+
+        function pintar() {
+          vistos = buscar(campo.value);
+          sel = 0;
+          if (!vistos.length) {
+            lista.innerHTML = '<p class="paleta-vacio">Nada coincide con esa búsqueda. '
+              + 'Prueba con el número de una regla, una palabra del glosario o una fecha.</p>';
+            return;
+          }
+          lista.innerHTML = vistos.map(function (d, i) {
+            return '<a class="paleta-r' + (i === 0 ? ' sel' : '') + '" href="' + d.url + '" role="option">'
+              + '<span class="paleta-tipo">' + (ETIQUETAS[d.tipo] || d.tipo) + '</span>'
+              + '<span class="paleta-t">' + d.titulo.replace(/[<>&]/g, '') + '</span>'
+              + '<span class="paleta-id mono">' + d.id + '</span>'
+              + '</a>';
+          }).join('');
+        }
+
+        function mover(paso) {
+          var filas = lista.querySelectorAll('.paleta-r');
+          if (!filas.length) return;
+          filas[sel].classList.remove('sel');
+          sel = (sel + paso + filas.length) % filas.length;
+          filas[sel].classList.add('sel');
+          filas[sel].scrollIntoView({ block: 'nearest' });
+        }
+
+        function abrir() {
+          if (dlg.open) return;
+          dlg.showModal();
+          campo.value = '';
+          pintar();
+          campo.focus();
+        }
+
+        document.querySelectorAll('[data-abrir-buscador]').forEach(function (b) {
+          b.addEventListener('click', abrir);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); abrir(); }
+        });
+
+        campo.addEventListener('input', pintar);
+        campo.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowDown') { e.preventDefault(); mover(1); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); mover(-1); }
+          else if (e.key === 'Enter') {
+            var f = lista.querySelectorAll('.paleta-r')[sel];
+            if (f) { e.preventDefault(); window.location.href = f.getAttribute('href'); }
+          }
+        });
+
+        // Clic fuera del panel cierra.
+        dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
       })();
     </script>
 
     <style>
       .saltar {
-        position: fixed; left: var(--e-3); top: var(--e-3); z-index: 20;
+        position: fixed; left: var(--e-3); top: var(--e-3); z-index: 60;
         padding: var(--e-2) var(--e-3);
-        background: var(--sup-3); box-shadow: none;
+        background: var(--elevado); border: 1px solid var(--borde);
+        border-radius: var(--radio-1);
         transform: translateY(-250%);
       }
       .saltar:focus { transform: none; }
 
-      /* ── cinta de estado ───────────────────────────────────────────── */
-      .cinta {
-        display: flex; flex-wrap: wrap; align-items: center;
-        border-bottom: 1px solid var(--filete);
-        font-family: var(--fuente-mono);
-        font-size: var(--t-1);
-        letter-spacing: var(--track-etiqueta);
+      /* ── cabecera ──────────────────────────────────────────────────── */
+      .cabecera {
+        position: sticky; top: 0; z-index: 40;
+        display: grid;
+        grid-template-columns: var(--rail) minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--e-5);
+        padding: var(--e-3) var(--e-6);
+        background: color-mix(in srgb, var(--fondo) 86%, transparent);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--borde-sutil);
+      }
+      .marca { display: block; }
+      .marca:hover { color: inherit; }
+      .marca-n {
+        display: block; font-size: var(--t-3); font-weight: var(--peso-fuerte);
+        letter-spacing: var(--track-titulo); color: var(--texto);
+      }
+      .marca-s { display: block; font-size: var(--t-1); color: var(--texto-3); margin-top: 1px; }
+
+      /* Buscador: la pieza mas visible de la cabecera, porque es un portal
+         de consulta y encontrar es la accion principal. */
+      .buscar {
+        display: flex; align-items: center; gap: var(--e-3);
+        width: 100%; max-width: 34rem;
+        padding: var(--e-2) var(--e-3);
+        background: var(--superficie);
+        border: 1px solid var(--borde);
+        border-radius: var(--radio-2);
         color: var(--texto-3);
-        background: var(--sup-1);
+        font: inherit; font-size: var(--t-3);
+        cursor: pointer; text-align: left;
+        transition: border-color var(--normal), background var(--normal);
       }
-      .cinta-i {
-        padding: var(--e-2) var(--e-4);
-        border-right: 1px solid var(--filete-tenue);
-        white-space: nowrap;
-      }
-      .cinta-i b { font-weight: var(--peso-medio); opacity: 0.6; margin-right: var(--e-2); }
-      .cinta .alerta { font-style: normal; color: var(--oro); }
-      .cinta-a {
-        margin-left: auto; border-right: 0;
-        border-left: 1px solid var(--filete-tenue);
-        color: var(--oro); box-shadow: none;
-      }
-      .cinta-a:hover { background: var(--sup-3); color: var(--oro); box-shadow: none; }
+      .buscar:hover { border-color: var(--n-600); background: var(--tarjeta); }
+      .buscar-i { width: 16px; height: 16px; flex: none; }
+      .buscar-t { flex: 1; }
+
+      .estado { display: block; }
 
       /* ── rail ──────────────────────────────────────────────────────── */
-      .marco { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); min-height: 100dvh; }
+      .marco { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); }
 
       .rail {
-        position: sticky; top: 0; align-self: start; height: 100dvh;
-        display: flex; flex-direction: column; gap: var(--e-6);
-        padding: var(--e-5) 0;
-        border-right: 1px solid var(--filete);
+        position: sticky; top: 3.75rem; align-self: start;
+        height: calc(100dvh - 3.75rem);
+        padding: var(--e-6) var(--e-4) var(--e-6) var(--e-6);
         overflow-y: auto;
       }
-
-      .marca { display: block; padding: 0 var(--e-5); box-shadow: none; }
-      .marca:hover { box-shadow: none; }
-      .marca-n {
-        display: block; font-family: var(--fuente-mono);
-        font-size: var(--t-3); font-weight: var(--peso-max);
-        letter-spacing: var(--track-etiqueta); color: var(--texto);
-      }
-      .marca-s {
-        display: block; font-family: var(--fuente-mono);
-        font-size: var(--t-1); color: var(--texto-3);
-        letter-spacing: var(--track-etiqueta); margin-top: var(--e-2);
-      }
-
-      .nav { display: flex; flex-direction: column; gap: var(--e-6); flex: 1; }
-      .nav-g { display: flex; flex-direction: column; }
-      .nav-t { margin: 0 0 var(--e-3); padding: 0 var(--e-5); opacity: 0.7; }
+      .nav-g { margin-bottom: var(--e-6); }
+      .nav-t { margin: 0 0 var(--e-2); padding-left: var(--e-3); }
 
       .nav-i {
         display: flex; align-items: center; justify-content: space-between;
         gap: var(--e-3);
-        padding: var(--e-2) var(--e-5);
-        min-height: 2.125rem;
+        padding: var(--e-2) var(--e-3);
+        border-radius: var(--radio-1);
         font-size: var(--t-3);
         color: var(--texto-2);
-        box-shadow: none;
-        border-left: 2px solid transparent;
-        transition: color var(--transicion), background var(--transicion), border-color var(--transicion);
+        transition: background var(--rapido), color var(--rapido);
       }
-      .nav-i:hover { background: var(--sup-1); color: var(--texto); box-shadow: none; }
-      .nav-i.activa {
-        color: var(--texto); background: var(--sup-2);
-        border-left-color: var(--azul);
-        font-weight: var(--peso-medio);
-      }
-      /* Pendiente: opacidad Y cursor, nunca solo color. */
-      .nav-i.pendiente { color: var(--texto-3); opacity: 0.45; cursor: not-allowed; }
+      .nav-i:hover { background: var(--superficie); color: var(--texto); }
+      .nav-i.activa { background: var(--acento-flojo); color: var(--texto); font-weight: var(--peso-medio); }
+      /* Pendiente: opacidad y cursor, no solo color. */
+      .nav-i.pendiente { color: var(--texto-3); opacity: 0.5; cursor: not-allowed; }
       .nav-i.pendiente:hover { background: none; color: var(--texto-3); }
-      .nav-c { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--texto-3); }
-
-      .estado { padding: 0 var(--e-5); box-shadow: none; }
-      .estado:hover { box-shadow: none; }
+      .nav-c { font-size: var(--t-1); color: var(--texto-3); }
 
       /* ── contenido ─────────────────────────────────────────────────── */
       .cuerpo { display: flex; flex-direction: column; min-width: 0; }
       .contenido { flex: 1; width: 100%; padding: var(--e-8) var(--e-7) var(--e-9); }
-      .contenido.texto { max-width: 56rem; }
-      .contenido.total { max-width: var(--ancho-total); }
+      .contenido.texto { max-width: 52rem; }
+      .contenido.total { max-width: var(--ancho); }
 
-      .pie { border-top: 1px solid var(--filete); padding: var(--e-5) var(--e-7); }
+      .pie {
+        border-top: 1px solid var(--borde-sutil);
+        padding: var(--e-6) var(--e-7);
+        display: grid; gap: var(--e-2);
+      }
 
-      /* ── por debajo de 900px el rail pasa arriba ───────────────────── */
+      /* ── paleta de busqueda ────────────────────────────────────────── */
+      .paleta {
+        width: min(38rem, calc(100vw - 2rem));
+        margin-top: 12vh;
+        padding: 0;
+        background: var(--tarjeta);
+        border: 0;
+        border-radius: var(--radio-3);
+        box-shadow: var(--sombra-3);
+        color: var(--texto);
+        overflow: hidden;
+      }
+      .paleta::backdrop { background: rgba(5, 8, 14, 0.72); backdrop-filter: blur(3px); }
+
+      .paleta-campo {
+        display: flex; align-items: center; gap: var(--e-3);
+        padding: var(--e-4) var(--e-5);
+        border-bottom: 1px solid var(--borde-sutil);
+      }
+      .paleta-campo svg { width: 18px; height: 18px; color: var(--texto-3); flex: none; }
+      .paleta-campo input {
+        flex: 1; background: none; border: 0; outline: none;
+        color: var(--texto); font: inherit; font-size: var(--t-5);
+      }
+      .paleta-campo input::placeholder { color: var(--texto-3); }
+      .paleta-campo input::-webkit-search-cancel-button { display: none; }
+
+      .paleta-lista { max-height: 22rem; overflow-y: auto; padding: var(--e-2); }
+      /* Estos nodos los crea el JS, asi que van sin ambito. */
+      .paleta-lista :global(.paleta-r) {
+        display: grid;
+        grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+        align-items: center; gap: var(--e-3);
+        padding: var(--e-3);
+        border-radius: var(--radio-1);
+        color: var(--texto-2);
+      }
+      .paleta-lista :global(.paleta-r.sel) { background: var(--elevado); color: var(--texto); }
+      .paleta-lista :global(.paleta-tipo) { font-size: var(--t-1); color: var(--texto-3); letter-spacing: var(--track-etiqueta); text-transform: uppercase; }
+      .paleta-lista :global(.paleta-t) { font-size: var(--t-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .paleta-lista :global(.paleta-id) { font-size: var(--t-1); color: var(--texto-3); }
+      .paleta-lista :global(.paleta-vacio) { padding: var(--e-5); margin: 0; color: var(--texto-3); font-size: var(--t-3); }
+
+      .paleta-pie {
+        display: flex; justify-content: space-between; gap: var(--e-4);
+        padding: var(--e-3) var(--e-5);
+        border-top: 1px solid var(--borde-sutil);
+        background: var(--superficie);
+      }
+
+      /* ── responsive ────────────────────────────────────────────────── */
       @media (max-width: 900px) {
+        .cabecera {
+          grid-template-columns: 1fr auto;
+          grid-template-areas: 'marca estado' 'buscar buscar';
+          padding: var(--e-3) var(--e-4);
+        }
+        .marca { grid-area: marca; }
+        .estado { grid-area: estado; }
+        .buscar { grid-area: buscar; max-width: none; }
         .marco { grid-template-columns: 1fr; }
         .rail {
           position: static; height: auto;
-          flex-direction: row; align-items: center; gap: var(--e-4);
-          border-right: 0; border-bottom: 1px solid var(--filete);
-          padding: var(--e-3) var(--e-4); overflow-x: auto;
+          padding: var(--e-4);
+          border-bottom: 1px solid var(--borde-sutil);
+          overflow-x: auto;
         }
-        .nav { flex-direction: row; gap: var(--e-4); flex: 0 0 auto; }
-        .nav-g { flex-direction: row; }
+        .rail nav { display: flex; gap: var(--e-5); }
+        .nav-g { margin-bottom: 0; display: flex; align-items: center; gap: var(--e-1); }
         .nav-t { display: none; }
-        .nav-i {
-          white-space: nowrap; padding: var(--e-2) var(--e-3);
-          border-left: 0; border-bottom: 2px solid transparent;
-        }
-        .nav-i.activa { border-left: 0; border-bottom-color: var(--azul); }
-        .marca, .estado { flex: 0 0 auto; padding: 0 var(--e-2); }
-        .marca-s { display: none; }
+        .nav-i { white-space: nowrap; }
         .contenido { padding: var(--e-6) var(--e-4) var(--e-8); }
         .pie { padding: var(--e-5) var(--e-4); }
-        .cinta-i { padding: var(--e-2) var(--e-3); }
       }
     </style>
   </body>

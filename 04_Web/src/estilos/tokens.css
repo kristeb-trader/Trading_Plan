@@ -1,95 +1,109 @@
 /**
  * TOKENS — el unico sitio donde vive un valor literal.
  *
- * DIRECCION VISUAL (01/09/2026, tras ui-ux-pro-max):
- *   Swiss Modernism · Minimalist Monochrome · Data-Dense Dashboard
+ * DIRECCION (02/09/2026, rediseno completo con los tres skills):
  *
- *   Rejilla de 12 columnas y espaciado matematico. RADIO CERO en todo.
- *   Sin sombras y sin degradados: la separacion se hace con FILETES y con
- *   cambio de fondo, como en la imprenta. Contraste tipografico extremo:
- *   cifras enormes contra etiquetas diminutas en monoespaciada.
+ *   ui-ux-pro-max  -> patron "Documentacion": portada con buscador destacado
+ *                     y mapa de contenido. Estilo Minimalism & Swiss:
+ *                     limpio, espacioso, rejilla, jerarquia clara.
+ *   taste-skill    -> jerarquia por PESO Y COLOR, no por tamano bruto.
+ *                     Nada de negro puro. Acentos desaturados para que
+ *                     convivan con los neutros. Sin adornos enumerados.
+ *   impeccable     -> contraste AA verificado, medida de linea, sin barras
+ *                     de color laterales, sin filete bajo cada fila.
  *
- *   Es un terminal, no una coleccion de tarjetas.
- *
- * COLOR: los nueve del estandar visual que el operador validó sobre las
- * graficas de backtesting (CLAUDE.md). No se eligen: se heredan.
- *
- * ESCRITORIO PRIMERO: el portal se usa en computador.
+ * Es un portal de consulta: lo primero es encontrar, no impresionar.
  */
 :root {
   color-scheme: dark;
 
-  /* ── color base · estandar visual del operador ───────────────────────── */
-  --azul:   #2E86FF;  /* alcista · acento · interactivo */
-  --gris:   #8B93A7;  /* zonas */
-  --oro:    #F5C542;  /* aviso · pendiente · «no probado» */
-  --rojo:   #FF5C5C;  /* solo dato negativo real */
-  --verde:  #4ADE80;  /* confirmado */
-  --cian:   #22D3EE;  /* referencia cruzada · glosario */
+  /* ── neutros ─────────────────────────────────────────────────────────
+     Rampa unica con matiz azul, del fondo al texto. Nada de negro puro:
+     #000 sobre pantalla es plano y delata plantilla.                    */
+  --n-950: #0A0C11;  /* pagina */
+  --n-900: #0F1218;  /* superficie elevada, cabecera */
+  --n-850: #13171F;  /* tarjeta */
+  --n-800: #191E28;  /* hover, celda activa */
+  --n-700: #232936;  /* borde marcado */
+  --n-600: #333B4B;  /* borde de control */
+  --n-500: #4C5566;
+  --n-400: #8790A1;  /* texto terciario */
+  --n-300: #A8B0BF;  /* texto secundario */
+  --n-100: #DDE2EA;
+  --n-50:  #F2F5F9;  /* texto principal, blanco roto */
 
-  /* ── superficies ─────────────────────────────────────────────────────── */
-  --fondo:   #0B0E14;
-  --sup-1:   #0E121A;  /* franja alterna, barra lateral */
-  --sup-2:   #12161F;  /* celda destacada */
-  --sup-3:   #191E2A;  /* estado activo, hover */
+  /* ── acentos, desaturados para convivir con los neutros ──────────── */
+  --acento:      #4C8DFF;  /* interactivo, foco, enlace */
+  --acento-flojo:#1B2A45;  /* fondo de estado activo */
+  --aviso:       #E3B341;  /* plan no probado, pendiente */
+  --negativo:    #EF5F63;  /* unico dato negativo real */
+  --positivo:    #3FCF8E;  /* confirmado */
+  --info:        #38BDD4;  /* referencia cruzada, glosario */
 
-  /* ── filetes: aqui vive la estructura ────────────────────────────────── */
-  --filete:        rgba(255, 255, 255, 0.10);  /* separador normal */
-  --filete-tenue:  rgba(255, 255, 255, 0.055); /* division interna */
-  --filete-fuerte: rgba(255, 255, 255, 0.22);  /* corte de seccion */
-  --linea: #3A4256;   /* token del estandar de graficas */
+  /* ── semanticos ──────────────────────────────────────────────────── */
+  --fondo:      var(--n-950);
+  --superficie: var(--n-900);
+  --tarjeta:    var(--n-850);
+  --elevado:    var(--n-800);
+  --borde:      var(--n-700);
+  --borde-sutil: rgba(255, 255, 255, 0.055);
+  --texto:      var(--n-50);
+  --texto-2:    var(--n-300);
+  --texto-3:    var(--n-400);
 
-  /* ── tinta · contraste verificado con el detector (WCAG AA) ──────────── */
-  --texto:   #FFFFFF;
-  --texto-2: #B4BCCC;
-  --texto-3: #949DB1;
+  /* ── espacio, base 4 ─────────────────────────────────────────────── */
+  --e-1: 0.25rem; --e-2: 0.5rem;  --e-3: 0.75rem; --e-4: 1rem;
+  --e-5: 1.5rem;  --e-6: 2rem;    --e-7: 2.75rem; --e-8: 4rem;
+  --e-9: 6rem;
 
-  /* ── espacio · base 8, escala matematica ─────────────────────────────── */
-  --e-1: 0.25rem;  --e-2: 0.5rem;   --e-3: 0.75rem;  --e-4: 1rem;
-  --e-5: 1.5rem;   --e-6: 2rem;     --e-7: 3rem;     --e-8: 5rem;
-  --e-9: 7.5rem;   /* corte entre secciones: el aire es parte del estilo */
-
-  /* ── tipografia · Geist, autoalojada, SIL OFL. Cero CDN ──────────────── */
+  /* ── tipografia · Geist autoalojada, SIL OFL. Sin CDN ────────────── */
   --fuente: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --fuente-mono: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
 
-  /* Contraste extremo: de 11px a 112px. Es lo que da caracter. */
-  --t-1: 0.6875rem;  /* etiqueta mono en mayusculas */
-  --t-2: 0.75rem;    /* dato mono, metadato */
-  --t-3: 0.8125rem;  /* interfaz, tabla */
+  /* Escala contenida. La jerarquia la hacen el peso y el color, no el
+     tamano: un titular de 7rem solo grita. */
+  --t-1: 0.75rem;    /* etiqueta, contador */
+  --t-2: 0.8125rem;  /* metadato, interfaz densa */
+  --t-3: 0.875rem;   /* interfaz, tabla */
   --t-4: 0.9375rem;  /* cuerpo */
-  --t-5: 1.125rem;   /* entradilla */
-  --t-6: 1.5rem;     /* titulo de seccion */
-  --t-7: 2.5rem;
-  --t-8: 4rem;
-  --t-9: 7rem;       /* cifra protagonista y titular */
+  --t-5: 1.0625rem;  /* entradilla */
+  --t-6: 1.25rem;    /* titulo de bloque */
+  --t-7: 1.75rem;    /* titulo de seccion */
+  --t-8: 2.375rem;   /* titulo de pagina */
+  --t-9: 3rem;       /* cifra protagonista */
 
-  --peso-normal: 400;  --peso-medio: 500;
-  --peso-fuerte: 600;  --peso-max: 700;
+  --peso-normal: 400; --peso-medio: 500;
+  --peso-fuerte: 600; --peso-max: 700;
 
   --alto-linea: 1.65;
-  --alto-corto: 1.05;   /* titulares muy cerrados, como en prensa */
+  --alto-corto: 1.2;
 
-  --track-titulo:   -0.03em;
-  --track-cifra:    -0.045em;
-  --track-etiqueta:  0.14em;  /* mayusculas muy abiertas */
+  --track-titulo: -0.02em;
+  --track-cifra:  -0.03em;
+  --track-etiqueta: 0.06em;
 
-  /* ── forma ───────────────────────────────────────────────────────────── */
-  /* RADIO CERO. Sin excepciones y sin sombras: la estructura son los filetes. */
-  --radio: 0;
-  --radio-pill: 999px;  /* unica excepcion: la pastilla de estado */
+  /* ── forma ───────────────────────────────────────────────────────── */
+  --radio-1: 6px;
+  --radio-2: 10px;
+  --radio-3: 14px;
+  --radio-pill: 999px;
 
-  /* ── rejilla ─────────────────────────────────────────────────────────── */
-  --columnas: 12;
-  --calle: var(--e-4);
+  /* Sombras teñidas, nunca negro puro: dan profundidad sin ensuciar. */
+  --sombra-1: 0 1px 2px rgba(5, 8, 14, 0.5);
+  --sombra-2: 0 4px 16px rgba(5, 8, 14, 0.45);
+  /* En capas y contenida: borde de 1px con 64px de desenfoque es una firma
+     de interfaz generada, y el detector la marca. */
+  --sombra-3: 0 2px 6px rgba(5, 8, 14, 0.55), 0 10px 28px rgba(5, 8, 14, 0.5);
 
-  /* ── medida ──────────────────────────────────────────────────────────── */
-  --medida: 52ch;
-  --ancho-total: 80rem;
-  --rail: 14rem;
+  /* ── medida ──────────────────────────────────────────────────────── */
+  --medida: 62ch;
+  --ancho: 72rem;
+  --rail: 15rem;
 
-  /* ── movimiento ──────────────────────────────────────────────────────── */
-  --curva: cubic-bezier(0.32, 0.72, 0, 1);
-  --transicion: 160ms var(--curva);
-  --entrada: 620ms var(--curva);
+  /* ── movimiento · hover 200-250ms, como pide el sistema ──────────── */
+  --curva: cubic-bezier(0.4, 0, 0.2, 1);
+  --curva-salida: cubic-bezier(0.16, 1, 0.3, 1);
+  --rapido: 140ms var(--curva);
+  --normal: 220ms var(--curva);
+  --entrada: 480ms var(--curva-salida);
 }
