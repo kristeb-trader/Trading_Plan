@@ -1,0 +1,112 @@
+/**
+ * BASE — reset corto y estilos de documento.
+ * Ni un valor literal: todo sale de tokens.css.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: var(--fuente);
+  font-size: var(--t-4);
+  line-height: var(--alto-linea);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  line-height: var(--alto-corto);
+  font-weight: var(--peso-fuerte);
+  margin: var(--e-6) 0 var(--e-3);
+  text-wrap: balance;
+}
+h1 { font-size: var(--t-7); margin-top: 0; }
+h2 { font-size: var(--t-6); }
+h3 { font-size: var(--t-5); }
+h4 { font-size: var(--t-4); color: var(--texto-2); }
+
+p, ul, ol { margin: 0 0 var(--e-4); }
+ul, ol { padding-left: var(--e-5); }
+li { margin-bottom: var(--e-1); }
+
+a {
+  color: var(--azul);
+  text-decoration-color: color-mix(in srgb, var(--azul) 40%, transparent);
+  text-underline-offset: 0.2em;
+  transition: color var(--transicion);
+}
+a:hover { color: var(--texto); text-decoration-color: currentColor; }
+
+/* Foco visible en todo lo tabulable. No se quita nunca. */
+:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+  border-radius: var(--radio-chico);
+}
+
+strong, b { font-weight: var(--peso-fuerte); }
+
+code, kbd, samp {
+  font-family: var(--fuente-mono);
+  font-size: 0.9em;
+}
+
+blockquote {
+  margin: var(--e-4) 0;
+  padding: var(--e-3) var(--e-4);
+  border-left: 2px solid var(--linea);
+  background: var(--fondo-sutil);
+  color: var(--texto-2);
+}
+blockquote > :last-child { margin-bottom: 0; }
+
+hr {
+  border: 0;
+  border-top: var(--borde);
+  margin: var(--e-6) 0;
+}
+
+/* ---- tablas: hacen scroll dentro de su contenedor, nunca la pagina ---- */
+.tabla-scroll { overflow-x: auto; margin: var(--e-4) 0; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: var(--t-3);
+}
+th, td {
+  text-align: left;
+  padding: var(--e-2) var(--e-3);
+  border-bottom: var(--borde);
+  vertical-align: top;
+}
+th {
+  color: var(--texto-2);
+  font-weight: var(--peso-medio);
+  font-size: var(--t-2);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* Toda columna numerica con digitos que no bailan. */
+td.num, .num { font-variant-numeric: tabular-nums; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* ---- utilidades minimas ---- */
+.apunte { color: var(--texto-2); font-size: var(--t-3); }
+.meta   { color: var(--texto-3); font-size: var(--t-2); }
+.mono   { font-family: var(--fuente-mono); }
+
+.solo-lectores {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

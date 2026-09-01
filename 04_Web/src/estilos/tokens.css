@@ -1,0 +1,80 @@
+/**
+ * TOKENS — el unico sitio donde vive un valor literal.
+ *
+ * Los COLORES no se eligen aqui: vienen del estandar visual que el operador
+ * validó una por una sobre las graficas de backtesting (ver CLAUDE.md).
+ * Las escalas de espacio y tipografia se derivan; cualquier valor nuevo se
+ * anade aqui, nunca suelto en un componente.
+ *
+ * Tema unico oscuro: el portal se mira en pantalla, de noche, junto a un
+ * grafico negro. No hay tema claro y no se finge que lo haya.
+ */
+:root {
+  color-scheme: dark;
+
+  /* ---- color: exactamente los del estandar visual ---- */
+  --fondo:        #0B0E14;
+  --linea:        #3A4256;
+  --azul:         #2E86FF;  /* alcista · acento primario · enlaces */
+  --texto:        #FFFFFF;  /* bajista · texto principal */
+  --gris:         #8B93A7;  /* zonas · texto secundario */
+  --oro:          #F5C542;  /* aviso · pendiente */
+  --rojo:         #FF5C5C;  /* hueco declarado · prohibicion */
+  --verde:        #4ADE80;  /* confirmado */
+  --cian:         #22D3EE;  /* referencia cruzada · glosario */
+
+  /* ---- superficies: derivadas del fondo, no colores nuevos ---- */
+  --fondo-alto:   #11151E;  /* cabecera y barras, un escalon sobre el fondo */
+  --fondo-sutil:  #0E121A;  /* filas alternas y bloques citados */
+  --linea-tenue:  #232938;  /* separadores internos, mas callados que --linea */
+
+  /* ---- texto ---- */
+  --texto-2:      var(--gris);
+  --texto-3:      #646C7E;  /* metadatos, fechas, contadores */
+
+  /* ---- espacio: escala unica, nada a ojo ---- */
+  --e-1: 0.25rem;
+  --e-2: 0.5rem;
+  --e-3: 0.75rem;
+  --e-4: 1rem;
+  --e-5: 1.5rem;
+  --e-6: 2rem;
+  --e-7: 3rem;
+  --e-8: 4rem;
+
+  /* ---- tipografia ---- */
+  /* Servida por el sistema: ni una peticion a un CDN, como pide el diseno. */
+  --fuente: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+            "Helvetica Neue", Arial, sans-serif;
+  --fuente-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "SF Mono",
+                 Menlo, Consolas, monospace;
+
+  --t-1:  0.75rem;   /* etiquetas, contadores */
+  --t-2:  0.8125rem; /* metadatos */
+  --t-3:  0.875rem;  /* interfaz, tablas */
+  --t-4:  1rem;      /* cuerpo */
+  --t-5:  1.125rem;  /* enunciado de regla */
+  --t-6:  1.375rem;  /* titulo de seccion */
+  --t-7:  1.75rem;   /* titulo de pagina */
+
+  --peso-normal: 400;
+  --peso-medio:  500;
+  --peso-fuerte: 600;
+
+  --alto-linea:  1.65;  /* bloques largos de prosa: el plan se lee entero */
+  --alto-corto:  1.35;  /* titulos y celdas */
+
+  /* ---- forma ---- */
+  /* Sin sombras de tarjeta y sin degradados: el estandar visual lo prohibe.
+     La separacion se hace con linea y con espacio. */
+  --radio:       4px;
+  --radio-chico: 3px;
+  --borde:       1px solid var(--linea-tenue);
+
+  /* ---- medida ---- */
+  --ancho-texto: 46rem;  /* medida comoda de lectura para el plan largo */
+  --ancho-total: 84rem;
+  --nav-ancho:   15rem;
+
+  --transicion: 120ms ease;
+}

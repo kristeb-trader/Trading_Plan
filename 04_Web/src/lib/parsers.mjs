@@ -8,6 +8,26 @@
  */
 import { documento, json, subfasesSueltas, partirPorEncabezado, tituloLimpio, contarMermaid } from './fuentes.mjs';
 
+// ────────────────────────────────────────────────── markdown en una linea
+/**
+ * Convierte el markdown de un TITULO a HTML. Solo lo que aparece en titulos:
+ * `codigo` y **negrita**. Escapa primero, asi que no puede inyectar nada.
+ * No es un renderizador de markdown: los cuerpos se renderizan aparte.
+ */
+export function tituloAHtml(texto) {
+  const escapado = String(texto)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return escapado
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+}
+
+/** Quita la numeracion manual del principio de un titulo («3 · Falta…»)
+ *  cuando la lista ya numera sola. Sin ella saldria el numero dos veces. */
+export function sinNumeracion(texto) {
+  return String(texto).replace(/^\d+\s*[·.)-]\s*/, '');
+}
+
 // ─────────────────────────────────────────────────────────────── version
 export function version() {
   const t = documento('TRADING_PLAN_CHAUMER.md');

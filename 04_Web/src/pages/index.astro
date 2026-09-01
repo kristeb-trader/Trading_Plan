@@ -1,8 +1,12 @@
 ---
-// PROVISIONAL — fase 1/2. Solo demuestra que el circuito completo funciona:
-// 01_Plan -> sync -> src/lib -> pagina. El diseno entra en la fase 3.
-//
-// Ni un solo numero de esta pagina esta escrito a mano: todos se cuentan.
+/**
+ * Portada.
+ *
+ * Ningun numero de esta pagina esta escrito a mano: todos se cuentan de
+ * 01_Plan/ en cada compilacion. Y las cifras del backtesting no aparecen
+ * nunca sin sus cuatro motivos al lado.
+ */
+import Marco from '../componentes/Marco.astro';
 import * as P from '../lib/parsers.mjs';
 
 const v = P.version();
@@ -12,60 +16,141 @@ const subfases = P.subfasesDeclaradas();
 const glosario = P.glosario();
 const galeria = P.galeria();
 const abiertos = P.pendientesAbiertos();
+const desviaciones = P.desviaciones();
 const ctx = P.contextualizacion();
 const params = P.parametros();
 const bt = P.backtesting();
+
+const cifras = [
+  { n: reglas.length, etiqueta: 'reglas medibles', nota: cats.length + ' categorías' },
+  { n: subfases.length, etiqueta: 'sub-fases', nota: 'el plan completo' },
+  { n: glosario.length, etiqueta: 'términos', nota: 'con definición medible' },
+  { n: galeria.length, etiqueta: 'casos reales', nota: galeria.filter((c) => c.imagen).length + ' con gráfica' },
+  { n: params.size, etiqueta: 'parámetros', nota: 'en un solo sitio' },
+  { n: abiertos.length, etiqueta: 'puntos abiertos', nota: desviaciones.length + ' desviaciones' },
+];
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Plan Chaumer · v{v.version}</title>
-    <style>
-      :root { color-scheme: dark; }
-      body {
-        background: #0B0E14; color: #FFFFFF; margin: 0; padding: 2rem 1.25rem;
-        font: 16px/1.6 ui-sans-serif, system-ui, sans-serif;
-      }
-      main { max-width: 46rem; margin: 0 auto; }
-      h1 { font-size: 1.5rem; margin: 0 0 .25rem; }
-      .banda {
-        border: 1px solid #FF5C5C; color: #FF5C5C; padding: .6rem .8rem;
-        margin: 1.5rem 0; font-size: .9rem;
-      }
-      dl { display: grid; grid-template-columns: auto 1fr; gap: .35rem 1rem; margin: 0; }
-      dt { color: #8B93A7; } dd { margin: 0; font-variant-numeric: tabular-nums; }
-      .apunte { color: #8B93A7; font-size: .85rem; }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>Plan de trading Chaumer</h1>
-      <p class="apunte">versión {v.version} · {v.fecha}</p>
+<Marco titulo="Portada">
+  <h1>El plan está escrito. No está probado.</h1>
 
-      <div class="banda">
-        <strong>El plan está escrito y contrastado, pero NO probado.</strong>
-        Se cerró con {bt.huecos.length} huecos declarados. El backtesting dio
-        {bt.total} en {bt.operaciones} operaciones, y esa cifra no mide la
-        estrategia.
+  <p class="entrada">
+    La metodología de trading de Alfredo Chaumer para NQ y MNQ, traducida a {reglas.length} reglas
+    medibles durante la fase 1 y contrastada contra sesiones reales al tick. Esta
+    página no añade metodología: renderiza los documentos del plan tal como están
+    escritos.
+  </p>
+
+  <section class="cifras" aria-label="El plan en números">
+    {cifras.map((c) => (
+      <div class="cifra">
+        <span class="cifra-n num">{c.n}</span>
+        <span class="cifra-e">{c.etiqueta}</span>
+        <span class="cifra-nota meta">{c.nota}</span>
       </div>
+    ))}
+  </section>
 
-      <dl>
-        <dt>reglas</dt><dd>{reglas.length} en {cats.length} categorías</dd>
-        <dt>sub-fases</dt><dd>{subfases.length}</dd>
-        <dt>términos</dt><dd>{glosario.length}</dd>
-        <dt>casos</dt><dd>{galeria.length}</dd>
-        <dt>parámetros</dt><dd>{params.size}</dd>
-        <dt>pendientes abiertos</dt><dd>{abiertos.length}</dd>
-        <dt>elementos de contexto</dt>
-        <dd>{ctx.items.length} encabezados · {new Set(ctx.items.map((i) => i.id)).size} identificadores</dd>
-      </dl>
+  <h2 id="huecos">Los cuatro huecos declarados</h2>
+  <p class="apunte">
+    Ninguno es un olvido. La fase 1 se cerró <strong>sabiendo</strong> que estos
+    cuatro puntos quedaban abiertos, y el portal no puede presentarse como si
+    estuvieran resueltos.
+  </p>
 
-      <p class="apunte">
-        Esqueleto provisional. Ningún número de esta página está escrito en el
-        código: todos se cuentan de <code>01_Plan/</code> en cada compilación.
-      </p>
-    </main>
-  </body>
-</html>
+  <ol class="huecos">
+    {bt.huecos.map((h) => (
+      <li class="hueco">
+        <h3 class="hueco-t" set:html={P.tituloAHtml(P.sinNumeracion(h.titulo))} />
+      </li>
+    ))}
+  </ol>
+
+  <h2>Lo que dio el backtesting</h2>
+
+  <div class="bt">
+    <div class="bt-cifra">
+      <span class="bt-n num">{bt.total}</span>
+      <span class="meta">en {bt.operaciones} operaciones · 11 sesiones reconstruidas</span>
+    </div>
+    <div class="bt-aviso">
+      <p class="bt-titular">Esta cifra NO mide la estrategia.</p>
+      <ul class="bt-motivos">
+        <li>{bt.operaciones} operaciones no dicen nada estadísticamente.</li>
+        <li>Las reglas cambiaron durante la propia revisión: los primeros días
+          se leyeron con reglas que después resultaron incorrectas.</li>
+        <li>No hubo filtro de noticias rojas. Ninguna operación se descartó por noticia.</li>
+        <li>Falta la capa de contextualización, que es la que quita varios de esos días.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="meta cierre-nota">
+    Plan versión {v.version}, actualizado el {v.fecha}. Los contadores se leen de
+    los archivos en cada compilación: si mañana hay una regla más, aquí sale una más.
+  </p>
+</Marco>
+
+<style>
+  .entrada { font-size: var(--t-5); color: var(--texto-2); max-width: 40rem; }
+
+  /* ---- cifras: grid, no flex, para que las columnas no se desalineen ---- */
+  .cifras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--e-4);
+    margin: var(--e-6) 0;
+    padding: var(--e-5) 0;
+    border-top: var(--borde);
+    border-bottom: var(--borde);
+  }
+  .cifra { display: flex; flex-direction: column; gap: var(--e-1); }
+  .cifra-n {
+    font-size: var(--t-7); font-weight: var(--peso-fuerte);
+    line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .cifra-e { font-size: var(--t-3); color: var(--texto-2); }
+  .cifra-nota { font-size: var(--t-1); }
+
+  /* ---- huecos ---- */
+  .huecos { list-style: none; padding: 0; margin: var(--e-4) 0 var(--e-6); counter-reset: h; }
+  .hueco {
+    counter-increment: h;
+    display: flex; gap: var(--e-3); align-items: baseline;
+    padding: var(--e-3) 0;
+    border-bottom: var(--borde);
+  }
+  .hueco::before {
+    content: counter(h);
+    font-family: var(--fuente-mono); font-size: var(--t-2);
+    color: var(--rojo); min-width: 1.25rem;
+  }
+  .hueco-t { margin: 0; font-size: var(--t-4); font-weight: var(--peso-medio); }
+  /* Los codigos de regla son referencias, no titulo: se apagan y se enlazaran. */
+  .hueco-t :global(code) { color: var(--cian); font-size: var(--t-2); }
+
+  /* ---- backtesting: la cifra y sus motivos, siempre en el mismo bloque ---- */
+  .bt {
+    display: grid; grid-template-columns: minmax(11rem, auto) 1fr;
+    gap: var(--e-5);
+    margin: var(--e-4) 0 var(--e-6);
+    padding: var(--e-4);
+    border: 1px solid color-mix(in srgb, var(--rojo) 30%, transparent);
+    border-radius: var(--radio);
+    background: var(--fondo-sutil);
+  }
+  .bt-cifra { display: flex; flex-direction: column; gap: var(--e-1); }
+  .bt-n {
+    font-size: var(--t-7); font-weight: var(--peso-fuerte);
+    color: var(--rojo); line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .bt-titular { color: var(--rojo); font-weight: var(--peso-fuerte); margin: 0 0 var(--e-2); }
+  .bt-motivos { margin: 0; padding-left: var(--e-4); font-size: var(--t-3); color: var(--texto-2); }
+  .bt-motivos li { margin-bottom: var(--e-2); }
+
+  .cierre-nota { margin-top: var(--e-7); }
+
+  @media (max-width: 600px) {
+    .bt { grid-template-columns: 1fr; }
+  }
+</style>

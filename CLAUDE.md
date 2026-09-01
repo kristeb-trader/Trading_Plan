@@ -93,6 +93,23 @@ Viene de las gráficas de backtesting que él validó una por una.
 
 ---
 
+## Lenguaje visual
+
+| | |
+|---|---|
+| **Dónde viven los tokens** | `04_Web\src\estilos\tokens.css` — **único sitio con valores literales** |
+| **Estilos de documento** | `04_Web\src\estilos\base.css` |
+| **De dónde salen los colores** | de la tabla del estándar visual de arriba. **No se eligen, se heredan** |
+| **Tema** | uno solo, oscuro. No hay tema claro y no se finge que lo haya |
+
+**La regla:** si escribes un color, un radio, una sombra, un espaciado o un tamaño de fuente que **no sale de un token**, estás creando un segundo lenguaje visual. Se añade el token; no se pone el valor suelto. Excepción legítima: un valor que de verdad solo tiene sentido en un sitio, con un comentario que diga por qué.
+
+**Prohibido por el estándar:** degradados, sombras de tarjeta, cuadrícula y emojis decorativos. La jerarquía se hace con **peso tipográfico y espacio**, no con cajas. Los emojis del texto fuente sí se respetan: son del documento.
+
+**Además:** columnas numéricas siempre con `tabular-nums`; las tablas anchas hacen scroll dentro de su contenedor y la página nunca en horizontal; el color nunca comunica solo —siempre acompañado de texto, forma o icono—; y foco visible en todo lo que se pueda tabular.
+
+---
+
 ## Cómo hablarle al operador
 
 - **Nunca uses los códigos de regla** (`R-08`, `P-22`, `G-12`…) en conversación. Son para los documentos. Al hablar, lenguaje de usuario, claro y no técnico.

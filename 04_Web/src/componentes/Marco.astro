@@ -1,0 +1,158 @@
+---
+/**
+ * Marco — cabecera, navegacion, banda de advertencia y pie.
+ *
+ * La banda de advertencia NO es decorativa y no se puede quitar por pagina:
+ * la pone el marco, y todas las paginas pasan por el marco. Su texto y su
+ * version se leen del documento, no estan escritos aqui.
+ */
+import * as P from '../lib/parsers.mjs';
+import '../estilos/tokens.css';
+import '../estilos/base.css';
+
+interface Props { titulo: string; ancho?: 'texto' | 'total' }
+const { titulo, ancho = 'texto' } = Astro.props;
+
+const v = P.version();
+const bt = P.backtesting();
+
+// `lista: false` = pagina todavia no construida. Se muestra apagada en vez de
+// dar un enlace roto. Se enciende cuando la pagina existe.
+const SECCIONES = [
+  { href: '/', texto: 'Portada', lista: true },
+  { href: '/plan', texto: 'El plan', lista: false },
+  { href: '/reglas', texto: 'Reglas', lista: false },
+  { href: '/parametros', texto: 'Parámetros', lista: false },
+  { href: '/glosario', texto: 'Glosario', lista: false },
+  { href: '/checklist', texto: 'Checklist', lista: false },
+  { href: '/galeria', texto: 'Galería', lista: false },
+  { href: '/pendientes', texto: 'Pendientes', lista: false },
+  { href: '/contextualizacion', texto: 'Contextualización', lista: false },
+  { href: '/cierre', texto: 'Cierre de la fase 1', lista: false },
+];
+
+const ruta = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{titulo} · Plan Chaumer</title>
+  </head>
+
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+    <!-- Banda permanente. Ninguna pagina puede esconderla. -->
+    <div class="banda">
+      <span class="banda-marca">plan v{v.version}</span>
+      <span class="banda-sep">·</span>
+      <span>escrito y contrastado</span>
+      <span class="banda-sep">·</span>
+      <strong class="banda-alerta">no probado</strong>
+      <a class="banda-enlace" href="/cierre">{bt.huecos.length} huecos declarados →</a>
+    </div>
+
+    <header class="cabecera">
+      <div class="cabecera-fila">
+        <a class="marca" href="/">
+          <span class="marca-nombre">Plan de trading Chaumer</span>
+          <span class="marca-nota">NQ · MNQ · NinjaTrader 8</span>
+        </a>
+        <span class="meta mono">{v.fecha}</span>
+      </div>
+      <nav class="nav" aria-label="Secciones">
+        {SECCIONES.map((s) => (
+          s.lista
+            ? <a href={s.href} class:list={['nav-i', { activa: ruta === s.href.replace(/\/$/, '') || (s.href !== '/' && ruta.startsWith(s.href)) }]}>{s.texto}</a>
+            : <span class="nav-i pendiente" title="Todavía no construida">{s.texto}</span>
+        ))}
+      </nav>
+    </header>
+
+    <main id="contenido" class:list={['contenido', ancho]}>
+      <slot />
+    </main>
+
+    <footer class="pie">
+      <p class="meta">
+        El portal renderiza <code>01_Plan/</code>. No añade metodología, no manda
+        órdenes y no se conecta a la cuenta. Una observación no modifica el plan.
+      </p>
+    </footer>
+
+    <style>
+      .saltar {
+        position: absolute; left: var(--e-2); top: var(--e-2);
+        padding: var(--e-2) var(--e-3);
+        background: var(--fondo-alto); border: var(--borde); border-radius: var(--radio);
+        transform: translateY(-200%);
+      }
+      .saltar:focus { transform: none; }
+
+      /* ---- banda de advertencia ---- */
+      .banda {
+        display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--e-2);
+        padding: var(--e-2) var(--e-5);
+        background: var(--fondo);
+        border-bottom: 1px solid color-mix(in srgb, var(--rojo) 35%, transparent);
+        font-size: var(--t-2);
+        color: var(--texto-2);
+      }
+      .banda-marca { font-family: var(--fuente-mono); color: var(--texto); }
+      .banda-sep { color: var(--linea); }
+      .banda-alerta { color: var(--rojo); font-weight: var(--peso-fuerte); }
+      .banda-enlace { margin-left: auto; color: var(--rojo); font-size: var(--t-1); }
+
+      /* ---- cabecera ---- */
+      .cabecera {
+        padding: var(--e-4) var(--e-5) 0;
+        background: var(--fondo-alto);
+        border-bottom: var(--borde);
+      }
+      .cabecera-fila {
+        display: flex; align-items: baseline; justify-content: space-between;
+        gap: var(--e-4); flex-wrap: wrap;
+        max-width: var(--ancho-total); margin: 0 auto;
+      }
+      .marca { text-decoration: none; color: inherit; display: flex; align-items: baseline; gap: var(--e-3); flex-wrap: wrap; }
+      .marca-nombre { font-weight: var(--peso-fuerte); font-size: var(--t-5); }
+      .marca-nota { color: var(--texto-3); font-size: var(--t-2); font-family: var(--fuente-mono); }
+
+      .nav {
+        display: flex; gap: var(--e-1); flex-wrap: wrap;
+        max-width: var(--ancho-total); margin: var(--e-4) auto 0;
+      }
+      .nav-i {
+        padding: var(--e-2) var(--e-3);
+        font-size: var(--t-3);
+        color: var(--texto-2);
+        text-decoration: none;
+        border-bottom: 2px solid transparent;
+        min-height: 44px; display: inline-flex; align-items: center;
+      }
+      .nav-i:hover { color: var(--texto); }
+      .nav-i.activa { color: var(--texto); border-bottom-color: var(--azul); }
+      /* Pendiente: se distingue por opacidad Y por el cursor, nunca solo por color. */
+      .nav-i.pendiente { color: var(--texto-3); opacity: 0.55; cursor: not-allowed; }
+
+      /* ---- contenido ---- */
+      .contenido { margin: 0 auto; padding: var(--e-6) var(--e-5) var(--e-8); }
+      .contenido.texto { max-width: var(--ancho-texto); }
+      .contenido.total { max-width: var(--ancho-total); }
+
+      .pie {
+        border-top: var(--borde);
+        padding: var(--e-4) var(--e-5);
+      }
+      .pie p { max-width: var(--ancho-total); margin: 0 auto; }
+
+      @media (max-width: 600px) {
+        .banda, .cabecera, .contenido, .pie { padding-left: var(--e-4); padding-right: var(--e-4); }
+        .banda-enlace { margin-left: 0; }
+      }
+    </style>
+  </body>
+</html>
