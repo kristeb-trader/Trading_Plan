@@ -142,6 +142,55 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-02 · dos gráficos nuevos, y la lista de los que faltan
+
+El operador pidió generar gráficos nuevos. Se ampliaron **13 → 15** conceptos.
+`scripts/graficos_conceptos.py` sigue sin tocar `05_Backtesting`: solo importa
+su motor.
+
+| Nuevo | Dónde | Qué muestra |
+|---|---|---|
+| `14-traspaso.png` | Zonas · **Romper y confirmar** | la vela que pasa el borde y la que después pasa de su extremo. Mismo patrón que el número 4 pero **buscado en otra sesión**, para no repetir imagen dentro del mismo recorrido |
+| `15-sesion.png` | Jornada · **Cómo avanza la sesión** | la ventana entera con el zigzag que une los extremos de cada tramo |
+
+> ⚠️ **El 15 se dibujó primero con sus 44 zonas y quedó ilegible**: una mancha
+> gris tapando las velas. Además el plan dice que en pantalla va **una sola
+> zona por banda y por jornada**, no las 44 en crudo — y decidir cuál sobrevive
+> en cada banda es metodología, no dibujo. Se dejó solo el zigzag, que es
+> exactamente de lo que habla ese apartado.
+
+**Estado: 15 apartados con imagen, 22 sin ella.** El triaje de esos 22:
+
+**Grupo 1 — el motor los encuentra solo, se pueden generar cuando el operador dé el visto bueno**
+
+| Apartado | Qué mostraría |
+|---|---|
+| Zonas · Varias zonas a la vez | una ventana con varias zonas vivas y la que manda en cada banda |
+| Zonas · Cuándo deja de contar | una zona que caduca y deja de servir |
+| Setups · Uno al lado del otro | IRI y Reingreso en dos paneles de la misma imagen |
+| Filtros · Lo que cancela la orden | una orden en espera que se cancela antes de llenarse *(sirve también para «La orden esperando»)* |
+| Dentro · Solo hay dos salidas | dos paneles: una operación al stop y otra al objetivo |
+
+**Grupo 2 — hacen falta datos o una decisión del operador**
+
+| Apartado | Qué falta |
+|---|---|
+| Premercado · El calendario | marcar la ventana de once minutos de una noticia roja. **Las horas de las noticias no están en los datos** |
+| Premercado · Los dos gráficos | NQ y MNQ el mismo minuto con la diferencia de hasta 3 ticks. **No hay datos de MNQ**, solo de NQ |
+| Jornada · Por dónde empieza el día | hay una regla que quitó el sesgo de dirección; qué enseñar sin contradecirla lo decide el operador |
+| Filtros · Descartado no es vacío | tras un descarte la zona sigue contando. Hay varias formas de enseñarlo |
+
+**Grupo 3 — no son gráfico, y ponerles uno sería decorar**
+
+Cómo estoy hoy · La ATM · Solo hay dos · El registro · Antes de enviar · No
+abrir el día · Las noticias *(filtros)* · No se toca nada · Al cerrar · Cuántas
+veces · Con cuántos contratos · No hay regla de parada.
+
+Son estado del operador, configuración de la plataforma, cuentas y
+prohibiciones: nada de eso pasa en un gráfico de precio. Lo que sí admiten —la
+ATM y el registro— son **capturas de la pantalla del operador**, y las tiene
+que dar él.
+
 ### 2026-09-02 · un apartado por pantalla, con ruta numerada
 
 **Tercer cambio del día, en los ocho módulos.** El operador: *«cuando doy clic

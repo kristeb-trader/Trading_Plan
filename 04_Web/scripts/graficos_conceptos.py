@@ -561,6 +561,62 @@ def main():
                 operacion=(conf, entrada, stop, objetivo, fin),
                 marcas=marcas)
 
+    # ── 14 · el traspaso, en otra sesion ────────────────────────────────
+    # El apartado «Romper y confirmar» de Marcacion de zonas se quedaba sin
+    # grafico. Es el mismo patron del numero 4, pero se busca en OTRO dia
+    # para no ensenar dos veces la misma imagen en el mismo recorrido.
+    hecho = False
+    for d in DIAS:
+        if d == DIA:
+            continue
+        j0, j1 = ventana_sesion(V, d)
+        if j0 is None:
+            continue
+        zs = motor.estructura(V, j0, j1)
+        for z in sorted(zs, key=lambda z: z["vela"]):
+            arriba = z["tipo"] == "R"
+            borde = z["hi"] if arriba else z["lo"]
+            rot = next((i for i in range(z["vela"] + 2, min(z["vela"] + 45, j1))
+                        if (V[i]["h"] > borde if arriba else V[i]["l"] < borde)), None)
+            if rot is None or rot + 6 >= j1:
+                continue
+            conf = next((k for k in range(rot + 1, min(rot + 6, j1))
+                         if (V[k]["h"] > V[rot]["h"] if arriba else V[k]["l"] < V[rot]["l"])), None)
+            if not conf:
+                continue
+            a, b = max(z["vela"] - 5, j0), min(conf + 12, j1)
+            dibujar(V, a, b,
+                    "Rompimiento y consecución: recién ahí la zona quedó superada",
+                    "La primera pasa el borde por un tick, y basta la mecha. La segunda pasa del extremo de la primera.",
+                    os.path.join(SALIDA, "14-traspaso.png"),
+                    zonas=[z],
+                    marcas=[(rot, V[rot]["h"] if arriba else V[rot]["l"],
+                             "ROMPIMIENTO", ORO, 0.20 if arriba else -0.20),
+                            (conf, V[conf]["h"] if arriba else V[conf]["l"],
+                             "CONSECUCIÓN", VERDE, 0.32 if arriba else -0.32)])
+            hecho = True
+            break
+        if hecho:
+            break
+    if not hecho:
+        print("  aviso: no se encontro un traspaso en otra sesion")
+
+    # ── 15 · la sesion entera, con sus zonas ────────────────────────────
+    # «Como avanza la sesion» tampoco tenia grafico. Es la ventana completa
+    # con su zigzag: el apartado habla de como AVANZA la sesion, o sea de la
+    # cadena de corridas y retrocesos.
+    #
+    # SIN las zonas a proposito. Dibujar las 44 que devuelve el motor tapa
+    # las velas con una mancha gris, y ademas el plan dice que en pantalla
+    # va una sola zona por banda y por jornada, no las 44 en crudo. Filtrar
+    # cual sobrevive en cada banda es metodologia, no dibujo: se decide en
+    # 01_Plan, no aqui.
+    dibujar(V, i0, i1,
+            "Una sesión entera, de la primera vela a la última",
+            "La línea blanca une los extremos: cada tramo que avanza y cada descanso, de la primera vela a la última.",
+            os.path.join(SALIDA, "15-sesion.png"),
+            zigzag=zz)
+
     print("\nlistos en public/conceptos/")
     return 0
 
