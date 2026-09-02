@@ -126,7 +126,7 @@ const activa = (href: string) =>
         <div class="rail-pie">
           <!-- Rastro del modo tecnico. No es un interruptor a la vista: es la
                forma de saber que esta puesto y de poder quitarlo. -->
-          <a class="tec-chip solo-tecnico" href="?tecnico=0">
+          <a class="tec-chip solo-tecnico" href="/?tecnico=0">
             <span class="tec-punto" aria-hidden="true"></span>
             <span>Modo técnico encendido</span>
             <span class="tec-off meta">apagar</span>
@@ -353,22 +353,15 @@ const activa = (href: string) =>
         box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04), var(--sombra-2);
         isolation: isolate;
       }
-      /* Textura de velas detras del banner. Es el lenguaje del propio plan
-         —velas azules y blancas— muy apagado y desvanecido a los lados.
-         NO es una grafica: no representa ningun dato, y por eso no le aplica
-         el estandar de graficas, que manda donde se dibuja mercado real. */
+      /* Detras del banner, un foco de luz azul muy suave. Nada mas.
+         Aqui hubo una fila de velas dibujadas y el operador la rechazo:
+         «se ven horribles». No se sustituye por otro dibujo — un foco de luz
+         da modernidad sin fingir un grafico que no existe. */
       .cabecera::before {
         content: '';
-        /* z-index 0, no -1: con -1 se pinta DETRAS del fondo de la
-           cabecera y no se ve nada. La cabecera aisla su apilado, asi que
-           esto queda encima de su fondo y debajo de su contenido. */
         position: absolute; inset: 0; z-index: 0;
-        background-image: var(--textura-velas);
-        background-repeat: repeat-x;
-        background-position: center bottom;
-        opacity: 0.1;
-        -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
-        mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+        background: radial-gradient(38rem 12rem at 50% -30%,
+                    color-mix(in srgb, var(--acento) 26%, transparent), transparent 70%);
         pointer-events: none;
       }
       .cab-marca { grid-column: 2; justify-self: center; position: relative; z-index: 1; }
@@ -541,7 +534,7 @@ const activa = (href: string) =>
         border-top: 1px solid var(--borde-sutil);
         padding: var(--e-6) var(--e-7);
         display: flex; flex-wrap: wrap; gap: var(--e-2) var(--e-5);
-        justify-content: space-between;
+        justify-content: center; text-align: center;
       }
       .pie p { margin: 0; }
 

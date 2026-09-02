@@ -22,7 +22,10 @@ const galeria = P.galeria();
 const img = (id) => galeria.find((c) => c.id === id)?.imagen ?? null;
 const heroe = img('G-16') ?? img('G-13') ?? galeria.find((c) => c.imagen)?.imagen;
 
-// Dos bloques en zigzag, no tres tarjetas iguales.
+// Dos bloques, los dos con el texto a la izquierda y la imagen a la
+// derecha. Antes iban en zigzag (uno invertido); el operador lo cambio el
+// 02/09/2026: leer siempre por el mismo lado cansa menos y ademas la pagina
+// queda mas corta, que era lo que buscaba.
 const CAMINOS = [
   {
     href: '/premercado',
@@ -70,8 +73,8 @@ const CAMINOS = [
   </section>
 
   <!-- ── los dos caminos, en zigzag ────────────────────────────────────── -->
-  {CAMINOS.map((c, i) => (
-    <section class:list={['camino', { invertido: i % 2 === 1 }, 'entra']} aria-label={c.titulo}>
+  {CAMINOS.map((c) => (
+    <section class="camino entra" aria-label={c.titulo}>
       <div class="cm-txt">
         <h2>{c.titulo}</h2>
         <p>{c.texto}</p>
@@ -90,9 +93,14 @@ const CAMINOS = [
 
 <style>
   /* ── bienvenida ──────────────────────────────────────────────────────── */
+  /* Texto a la izquierda, grafico a la derecha. La columna del texto lleva
+     algo mas de ancho que la del grafico: con el titular a 58px, al reves se
+     partia en «La metodologia / de / Alfredo Chaumer,» y dejaba un «de»
+     colgando. */
   .hero {
-    display: grid; gap: var(--e-7);
-    margin-bottom: var(--e-9);
+    display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+    gap: var(--e-7); align-items: center;
+    margin-bottom: var(--e-8);
   }
   .hero-txt h1 {
     margin: 0 0 var(--e-5);
@@ -141,11 +149,10 @@ const CAMINOS = [
   /* ── caminos ─────────────────────────────────────────────────────────── */
   .camino {
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    gap: var(--e-8); align-items: center;
-    margin-bottom: var(--e-9);
+    gap: var(--e-7); align-items: center;
+    margin-bottom: var(--e-8);
   }
-  .camino:last-of-type { margin-bottom: var(--e-6); }
-  .camino.invertido .cm-txt { order: 2; }
+  .camino:last-of-type { margin-bottom: var(--e-5); }
   .cm-txt h2 { margin: 0 0 var(--e-4); font-size: var(--t-7); }
   .cm-txt p { font-size: var(--t-4); color: var(--texto-2); max-width: 44ch; }
   .cm-txt .btn-1, .cm-txt .btn-2 { margin-top: var(--e-4); }
@@ -175,8 +182,7 @@ const CAMINOS = [
   }
 
   @media (max-width: 1200px) {
-    .camino { grid-template-columns: 1fr; gap: var(--e-6); }
-    .camino.invertido .cm-txt { order: 0; }
-    .cm-fig { max-width: 46rem; }
+    .hero, .camino { grid-template-columns: 1fr; gap: var(--e-6); }
+    .hero-gr, .cm-fig { max-width: 46rem; }
   }
 </style>

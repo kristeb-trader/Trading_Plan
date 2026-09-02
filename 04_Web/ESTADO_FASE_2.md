@@ -142,6 +142,54 @@ entero de una vez es demasiado.
 
 ## Historial
 
+
+Correcciones del operador sobre la tanda anterior.
+
+| Qué pidió | Qué se hizo |
+|---|---|
+| «esas velas de arriba se ven horribles» | **fuera la textura de velas.** En su sitio, un foco de luz azul muy suave. No se sustituyó por otro dibujo: fingir un gráfico que no existe fue el error |
+| el texto a la izquierda y la imagen a la derecha | el hero **vuelve a dos columnas**, y los dos bloques de abajo **dejan el zigzag**: los tres tienen ahora el texto a la izquierda |
+| «que no tenga que dar scroll» | la portada pasa de **1947 a 1343 px de alto**. El titular y el gráfico entran juntos en la primera pantalla |
+| el copyright centrado | el pie pasa de extremos a **centrado** |
+| apagar el modo técnico debe llevar al inicio | el enlace «apagar» pasa de  a ****. Apagar es «vuelvo a ver lo que ve Alfredo», y eso empieza en el inicio — no en la página de auditoría donde estabas |
+
+Con el titular a 58px la columna del texto necesita algo más de ancho que la
+del gráfico (1,06 contra 0,94): al revés se partía en «La metodología / de /
+Alfredo Chaumer,» y dejaba un «de» colgando. Ahora son tres líneas limpias.
+
+> ⏳ **Pendiente: la imagen del banner.** El operador quiere una imagen de
+> internet. No se puso ninguna: hace falta que él decida la fuente y la
+> licencia, porque el portal se comparte con un tercero.
+
+**El tropiezo de Vite, otra vez.** Los cambios no se veían aunque el código
+estaba bien. Es el mismo caso ya anotado: parar el servidor y borrar
+ y . **Si algo no se refleja, empieza por ahí.**
+
+### 2026-09-02 · vuelta al texto a la izquierda, y fuera las velas del banner
+
+Correcciones del operador sobre la tanda anterior.
+
+| Qué pidió | Qué se hizo |
+|---|---|
+| «esas velas de arriba se ven horribles» | **fuera la textura de velas.** En su sitio, un foco de luz azul muy suave. No se sustituyó por otro dibujo: fingir un gráfico que no existe fue el error de fondo |
+| el texto a la izquierda y la imagen a la derecha | el hero **vuelve a dos columnas**, y los dos bloques de abajo **dejan el zigzag**: los tres tienen ahora el texto a la izquierda y la imagen a la derecha |
+| «que no tenga que dar scroll» | la portada pasa de **1947 a 1343 px de alto**. El titular y el gráfico entran juntos en la primera pantalla |
+| el copyright centrado | el pie pasa de extremos a **centrado** |
+| apagar el modo técnico debe llevar al inicio | el enlace «apagar» pasa de `?tecnico=0` a **`/?tecnico=0`**. Apagar es «vuelvo a ver lo que ve Alfredo», y eso empieza en el inicio, no en la página de auditoría donde estabas |
+
+Con el titular a 58 px la columna del texto necesita algo más de ancho que la
+del gráfico (1,06 contra 0,94): al revés se partía en «La metodología / de /
+Alfredo Chaumer,» y dejaba un «de» colgando. Ahora son tres líneas limpias.
+
+> ⏳ **Pendiente: la imagen del banner.** El operador quiere una imagen de
+> internet. No se puso ninguna: la fuente y la licencia las tiene que decidir
+> él, porque el portal se comparte con un tercero.
+
+**El tropiezo de Vite, otra vez.** Los cambios no se veían aunque el código
+estaba bien. Es el mismo caso ya anotado más abajo: parar el servidor y borrar
+`node_modules/.vite` y `.astro`. **Si algo no se refleja en pantalla, empieza
+por ahí antes de tocar el CSS.**
+
 ### 2026-09-02 · el banner, el menú con relieve y la portada sin botones
 
 Cuarto cambio del día. El operador: *«el título más grande, centrado… que se
