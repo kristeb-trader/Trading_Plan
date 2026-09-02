@@ -2,9 +2,18 @@
 
 **Qué es esto:** la metodología de trading de Alfredo Chaumer para NQ/MNQ en NinjaTrader 8, extraída durante la fase 1 a un plan mecánico de **38 reglas medibles**.
 
-**Fase actual:** 🚧 **FASE 2 — el portal web**, en `04_Web\`. **Publicado** en https://plan-operativo-nq.pages.dev
-➡️ **El seguimiento de esta fase vive en `04_Web\ESTADO_FASE_2.md`. Léelo antes de tocar nada del portal:** dice qué hay hecho, qué falta y qué errores ya se pagaron una vez.
-**Fase 1:** 🏁 cerrada el 2026-09-01. Ver `01_Plan\CIERRE_FASE_1.md`.
+## Las fases
+
+| | Fase | Estado | Seguimiento |
+|---|---|---|---|
+| **1** | **El plan** — la metodología extraída a 38 reglas medibles | 🏁 cerrada el 2026-09-01 | `01_Plan\CIERRE_FASE_1.md` |
+| **2** | **El portal** — donde Alfredo revisa y deja observaciones | 🚧 **en marcha**, publicado y en revisión | **`04_Web\ESTADO_FASE_2.md`** |
+| **3** | **Agente de backtesting** | 🔵 declarada, **sin definir** | `FASES.md` |
+| **4** | **El bot en NinjaTrader** | 🔵 declarada, **sin definir** | `FASES.md` |
+
+➡️ **Antes de tocar nada del portal, lee `04_Web\ESTADO_FASE_2.md`:** dice qué hay hecho, qué falta, por dónde va la revisión del operador y qué errores ya se pagaron una vez.
+
+🔵 **Las fases 3 y 4 están declaradas, no definidas.** El operador las detallará más adelante. **No deduzcas su alcance ni empieces a construirlas**; lo poco que consta está en `FASES.md`. El portal se publica en https://plan-operativo-nq.pages.dev
 
 **Operador:** Christian. **Uso:** personal.
 **Repositorio:** `kristeb-trader/Trading_Plan` — **privado, y se queda privado**.
@@ -16,8 +25,9 @@
 1. **No inventes metodología.** Ninguna regla, umbral o comportamiento sale de price action genérico ni de lo que "suele hacerse". Todo lo que hay está en `01_Plan\`. Si algo falta, **falta**: se marca `PENDIENTE`, no se rellena.
 2. **Ningún adjetivo es una regla.** "Fuerte", "sano", "claro" no son criterios. Solo valen ticks, puntos, porcentajes, número de velas y horas exactas.
 3. **No se cambia una regla confirmada** sin pedírselo al operador y esperar su confirmación explícita.
-4. **Los scripts de `05_Backtesting\` son herramientas de auditoría**, nunca de operación. No los conviertas en un bot ni en un ejecutor.
+4. **Los scripts de `05_Backtesting\` son herramientas de auditoría**, nunca de operación. No los conviertas en un bot ni en un ejecutor. *(La fase 4 será un bot, sí — pero se definirá y se construirá cuando el operador la abra, no antes y no reciclando estos scripts por su cuenta.)*
 5. **Los huecos declarados se muestran, no se esconden.** Ver más abajo.
+6. **`01_Plan\` no se toca desde ninguna otra fase.** Es la base con la que se construirá el bot: el portal lo lee y lo presenta, el backtesting lo audita, pero **nadie lo reescribe**. Si hay que cambiar una regla, se cambia en `01_Plan\` y con el visto bueno del operador.
 
 ---
 

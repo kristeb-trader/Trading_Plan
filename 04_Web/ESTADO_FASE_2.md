@@ -6,7 +6,8 @@
 > **Se actualiza al cerrar cada sesión de trabajo.** Si abres un chat nuevo,
 > léelo primero: con esto y `CLAUDE.md` se retoma sin que nadie te cuente nada.
 
-**Fase:** 2 — portal web · **Estado:** 🟢 publicado y en uso
+**Fase:** 2 — portal web · **Estado:** 🟢 publicado, 🔍 **en revisión por partes**
+**El mapa de todas las fases está en `..\FASES.md`.** Después de esta vienen el agente de backtesting y el bot de NinjaTrader, las dos **declaradas y sin definir**.
 **Última actualización:** 2026-09-01
 **Dirección:** https://plan-operativo-nq.pages.dev
 
@@ -96,14 +97,45 @@ python scripts/graficos_conceptos.py
 
 ---
 
+## 🔍 La revisión del operador — EN MARCHA
+
+**El operador está revisando el portal por partes**, y reporta los cambios por
+partes, cada tanda en su propio chat. Decidido así el 2026-09-01: recorrerlo
+entero de una vez es demasiado.
+
+> **Al terminar cada tanda, marca aquí la parte revisada y anota los cambios
+> hechos.** Es lo que permite que el siguiente chat sepa por dónde va la cosa
+> sin preguntar.
+
+| | Parte | Dirección | Revisada | Cambios |
+|---|---|---|---|---|
+| | Portada | `/` | ⬜ | |
+| 01 | Premercado | `/premercado` | ⬜ | |
+| 02 | Marcación de zonas | `/zonas` | ⬜ | |
+| 03 | Setups operativos | `/setups` | ⬜ | |
+| 04 | Jornada operativa | `/jornada` | ⬜ | |
+| 05 | Mecánica de entrada | `/entrada` | ⬜ | |
+| 06 | Filtros: cuándo NO se entra | `/filtros` | ⬜ | |
+| 07 | Dentro de la operación | `/dentro` | ⬜ | |
+| 08 | Riesgo y tamaño | `/riesgo` | ⬜ | |
+| | Casos reales | `/galeria` | ⬜ | |
+| | Vocabulario | `/glosario` | ⬜ | |
+| | Observaciones | `/observaciones` | ⬜ | |
+
+**Cómo se retoma una tanda en un chat nuevo:**
+
+> Lee `CLAUDE.md` y `04_Web\ESTADO_FASE_2.md`. Vamos con la revisión del módulo *(el que sea)*.
+
+---
+
 ## Qué falta
 
 | | Qué | Quién |
 |---|---|---|
 | 🔴 | **Crear la clave del operador** para poder ver y borrar las observaciones desde fuera del portal: `npx wrangler pages secret put CLAVE_OPERADOR --project-name=plan-operativo-nq` | **el operador** |
-| 🟡 | Recorrer los ocho módulos y decir qué falta o qué sobra | el operador |
+| 🟡 | La revisión por partes de arriba | el operador |
 | 🟡 | Simplificar la prosa de los casos reales, que todavía suena a auditoría | pendiente |
-| 🟡 | Pasarle la dirección a Alfredo | el operador |
+| 🟡 | Pasarle la dirección a Alfredo | el operador, **cuando termine la revisión** |
 
 ---
 
@@ -189,3 +221,7 @@ Si quieres darle contexto de golpe:
 > Lee `CLAUDE.md` y `04_Web\ESTADO_FASE_2.md`. Vamos a seguir con la fase 2.
 
 El historial real y completo está en el repositorio: `git log --oneline`.
+
+**Y lo primero que hay que hacer al terminar una tanda:** actualizar la tabla de
+revisión de arriba y, si hubo cambios de fondo, el apartado de historial. Si no
+se hace, el siguiente chat empieza a ciegas.
