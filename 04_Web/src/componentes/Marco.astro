@@ -1,17 +1,25 @@
 ---
 /**
- * Marco — cabecera con buscador, rail de secciones y contenido.
+ * Marco — cabecera, rail de secciones y contenido.
  *
- * Es un portal de CONSULTA: lo primero es encontrar. Por eso el buscador
- * esta en la cabecera de todas las paginas y se abre con Ctrl+K, y por eso
- * el rail agrupa las secciones con su contador.
+ * DOS PORTALES EN UNO (decidido por el operador el 02/09/2026):
  *
- * El aviso de «no probado» lo pone el marco, no la pagina: ninguna pantalla
- * puede esconderlo.
+ *   - Lo que ve Alfredo: inicio, los ocho modulos, los casos reales y las
+ *     observaciones. Nada mas. Sin buscador, sin codigos y sin el aviso de
+ *     «no probado»: lo que no esta probado es la transcripcion del metodo,
+ *     no el metodo, y repetirselo cuatro veces no le sirve de nada.
+ *
+ *   - Lo que ve el operador: todo lo anterior mas «Todo el detalle» y el
+ *     buscador. Se enciende con el icono discreto del pie del rail, que
+ *     lleva a /tecnico, o con ?tecnico=1 en cualquier direccion.
+ *
+ * El aviso de «no probado» y los cuatro huecos declarados viven ahora en
+ * /tecnico. Se muestran, no se esconden — pero del lado del operador.
  */
 import * as P from '../lib/parsers.mjs';
 import { MODULOS } from '../lib/modulos.mjs';
 import Icono from './Icono.astro';
+import Marca from './Marca.astro';
 import Observaciones from './Observaciones.astro';
 import '../estilos/tokens.css';
 import '../estilos/base.css';
@@ -19,41 +27,41 @@ import '../estilos/base.css';
 interface Props { titulo: string; ancho?: 'texto' | 'total' }
 const { titulo, ancho = 'total' } = Astro.props;
 
-const v = P.version();
-const bt = P.backtesting();
 const indice = P.indiceBusqueda();
 
 // El menu es el recorrido del metodo, en el orden real de la jornada. Los
-// ocho modulos van numerados a proposito: se leen como un camino, no como
-// una lista de temas sueltos.
+// ocho modulos van numerados a proposito: el numero no decora, es el orden
+// cronologico de la sesion y sin el la lista no se entiende igual.
 const GRUPOS = [
   {
-    grupo: 'El método',
+    items: [{ icono: 'house', href: '/', texto: 'Inicio' }],
+  },
+  {
     items: MODULOS.map((m) => ({
-      n: m.n, href: '/' + m.slug, texto: m.corto, lista: true,
+      n: m.n, icono: m.icono, href: '/' + m.slug, texto: m.corto,
     })),
   },
   {
-    grupo: 'Material',
     items: [
-      { icono: 'images', href: '/galeria', texto: 'Casos reales', lista: true, cuenta: P.galeria().length },
-      { icono: 'book-open', href: '/glosario', texto: 'Vocabulario', lista: true, cuenta: P.glosario().length },
+      { icono: 'images', href: '/galeria', texto: 'Casos reales', cuenta: P.galeria().length },
+      { icono: 'chat-teardrop-text', href: '/observaciones', texto: 'Observaciones' },
     ],
   },
   {
-    // Solo aparece en modo técnico. Es el detalle de auditoría: al revisor
-    // le sobra, y tenerlo delante invita a perderse en las 38 fichas.
+    // Solo en modo tecnico. Es el detalle de auditoria: al revisor le sobra,
+    // y tenerlo delante invita a perderse en las 38 fichas.
     grupo: 'Todo el detalle',
     soloTecnico: true,
     items: [
-      { icono: 'list-checks', href: '/plan-completo', texto: 'El plan completo', lista: true },
-      { icono: 'list-checks', href: '/reglas', texto: 'Las reglas', lista: true, cuenta: P.reglas().length },
-    ],
-  },
-  {
-    grupo: 'Revisión',
-    items: [
-      { icono: 'chat-teardrop-text', href: '/observaciones', texto: 'Observaciones', lista: true },
+      { icono: 'compass', href: '/tecnico', texto: 'Portada técnica' },
+      { icono: 'file-text', href: '/plan-completo', texto: 'El plan completo' },
+      { icono: 'list-checks', href: '/reglas', texto: 'Las reglas', cuenta: P.reglas().length },
+      { icono: 'book-open', href: '/glosario', texto: 'Vocabulario', cuenta: P.glosario().length },
+      { icono: 'sliders-horizontal', href: '/parametros', texto: 'Parámetros' },
+      { icono: 'check-square', href: '/checklist', texto: 'Checklist diaria' },
+      { icono: 'warning-circle', href: '/pendientes', texto: 'Pendientes' },
+      { icono: 'stack', href: '/contextualizacion', texto: 'Contextualización' },
+      { icono: 'seal-check', href: '/cierre', texto: 'Acta de cierre' },
     ],
   },
 ];
@@ -68,19 +76,20 @@ const activa = (href: string) =>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>{titulo} · Plan Chaumer</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{titulo} · Trading Plan Nasdaq</title>
   </head>
 
   <body class="sin-js">
     <a class="saltar" href="#contenido">Saltar al contenido</a>
 
     <header class="cabecera">
-      <a class="marca" href="/">
-        <span class="marca-n">Plan Chaumer</span>
-        <span class="marca-s">NQ, MNQ, NinjaTrader 8</span>
-      </a>
+      <Marca />
 
-      <button class="buscar" type="button" data-abrir-buscador>
+      <!-- El buscador indexa reglas, parametros y pendientes: material del
+           operador. Un recorrido de ocho modulos en orden no se busca, se
+           recorre. Por eso solo aparece en modo tecnico. -->
+      <button class="buscar solo-tecnico" type="button" data-abrir-buscador>
         <svg class="buscar-i" viewBox="0 0 20 20" fill="none" aria-hidden="true">
           <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6" />
           <path d="M13.5 13.5 17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
@@ -88,10 +97,6 @@ const activa = (href: string) =>
         <span class="buscar-t">Buscar una regla, un término, un caso</span>
         <kbd class="tecla">Ctrl K</kbd>
       </button>
-
-      <a class="estado" href="/cierre">
-        <span class="marca-estado aviso">no probado</span>
-      </a>
     </header>
 
     <div class="marco">
@@ -99,45 +104,35 @@ const activa = (href: string) =>
         <nav class="nav" aria-label="Secciones">
           {GRUPOS.map((g) => (
             <div class:list={['nav-g', { 'solo-tecnico': g.soloTecnico }]}>
-              <p class="etiqueta nav-t">{g.grupo}</p>
+              {g.grupo && <p class="etiqueta nav-t">{g.grupo}</p>}
               {g.items.map((s) => (
-                s.lista
-                  ? <a href={s.href} class:list={['nav-i', { activa: activa(s.href) }]}>
-                      {s.n
-                        ? <span class="nav-n num">{String(s.n).padStart(2, '0')}</span>
-                        : <span class="nav-ic"><Icono nombre={s.icono} /></span>}
-                      <span class="nav-x">{s.texto}</span>
-                      {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
-                    </a>
-                  : <span class="nav-i pendiente" aria-disabled="true">
-                      <span class="nav-ic"><Icono nombre={s.icono} /></span>
-                      <span class="nav-x">{s.texto}</span>
-                      {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
-                      <span class="nav-pronto" aria-hidden="true">pronto</span>
-                    </span>
+                <a href={s.href} class:list={['nav-i', { activa: activa(s.href) }]}>
+                  <span class="nav-ic"><Icono nombre={s.icono} /></span>
+                  <span class="nav-x">{s.texto}</span>
+                  {s.n && <span class="nav-n num">{String(s.n).padStart(2, '0')}</span>}
+                  {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
+                </a>
               ))}
             </div>
           ))}
         </nav>
 
-        <!-- El modo tecnico ya no vive en el rail: se enciende con ?tecnico=1
-             y el navegador lo recuerda. Es del operador, no del revisor, y
-             tenerlo a la vista solo invita a pulsarlo por curiosidad.
-             Encendido si deja rastro, para poder apagarlo sin recordar nada. -->
-        <a class="tec-chip solo-tecnico" href="?tecnico=0">
-          <span class="tec-punto" aria-hidden="true"></span>
-          <span>Modo técnico encendido</span>
-          <span class="tec-off meta">apagar</span>
-        </a>
+        <div class="rail-pie">
+          <!-- Rastro del modo tecnico. No es un interruptor a la vista: es la
+               forma de saber que esta puesto y de poder quitarlo. -->
+          <a class="tec-chip solo-tecnico" href="?tecnico=0">
+            <span class="tec-punto" aria-hidden="true"></span>
+            <span>Modo técnico encendido</span>
+            <span class="tec-off meta">apagar</span>
+          </a>
 
-        <!-- Estado del plan, siempre a la vista al pie del rail. -->
-        <a class="rail-estado" href="/cierre">
-          <span class="re-cab">
-            <span class="re-punto" aria-hidden="true"></span>
-            <span class="re-t">Plan no probado</span>
-          </span>
-          <span class="re-x">{bt.huecos.length} huecos declarados. v{v.version}</span>
-        </a>
+          <!-- La puerta del operador. Discreta a proposito: Alfredo no
+               necesita el detalle de auditoria y no debe tropezar con el.
+               Lleva a /tecnico y de paso enciende el modo. -->
+          <a class="puerta" href="/tecnico?tecnico=1" aria-label="Portada técnica">
+            <Icono nombre="gear-six" />
+          </a>
+        </div>
       </aside>
 
       <div class="cuerpo">
@@ -147,10 +142,10 @@ const activa = (href: string) =>
 
         <footer class="pie">
           <p class="meta">
-            Plan de trading para NQ y MNQ. No manda órdenes y no se conecta a
-            ninguna cuenta.
+            © <strong>Christian Buitrago</strong> ·{' '}
+            <a href="mailto:kristeb@hotmail.com">kristeb@hotmail.com</a>
           </p>
-          <p class="meta">Versión {v.version}, actualizada el {v.fecha}.</p>
+          <p class="meta">Versión 1.0</p>
         </footer>
       </div>
     </div>
@@ -187,7 +182,6 @@ const activa = (href: string) =>
       // a quien llega nuevo. Quien audita lo enciende una vez y se recuerda.
       (function () {
         var CLAVE = 'chaumer.tecnico';
-        var btn = document.querySelector('[data-tecnico]');
         var on = false;
         try { on = localStorage.getItem(CLAVE) === '1'; } catch (e) { /* sin almacenamiento */ }
 
@@ -203,19 +197,7 @@ const activa = (href: string) =>
           }
         } catch (e) { /* sin almacenamiento */ }
 
-        function pintar() {
-          document.body.classList.toggle('tecnico', on);
-          if (btn) btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-        }
-        pintar();
-
-        if (btn) {
-          btn.addEventListener('click', function () {
-            on = !on;
-            try { localStorage.setItem(CLAVE, on ? '1' : '0'); } catch (e) { /* sin almacenamiento */ }
-            pintar();
-          });
-        }
+        document.body.classList.toggle('tecnico', on);
       })();
       (function () {
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -304,6 +286,9 @@ const activa = (href: string) =>
         }
 
         function abrir() {
+          // El buscador es del operador. Sin modo tecnico no existe, ni con
+          // el atajo: si no, Alfredo lo abre sin querer y ve las 38 fichas.
+          if (!document.body.classList.contains('tecnico')) return;
           if (dlg.open) return;
           dlg.showModal();
           campo.value = '';
@@ -348,27 +333,22 @@ const activa = (href: string) =>
       .cabecera {
         position: sticky; top: 0; z-index: 40;
         display: grid;
-        grid-template-columns: var(--rail) minmax(0, 1fr) auto;
+        grid-template-columns: var(--rail) minmax(0, 1fr);
         align-items: center;
         gap: var(--e-5);
+        /* Alto fijo: el rail cuelga de aqui y necesita saber cuanto mide. */
+        min-height: var(--alto-cabecera);
         padding: var(--e-3) var(--e-6);
         background: color-mix(in srgb, var(--fondo) 86%, transparent);
-        backdrop-filter: blur(14px);
+        backdrop-filter: var(--desenfoque);
         border-bottom: 1px solid var(--borde-sutil);
       }
-      .marca { display: block; }
-      .marca:hover { color: inherit; }
-      .marca-n {
-        display: block; font-size: var(--t-3); font-weight: var(--peso-fuerte);
-        letter-spacing: var(--track-titulo); color: var(--texto);
-      }
-      .marca-s { display: block; font-size: var(--t-1); color: var(--texto-3); margin-top: 1px; }
 
-      /* Buscador: la pieza mas visible de la cabecera, porque es un portal
-         de consulta y encontrar es la accion principal. */
+      /* Buscador: solo del lado del operador. */
       .buscar {
         display: flex; align-items: center; gap: var(--e-3);
         width: 100%; max-width: 34rem;
+        min-height: 2.75rem;
         padding: var(--e-2) var(--e-3);
         background: var(--superficie);
         border: 1px solid var(--borde);
@@ -382,18 +362,13 @@ const activa = (href: string) =>
       .buscar-i { width: 16px; height: 16px; flex: none; }
       .buscar-t { flex: 1; }
 
-      .estado { display: block; }
-
-      /* ── rastro del modo técnico ────────────────────────
-         Solo se ve con el modo encendido. No es un interruptor a la vista:
-         es la forma de saber que está puesto y de poder quitarlo. */
+      /* ── rastro del modo técnico ───────────────────────────────────── */
       .tec-chip {
         display: flex; align-items: center; gap: var(--e-2);
-        margin-bottom: var(--e-3);
         padding: var(--e-2) var(--e-3);
         border-radius: var(--radio-2);
         border: 1px solid var(--borde-sutil);
-        background: rgba(76, 141, 255, 0.06);
+        background: color-mix(in srgb, var(--acento) 6%, transparent);
         font-size: var(--t-1);
         color: var(--texto-3);
         transition: border-color var(--normal), color var(--normal);
@@ -409,8 +384,8 @@ const activa = (href: string) =>
       .marco { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); }
 
       .rail {
-        position: sticky; top: 3.75rem; align-self: start;
-        height: calc(100dvh - 3.75rem);
+        position: sticky; top: var(--alto-cabecera); align-self: start;
+        height: calc(100dvh - var(--alto-cabecera));
         display: flex; flex-direction: column; gap: var(--e-4);
         padding: var(--e-4) var(--e-3);
         margin: var(--e-4) 0 var(--e-4) var(--e-4);
@@ -422,38 +397,37 @@ const activa = (href: string) =>
         overflow-y: auto;
       }
       .nav { flex: 1; }
-      .nav-g { margin-bottom: var(--e-4); }
-      .nav-g + .nav-g { padding-top: var(--e-4); border-top: 1px solid var(--borde-sutil); }
+      .nav-g { margin-bottom: var(--e-3); }
+      .nav-g + .nav-g { padding-top: var(--e-3); border-top: 1px solid var(--borde-sutil); }
       .nav-t { margin: 0 0 var(--e-2); padding-left: var(--e-3); }
 
       .nav-i {
         position: relative;
         display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
         align-items: center; gap: var(--e-3);
+        min-height: 2.75rem;
         padding: var(--e-2) var(--e-3);
         border-radius: var(--radio-2);
         font-size: var(--t-3);
         color: var(--texto-2);
-        transition: background var(--normal), color var(--normal), transform var(--normal);
+        transition: background var(--normal), color var(--normal);
       }
       .nav-ic { display: flex; color: var(--texto-3); transition: color var(--normal), transform var(--normal); }
+      .nav-x { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-      /* El numero ocupa el sitio del icono en los ocho modulos: mismo ancho,
-         misma alineacion, y el rail no baila al mezclar unos con otros. */
+      /* El numero del modulo va detras, no delante: el icono abre la fila y
+         el numero cierra el orden. Misma columna que el contador de casos,
+         asi que el rail no baila al mezclar unos con otros. */
       .nav-n {
-        display: flex; align-items: center; justify-content: center;
-        width: 1.125rem; flex: none;
         font-size: var(--t-1);
         letter-spacing: var(--track-cifra);
         color: var(--texto-3);
         transition: color var(--normal);
       }
-      .nav-i:hover .nav-n { color: var(--acento); }
-      .nav-i.activa .nav-n { color: var(--acento); }
-      .nav-x { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-      .nav-i:hover { background: rgba(255, 255, 255, 0.05); color: var(--texto); }
+      .nav-i:hover { background: var(--vidrio-hover); color: var(--texto); }
       .nav-i:hover .nav-ic { color: var(--acento); transform: scale(1.08); }
+      .nav-i:hover .nav-n { color: var(--acento); }
 
       /* Activa: fondo en degradado, icono en color y una barra de luz a la
          izquierda. Tres senales, no solo el color de fondo. */
@@ -471,58 +445,33 @@ const activa = (href: string) =>
         background: var(--acento);
         box-shadow: 0 0 10px 1px color-mix(in srgb, var(--acento) 75%, transparent);
       }
-      .nav-i.activa .nav-ic { color: var(--acento); }
-
-      /* Pendiente: apagada, con etiqueta y cursor. Nunca solo por color. */
-      .nav-i.pendiente { color: var(--texto-3); cursor: not-allowed; }
-      .nav-i.pendiente .nav-ic { opacity: 0.45; }
-      .nav-i.pendiente:hover { background: none; color: var(--texto-3); }
-      .nav-i.pendiente:hover .nav-ic { color: var(--texto-3); transform: none; }
-      .nav-pronto {
-        grid-column: 3; font-size: var(--t-1); color: var(--texto-3);
-        opacity: 0; transition: opacity var(--normal);
-      }
-      .nav-i.pendiente:hover .nav-pronto { opacity: 0.8; }
-      .nav-i.pendiente:hover .nav-c { display: none; }
+      .nav-i.activa .nav-ic, .nav-i.activa .nav-n { color: var(--acento); }
 
       .nav-c {
         font-size: var(--t-1); color: var(--texto-3);
-        background: rgba(255, 255, 255, 0.06);
+        background: var(--vidrio-hover);
         border-radius: var(--radio-pill);
         padding: 1px var(--e-2); min-width: 1.6rem; text-align: center;
       }
       .nav-i.activa .nav-c { background: color-mix(in srgb, var(--acento) 26%, transparent); color: var(--texto); }
 
-      /* ── estado al pie del rail ────────────────────────────────────── */
-      .rail-estado {
-        display: block;
-        padding: var(--e-3) var(--e-4);
+      /* ── pie del rail ──────────────────────────────────────────────── */
+      .rail-pie { display: grid; gap: var(--e-2); justify-items: end; }
+      .tec-chip { justify-self: stretch; }
+
+      /* La puerta al detalle: un icono pequeño y apagado. Se ve si se busca,
+         no llama si no. Al enfocar o pasar por encima se declara. */
+      /* Caja de 44px para poder tocarla en el movil; el icono de dentro sigue
+         siendo diminuto, que es lo que pidio el operador. */
+      .puerta {
+        display: flex; align-items: center; justify-content: center;
+        width: 2.75rem; height: 2.75rem;
         border-radius: var(--radio-2);
-        background: color-mix(in srgb, var(--aviso) 9%, transparent);
-        border: 1px solid color-mix(in srgb, var(--aviso) 24%, transparent);
-        color: var(--texto-2);
-        transition: background var(--normal), border-color var(--normal);
+        color: var(--n-500);
+        --i: 0.875rem;
+        transition: color var(--normal), background var(--normal);
       }
-      .rail-estado:hover {
-        background: color-mix(in srgb, var(--aviso) 15%, transparent);
-        border-color: color-mix(in srgb, var(--aviso) 45%, transparent);
-        color: var(--texto-2);
-      }
-      .re-cab { display: flex; align-items: center; gap: var(--e-2); }
-      /* Este punto si comunica un estado real, y late para que se note. */
-      .re-punto {
-        width: 7px; height: 7px; border-radius: 50%;
-        background: var(--aviso); flex: none;
-        box-shadow: 0 0 0 0 color-mix(in srgb, var(--aviso) 60%, transparent);
-        animation: latido 2.6s var(--curva) infinite;
-      }
-      @keyframes latido {
-        0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--aviso) 55%, transparent); }
-        70%  { box-shadow: 0 0 0 7px rgba(0, 0, 0, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
-      }
-      .re-t { font-size: var(--t-2); font-weight: var(--peso-fuerte); color: var(--aviso); }
-      .re-x { display: block; margin-top: var(--e-1); font-size: var(--t-1); color: var(--texto-3); }
+      .puerta:hover { color: var(--texto-2); background: var(--vidrio-hover); }
 
       /* ── contenido ─────────────────────────────────────────────────── */
       .cuerpo { display: flex; flex-direction: column; min-width: 0; }
@@ -533,8 +482,10 @@ const activa = (href: string) =>
       .pie {
         border-top: 1px solid var(--borde-sutil);
         padding: var(--e-6) var(--e-7);
-        display: grid; gap: var(--e-2);
+        display: flex; flex-wrap: wrap; gap: var(--e-2) var(--e-5);
+        justify-content: space-between;
       }
+      .pie p { margin: 0; }
 
       /* ── paleta de busqueda ────────────────────────────────────────── */
       .paleta {
@@ -548,7 +499,7 @@ const activa = (href: string) =>
         color: var(--texto);
         overflow: hidden;
       }
-      .paleta::backdrop { background: rgba(5, 8, 14, 0.72); backdrop-filter: blur(3px); }
+      .paleta::backdrop { background: color-mix(in srgb, var(--n-950) 78%, transparent); backdrop-filter: blur(3px); }
 
       .paleta-campo {
         display: flex; align-items: center; gap: var(--e-3);
@@ -587,26 +538,40 @@ const activa = (href: string) =>
       }
 
       /* ── responsive ────────────────────────────────────────────────── */
+      /* 900px es el unico punto de ruptura del portal. Las paginas no
+         inventan el suyo: si el rail cambia de forma aqui, todo cambia aqui. */
       @media (max-width: 900px) {
         .cabecera {
-          grid-template-columns: 1fr auto;
-          grid-template-areas: 'marca estado' 'buscar buscar';
+          grid-template-columns: 1fr;
           padding: var(--e-3) var(--e-4);
         }
-        .marca { grid-area: marca; }
-        .estado { grid-area: estado; }
-        .buscar { grid-area: buscar; max-width: none; }
         .marco { grid-template-columns: 1fr; }
         .rail {
           position: static; height: auto;
-          padding: var(--e-4);
-          border-bottom: 1px solid var(--borde-sutil);
+          margin: 0; border-radius: 0;
+          padding: var(--e-3) var(--e-4);
+          border: 0; border-bottom: 1px solid var(--borde-sutil);
           overflow-x: auto;
+          flex-direction: row; align-items: center; gap: var(--e-3);
         }
-        .rail nav { display: flex; gap: var(--e-5); }
+        .nav { flex: none; }
+        .rail nav { display: flex; gap: var(--e-3); }
         .nav-g { margin-bottom: 0; display: flex; align-items: center; gap: var(--e-1); }
+        .nav-g + .nav-g { padding-top: 0; border-top: 0; border-left: 1px solid var(--borde-sutil); padding-left: var(--e-3); }
         .nav-t { display: none; }
-        .nav-i { white-space: nowrap; }
+        /* Sin esto los items se encogen hasta que la etiqueta mide 0px y el
+           menu queda como una tira de numeros sin nombre. Lo pago una vez.
+           Dos cosas hacen falta, y las dos: que la fila no se encoja
+           (longhands, porque el compilador se come el atajo `flex: none`) y
+           que la columna del texto sea `auto` en vez de `minmax(0, 1fr)`,
+           que es la que permite llegar a cero. */
+        .nav-i {
+          flex-grow: 0; flex-shrink: 0; flex-basis: auto;
+          grid-template-columns: auto auto auto;
+          white-space: nowrap;
+        }
+        .nav-x { overflow: visible; text-overflow: clip; }
+        .rail-pie { display: flex; align-items: center; gap: var(--e-2); margin-left: auto; }
         .contenido { padding: var(--e-6) var(--e-4) var(--e-8); }
         .pie { padding: var(--e-5) var(--e-4); }
       }

@@ -41,3 +41,6 @@ __pycache__/
 
 # diagramas dibujados en la compilacion, se regeneran solos
 04_Web/.diagramas/
+
+# informes de auditoria de diseno: se regeneran ejecutando la revision
+.impeccable/

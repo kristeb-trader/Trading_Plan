@@ -8,7 +8,7 @@
 
 **Fase:** 2 — portal web · **Estado:** 🟢 publicado, 🔍 **en revisión por partes**
 **El mapa de todas las fases está en `..\FASES.md`.** Después de esta vienen el agente de backtesting y el bot de NinjaTrader, las dos **declaradas y sin definir**.
-**Última actualización:** 2026-09-01
+**Última actualización:** 2026-09-02
 **Dirección:** https://plan-operativo-nq.pages.dev
 
 ---
@@ -109,7 +109,7 @@ entero de una vez es demasiado.
 
 | | Parte | Dirección | Revisada | Cambios |
 |---|---|---|---|---|
-| | Portada | `/` | ⬜ | |
+| | Portada | `/` | ✅ **2026-09-02** | marca nueva, menú con iconos, dos portadas, pie del operador. Detalle en el historial |
 | 01 | Premercado | `/premercado` | ⬜ | |
 | 02 | Marcación de zonas | `/zonas` | ⬜ | |
 | 03 | Setups operativos | `/setups` | ⬜ | |
@@ -134,12 +134,72 @@ entero de una vez es demasiado.
 |---|---|---|
 | 🔴 | **Crear la clave del operador** para poder ver y borrar las observaciones desde fuera del portal: `npx wrangler pages secret put CLAVE_OPERADOR --project-name=plan-operativo-nq` | **el operador** |
 | 🟡 | La revisión por partes de arriba | el operador |
+| 🔴 | **Alfredo no puede dejar observaciones en los ocho módulos.** Comprobado uno por uno: cero puntos comentables en premercado, zonas, setups, jornada, entrada, filtros, dentro y riesgo. Solo se comenta en casos reales y vocabulario, y `/observaciones` es de solo lectura. **Es la razón de ser de la fase.** Siguiente tanda | pendiente |
 | 🟡 | Simplificar la prosa de los casos reales, que todavía suena a auditoría | pendiente |
 | 🟡 | Pasarle la dirección a Alfredo | el operador, **cuando termine la revisión** |
 
 ---
 
 ## Historial
+
+### 2026-09-02 · la portada, revisada — y el portal partido en dos
+
+**Primera tanda de la revisión por partes.** Se auditó la portada con dos
+análisis independientes: uno de diseño y otro de medición en el navegador.
+Puntuación de partida: **20 sobre 36**.
+
+**Lo que decidió el operador**
+
+El portal pasa a tener **dos portadas**:
+
+| | La de Alfredo (`/`) | La técnica (`/tecnico`) |
+|---|---|---|
+| Menú | inicio, los ocho módulos, casos reales, observaciones | todo lo anterior + «Todo el detalle» |
+| Buscador | **no existe**, ni con `Ctrl+K` | sí |
+| Vocabulario, parámetros, las 38 fichas, checklist, pendientes, contextualización, acta de cierre | no | sí |
+| «Plan no probado» y los cuatro huecos | no | **sí, enteros** |
+
+Se entra a la técnica por un **icono pequeño y apagado al pie del menú**, que
+de paso enciende el modo técnico.
+
+> 🔴 **Cambio de una regla escrita.** `CLAUDE.md` decía que los huecos
+> declarados los muestra *el portal*. Ahora los muestra la portada técnica.
+> Razón del operador: lo que no está probado es **la transcripción del método,
+> no el método de Alfredo**. Queda anotado en `CLAUDE.md`.
+
+**Cambios de la portada**
+
+| | |
+|---|---|
+| Marca | «Plan Chaumer · NQ, MNQ, NinjaTrader 8» pasa a **«Trading Plan Nasdaq»** con icono propio y favicon. El icono es el **zigzag de corrida y retroceso**: sale del vocabulario del método, no de un catálogo |
+| Fuera de la portada | la píldora «Escrito y contrastado. No probado.», el «NO PROBADO» de la cabecera, los contadores 38/11/23, la frase «Portal de revisión…», el bloque «Antes de juzgarlo» y el buscador |
+| Subtítulo | ahora: «traducido a reglas que se pueden **medir, seguir y operar**» |
+| Menú | **icono por elemento**, «Inicio» arriba con su casita, el número del módulo pasa detrás. Vocabulario se va a la parte técnica |
+| Pie | «© Christian Buitrago · kristeb@hotmail.com» y «Versión 1.0» |
+
+**Defectos corregidos de paso** *(los encontró la auditoría, no estaban en la lista)*
+
+| Qué | Por qué importaba |
+|---|---|
+| El menú perdía los nombres en el móvil | a 375 px las once etiquetas medían **0 px**: quedaba «01 02 03…» sin un solo nombre |
+| El marco de foco del botón azul era **azul sobre azul** | invisible en el botón más importante. Ahora se pinta en claro |
+| El sello de versión salía **dos veces** | uno debajo del otro al final de la página |
+| El gráfico del hero iba **girado en 3D y al 25 %** | ilegible, y contra el estándar de gráficas que el operador validó: «cuanto más limpio, mejor». Ahora va de frente |
+| El titular partía **«Alfredo / Chaumer»** entre dos líneas | el nombre del cliente roto dentro de su propio titular |
+| El degradado partía «ex» blanco y «plicada.» azul | ahora el énfasis es de color sólido |
+| La portada rompía a 1000 px y el marco a 900 | entre esos dos anchos la página se veía rota. Un solo punto de ruptura: **900** |
+| Colores escritos a mano | `#06121F`, `#6AA0FF` y una copia literal de un token que ya existía. Ahora son tokens |
+
+**Comprobado, no supuesto:** contraste de cada texto sobre su fondo real (todo
+por encima del mínimo), sin desbordamiento horizontal a 375, 900 ni 1440,
+objetivos táctiles de 44 px, un solo `h1` sin saltos de nivel, y que con el
+modo técnico apagado **el buscador no existe ni con `Ctrl+K`**. Detector de
+anti-patrones: cero hallazgos en los archivos tocados.
+
+> ⚠️ **Excepción consciente:** el icono de la puerta técnica queda por debajo
+> del contraste normal (2,6:1). Es lo que el operador pidió — «muy pequeño,
+> escondido» — y se aclara al pasar por encima o al tabular.
+
 
 ### 2026-08-31 · la decisión que define el portal
 

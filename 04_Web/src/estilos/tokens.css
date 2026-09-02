@@ -34,6 +34,8 @@
 
   /* ── acentos, desaturados para convivir con los neutros ──────────── */
   --acento:      #4C8DFF;  /* interactivo, foco, enlace */
+  --acento-vivo: #6AA0FF;  /* el mismo acento al pasar el raton */
+  --sobre-acento:#06121F;  /* texto sobre un relleno de acento */
   --acento-flojo:#1B2A45;  /* fondo de estado activo */
   --aviso:       #E3B341;  /* plan no probado, pendiente */
   --negativo:    #EF5F63;  /* unico dato negativo real */
@@ -100,6 +102,7 @@
   --medida: 62ch;
   --ancho: 72rem;
   --rail: 17.5rem;  /* con icono, contador y texto sin cortar */
+  --alto-cabecera: 3.75rem;  /* la cabecera pegajosa; el rail cuelga de aqui */
 
   /* ── movimiento · hover 200-250ms, como pide el sistema ──────────── */
   --curva: cubic-bezier(0.4, 0, 0.2, 1);
@@ -126,12 +129,15 @@
   /* Cristal: superficie translucida con desenfoque por detras. */
   --vidrio-fondo: rgba(255, 255, 255, 0.035);
   --vidrio-borde: rgba(255, 255, 255, 0.10);
+  --vidrio-hover: rgba(255, 255, 255, 0.08);
   --vidrio-brillo: linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0) 42%);
   --desenfoque: blur(18px);
 
   /* Halos de color para piezas destacadas. */
   --halo-azul: 0 0 0 1px rgba(76, 141, 255, 0.22), 0 18px 50px -12px rgba(76, 141, 255, 0.35);
   --halo-oro:  0 0 0 1px rgba(227, 179, 65, 0.22), 0 18px 50px -12px rgba(227, 179, 65, 0.22);
+  /* Sombra del boton principal: desplazada y con desenfoque, no un halo plano. */
+  --halo-boton: 0 8px 26px -10px rgba(76, 141, 255, 0.75);
 
   /* Degradado de texto para una sola frase por pantalla, no mas. */
   --texto-degradado: linear-gradient(96deg, #FFFFFF 8%, #9CC2FF 46%, #5BE1F0 92%);

@@ -1,23 +1,23 @@
 ---
 /**
- * Portada de bienvenida.
+ * Portada de bienvenida — la que abre Alfredo.
  *
- * Presenta el portal en pocas líneas y deja elegir camino: entender la
- * estrategia, o entrar al detalle. No explica el método aquí: para eso está
- * «Cómo funciona».
+ * Presenta el metodo en pocas lineas y deja elegir camino: recorrerlo, o ver
+ * como se aplica. No explica el metodo aqui: para eso estan los ocho modulos.
  *
- * El material visual son los gráficos reales del operador. Nada de cajas
- * inventadas simulando una pantalla.
+ * Lo que NO va en esta pagina (decidido por el operador el 02/09/2026):
+ * el aviso de «no probado», los cuatro huecos declarados y los contadores del
+ * plan. Todo eso vive en /tecnico, del lado del operador. Lo que no esta
+ * probado es la transcripcion del metodo, no el metodo de Alfredo.
+ *
+ * El material visual son los graficos reales del operador, presentados de
+ * frente. Nada de cajas inventadas simulando una pantalla.
  */
 import Marco from '../componentes/Marco.astro';
 import Icono from '../componentes/Icono.astro';
 import * as P from '../lib/parsers.mjs';
 
-const reglas = P.reglas();
 const galeria = P.galeria();
-const glosario = P.glosario();
-const bt = P.backtesting();
-const v = P.version();
 
 const img = (id) => galeria.find((c) => c.id === id)?.imagen ?? null;
 const heroe = img('G-16') ?? img('G-13') ?? galeria.find((c) => c.imagen)?.imagen;
@@ -28,7 +28,6 @@ const CAMINOS = [
     href: '/premercado',
     titulo: 'Recorrer el método',
     texto: 'Ocho módulos, en el orden real de la jornada: qué se prepara antes, qué se busca en el gráfico, cómo se entra y cuándo no se entra.',
-    dato: 'ocho módulos',
     imagen: '/conceptos/02-corrida-retroceso.png',
     cta: 'Empezar por aquí',
     principal: true,
@@ -37,31 +36,23 @@ const CAMINOS = [
     href: '/galeria',
     titulo: 'Ver cómo se aplica',
     texto: `${galeria.length} sesiones reales del gráfico del operador, cada una etiquetada con lo que la explica. Es el material con el que se entrena el ojo.`,
-    dato: `${galeria.length} casos`,
     imagen: img('G-19') ?? img('G-17'),
     cta: 'Ver los casos',
   },
-];
-
-const CIFRAS = [
-  { n: reglas.length, t: 'reglas medibles' },
-  { n: 11, t: 'sesiones reconstruidas al tick' },
-  { n: glosario.length, t: 'términos con definición exacta' },
 ];
 ---
 
 <Marco titulo="Inicio">
   <!-- ── bienvenida ────────────────────────────────────────────────────── -->
-  <section class="hero">
+  <section class="hero" aria-label="Bienvenida">
     <div class="hero-txt entra">
-      <span class="marca-estado aviso frase">Escrito y contrastado. No probado.</span>
       <h1>
-        La metodología de Alfredo Chaumer,{' '}
-        <span class="degradado">explicada.</span>
+        La metodología de <span class="h1-nom">Alfredo Chaumer,</span>{' '}
+        <span class="h1-ac">explicada.</span>
       </h1>
       <p class="lead">
         Un método de trading para NQ y MNQ, traducido a reglas que se pueden
-        medir: ticks, puntos, velas y horas exactas. Sin adjetivos.
+        medir, seguir y operar.
       </p>
       <div class="cta">
         <a class="btn-1" href="/premercado">
@@ -69,74 +60,38 @@ const CIFRAS = [
         </a>
         <a class="btn-2" href="/galeria">Ver los casos reales</a>
       </div>
-      <p class="meta hero-nota">
-        Portal de revisión. Puedes dejar una observación sobre cualquier cosa
-        que veas.
-      </p>
     </div>
 
     {heroe && (
       <figure class="hero-gr entra" style="--retraso:120ms">
         <div class="hero-gr-in vidrio borde-vivo">
-          <img src={heroe} alt="Una sesión real con las zonas marcadas y la operación" loading="eager" />
+          <img src={heroe} width="2000" height="1060" decoding="async"
+               alt="Una sesión real con las zonas marcadas y la operación" loading="eager" />
         </div>
       </figure>
     )}
   </section>
 
-  <!-- ── cifras, en línea y sin tarjetas ───────────────────────────────── -->
-  <section class="cifras entra" aria-label="El plan en números">
-    {CIFRAS.map((c) => (
-      <div class="cifra">
-        <span class="c-n num">{c.n}</span>
-        <span class="c-t">{c.t}</span>
-      </div>
-    ))}
-  </section>
-
   <!-- ── los dos caminos, en zigzag ────────────────────────────────────── -->
   {CAMINOS.map((c, i) => (
-    <section class:list={['camino', { invertido: i % 2 === 1 }, 'entra']}>
+    <section class:list={['camino', { invertido: i % 2 === 1 }, 'entra']} aria-label={c.titulo}>
       <div class="cm-txt">
         <h2>{c.titulo}</h2>
         <p>{c.texto}</p>
-        <p class="meta">{c.dato}</p>
         <a class:list={[c.principal ? 'btn-1' : 'btn-2']} href={c.href}>
           {c.cta} <Icono nombre="arrow-right" />
         </a>
       </div>
       {c.imagen && (
         <a class="cm-fig" href={c.href} aria-hidden="true" tabindex="-1">
-          <img src={c.imagen} alt="" loading="lazy" />
+          <img src={c.imagen} width="1760" height="880" decoding="async" alt="" loading="lazy" />
         </a>
       )}
     </section>
   ))}
-
-  <!-- ── la honestidad, no en letra pequeña ────────────────────────────── -->
-  <section class="honesto vidrio entra">
-    <div class="ho-txt">
-      <h2>Antes de juzgarlo: no está probado</h2>
-      <p>
-        El plan está escrito y contrastado contra sesiones reales, pero{' '}
-        <strong>nunca pasó una prueba a ciegas</strong>. Se cerró con{' '}
-        {bt.huecos.length} huecos declarados, y este portal no los esconde.
-      </p>
-      <a class="btn-2" href="/cierre">Leer qué está probado y qué no</a>
-    </div>
-    <ul class="ho-lista">
-      {bt.huecos.map((h) => (
-        <li set:html={P.sinCodigos(P.tituloAHtml(P.sinNumeracion(h.titulo)))} />
-      ))}
-    </ul>
-  </section>
-
-  <p class="pie-nota meta">Plan versión {v.version}, actualizado el {v.fecha}.</p>
 </Marco>
 
 <style>
-  .marca-estado.frase { text-transform: none; letter-spacing: 0; font-size: var(--t-2); }
-
   /* ── bienvenida ──────────────────────────────────────────────────────── */
   .hero {
     display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
@@ -144,57 +99,49 @@ const CIFRAS = [
     margin-bottom: var(--e-9);
   }
   .hero-txt h1 {
-    margin: var(--e-5) 0;
-    font-size: clamp(var(--t-7), 3.4vw, 2.9rem);
-    max-width: 15ch;
+    margin: 0 0 var(--e-5);
+    font-size: clamp(var(--t-8), 3.4vw, var(--t-9));
   }
+  /* Enfasis por color, no por degradado: el degradado partia la palabra en
+     «ex» blanco y «plicada.» azul. */
+  .h1-ac { color: var(--acento); }
+  /* Su nombre no se parte entre dos lineas. */
+  .h1-nom { white-space: nowrap; }
   .lead { font-size: var(--t-5); color: var(--texto-2); max-width: 42ch; }
 
-  .cta { display: flex; gap: var(--e-3); flex-wrap: wrap; margin: var(--e-6) 0 var(--e-4); }
+  .cta { display: flex; gap: var(--e-3); flex-wrap: wrap; margin-top: var(--e-6); }
   .btn-1, .btn-2 {
     display: inline-flex; align-items: center; gap: var(--e-2);
+    min-height: 2.75rem;
     padding: var(--e-3) var(--e-5);
     border-radius: var(--radio-2);
     font-size: var(--t-3); font-weight: var(--peso-medio);
     transition: background var(--normal), box-shadow var(--normal), transform var(--normal);
   }
   .btn-1 {
-    background: var(--acento); color: #06121F;
-    box-shadow: 0 8px 26px -10px rgba(76, 141, 255, 0.75);
+    background: var(--acento); color: var(--sobre-acento);
+    box-shadow: var(--halo-boton);
   }
-  .btn-1:hover { background: #6AA0FF; color: #06121F; transform: translateY(-1px); }
+  .btn-1:hover { background: var(--acento-vivo); color: var(--sobre-acento); transform: translateY(-1px); }
+  /* El anillo de foco global es del color del acento, y sobre un boton de
+     acento no se ve. Aqui se pinta en claro. */
+  .btn-1:focus-visible { outline-color: var(--texto); }
   .btn-2 {
     background: var(--vidrio-fondo); color: var(--texto);
     border: 1px solid var(--vidrio-borde);
     backdrop-filter: var(--desenfoque);
   }
-  .btn-2:hover { background: rgba(255, 255, 255, 0.08); color: var(--texto); }
-  .hero-nota { margin: 0; }
+  .btn-2:hover { background: var(--vidrio-hover); color: var(--texto); }
 
+  /* El grafico va de frente. Es una grafica real del operador y el estandar
+     que el valido dice «cuanto mas limpio, mejor»: inclinarla en 3D la dejaba
+     ilegible y contradecia su propia norma. El volumen lo da el cristal. */
   .hero-gr { margin: 0; }
   .hero-gr-in {
     padding: var(--e-2);
-    transform: perspective(1500px) rotateY(-7deg) rotateX(2.5deg);
-    transition: transform var(--entrada);
     box-shadow: var(--halo-azul), var(--sombra-3);
   }
-  .hero-gr-in:hover { transform: perspective(1500px) rotateY(-3deg) rotateX(1deg); }
-  .hero-gr-in img { width: 100%; display: block; border-radius: calc(var(--radio-4) - var(--e-2)); }
-
-  /* ── cifras ──────────────────────────────────────────────────────────── */
-  .cifras {
-    display: flex; flex-wrap: wrap; gap: var(--e-8);
-    padding: var(--e-6) 0;
-    margin-bottom: var(--e-9);
-    border-top: 1px solid var(--borde-sutil);
-    border-bottom: 1px solid var(--borde-sutil);
-  }
-  .cifra { display: flex; align-items: baseline; gap: var(--e-3); }
-  .c-n {
-    font-size: var(--t-8); font-weight: var(--peso-max);
-    color: var(--texto); line-height: 1; letter-spacing: var(--track-cifra);
-  }
-  .c-t { font-size: var(--t-3); color: var(--texto-2); max-width: 14ch; }
+  .hero-gr-in img { width: 100%; height: auto; display: block; border-radius: calc(var(--radio-4) - var(--e-2)); }
 
   /* ── caminos ─────────────────────────────────────────────────────────── */
   .camino {
@@ -202,6 +149,7 @@ const CIFRAS = [
     gap: var(--e-8); align-items: center;
     margin-bottom: var(--e-9);
   }
+  .camino:last-of-type { margin-bottom: var(--e-6); }
   .camino.invertido .cm-txt { order: 2; }
   .cm-txt h2 { margin: 0 0 var(--e-4); font-size: var(--t-7); }
   .cm-txt p { font-size: var(--t-4); color: var(--texto-2); max-width: 44ch; }
@@ -211,36 +159,26 @@ const CIFRAS = [
     display: block; overflow: hidden;
     border-radius: var(--radio-3);
     border: 1px solid var(--vidrio-borde);
-    background: var(--n-950);
+    background: var(--fondo);
   }
-  .cm-fig img { width: 100%; display: block; transition: transform var(--entrada); }
+  .cm-fig img { width: 100%; height: auto; display: block; transition: transform var(--entrada); }
   .cm-fig:hover img { transform: scale(1.02); }
 
-  /* ── honestidad ──────────────────────────────────────────────────────── */
-  .honesto {
-    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--e-7);
-    padding: var(--e-7);
-    box-shadow: var(--halo-oro), var(--sombra-2);
-    margin-bottom: var(--e-6);
-  }
-  .ho-txt h2 { margin: 0 0 var(--e-4); font-size: var(--t-6); color: var(--aviso); }
-  .ho-txt p { font-size: var(--t-4); color: var(--texto-2); }
-  .ho-lista { list-style: none; padding: 0; margin: 0; max-width: none; display: grid; gap: var(--e-2); align-content: center; }
-  .ho-lista li {
-    margin: 0; padding: var(--e-3) var(--e-4);
-    background: rgba(255, 255, 255, 0.035);
-    border-radius: var(--radio-2);
-    font-size: var(--t-3); color: var(--texto-2);
-  }
-  .ho-lista :global(code) { color: var(--texto-3); font-size: var(--t-1); }
+  /* Dos anchos, y cada uno con su motivo:
 
-  .pie-nota { margin: 0; }
+     1200 — con el rail lateral puesto, dos columnas dejan al titular unos
+     300px y se parte en cinco lineas. El hero y los caminos se apilan antes
+     de que eso pase. Es una decision de contenido.
 
-  @media (max-width: 1000px) {
-    .hero, .camino, .honesto { grid-template-columns: 1fr; gap: var(--e-6); }
-    .hero-gr-in, .hero-gr-in:hover { transform: none; }
+     900 — el marco: aqui el rail pasa a barra superior. Lo fija Marco.astro
+     y esta pagina no lo toca. (El fallo viejo era tener 1000 aqui y 900 alli:
+     una franja con rail lateral y hero ya apilado.) */
+  @media (max-width: 1200px) {
+    .hero, .camino { grid-template-columns: 1fr; gap: var(--e-6); }
     .camino.invertido .cm-txt { order: 0; }
-    .cifras { gap: var(--e-6); }
+    /* Apilado, el titular tiene todo el ancho: se le deja crecer. */
+    .hero-txt h1 { font-size: var(--t-9); }
+    .hero-gr { max-width: 46rem; }
+    .cm-fig { max-width: 46rem; }
   }
 </style>

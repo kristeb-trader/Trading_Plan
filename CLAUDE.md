@@ -26,7 +26,7 @@
 2. **Ningún adjetivo es una regla.** "Fuerte", "sano", "claro" no son criterios. Solo valen ticks, puntos, porcentajes, número de velas y horas exactas.
 3. **No se cambia una regla confirmada** sin pedírselo al operador y esperar su confirmación explícita.
 4. **Los scripts de `05_Backtesting\` son herramientas de auditoría**, nunca de operación. No los conviertas en un bot ni en un ejecutor. *(La fase 4 será un bot, sí — pero se definirá y se construirá cuando el operador la abra, no antes y no reciclando estos scripts por su cuenta.)*
-5. **Los huecos declarados se muestran, no se esconden.** Ver más abajo.
+5. **Los huecos declarados se muestran, no se esconden.** *(Desde el 02/09/2026 se muestran en la **portada técnica**, no en la de Alfredo. Cambian de sitio, no desaparecen — ver más abajo.)*
 6. **`01_Plan\` no se toca desde ninguna otra fase.** Es la base con la que se construirá el bot: el portal lo lee y lo presenta, el backtesting lo audita, pero **nadie lo reescribe**. Si hay que cambiar una regla, se cambia en `01_Plan\` y con el visto bueno del operador.
 
 ---
@@ -50,7 +50,7 @@ Si `reglas.json` y un `.md` se contradicen, **para y pregunta**. No elijas tú.
 
 ---
 
-## 🚨 Los cuatro huecos declarados — el portal debe mostrarlos
+## 🚨 Los cuatro huecos declarados — dónde se muestran
 
 El plan está **escrito y contrastado**, pero **no probado**. Cuatro cosas faltan y el portal no puede presentarse como si estuvieran:
 
@@ -60,6 +60,19 @@ El plan está **escrito y contrastado**, pero **no probado**. Cuatro cosas falta
 4. **Las cifras del backtesting no miden la estrategia** (`P-27`): 9 operaciones, reglas que cambiaron durante la propia revisión, sin filtro de noticias rojas y sin capa de contexto.
 
 > Si el portal muestra el resultado del backtesting (−91,00 pts en 9 operaciones), **debe mostrar estos motivos en la misma pantalla**.
+
+### Dónde viven — corregido por el operador el 02/09/2026
+
+Los cuatro huecos y el aviso de «no probado» **salieron de la portada de Alfredo
+y viven en la portada técnica** (`/tecnico`), junto al resultado del backtesting
+y en la misma pantalla que sus motivos.
+
+**La razón del operador:** lo que no está probado es **la transcripción del
+método, no el método de Alfredo**. Repetírselo cuatro veces antes de que lea una
+sola regla no le sirve de nada y le pone en duda su propio trabajo.
+
+**Lo que sigue en pie:** se muestran enteros, sin recortar y sin letra pequeña.
+Lo que cambió es **a quién**, no si se enseñan.
 
 ---
 
@@ -79,6 +92,19 @@ El plan está **escrito y contrastado**, pero **no probado**. Cuatro cosas falta
 **Lo que NO queda derogado y se cumple al pie de la letra:** ninguna escritura desde el cliente y **ninguna clave en el paquete que descarga el navegador**. El navegador nunca habla con Supabase: habla con una función de Cloudflare que comprueba la identidad y escribe. Sin la puerta configurada, **no se despliega**.
 
 > 🔴 **Una observación de Alfredo no es una regla.** El plan solo cambia si el operador cambia `01_Plan\`. El portal deja constancia; no toca la fuente.
+
+### Dos portadas — decidido el 02/09/2026
+
+| | La de Alfredo (`/`) | La técnica (`/tecnico`) |
+|---|---|---|
+| Menú | inicio, los ocho módulos, casos reales, observaciones | todo lo anterior **+ «Todo el detalle»** |
+| Buscador | **no existe**, ni con `Ctrl+K` | sí |
+| Códigos de regla | no | sí |
+| Vocabulario, parámetros, las 38 fichas, checklist, pendientes, contextualización, acta de cierre | no | sí |
+| «Plan no probado» y los cuatro huecos | no | **sí, enteros** |
+
+Se entra a la técnica por un **icono pequeño y apagado al pie del menú**, que además
+enciende el modo técnico. Alfredo no tiene por qué tropezar con él.
 
 Estado y seguimiento en **`04_Web\ESTADO_FASE_2.md`**, que manda sobre todo lo demás de esa carpeta. El diseño de partida está en `DISENO_PORTAL.md`; el brief y el guion de arranque son **anteriores** a la redefinición del portal y se conservan solo como historia.
 
