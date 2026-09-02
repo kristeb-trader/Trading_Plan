@@ -34,17 +34,21 @@ const indice = P.indiceBusqueda();
 // cronologico de la sesion y sin el la lista no se entiende igual.
 const GRUPOS = [
   {
-    items: [{ icono: 'house', href: '/', texto: 'Inicio' }],
+    items: [{ icono: 'house', href: '/', texto: 'Inicio', tono: 'var(--acento)' }],
   },
   {
-    items: MODULOS.map((m) => ({
+    // El tono del icono avanza del cian al azul a lo largo de los ocho
+    // modulos. No codifica nada nuevo: acompana al numero, que ya dice el
+    // orden. Los dos colores son los del estandar; no se inventa ninguno.
+    items: MODULOS.map((m, i) => ({
       n: m.n, icono: m.icono, href: '/' + m.slug, texto: m.corto,
+      tono: `color-mix(in srgb, var(--info) ${Math.round(100 - (i * 100) / (MODULOS.length - 1))}%, var(--acento))`,
     })),
   },
   {
     items: [
-      { icono: 'images', href: '/galeria', texto: 'Casos reales', cuenta: P.galeria().length },
-      { icono: 'chat-teardrop-text', href: '/observaciones', texto: 'Observaciones' },
+      { icono: 'images', href: '/galeria', texto: 'Casos reales', cuenta: P.galeria().length, tono: 'var(--info)' },
+      { icono: 'chat-teardrop-text', href: '/observaciones', texto: 'Observaciones', tono: 'var(--acento)' },
     ],
   },
   {
@@ -77,14 +81,16 @@ const activa = (href: string) =>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{titulo} · Trading Plan Nasdaq</title>
+    <title>{titulo} · Trading Plan de Futuros NQ</title>
   </head>
 
   <body class="sin-js">
     <a class="saltar" href="#contenido">Saltar al contenido</a>
 
     <header class="cabecera">
-      <Marca />
+      <!-- El banner va centrado en la cabecera, no pegado a la izquierda:
+           es la marca del portal, no una etiqueta de barra de herramientas. -->
+      <div class="cab-marca"><Marca /></div>
 
       <!-- El buscador indexa reglas, parametros y pendientes: material del
            operador. Un recorrido de ocho modulos en orden no se busca, se
@@ -107,7 +113,7 @@ const activa = (href: string) =>
               {g.grupo && <p class="etiqueta nav-t">{g.grupo}</p>}
               {g.items.map((s) => (
                 <a href={s.href} class:list={['nav-i', { activa: activa(s.href) }]}>
-                  <span class="nav-ic"><Icono nombre={s.icono} /></span>
+                  <span class="nav-ic" style={s.tono ? `--tono:${s.tono}` : undefined}><Icono nombre={s.icono} /></span>
                   <span class="nav-x">{s.texto}</span>
                   {s.n && <span class="nav-n num">{String(s.n).padStart(2, '0')}</span>}
                   {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
@@ -330,10 +336,12 @@ const activa = (href: string) =>
       .saltar:focus { transform: none; }
 
       /* ── cabecera ──────────────────────────────────────────────────── */
+      /* Tres columnas iguales a los lados para que el banner quede centrado
+         de verdad en la pagina, no «centrado en lo que sobra». */
       .cabecera {
         position: sticky; top: 0; z-index: 40;
         display: grid;
-        grid-template-columns: var(--rail) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
         align-items: center;
         gap: var(--e-5);
         /* Alto fijo: el rail cuelga de aqui y necesita saber cuanto mide. */
@@ -342,12 +350,34 @@ const activa = (href: string) =>
         background: color-mix(in srgb, var(--fondo) 86%, transparent);
         backdrop-filter: var(--desenfoque);
         border-bottom: 1px solid var(--borde-sutil);
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04), var(--sombra-2);
+        isolation: isolate;
       }
+      /* Textura de velas detras del banner. Es el lenguaje del propio plan
+         —velas azules y blancas— muy apagado y desvanecido a los lados.
+         NO es una grafica: no representa ningun dato, y por eso no le aplica
+         el estandar de graficas, que manda donde se dibuja mercado real. */
+      .cabecera::before {
+        content: '';
+        /* z-index 0, no -1: con -1 se pinta DETRAS del fondo de la
+           cabecera y no se ve nada. La cabecera aisla su apilado, asi que
+           esto queda encima de su fondo y debajo de su contenido. */
+        position: absolute; inset: 0; z-index: 0;
+        background-image: var(--textura-velas);
+        background-repeat: repeat-x;
+        background-position: center bottom;
+        opacity: 0.1;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+        pointer-events: none;
+      }
+      .cab-marca { grid-column: 2; justify-self: center; position: relative; z-index: 1; }
 
-      /* Buscador: solo del lado del operador. */
+      /* Buscador: solo del lado del operador. Va a la izquierda del banner. */
       .buscar {
+        grid-column: 1; grid-row: 1; position: relative; z-index: 1;
         display: flex; align-items: center; gap: var(--e-3);
-        width: 100%; max-width: 34rem;
+        width: 100%; max-width: 26rem;
         min-height: var(--alto-control);
         padding: var(--e-2) var(--e-3);
         background: var(--superficie);
@@ -410,9 +440,24 @@ const activa = (href: string) =>
         border-radius: var(--radio-2);
         font-size: var(--t-3);
         color: var(--texto-2);
-        transition: background var(--normal), color var(--normal);
+        transition: background var(--normal), color var(--normal), transform var(--normal);
       }
-      .nav-ic { display: flex; color: var(--texto-3); transition: color var(--normal), transform var(--normal); }
+
+      /* El icono deja de ser un glifo suelto y pasa a ser un objeto: azulejo
+         teñido, borde de luz arriba y sombra abajo. El tono lo pone cada
+         entrada del menú (--tono); si no lo trae, queda neutro. */
+      .nav-ic {
+        display: grid; place-items: center;
+        width: 1.75rem; height: 1.75rem; flex: none;
+        border-radius: var(--radio-2);
+        color: var(--tono, var(--texto-3));
+        background: color-mix(in srgb, var(--tono, var(--n-500)) 14%, transparent);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                    inset 0 0 0 1px color-mix(in srgb, var(--tono, var(--n-500)) 26%, transparent),
+                    0 1px 3px rgba(5, 8, 14, 0.5);
+        --i: 1rem;
+        transition: background var(--normal), box-shadow var(--normal), transform var(--normal);
+      }
       .nav-x { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
       /* El numero del modulo va detras, no delante: el icono abre la fila y
@@ -425,8 +470,14 @@ const activa = (href: string) =>
         transition: color var(--normal);
       }
 
-      .nav-i:hover { background: var(--vidrio-hover); color: var(--texto); }
-      .nav-i:hover .nav-ic { color: var(--acento); transform: scale(1.08); }
+      .nav-i:hover { background: var(--vidrio-hover); color: var(--texto); transform: translateX(2px); }
+      .nav-i:hover .nav-ic {
+        background: color-mix(in srgb, var(--tono, var(--n-500)) 26%, transparent);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.20),
+                    inset 0 0 0 1px color-mix(in srgb, var(--tono, var(--n-500)) 45%, transparent),
+                    0 3px 8px rgba(5, 8, 14, 0.6);
+        transform: translateY(-1px);
+      }
       .nav-i:hover .nav-n { color: var(--acento); }
 
       /* Activa: fondo en degradado, icono en color y una barra de luz a la
@@ -445,7 +496,14 @@ const activa = (href: string) =>
         background: var(--acento);
         box-shadow: 0 0 10px 1px color-mix(in srgb, var(--acento) 75%, transparent);
       }
-      .nav-i.activa .nav-ic, .nav-i.activa .nav-n { color: var(--acento); }
+      .nav-i.activa .nav-n { color: var(--acento); }
+      /* Activa: el azulejo se enciende del todo, con su propio tono. */
+      .nav-i.activa .nav-ic {
+        background: color-mix(in srgb, var(--tono, var(--acento)) 85%, transparent);
+        color: var(--sobre-acento);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.30),
+                    0 3px 10px color-mix(in srgb, var(--tono, var(--acento)) 45%, transparent);
+      }
 
       .nav-c {
         font-size: var(--t-1); color: var(--texto-3);
@@ -541,10 +599,16 @@ const activa = (href: string) =>
       /* 900px es el unico punto de ruptura del portal. Las paginas no
          inventan el suyo: si el rail cambia de forma aqui, todo cambia aqui. */
       @media (max-width: 900px) {
+        /* En vertical la cabecera se apila: el banner arriba, centrado, y
+           el buscador debajo a todo el ancho. En tres columnas el buscador
+           se partia en tres lineas y empujaba la marca fuera de la pagina. */
         .cabecera {
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
+          gap: var(--e-2);
           padding: var(--e-3) var(--e-4);
         }
+        .cab-marca { grid-column: 1; grid-row: 1; }
+        .buscar { grid-column: 1; grid-row: 2; max-width: none; }
         .marco { grid-template-columns: 1fr; }
         .rail {
           position: static; height: auto;

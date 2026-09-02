@@ -142,6 +142,68 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-02 · el banner, el menú con relieve y la portada sin botones
+
+Cuarto cambio del día. El operador: *«el título más grande, centrado… que se
+vea 3D»*, *«esa barra de menú se puede mejorar, más 3D, que los iconos no se
+vean tan muertos»*.
+
+**El banner**
+
+| | Antes | Ahora |
+|---|---|---|
+| Nombre | «Plan Chaumer» | **«Trading Plan de Futuros · NQ»**, también en la pestaña |
+| Sitio | pegado a la izquierda | **centrado** en la cabecera, con el buscador a su izquierda |
+| Tamaño | 15 px | 28 px, con el icono a 48 px |
+| Relieve | plano | tres capas: degradado en el azulejo, sombra desplazada debajo, y el texto con luz de arriba abajo más una sombra oscura de 1 px |
+
+**Lo de «una imagen del Nasdaq».** No se puso ninguna foto ni la marca Nasdaq:
+es una marca registrada y el portal no tiene nada que ver con ellos, y una foto
+de archivo de una sala de trading es justo lo que hace que una página parezca
+de plantilla. En su lugar la cabecera lleva **una fila de velas azules y
+blancas al 10 %**, desvanecida a los lados — el lenguaje del propio plan. **No
+es una gráfica:** no representa ningún dato, así que no le aplica el estándar
+de gráficas, que manda solo donde se dibuja mercado real. Si el operador quiere
+una imagen de verdad, la tiene que dar él.
+
+**El menú**
+
+Cada icono deja de ser un glifo suelto y pasa a ser un objeto: azulejo teñido,
+borde de luz arriba, sombra abajo, y se levanta al pasar el ratón. El activo se
+enciende del todo.
+
+**El tono avanza del cian al azul a lo largo de los ocho módulos.** No codifica
+nada nuevo: acompaña al número, que ya dice el orden. Los dos colores salen del
+estándar; no se inventó ninguno, y **no se usaron ni el rojo ni el oro**, que
+están reservados.
+
+**La portada**
+
+Fuera los dos botones del titular. «Ver los casos reales» ya estaba abajo en
+«Ver cómo se aplica», y «Empezar por el principio» en «Recorrer el método» —
+donde además se explica a dónde llevan. El titular pasa de 48 a 58 px.
+
+Sin botones y con el titular más grande, **el hero pasa a una sola columna**: a
+dos columnas se partía en «La metodología / de / Alfredo Chaumer,» dejando un
+«de» suelto. A todo el ancho son dos líneas limpias, y **el gráfico gana 1039 px
+de ancho**, que era la otra queja de la primera auditoría: se lee de verdad.
+
+**Dos cosas que se rompieron y se arreglaron por el camino**
+
+| Qué | Por qué |
+|---|---|
+| La textura no se veía | iba con `z-index: -1`, o sea **por detrás del fondo** de la cabecera |
+| En móvil con modo técnico la página **se desbordaba 24 px** | el buscador se partía en tres líneas y empujaba la marca fuera. Ahora la cabecera se apila: banner arriba, buscador debajo a todo el ancho |
+
+**Comprobado:** banner centrado al píxel, sin desbordes a 375 ni 1440 con el
+modo técnico encendido y apagado, contraste de los iconos del menú entre 4,49 y
+7,99 *(el mínimo para un icono es 3)*, el titular en dos líneas a 1440 y tres a
+375, y el alto de la cabecera propagándose solo al menú lateral.
+
+> El detector avisa de «exceso de guiones largos» en `Marco.astro`. Es falso
+> positivo: cuenta los de los comentarios del código, no los de ningún texto
+> que vea nadie.
+
 ### 2026-09-02 · dos gráficos nuevos, y la lista de los que faltan
 
 El operador pidió generar gráficos nuevos. Se ampliaron **13 → 15** conceptos.

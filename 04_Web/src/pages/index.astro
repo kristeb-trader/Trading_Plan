@@ -54,12 +54,9 @@ const CAMINOS = [
         Un método de trading para NQ y MNQ, traducido a reglas que se pueden
         medir, seguir y operar.
       </p>
-      <div class="cta">
-        <a class="btn-1" href="/premercado">
-          Empezar por el principio <Icono nombre="arrow-right" />
-        </a>
-        <a class="btn-2" href="/galeria">Ver los casos reales</a>
-      </div>
+      <!-- Sin botones aquí, por decisión del operador (02/09/2026): los dos
+           que había repetían los de las secciones de abajo, que además
+           explican a dónde llevan. El titular no necesita competencia. -->
     </div>
 
     {heroe && (
@@ -94,13 +91,12 @@ const CAMINOS = [
 <style>
   /* ── bienvenida ──────────────────────────────────────────────────────── */
   .hero {
-    display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-    gap: var(--e-8); align-items: center;
+    display: grid; gap: var(--e-7);
     margin-bottom: var(--e-9);
   }
   .hero-txt h1 {
     margin: 0 0 var(--e-5);
-    font-size: clamp(var(--t-8), 3.4vw, var(--t-9));
+    font-size: clamp(var(--t-9), 4vw, var(--t-10));
   }
   /* Enfasis por color, no por degradado: el degradado partia la palabra en
      «ex» blanco y «plicada.» azul. */
@@ -109,7 +105,6 @@ const CAMINOS = [
   .h1-nom { white-space: nowrap; }
   .lead { font-size: var(--t-5); color: var(--texto-2); max-width: 42ch; }
 
-  .cta { display: flex; gap: var(--e-3); flex-wrap: wrap; margin-top: var(--e-6); }
   .btn-1, .btn-2 {
     display: inline-flex; align-items: center; gap: var(--e-2);
     min-height: var(--alto-control);
@@ -173,12 +168,15 @@ const CAMINOS = [
      900 — el marco: aqui el rail pasa a barra superior. Lo fija Marco.astro
      y esta pagina no lo toca. (El fallo viejo era tener 1000 aqui y 900 alli:
      una franja con rail lateral y hero ya apilado.) */
+  /* En pantalla estrecha el titular baja de escalon: a 60px se parte en
+     «La metodologia / de / Alfredo Chaumer,» y deja un «de» solo. */
+  @media (max-width: 600px) {
+    .hero-txt h1 { font-size: var(--t-8); }
+  }
+
   @media (max-width: 1200px) {
-    .hero, .camino { grid-template-columns: 1fr; gap: var(--e-6); }
+    .camino { grid-template-columns: 1fr; gap: var(--e-6); }
     .camino.invertido .cm-txt { order: 0; }
-    /* Apilado, el titular tiene todo el ancho: se le deja crecer. */
-    .hero-txt h1 { font-size: var(--t-9); }
-    .hero-gr { max-width: 46rem; }
     .cm-fig { max-width: 46rem; }
   }
 </style>
