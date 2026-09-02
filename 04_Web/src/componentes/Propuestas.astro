@@ -1,0 +1,81 @@
+---
+/**
+ * Selector de propuestas de portada.
+ *
+ * Temporal: vive mientras el operador elige. Cuando elija una, esa pasa a ser
+ * la portada y este componente y las tres paginas se borran.
+ */
+interface Props { activa: 1 | 2 | 3 }
+const { activa } = Astro.props;
+
+const P = [
+  { n: 1, href: '/propuesta-1', t: 'Editorial', s: 'Tipografía grande, líneas finas, aire' },
+  { n: 2, href: '/propuesta-2', t: 'Terminal', s: 'Densa, monoespaciada, de herramienta' },
+  { n: 3, href: '/propuesta-3', t: 'Bento', s: 'Mosaico asimétrico de piezas' },
+];
+---
+
+<nav class="sel" aria-label="Propuestas de portada">
+  <p class="sel-t">Propuesta de portada</p>
+  <ol class="sel-l">
+    {P.map((p) => (
+      <li>
+        <a href={p.href} class:list={['sel-i', { aqui: p.n === activa }]}
+           aria-current={p.n === activa ? 'page' : undefined}>
+          <span class="sel-n num">{p.n}</span>
+          <span class="sel-x">
+            <span class="sel-nm">{p.t}</span>
+            <span class="sel-s">{p.s}</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ol>
+  <a class="sel-v" href="/">Ver la portada actual</a>
+</nav>
+
+<style>
+  .sel {
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: var(--e-3) var(--e-5);
+    margin-bottom: var(--e-7);
+    padding: var(--e-3) var(--e-4);
+    border-radius: var(--radio-3);
+    border: 1px dashed var(--borde);
+    background: color-mix(in srgb, var(--aviso) 5%, transparent);
+  }
+  .sel-t {
+    margin: 0; flex: none;
+    font-size: var(--t-1); font-weight: var(--peso-medio);
+    letter-spacing: var(--track-etiqueta); text-transform: uppercase;
+    color: var(--aviso);
+  }
+  .sel-l { list-style: none; margin: 0; padding: 0; max-width: none; display: flex; flex-wrap: wrap; gap: var(--e-2); }
+  .sel-l li { margin: 0; }
+  .sel-i {
+    display: flex; align-items: center; gap: var(--e-3);
+    min-height: var(--alto-control);
+    padding: var(--e-2) var(--e-4);
+    border-radius: var(--radio-2);
+    border: 1px solid var(--borde-sutil);
+    color: var(--texto-2);
+    transition: background var(--normal), border-color var(--normal), color var(--normal);
+  }
+  .sel-i:hover { background: var(--vidrio-hover); color: var(--texto); border-color: var(--n-600); }
+  .sel-i.aqui {
+    background: color-mix(in srgb, var(--acento) 18%, transparent);
+    border-color: color-mix(in srgb, var(--acento) 45%, transparent);
+    color: var(--texto);
+  }
+  .sel-n { font-size: var(--t-2); color: var(--texto-3); }
+  .sel-i.aqui .sel-n { color: var(--acento); }
+  .sel-x { display: grid; }
+  .sel-nm { font-size: var(--t-3); font-weight: var(--peso-medio); }
+  .sel-s { font-size: var(--t-1); color: var(--texto-3); }
+  .sel-v { margin-left: auto; font-size: var(--t-2); }
+
+  @media (max-width: 900px) {
+    .sel-v { margin-left: 0; }
+    .sel-s { display: none; }
+  }
+</style>
