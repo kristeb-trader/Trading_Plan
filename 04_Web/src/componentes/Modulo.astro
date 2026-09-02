@@ -3,8 +3,17 @@
  * Modulo — la envoltura de cada uno de los ocho pasos del metodo.
  *
  * Pone lo que se repite en los ocho: la portada con su numero, la barra de
- * progreso del recorrido, el indice lateral que sigue al scroll y el pie que
- * lleva al siguiente. La pagina solo escribe su contenido.
+ * apartados que sigue al scroll y el pie que lleva al siguiente. La pagina
+ * solo escribe su contenido.
+ *
+ * QUE HAY ARRIBA — cambiado por el operador el 02/09/2026:
+ *
+ * Antes arriba estaban otra vez los ocho modulos, que ya estan en el menu
+ * de la izquierda, y los apartados del modulo vivian en una columna a la
+ * derecha que desaparecia por debajo de 1200px. Ahora es al reves: arriba
+ * van los APARTADOS DE ESTE MODULO, pegados al hacer scroll, y la columna
+ * derecha se ha quitado. Se salta de apartado a apartado sin scroll y sin
+ * repetir el menu principal.
  *
  * El indice se declara a mano en cada pagina (no se deduce del HTML) porque
  * asi la pagina decide que apartados merecen entrada y cuales no.
@@ -25,194 +34,227 @@ const dos = (n: number) => String(n).padStart(2, '0');
 ---
 
 <Marco titulo={m.titulo}>
-  <!-- ── barra de progreso del recorrido ──────────────────────────────── -->
-  <nav class="pasos" aria-label="Los ocho módulos">
-    {MODULOS.map((x) => (
-      <a
-        href={`/${x.slug}`}
-        class:list={['paso-p', { aqui: x.slug === slug, hecho: x.n < m.n }]}
-        title={`${dos(x.n)} · ${x.titulo}`}
-        aria-current={x.slug === slug ? 'page' : undefined}
-      >
-        <span class="pp-n num">{dos(x.n)}</span>
-        <span class="pp-t">{x.corto}</span>
-      </a>
-    ))}
-  </nav>
-
   <div class="mod">
-    <div class="mod-cuerpo">
-      <header class="mod-cab entra">
-        <span class="mod-n num">{dos(m.n)}</span>
-        <h1>{m.titulo}</h1>
-        <p class="lead">{m.sub}</p>
-      </header>
+    <header class="mod-cab entra">
+      <p class="mod-n">
+        <span class="num">{dos(m.n)}</span>
+        <span class="mn-de">de {dos(MODULOS.length)}</span>
+      </p>
+      <h1>{m.titulo}</h1>
+      <p class="lead">{m.sub}</p>
+    </header>
 
-      <slot />
-
-      <!-- ── siguiente paso ──────────────────────────────────────────── -->
-      <nav class="mod-pie entra" aria-label="Continuar">
-        {anterior ? (
-          <a class="mp mp-a" href={`/${anterior.slug}`}>
-            <Icono nombre="arrow-left" />
-            <span>
-              <span class="mp-e meta">Anterior</span>
-              <span class="mp-t">{anterior.titulo}</span>
-            </span>
-          </a>
-        ) : (
-          <a class="mp mp-a" href="/">
-            <Icono nombre="arrow-left" />
-            <span>
-              <span class="mp-e meta">Volver</span>
-              <span class="mp-t">Inicio</span>
-            </span>
-          </a>
-        )}
-
-        {siguiente ? (
-          <a class="mp mp-s" href={`/${siguiente.slug}`}>
-            <span>
-              <span class="mp-e meta">Siguiente</span>
-              <span class="mp-t">{siguiente.titulo}</span>
-            </span>
-            <Icono nombre="arrow-right" />
-          </a>
-        ) : (
-          <a class="mp mp-s" href="/galeria">
-            <span>
-              <span class="mp-e meta">Y para terminar</span>
-              <span class="mp-t">Los casos reales</span>
-            </span>
-            <Icono nombre="arrow-right" />
-          </a>
-        )}
-      </nav>
-    </div>
-
-    <!-- ── indice del modulo ─────────────────────────────────────────── -->
+    <!-- ── apartados de este modulo, pegados al hacer scroll ──────────── -->
     {secciones.length > 0 && (
-      <aside class="mod-idx" aria-label="En esta sección">
-        <div class="mi-in">
-          <p class="etiqueta mi-t">En esta sección</p>
-          <ol class="mi-l">
+      <nav class="apnav" aria-label={`Apartados de ${m.titulo}`}>
+        <div class="an-in">
+          <span class="an-mod" aria-hidden="true">
+            <Icono nombre={m.icono} />
+            <span class="an-mt">{m.corto}</span>
+          </span>
+          <ol class="an-l">
             {secciones.map((s) => (
               <li><a href={`#${s.id}`} data-idx={s.id}>{s.t}</a></li>
             ))}
           </ol>
         </div>
-      </aside>
+      </nav>
     )}
+
+    <slot />
+
+    <!-- ── siguiente paso ──────────────────────────────────────────── -->
+    <nav class="mod-pie entra" aria-label="Continuar">
+      {anterior ? (
+        <a class="mp mp-a" href={`/${anterior.slug}`}>
+          <Icono nombre="arrow-left" />
+          <span>
+            <span class="mp-e meta">Anterior</span>
+            <span class="mp-t">{anterior.titulo}</span>
+          </span>
+        </a>
+      ) : (
+        <a class="mp mp-a" href="/">
+          <Icono nombre="arrow-left" />
+          <span>
+            <span class="mp-e meta">Volver</span>
+            <span class="mp-t">Inicio</span>
+          </span>
+        </a>
+      )}
+
+      {siguiente ? (
+        <a class="mp mp-s" href={`/${siguiente.slug}`}>
+          <span>
+            <span class="mp-e meta">Siguiente</span>
+            <span class="mp-t">{siguiente.titulo}</span>
+          </span>
+          <Icono nombre="arrow-right" />
+        </a>
+      ) : (
+        <a class="mp mp-s" href="/galeria">
+          <span>
+            <span class="mp-e meta">Y para terminar</span>
+            <span class="mp-t">Los casos reales</span>
+          </span>
+          <Icono nombre="arrow-right" />
+        </a>
+      )}
+    </nav>
   </div>
 </Marco>
 
 <script is:inline>
-  // El indice sigue al scroll: se resalta el apartado que se esta leyendo.
-  // Con un observador, no con un calculo en cada pixel de scroll.
+  // La barra de apartados sigue al scroll: se resalta el que se esta leyendo
+  // y, si la barra va con scroll lateral, se trae a la vista.
+  //
+  // Es «el ultimo apartado cuyo titulo ya paso por debajo de la barra», no
+  // «el primero que se ve». Con lo segundo, al llegar a un apartado nuevo
+  // seguia marcado el anterior, porque los apartados son largos y los dos
+  // se ven a la vez.
+  //
+  // Se recalcula en scroll, pero limitado a un fotograma: son cuatro o seis
+  // medidas, no un calculo en cada pixel.
   (function () {
     var enlaces = Array.prototype.slice.call(document.querySelectorAll('[data-idx]'));
-    if (!enlaces.length || !('IntersectionObserver' in window)) return;
+    if (!enlaces.length) return;
 
-    var porId = {};
-    enlaces.forEach(function (a) { porId[a.getAttribute('data-idx')] = a; });
+    var tira = document.querySelector('.an-l');
+    var barra = document.querySelector('.apnav');
+    var ultimo = null;
+    var pedido = false;
 
-    var visibles = {};
-    var obs = new IntersectionObserver(
-      function (entradas) {
-        entradas.forEach(function (e) { visibles[e.target.id] = e.isIntersecting; });
-        var activo = null;
-        for (var i = 0; i < enlaces.length; i++) {
-          var id = enlaces[i].getAttribute('data-idx');
-          if (visibles[id]) { activo = id; break; }
-        }
-        enlaces.forEach(function (a) {
-          a.classList.toggle('aqui', a.getAttribute('data-idx') === activo);
+    function traerALaVista(a) {
+      if (!tira || tira.scrollWidth <= tira.clientWidth) return;
+      var r = a.getBoundingClientRect();
+      var c = tira.getBoundingClientRect();
+      if (r.left < c.left || r.right > c.right) {
+        tira.scrollTo({
+          left: tira.scrollLeft + (r.left - c.left) - (c.width - r.width) / 2,
+          behavior: 'smooth',
         });
-      },
-      // Se considera «leyendo» la franja alta de la ventana, no el centro:
-      // es donde estan los ojos cuando se baja poco a poco.
-      { rootMargin: '-80px 0px -65% 0px', threshold: 0 }
-    );
+      }
+    }
 
-    Object.keys(porId).forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) obs.observe(el);
-    });
+    function recalcular() {
+      pedido = false;
+      // El corte es el borde inferior de la barra pegada, mas un respiro.
+      // El respiro tiene que ser mayor que el hueco al que aterriza un titulo
+      // al pulsar su apartado (el scroll-margin-top de .ap, que lo deja unos
+      // 13px por debajo de la barra). Con menos, al pulsar se marcaba el
+      // apartado ANTERIOR por un pixel de diferencia.
+      var corte = (barra ? barra.getBoundingClientRect().bottom : 110) + 24;
+      var activo = enlaces[0].getAttribute('data-idx');
+
+      for (var i = 0; i < enlaces.length; i++) {
+        var id = enlaces[i].getAttribute('data-idx');
+        var el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= corte) activo = id;
+      }
+
+      // Al final de la pagina manda el ultimo: si no, el penultimo se queda
+      // marcado porque el ultimo nunca llega a cruzar el corte.
+      if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) {
+        activo = enlaces[enlaces.length - 1].getAttribute('data-idx');
+      }
+
+      if (activo === ultimo) return;
+      ultimo = activo;
+      for (var j = 0; j < enlaces.length; j++) {
+        var esta = enlaces[j].getAttribute('data-idx') === activo;
+        enlaces[j].classList.toggle('aqui', esta);
+        if (esta) traerALaVista(enlaces[j]);
+      }
+    }
+
+    function pedir() {
+      if (pedido) return;
+      pedido = true;
+      requestAnimationFrame(recalcular);
+    }
+
+    addEventListener('scroll', pedir, { passive: true });
+    addEventListener('resize', pedir);
+    recalcular();
   })();
 </script>
 
 <style>
-  /* ── barra de progreso ─────────────────────────────────────────────── */
-  .pasos {
-    display: flex;
-    gap: 2px;
-    margin-bottom: var(--e-7);
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: var(--e-1);
-  }
-  .pasos::-webkit-scrollbar { display: none; }
-
-  .paso-p {
-    flex: 1 1 0;
-    min-width: 5.5rem;
-    display: grid;
-    gap: 2px;
-    padding: var(--e-2) var(--e-3) var(--e-3);
-    border-top: 2px solid var(--borde-sutil);
-    color: var(--texto-3);
-    transition: border-color var(--normal), color var(--normal), background var(--normal);
-  }
-  .paso-p:hover { color: var(--texto); background: rgba(255, 255, 255, 0.025); }
-  .paso-p.hecho { border-top-color: var(--n-600); color: var(--texto-3); }
-  .paso-p.aqui {
-    border-top-color: var(--acento);
-    color: var(--texto);
-    background: rgba(255, 255, 255, 0.03);
-  }
-  .pp-n { font-size: var(--t-1); letter-spacing: var(--track-cifra); opacity: 0.7; }
-  .paso-p.aqui .pp-n { color: var(--acento); opacity: 1; }
-  .pp-t {
-    font-size: var(--t-1);
-    line-height: 1.25;
-    /* Dos lineas como maximo: los titulos largos no descuadran la barra. */
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* ── reparto ───────────────────────────────────────────────────────── */
-  .mod { display: grid; grid-template-columns: minmax(0, 1fr) 13rem; gap: var(--e-8); }
-  .mod-cuerpo { min-width: 0; }
+  .mod { min-width: 0; }
 
   /* ── portada del modulo ────────────────────────────────────────────── */
-  .mod-cab { margin-bottom: var(--e-8); }
+  .mod-cab { margin-bottom: var(--e-6); }
   .mod-n {
-    display: block;
+    display: flex; align-items: baseline; gap: var(--e-2);
+    margin: 0 0 var(--e-2);
     font-size: var(--t-2);
     letter-spacing: var(--track-cifra);
     color: var(--acento);
-    margin-bottom: var(--e-2);
   }
-  .mod-cab h1 { margin: 0 0 var(--e-4); font-size: clamp(var(--t-7), 3vw, 2.4rem); }
+  /* El «de 08» conserva el sentido de recorrido que daba la barra de los
+     ocho modulos, sin repetir el menu entero. */
+  .mn-de { color: var(--texto-3); letter-spacing: 0; }
+  .mod-cab h1 { margin: 0 0 var(--e-4); font-size: clamp(var(--t-7), 3vw, var(--t-8)); }
   .mod-cab .lead { font-size: var(--t-5); color: var(--texto-2); max-width: 48ch; margin: 0; }
 
-  /* ── indice lateral ────────────────────────────────────────────────── */
-  .mod-idx { position: relative; }
-  .mi-in { position: sticky; top: var(--e-6); }
-  .mi-t { margin: 0 0 var(--e-3); }
-  .mi-l { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; max-width: none; }
-  .mi-l li { margin: 0; }
-  .mi-l a {
+  /* ── barra de apartados ────────────────────────────────────────────── */
+  .apnav {
+    position: sticky;
+    top: calc(var(--alto-cabecera) + var(--e-2));
+    z-index: 30;
+    margin-bottom: var(--e-7);
+  }
+  .an-in {
+    display: flex; align-items: center; gap: var(--e-3);
+    padding: var(--e-2);
+    border-radius: var(--radio-pill);
+    background: color-mix(in srgb, var(--superficie) 88%, transparent);
+    background-image: var(--vidrio-brillo);
+    backdrop-filter: var(--desenfoque);
+    border: 1px solid var(--vidrio-borde);
+    box-shadow: var(--sombra-2);
+  }
+
+  /* De que modulo son estos apartados. En escritorio NO se pone: el menu de
+     la izquierda tambien queda pegado y ya marca el modulo activo, asi que
+     seria decirlo dos veces y ademas roba el ancho que necesitan los
+     apartados. Solo aparece por debajo de 900px, donde el menu se va con el
+     scroll y la barra se queda sola. */
+  .an-mod { display: none; }
+  .an-mt {
+    font-size: var(--t-1);
+    font-weight: var(--peso-medio);
+    letter-spacing: var(--track-etiqueta);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .an-l {
+    list-style: none; margin: 0; padding: 0; max-width: none;
+    display: flex; flex-wrap: wrap; gap: var(--e-1);
+    min-width: 0;
+  }
+  .an-l::-webkit-scrollbar { display: none; }
+  .an-l li { margin: 0; flex: none; }
+
+  .an-l a {
     display: block;
     padding: var(--e-2) var(--e-3);
-    border-left: 2px solid var(--borde-sutil);
+    border-radius: var(--radio-pill);
     font-size: var(--t-2);
     line-height: 1.3;
+    white-space: nowrap;
     color: var(--texto-3);
-    transition: color var(--normal), border-color var(--normal);
+    transition: color var(--normal), background var(--normal);
   }
-  .mi-l a:hover { color: var(--texto-2); border-left-color: var(--n-600); }
-  .mi-l a.aqui { color: var(--texto); border-left-color: var(--acento); }
+  .an-l a:hover { color: var(--texto); background: var(--vidrio-hover); }
+  /* Activo: relleno de acento y texto claro. No es solo color: es un relleno
+     con forma, que se distingue tambien sin ver bien el matiz. */
+  .an-l a.aqui {
+    color: var(--texto);
+    background: color-mix(in srgb, var(--acento) 26%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acento) 40%, transparent);
+  }
 
   /* ── pie ───────────────────────────────────────────────────────────── */
   .mod-pie {
@@ -232,14 +274,34 @@ const dos = (n: number) => String(n).padStart(2, '0');
     color: var(--texto-2);
     transition: border-color var(--normal), background var(--normal), color var(--normal);
   }
-  .mp:hover { border-color: var(--n-600); background: rgba(255, 255, 255, 0.05); color: var(--texto); }
+  .mp:hover { border-color: var(--n-600); background: var(--vidrio-hover); color: var(--texto); }
   .mp-s { justify-content: flex-end; text-align: right; }
   .mp-e { display: block; }
   .mp-t { display: block; font-size: var(--t-3); font-weight: var(--peso-medio); }
 
-  @media (max-width: 1200px) {
-    .mod { grid-template-columns: 1fr; }
-    .mod-idx { display: none; }
+  @media (max-width: 900px) {
+    /* Aqui el menu de la izquierda ya no esta pegado, asi que la barra tiene
+       que decir de que modulo son estos apartados. Con el icono basta: el
+       nombre completo se comeria el sitio de los propios apartados. */
+    .an-mod {
+      display: flex; align-items: center;
+      flex: none;
+      padding: 0 var(--e-3) 0 var(--e-2);
+      border-right: 1px solid var(--borde-sutil);
+      color: var(--texto-3);
+      --i: 1rem;
+    }
+    .an-mt { display: none; }
+    /* En vertical el sitio es oro: aqui la tira NO se parte en varias lineas,
+       se desliza. El apartado activo se trae solo a la vista. */
+    .an-l {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-left: var(--e-2);
+    }
+    /* Se pulsan con el dedo: misma altura que las filas del menu. */
+    .an-l a { display: flex; align-items: center; min-height: 2.5rem; }
   }
   @media (max-width: 700px) {
     .mod-pie { grid-template-columns: 1fr; }

@@ -348,7 +348,7 @@ const activa = (href: string) =>
       .buscar {
         display: flex; align-items: center; gap: var(--e-3);
         width: 100%; max-width: 34rem;
-        min-height: 2.75rem;
+        min-height: var(--alto-control);
         padding: var(--e-2) var(--e-3);
         background: var(--superficie);
         border: 1px solid var(--borde);
@@ -405,7 +405,7 @@ const activa = (href: string) =>
         position: relative;
         display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
         align-items: center; gap: var(--e-3);
-        min-height: 2.75rem;
+        min-height: var(--alto-control);
         padding: var(--e-2) var(--e-3);
         border-radius: var(--radio-2);
         font-size: var(--t-3);
@@ -465,7 +465,7 @@ const activa = (href: string) =>
          siendo diminuto, que es lo que pidio el operador. */
       .puerta {
         display: flex; align-items: center; justify-content: center;
-        width: 2.75rem; height: 2.75rem;
+        width: var(--alto-control); height: var(--alto-control);
         border-radius: var(--radio-2);
         color: var(--n-500);
         --i: 0.875rem;

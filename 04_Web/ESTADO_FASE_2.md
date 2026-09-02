@@ -142,6 +142,50 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-02 · arriba, los apartados del módulo — no otra vez el menú
+
+**Segundo cambio del día, en los ocho módulos a la vez.**
+
+Arriba de cada módulo estaban **otra vez los ocho módulos**, que ya están en el
+menú de la izquierda. Y los apartados del módulo vivían en **una columna a la
+derecha que desaparecía por debajo de 1200 px**. Resultado: en pantallas
+normales no había forma de saltar de apartado a apartado y tocaba bajar a mano.
+
+Ahora arriba van **los apartados de ese módulo**, en una barra que **se queda
+pegada** al hacer scroll, y la columna de la derecha se ha quitado — el
+contenido gana todo ese ancho.
+
+| Ancho | Cómo se comporta la barra |
+|---|---|
+| 1440 | los seis apartados del módulo más largo caben en una línea |
+| 1000 | se parte en dos líneas; **ninguno queda escondido** |
+| 375 | una sola línea que se desliza, con el icono del módulo delante, y el apartado activo se trae solo a la vista |
+
+El nombre del módulo solo sale en la barra **por debajo de 900 px**: por encima,
+el menú de la izquierda también queda pegado y ya marca el módulo activo.
+
+**Lo que no se pierde al quitar la barra de los ocho:** la cabecera de cada
+módulo ahora dice **«03 de 08»**, y el pie sigue llevando al anterior y al
+siguiente.
+
+**Dos detalles que costaron su rato:**
+
+- El apartado marcado iba **uno por detrás** del que se estaba leyendo. Era
+  «el primero que se ve»; tenía que ser **«el último cuyo título ya pasó por
+  debajo de la barra»**. Los apartados son largos y dos se ven a la vez.
+- Al **pulsar** un apartado se marcaba el anterior **por un píxel**: el título
+  aterrizaba en 141 px y el corte estaba en 140. Ahora el corte lleva holgura.
+
+**De paso:** `--alto-cabecera` estaba escrito a mano como 3,75 rem cuando la
+cabecera mide 69 px, así que el menú lateral se metía 9 px por debajo al hacer
+scroll. Ahora se calcula solo desde el relleno y el nuevo `--alto-control`
+(44 px, el objetivo táctil), que además retira seis valores sueltos.
+
+**Comprobado:** los ocho módulos con su barra, todos los enlaces apuntando a un
+apartado que existe, marcado correcto al pulsar y al hacer scroll libre en seis
+posiciones, sin desbordes a 375 / 1000 / 1440, contraste de 5,69 y 11,29, y
+chips de 40 px en móvil. El detector no encuentra nada en `Modulo.astro`.
+
 ### 2026-09-02 · la portada, revisada — y el portal partido en dos
 
 **Primera tanda de la revisión por partes.** Se auditó la portada con dos

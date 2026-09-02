@@ -328,7 +328,7 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
    pasar de un módulo al siguiente.                                      */
 
 /* Un apartado del módulo. El ancla del índice lateral. */
-.ap { margin-bottom: var(--e-8); scroll-margin-top: var(--e-6); }
+.ap { margin-bottom: var(--e-8); scroll-margin-top: calc(var(--alto-cabecera) + 4.5rem); }
 .ap > h2 {
   margin: 0 0 var(--e-4);
   font-size: var(--t-7);

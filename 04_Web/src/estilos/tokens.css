@@ -102,7 +102,14 @@
   --medida: 62ch;
   --ancho: 72rem;
   --rail: 17.5rem;  /* con icono, contador y texto sin cortar */
-  --alto-cabecera: 3.75rem;  /* la cabecera pegajosa; el rail cuelga de aqui */
+
+  /* Alto minimo de cualquier cosa que se pueda pulsar: 44px, el objetivo
+     tactil. De aqui salen botones, filas del menu y campos. */
+  --alto-control: 2.75rem;
+  /* La cabecera pegajosa. El rail y la barra de apartados cuelgan de aqui,
+     asi que NO es un numero suelto: es lo que mide de verdad, calculado.
+     Si cambia el relleno de la cabecera, esto se ajusta solo. */
+  --alto-cabecera: calc(var(--alto-control) + var(--e-3) * 2 + 1px);
 
   /* ── movimiento · hover 200-250ms, como pide el sistema ──────────── */
   --curva: cubic-bezier(0.4, 0, 0.2, 1);
