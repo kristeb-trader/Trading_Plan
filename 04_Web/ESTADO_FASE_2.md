@@ -142,6 +142,63 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-02 · un apartado por pantalla, con ruta numerada
+
+**Tercer cambio del día, en los ocho módulos.** El operador: *«cuando doy clic
+en Cómo estoy hoy, solo me salga lo de ese submódulo»*, y *«esa página está muy
+muerta, parece de una funeraria»*.
+
+**Un apartado a la vez.** Cada módulo deja de ser una página larga: se ve un
+apartado y se pasa al siguiente. La ruta de arriba es ahora un recorrido
+numerado con la línea que une las paradas — porque los apartados **están en el
+orden en que se hacen las cosas**, no son pestañas intercambiables. La parada
+hecha se marca con un visto, la actual va rellena y con halo.
+
+**El pie encadena.** Dentro del módulo mueve de apartado; en el último, el
+botón «siguiente» pasa a ser **el módulo siguiente**, en azul. Los ocho módulos
+y sus 37 apartados se recorren enteros sin volver nunca al menú.
+
+**Sin JavaScript** se ven todos los apartados seguidos, como antes: el HTML
+lleva el contenido completo y ocultar es cosa del navegador.
+
+**Lo visual**
+
+| Qué | Antes | Ahora |
+|---|---|---|
+| Gráficos | imagen suelta con un filete de 1 px | pieza de cristal con halo azul y el pie dentro del mismo marco |
+| Avisos y prohibiciones | barra de color de 2 px a la izquierda | **icono**, panel teñido y borde entero. Esa barra es la marca de fábrica de las interfaces generadas — el detector la señala en otras páginas — y además el color iba solo |
+| Tarjetas | superficie plana | cristal con brillo y sombra |
+| Cabecera del módulo | número suelto | icono del módulo en azulejo + «02 de 08» |
+
+**Imágenes que faltaban**
+
+| Dónde | Qué |
+|---|---|
+| Marcación de zonas · «Cuando no se confirma» | `05-sin-confirmar.png` **estaba generado y sin usar en ninguna página**. Es el otro desenlace del apartado: la vela cruza, ninguna la supera, la zona sigue viva |
+| Riesgo y tamaño · «Cuánto se arriesga» | era **el único módulo sin una sola imagen**. Ahora lleva el gráfico de la distancia al stop repetida al otro lado, y el del setup descartado por pasarse del tope |
+
+Los dos gráficos de riesgo **ya existían y ya estaban en el portal**: aquí
+ilustran el tope, en su módulo ilustraban la mecánica y el filtro. Ninguno es
+nuevo y ninguno dice nada que no dijera ya.
+
+> 🔵 **Sigue faltando material gráfico.** Hay 13 gráficos de concepto y los 21
+> casos de la galería, pero **10 de esos 21 no siguen el estándar visual** que
+> el operador validó, así que no se pueden meter en los módulos tal cual.
+> Generar gráficos nuevos es posible —**Python ya está instalado en el equipo**,
+> al contrario de lo que decía `CLAUDE.md` el 01/09— pero elegir qué sesión real
+> ilustra qué concepto es una decisión de metodología: la toma el operador.
+
+**Un rato perdido que conviene no repetir:** la ruta salía sin estilos, como una
+lista numerada suelta. No era el CSS: **Vite servía al navegador una versión
+vieja del módulo** mientras el HTML llevaba la nueva. Se arregla parando el
+servidor y borrando `node_modules/.vite` y `.astro`.
+
+**Comprobado:** un apartado visible a la vez en los ocho módulos, la ruta
+marcando hechas y actual, el contador, el pie encadenando dentro del módulo y
+saltando al siguiente en la última parada, el botón «atrás» del navegador, sin
+desbordes a 375 ni 1440, y el HTML sirviendo los apartados sin ocultar para
+quien no tenga JavaScript. Detector limpio en `Modulo.astro`.
+
 ### 2026-09-02 · arriba, los apartados del módulo — no otra vez el menú
 
 **Segundo cambio del día, en los ocho módulos a la vez.**

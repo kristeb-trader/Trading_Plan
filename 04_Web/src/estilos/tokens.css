@@ -149,6 +149,12 @@
   /* Degradado de texto para una sola frase por pantalla, no mas. */
   --texto-degradado: linear-gradient(96deg, #FFFFFF 8%, #9CC2FF 46%, #5BE1F0 92%);
 
+  /* Iconos de los avisos de los módulos, como máscara. Son los mismos trazos
+     de Phosphor que usa el componente Icono, aquí en forma de dato porque un
+     ::before no puede montar un componente. */
+  --icono-aviso: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath d='M240.26,186.1,152.81,34.23h0a28.74,28.74,0,0,0-49.62,0L15.74,186.1a27.45,27.45,0,0,0,0,27.71A28.31,28.31,0,0,0,40.55,228h174.9a28.31,28.31,0,0,0,24.79-14.19A27.45,27.45,0,0,0,240.26,186.1Zm-20.8,15.7a4.46,4.46,0,0,1-4,2.2H40.55a4.46,4.46,0,0,1-4-2.2,3.56,3.56,0,0,1,0-3.73L124,46.2a4.77,4.77,0,0,1,8,0l87.44,151.87A3.56,3.56,0,0,1,219.46,201.8ZM116,136V104a12,12,0,0,1,24,0v32a12,12,0,0,1-24,0Zm28,40a16,16,0,1,1-16-16A16,16,0,0,1,144,176Z'/%3E%3C/svg%3E");
+  --icono-veto: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath d='M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm84,108a83.6,83.6,0,0,1-16.75,50.28L77.72,60.75A84,84,0,0,1,212,128ZM44,128A83.6,83.6,0,0,1,60.75,77.72L178.28,195.25A84,84,0,0,1,44,128Z'/%3E%3C/svg%3E");
+
   --borde-vivo: linear-gradient(140deg,
                 rgba(76,141,255,0.55), rgba(56,189,212,0.25) 38%,
                 rgba(255,255,255,0.06) 62%, rgba(76,141,255,0.30));

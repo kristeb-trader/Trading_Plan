@@ -182,6 +182,6 @@ Definiciones completas y medibles en `01_Plan\GLOSARIO.md`.
 - **Horario:** el ancla es la **apertura americana — 09:30–11:30 ET**, nunca el número del reloj. El gráfico del operador va en hora Colombia (UTC−5 fijo), así que en pantalla la ventana es **08:30–10:30 Col en verano NY** y **09:30–11:30 Col en invierno NY**. La primera vela de la ventana es la **08:31**.
   > ⚠️ **La equivalencia en UTC se desplaza una hora el 1 de noviembre de 2026.** Hasta esa fecha, 13:30–15:30 UTC; desde el 2 de noviembre, 14:30–16:30 UTC. No la escribas fija en ningún sitio: calcúlala desde la apertura americana.
 - `05_Backtesting\lector.py` · `motor.py` · `dia.py` · `dibujo.py` — motor de marcado de zonas, detección de setups y generación de la gráfica estándar.
-  > Python **no está en el PATH** de este equipo a fecha 2026-09-01: los scripts no se pueden ejecutar sin instalarlo antes.
+  > Python **ya está instalado** (3.13, comprobado el 2026-09-02). Hasta el 01/09 no estaba en el PATH; esa nota queda derogada.
 
 Los dos son **auditoría**. Sirven para verificar el plan, no para operar.

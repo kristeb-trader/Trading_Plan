@@ -2,21 +2,23 @@
 /**
  * Modulo — la envoltura de cada uno de los ocho pasos del metodo.
  *
- * Pone lo que se repite en los ocho: la portada con su numero, la barra de
- * apartados que sigue al scroll y el pie que lleva al siguiente. La pagina
- * solo escribe su contenido.
+ * UN APARTADO A LA VEZ — pedido por el operador el 02/09/2026.
  *
- * QUE HAY ARRIBA — cambiado por el operador el 02/09/2026:
+ * Antes el modulo era una pagina larga y se bajaba con el scroll. Ahora cada
+ * apartado es una parada: se ve uno solo, y se pasa al siguiente pulsando en
+ * la ruta de arriba o el boton del pie. La ruta va numerada y con la linea
+ * que une las paradas porque el recorrido ES secuencial: los apartados estan
+ * en el orden en que se hacen las cosas, no son pestanas intercambiables.
  *
- * Antes arriba estaban otra vez los ocho modulos, que ya estan en el menu
- * de la izquierda, y los apartados del modulo vivian en una columna a la
- * derecha que desaparecia por debajo de 1200px. Ahora es al reves: arriba
- * van los APARTADOS DE ESTE MODULO, pegados al hacer scroll, y la columna
- * derecha se ha quitado. Se salta de apartado a apartado sin scroll y sin
- * repetir el menu principal.
+ * El pie encadena: al final del ultimo apartado, «siguiente» ya no es un
+ * apartado sino el modulo siguiente. Los ocho modulos y sus apartados se
+ * recorren enteros sin volver nunca al menu.
+ *
+ * SIN JAVASCRIPT se ven todos los apartados seguidos, como antes. Ocultar es
+ * cosa del navegador: el HTML lleva el contenido completo.
  *
  * El indice se declara a mano en cada pagina (no se deduce del HTML) porque
- * asi la pagina decide que apartados merecen entrada y cuales no.
+ * asi la pagina decide que apartados merecen parada y cuales no.
  */
 import Marco from './Marco.astro';
 import Icono from './Icono.astro';
@@ -31,12 +33,17 @@ const { slug, secciones = [] } = Astro.props;
 const m = modulo(slug);
 const { anterior, siguiente } = vecinos(slug);
 const dos = (n: number) => String(n).padStart(2, '0');
+
+const destinoFinal = siguiente
+  ? { href: '/' + siguiente.slug, etiqueta: 'Siguiente módulo', texto: siguiente.titulo }
+  : { href: '/galeria', etiqueta: 'Y para terminar', texto: 'Los casos reales' };
 ---
 
 <Marco titulo={m.titulo}>
-  <div class="mod">
-    <header class="mod-cab entra">
+  <div class="mod" data-mod>
+    <header class="mod-cab">
       <p class="mod-n">
+        <span class="mn-ic"><Icono nombre={m.icono} /></span>
         <span class="num">{dos(m.n)}</span>
         <span class="mn-de">de {dos(MODULOS.length)}</span>
       </p>
@@ -44,138 +51,173 @@ const dos = (n: number) => String(n).padStart(2, '0');
       <p class="lead">{m.sub}</p>
     </header>
 
-    <!-- ── apartados de este modulo, pegados al hacer scroll ──────────── -->
+    <!-- ── la ruta del modulo ─────────────────────────────────────────── -->
     {secciones.length > 0 && (
-      <nav class="apnav" aria-label={`Apartados de ${m.titulo}`}>
-        <div class="an-in">
-          <span class="an-mod" aria-hidden="true">
-            <Icono nombre={m.icono} />
-            <span class="an-mt">{m.corto}</span>
-          </span>
-          <ol class="an-l">
-            {secciones.map((s) => (
-              <li><a href={`#${s.id}`} data-idx={s.id}>{s.t}</a></li>
-            ))}
-          </ol>
-        </div>
+      <nav class="ruta" aria-label={`Apartados de ${m.titulo}`}>
+        <ol class="ruta-l">
+          {secciones.map((s, i) => (
+            <li class="ruta-i" data-paso-i={i}>
+              <a href={`#${s.id}`} data-paso={s.id}>
+                <span class="ri-p" aria-hidden="true">
+                  <span class="ri-n num">{i + 1}</span>
+                  <span class="ri-ok"><Icono nombre="check" peso="bold" /></span>
+                </span>
+                <span class="ri-t">{s.t}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
       </nav>
     )}
 
-    <slot />
+    <div class="mod-cuerpo">
+      <slot />
+    </div>
 
-    <!-- ── siguiente paso ──────────────────────────────────────────── -->
-    <nav class="mod-pie entra" aria-label="Continuar">
-      {anterior ? (
-        <a class="mp mp-a" href={`/${anterior.slug}`}>
-          <Icono nombre="arrow-left" />
-          <span>
-            <span class="mp-e meta">Anterior</span>
-            <span class="mp-t">{anterior.titulo}</span>
-          </span>
-        </a>
-      ) : (
-        <a class="mp mp-a" href="/">
-          <Icono nombre="arrow-left" />
-          <span>
-            <span class="mp-e meta">Volver</span>
-            <span class="mp-t">Inicio</span>
-          </span>
-        </a>
-      )}
+    <!-- ── el pie que encadena ─────────────────────────────────────────── -->
+    <nav class="mod-pie" aria-label="Continuar" data-pie>
+      <a class="mp mp-a" data-atras href={anterior ? `/${anterior.slug}` : '/'}>
+        <Icono nombre="arrow-left" />
+        <span>
+          <span class="mp-e meta" data-atras-e>{anterior ? 'Módulo anterior' : 'Volver'}</span>
+          <span class="mp-t" data-atras-t>{anterior ? anterior.titulo : 'Inicio'}</span>
+        </span>
+      </a>
 
-      {siguiente ? (
-        <a class="mp mp-s" href={`/${siguiente.slug}`}>
-          <span>
-            <span class="mp-e meta">Siguiente</span>
-            <span class="mp-t">{siguiente.titulo}</span>
-          </span>
-          <Icono nombre="arrow-right" />
-        </a>
-      ) : (
-        <a class="mp mp-s" href="/galeria">
-          <span>
-            <span class="mp-e meta">Y para terminar</span>
-            <span class="mp-t">Los casos reales</span>
-          </span>
-          <Icono nombre="arrow-right" />
-        </a>
-      )}
+      <p class="mp-cuenta meta" data-cuenta hidden></p>
+
+      <a class="mp mp-s" data-alante href={destinoFinal.href}>
+        <span>
+          <span class="mp-e meta" data-alante-e>{destinoFinal.etiqueta}</span>
+          <span class="mp-t" data-alante-t>{destinoFinal.texto}</span>
+        </span>
+        <Icono nombre="arrow-right" />
+      </a>
     </nav>
   </div>
 </Marco>
 
-<script is:inline>
-  // La barra de apartados sigue al scroll: se resalta el que se esta leyendo
-  // y, si la barra va con scroll lateral, se trae a la vista.
-  //
-  // Es «el ultimo apartado cuyo titulo ya paso por debajo de la barra», no
-  // «el primero que se ve». Con lo segundo, al llegar a un apartado nuevo
-  // seguia marcado el anterior, porque los apartados son largos y los dos
-  // se ven a la vez.
-  //
-  // Se recalcula en scroll, pero limitado a un fotograma: son cuatro o seis
-  // medidas, no un calculo en cada pixel.
+<script
+  is:inline
+  define:vars={{
+    pasos: secciones.map((s) => s.id),
+    nombres: secciones.map((s) => s.t),
+    final: destinoFinal,
+    atrasModulo: anterior
+      ? { href: '/' + anterior.slug, etiqueta: 'Módulo anterior', texto: anterior.titulo }
+      : { href: '/', etiqueta: 'Volver', texto: 'Inicio' },
+  }}
+>
+  // Un apartado a la vez. Sin JavaScript no se ejecuta nada de esto y la
+  // pagina se queda como una lectura larga y completa, que es un buen
+  // resultado por si solo.
   (function () {
-    var enlaces = Array.prototype.slice.call(document.querySelectorAll('[data-idx]'));
-    if (!enlaces.length) return;
+    if (!pasos.length) return;
 
-    var tira = document.querySelector('.an-l');
-    var barra = document.querySelector('.apnav');
-    var ultimo = null;
-    var pedido = false;
+    var raiz = document.querySelector('[data-mod]');
+    var enlaces = Array.prototype.slice.call(document.querySelectorAll('[data-paso]'));
+    var items = Array.prototype.slice.call(document.querySelectorAll('[data-paso-i]'));
+    var secs = pasos.map(function (id) { return document.getElementById(id); });
+    if (secs.some(function (s) { return !s; })) return;
 
-    function traerALaVista(a) {
-      if (!tira || tira.scrollWidth <= tira.clientWidth) return;
-      var r = a.getBoundingClientRect();
-      var c = tira.getBoundingClientRect();
-      if (r.left < c.left || r.right > c.right) {
-        tira.scrollTo({
-          left: tira.scrollLeft + (r.left - c.left) - (c.width - r.width) / 2,
-          behavior: 'smooth',
-        });
+    var atras = document.querySelector('[data-atras]');
+    var atrasE = document.querySelector('[data-atras-e]');
+    var atrasT = document.querySelector('[data-atras-t]');
+    var alante = document.querySelector('[data-alante]');
+    var alanteE = document.querySelector('[data-alante-e]');
+    var alanteT = document.querySelector('[data-alante-t]');
+    var cuenta = document.querySelector('[data-cuenta]');
+
+    raiz.classList.add('por-pasos');
+    cuenta.hidden = false;
+
+    // Cada apartado es un destino de foco: al cambiar de parada, el lector
+    // de pantalla y el teclado aterrizan en el titulo, no al principio.
+    secs.forEach(function (s) { s.setAttribute('tabindex', '-1'); });
+
+    var actual = -1;
+
+    function pintar(i, mover) {
+      if (i < 0 || i >= pasos.length || i === actual) return;
+      actual = i;
+
+      secs.forEach(function (s, j) { s.hidden = j !== i; });
+
+      items.forEach(function (li, j) {
+        li.classList.toggle('hecho', j < i);
+        li.classList.toggle('aqui', j === i);
+      });
+      enlaces.forEach(function (a, j) {
+        if (j === i) a.setAttribute('aria-current', 'step');
+        else a.removeAttribute('aria-current');
+      });
+
+      cuenta.textContent = 'Apartado ' + (i + 1) + ' de ' + pasos.length;
+
+      // El pie encadena: dentro del modulo mueve de apartado; en los extremos
+      // salta al modulo de al lado.
+      if (i === 0) {
+        atras.href = atrasModulo.href;
+        atrasE.textContent = atrasModulo.etiqueta;
+        atrasT.textContent = atrasModulo.texto;
+      } else {
+        atras.href = '#' + pasos[i - 1];
+        atrasE.textContent = 'Apartado anterior';
+        atrasT.textContent = nombres[i - 1];
+      }
+
+      if (i === pasos.length - 1) {
+        alante.href = final.href;
+        alanteE.textContent = final.etiqueta;
+        alanteT.textContent = final.texto;
+        alante.classList.add('mp-fin');
+      } else {
+        alante.href = '#' + pasos[i + 1];
+        alanteE.textContent = 'Siguiente apartado';
+        alanteT.textContent = nombres[i + 1];
+        alante.classList.remove('mp-fin');
+      }
+
+      // Traer la parada activa a la vista cuando la ruta se desliza.
+      var li = items[i];
+      var tira = document.querySelector('.ruta-l');
+      if (tira && tira.scrollWidth > tira.clientWidth) {
+        var r = li.getBoundingClientRect(), c = tira.getBoundingClientRect();
+        if (r.left < c.left || r.right > c.right) {
+          tira.scrollTo({
+            left: tira.scrollLeft + (r.left - c.left) - (c.width - r.width) / 2,
+            behavior: 'smooth',
+          });
+        }
+      }
+
+      if (mover) {
+        var arriba = raiz.getBoundingClientRect().top + window.scrollY - 16;
+        window.scrollTo({ top: Math.max(arriba, 0), behavior: 'smooth' });
+        secs[i].focus({ preventScroll: true });
       }
     }
 
-    function recalcular() {
-      pedido = false;
-      // El corte es el borde inferior de la barra pegada, mas un respiro.
-      // El respiro tiene que ser mayor que el hueco al que aterriza un titulo
-      // al pulsar su apartado (el scroll-margin-top de .ap, que lo deja unos
-      // 13px por debajo de la barra). Con menos, al pulsar se marcaba el
-      // apartado ANTERIOR por un pixel de diferencia.
-      var corte = (barra ? barra.getBoundingClientRect().bottom : 110) + 24;
-      var activo = enlaces[0].getAttribute('data-idx');
-
-      for (var i = 0; i < enlaces.length; i++) {
-        var id = enlaces[i].getAttribute('data-idx');
-        var el = document.getElementById(id);
-        if (el && el.getBoundingClientRect().top <= corte) activo = id;
-      }
-
-      // Al final de la pagina manda el ultimo: si no, el penultimo se queda
-      // marcado porque el ultimo nunca llega a cruzar el corte.
-      if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) {
-        activo = enlaces[enlaces.length - 1].getAttribute('data-idx');
-      }
-
-      if (activo === ultimo) return;
-      ultimo = activo;
-      for (var j = 0; j < enlaces.length; j++) {
-        var esta = enlaces[j].getAttribute('data-idx') === activo;
-        enlaces[j].classList.toggle('aqui', esta);
-        if (esta) traerALaVista(enlaces[j]);
-      }
+    function porHash(mover) {
+      var id = location.hash.replace('#', '');
+      var i = pasos.indexOf(id);
+      pintar(i >= 0 ? i : 0, mover);
     }
 
-    function pedir() {
-      if (pedido) return;
-      pedido = true;
-      requestAnimationFrame(recalcular);
-    }
+    // Cualquier enlace a un apartado abre esa parada, venga de la ruta, del
+    // pie o de un enlace dentro del texto.
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a) return;
+      var i = pasos.indexOf(a.getAttribute('href').slice(1));
+      if (i < 0) return;
+      e.preventDefault();
+      history.pushState(null, '', '#' + pasos[i]);
+      pintar(i, true);
+    });
 
-    addEventListener('scroll', pedir, { passive: true });
-    addEventListener('resize', pedir);
-    recalcular();
+    addEventListener('popstate', function () { porHash(true); });
+    porHash(false);
   })();
 </script>
 
@@ -185,83 +227,119 @@ const dos = (n: number) => String(n).padStart(2, '0');
   /* ── portada del modulo ────────────────────────────────────────────── */
   .mod-cab { margin-bottom: var(--e-6); }
   .mod-n {
-    display: flex; align-items: baseline; gap: var(--e-2);
-    margin: 0 0 var(--e-2);
+    display: flex; align-items: center; gap: var(--e-2);
+    margin: 0 0 var(--e-3);
     font-size: var(--t-2);
     letter-spacing: var(--track-cifra);
     color: var(--acento);
   }
-  /* El «de 08» conserva el sentido de recorrido que daba la barra de los
-     ocho modulos, sin repetir el menu entero. */
+  .mn-ic {
+    display: grid; place-items: center;
+    width: 1.75rem; height: 1.75rem;
+    border-radius: var(--radio-2);
+    background: color-mix(in srgb, var(--acento) 16%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acento) 26%, transparent);
+    --i: 1rem;
+  }
+  /* El «de 08» conserva el sentido de recorrido sin repetir el menu entero. */
   .mn-de { color: var(--texto-3); letter-spacing: 0; }
-  .mod-cab h1 { margin: 0 0 var(--e-4); font-size: clamp(var(--t-7), 3vw, var(--t-8)); }
+  .mod-cab h1 { margin: 0 0 var(--e-3); font-size: clamp(var(--t-7), 3vw, var(--t-8)); }
   .mod-cab .lead { font-size: var(--t-5); color: var(--texto-2); max-width: 48ch; margin: 0; }
 
-  /* ── barra de apartados ────────────────────────────────────────────── */
-  .apnav {
-    position: sticky;
-    top: calc(var(--alto-cabecera) + var(--e-2));
-    z-index: 30;
+  /* ── la ruta ───────────────────────────────────────────────────────── */
+  .ruta {
     margin-bottom: var(--e-7);
-  }
-  .an-in {
-    display: flex; align-items: center; gap: var(--e-3);
-    padding: var(--e-2);
-    border-radius: var(--radio-pill);
-    background: color-mix(in srgb, var(--superficie) 88%, transparent);
+    padding: var(--e-5) var(--e-4) var(--e-4);
+    border-radius: var(--radio-4);
+    background: var(--vidrio-fondo);
     background-image: var(--vidrio-brillo);
-    backdrop-filter: var(--desenfoque);
     border: 1px solid var(--vidrio-borde);
-    box-shadow: var(--sombra-2);
   }
-
-  /* De que modulo son estos apartados. En escritorio NO se pone: el menu de
-     la izquierda tambien queda pegado y ya marca el modulo activo, asi que
-     seria decirlo dos veces y ademas roba el ancho que necesitan los
-     apartados. Solo aparece por debajo de 900px, donde el menu se va con el
-     scroll y la barra se queda sola. */
-  .an-mod { display: none; }
-  .an-mt {
-    font-size: var(--t-1);
-    font-weight: var(--peso-medio);
-    letter-spacing: var(--track-etiqueta);
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .an-l {
+  .ruta-l {
     list-style: none; margin: 0; padding: 0; max-width: none;
-    display: flex; flex-wrap: wrap; gap: var(--e-1);
-    min-width: 0;
+    display: flex; align-items: flex-start;
   }
-  .an-l::-webkit-scrollbar { display: none; }
-  .an-l li { margin: 0; flex: none; }
+  .ruta-l::-webkit-scrollbar { display: none; }
+  .ruta-i { flex: 1 1 0; min-width: 0; margin: 0; position: relative; }
 
-  .an-l a {
-    display: block;
-    padding: var(--e-2) var(--e-3);
-    border-radius: var(--radio-pill);
+  /* La linea que une las paradas. Es lo que dice «esto va en orden»: sin
+     ella son pestanas, con ella es un recorrido. */
+  .ruta-i + .ruta-i::before {
+    content: '';
+    position: absolute; z-index: 0;
+    top: 1.125rem; left: -50%; right: 50%;
+    height: 2px;
+    background: var(--borde);
+    transition: background var(--normal);
+  }
+  .ruta-i.hecho::before, .ruta-i.aqui::before { background: var(--acento); }
+
+  .ruta-i > a {
+    position: relative; z-index: 1;
+    display: grid; justify-items: center; gap: var(--e-2);
+    padding: 0 var(--e-2);
+    color: var(--texto-3);
+    text-align: center;
+  }
+
+  /* La parada: circulo con su numero. Grande a proposito — es el control
+     principal de la pagina. */
+  .ri-p {
+    position: relative;
+    display: grid; place-items: center;
+    width: 2.25rem; height: 2.25rem;
+    border-radius: 50%;
+    background: var(--fondo);
+    box-shadow: inset 0 0 0 2px var(--borde);
+    font-size: var(--t-3);
+    transition: background var(--normal), box-shadow var(--normal), color var(--normal);
+  }
+  .ri-n, .ri-ok { grid-area: 1 / 1; display: grid; place-items: center; }
+  .ri-ok { --i: 0.875rem; opacity: 0; }
+  .ri-t {
     font-size: var(--t-2);
     line-height: 1.3;
-    white-space: nowrap;
-    color: var(--texto-3);
-    transition: color var(--normal), background var(--normal);
+    /* Dos lineas como maximo: los titulos largos no descuadran la ruta. */
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  .an-l a:hover { color: var(--texto); background: var(--vidrio-hover); }
-  /* Activo: relleno de acento y texto claro. No es solo color: es un relleno
-     con forma, que se distingue tambien sin ver bien el matiz. */
-  .an-l a.aqui {
-    color: var(--texto);
-    background: color-mix(in srgb, var(--acento) 26%, transparent);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acento) 40%, transparent);
+
+  .ruta-i > a:hover { color: var(--texto); }
+  .ruta-i > a:hover .ri-p { box-shadow: inset 0 0 0 2px var(--n-500); }
+
+  /* Hecha: relleno tenue y una marca de verificado en lugar del numero. Dos
+     senales, no solo el color. */
+  .ruta-i.hecho > a { color: var(--texto-2); }
+  .ruta-i.hecho .ri-p {
+    background: color-mix(in srgb, var(--acento) 18%, transparent);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--acento) 45%, transparent);
+    color: var(--acento);
   }
+  .ruta-i.hecho .ri-n { opacity: 0; }
+  .ruta-i.hecho .ri-ok { opacity: 1; }
+
+  /* Aqui: relleno de acento y halo. Se ve de un vistazo donde se esta. */
+  .ruta-i.aqui > a { color: var(--texto); font-weight: var(--peso-medio); }
+  .ruta-i.aqui .ri-p {
+    background: var(--acento);
+    color: var(--sobre-acento);
+    box-shadow: inset 0 0 0 2px var(--acento),
+                0 0 0 4px color-mix(in srgb, var(--acento) 18%, transparent),
+                var(--halo-boton);
+  }
+
+  /* ── cuerpo ────────────────────────────────────────────────────────── */
+  /* Con JavaScript, el ultimo apartado no arrastra su margen al pie. */
+  .por-pasos .mod-cuerpo :global(.ap:last-child) { margin-bottom: 0; }
+  .por-pasos .mod-cuerpo :global(.ap:focus) { outline: none; }
 
   /* ── pie ───────────────────────────────────────────────────────────── */
   .mod-pie {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--e-3);
-    margin-top: var(--e-9);
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--e-4);
+    margin-top: var(--e-8);
     padding-top: var(--e-6);
     border-top: 1px solid var(--borde-sutil);
   }
@@ -276,35 +354,27 @@ const dos = (n: number) => String(n).padStart(2, '0');
   }
   .mp:hover { border-color: var(--n-600); background: var(--vidrio-hover); color: var(--texto); }
   .mp-s { justify-content: flex-end; text-align: right; }
+  /* La ultima parada lleva al modulo siguiente: se marca como accion
+     principal, que es el paso que de verdad continua el recorrido. */
+  .mp-fin {
+    background: var(--acento); color: var(--sobre-acento);
+    border-color: transparent;
+    box-shadow: var(--halo-boton);
+  }
+  .mp-fin:hover { background: var(--acento-vivo); color: var(--sobre-acento); border-color: transparent; }
+  .mp-fin:focus-visible { outline-color: var(--texto); }
   .mp-e { display: block; }
+  .mp-fin .mp-e { color: color-mix(in srgb, var(--sobre-acento) 72%, transparent); }
   .mp-t { display: block; font-size: var(--t-3); font-weight: var(--peso-medio); }
+  .mp-cuenta { margin: 0; white-space: nowrap; }
 
   @media (max-width: 900px) {
-    /* Aqui el menu de la izquierda ya no esta pegado, asi que la barra tiene
-       que decir de que modulo son estos apartados. Con el icono basta: el
-       nombre completo se comeria el sitio de los propios apartados. */
-    .an-mod {
-      display: flex; align-items: center;
-      flex: none;
-      padding: 0 var(--e-3) 0 var(--e-2);
-      border-right: 1px solid var(--borde-sutil);
-      color: var(--texto-3);
-      --i: 1rem;
-    }
-    .an-mt { display: none; }
-    /* En vertical el sitio es oro: aqui la tira NO se parte en varias lineas,
-       se desliza. El apartado activo se trae solo a la vista. */
-    .an-l {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      scrollbar-width: none;
-      padding-left: var(--e-2);
-    }
-    /* Se pulsan con el dedo: misma altura que las filas del menu. */
-    .an-l a { display: flex; align-items: center; min-height: 2.5rem; }
-  }
-  @media (max-width: 700px) {
+    .ruta { padding: var(--e-4) var(--e-2) var(--e-3); }
+    /* En vertical la ruta se desliza: las paradas no se aplastan. */
+    .ruta-l { overflow-x: auto; scrollbar-width: none; }
+    .ruta-i { flex: 0 0 6.5rem; }
     .mod-pie { grid-template-columns: 1fr; }
     .mp-s { justify-content: flex-start; text-align: left; flex-direction: row-reverse; }
+    .mp-cuenta { order: -1; text-align: center; }
   }
 </style>

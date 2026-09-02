@@ -338,15 +338,29 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
 .ap > p { color: var(--texto-2); }
 .ap > p:first-of-type { font-size: var(--t-5); color: var(--texto-2); }
 
-/* Gráfico con su pie. Ancho completo del cuerpo, sin marco pesado. */
-.gr { margin: var(--e-6) 0; }
+/* Gráfico con su pie.
+   Con un apartado por pantalla el gráfico deja de ser un adorno al margen y
+   pasa a ser el centro del apartado: marco de cristal, halo azul y el pie
+   dentro de la misma pieza. La imagen NO se toca — el estándar de gráficas
+   manda dentro del marco; esto es el marco. */
+.gr {
+  margin: var(--e-6) 0;
+  padding: var(--e-2);
+  border-radius: var(--radio-4);
+  background: var(--vidrio-fondo);
+  background-image: var(--vidrio-brillo);
+  border: 1px solid var(--vidrio-borde);
+  box-shadow: var(--halo-azul), var(--sombra-2);
+}
 .gr img {
   width: 100%; display: block;
-  border-radius: var(--radio-3);
-  border: 1px solid var(--borde-sutil);
+  border-radius: calc(var(--radio-4) - var(--e-2));
   background: var(--n-950);
 }
-.gr figcaption { margin-top: var(--e-3); }
+.gr figcaption {
+  margin: 0;
+  padding: var(--e-3) var(--e-4) var(--e-2);
+}
 
 /* Ficha de datos: lo medible de un apartado, en dos columnas. */
 .datos {
@@ -393,29 +407,58 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
 }
 .secuencia > li > strong { color: var(--texto); font-weight: var(--peso-medio); }
 
-/* Regla dura: lo que no admite excepción. Oro, que es advertencia. */
-.duro {
+/* Avisos: regla dura y prohibición.
+   Antes eran una barra de color de 2px a la izquierda. Esa barra es la marca
+   de fábrica de las interfaces generadas —el propio detector la señala en
+   otras páginas— y además el color iba solo. Ahora llevan icono, panel
+   teñido y borde entero: se distinguen sin depender del matiz. */
+.duro, .veto {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--e-3) var(--e-4);
   margin: var(--e-5) 0;
   padding: var(--e-4) var(--e-5);
-  border-left: 2px solid var(--aviso);
-  border-radius: 0 var(--radio-2) var(--radio-2) 0;
-  background: rgba(227, 179, 65, 0.05);
+  border-radius: var(--radio-3);
+  border: 1px solid;
 }
-.duro > p { margin: 0; color: var(--texto-2); font-size: var(--t-4); }
-.duro > p + p { margin-top: var(--e-2); }
-.duro strong { color: var(--aviso); }
+.duro > p, .veto > p { grid-column: 2; margin: 0; color: var(--texto-2); font-size: var(--t-4); }
+/* Las separa el hueco de filas de la rejilla; no hace falta margen. */
+.duro > p + p, .veto > p + p { margin-top: 0; }
 
-/* Prohibición: lo que directamente no se hace. */
-.veto {
-  margin: var(--e-5) 0;
-  padding: var(--e-4) var(--e-5);
-  border-left: 2px solid var(--negativo);
-  border-radius: 0 var(--radio-2) var(--radio-2) 0;
-  background: rgba(239, 95, 99, 0.05);
+/* El icono va en un pseudoelemento con máscara: mismo trazo y misma caja que
+   el resto de iconos del portal, sin tocar el HTML de los ocho módulos. */
+.duro::before, .veto::before {
+  content: '';
+  grid-row: 1 / -1;
+  width: 1.25rem; height: 1.25rem;
+  margin-top: 0.15em;
+  background: currentColor;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-size: contain; mask-size: contain;
 }
-.veto > p { margin: 0; color: var(--texto-2); font-size: var(--t-4); }
-.veto > p + p { margin-top: var(--e-2); }
+
+/* Regla dura: oro, que es advertencia y no error. */
+.duro {
+  border-color: color-mix(in srgb, var(--aviso) 28%, transparent);
+  background: color-mix(in srgb, var(--aviso) 7%, transparent);
+  color: var(--aviso);
+}
+.duro strong { color: var(--aviso); }
+.duro::before {
+  -webkit-mask-image: var(--icono-aviso); mask-image: var(--icono-aviso);
+}
+
+/* Prohibición: rojo. Es el único sitio de los módulos donde el rojo dice
+   «esto no se hace», y va siempre con el icono y con la palabra. */
+.veto {
+  border-color: color-mix(in srgb, var(--negativo) 28%, transparent);
+  background: color-mix(in srgb, var(--negativo) 7%, transparent);
+  color: var(--negativo);
+}
 .veto strong { color: var(--negativo); }
+.veto::before {
+  -webkit-mask-image: var(--icono-veto); mask-image: var(--icono-veto);
+}
 
 /* Rejilla de tarjetas: casos, filtros, variantes. */
 .rejilla { display: grid; gap: var(--e-4); margin: var(--e-5) 0; }
@@ -423,9 +466,11 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
 .rejilla.tres { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
 .tarj {
   padding: var(--e-5);
-  border: 1px solid var(--borde-sutil);
+  border: 1px solid var(--vidrio-borde);
   border-radius: var(--radio-3);
-  background: var(--superficie);
+  background: var(--vidrio-fondo);
+  background-image: var(--vidrio-brillo);
+  box-shadow: var(--sombra-1);
 }
 .tarj > h3, .tarj > h4 { margin: 0 0 var(--e-2); font-size: var(--t-4); color: var(--texto); }
 .tarj > p { margin: 0; color: var(--texto-2); font-size: var(--t-3); }
