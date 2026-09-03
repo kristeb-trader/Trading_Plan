@@ -329,22 +329,19 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
 
 /* Un apartado del módulo. El ancla del índice lateral. */
 .ap { margin-bottom: var(--e-8); scroll-margin-top: calc(var(--alto-cabecera) + 4.5rem); }
-/* El titulo del apartado: centrado, en mayusculas y con el tono del modulo.
-   El tono lo pone Modulo.astro en --tono-mod, y es el mismo cian→azul que
-   recorre los ocho en el menu: el titulo dice tambien por donde se va.
-   En mayusculas el interletrado normal aprieta, asi que se abre. */
+/* El titulo del apartado: en blanco resaltado, alineado a la derecha, tal
+   cual esta escrito (mayuscula solo en la primera letra — «Cómo estoy hoy»).
+   Antes llevaba el tono del modulo y mayusculas; ese tratamiento paso al
+   titulo principal del modulo (--tono-mod), y aqui queda al reves —
+   intercambio pedido por el operador el 03/09/2026. */
 .ap > h2 {
   margin: 0 0 var(--e-5);
   font-size: var(--t-7);
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--tono-mod, var(--acento));
+  text-align: right;
+  color: var(--texto);
   text-wrap: balance;
 }
-/* El codigo de regla que cuelga del titulo no se pone en mayusculas ni hereda
-   el tono: es un dato, no parte del titulo. */
-.ap > h2 .ref-cod { text-transform: none; letter-spacing: 0; }
+.ap > h2 .ref-cod { letter-spacing: 0; }
 .ap > h3 { margin: var(--e-6) 0 var(--e-3); font-size: var(--t-6); }
 .ap > p { color: var(--texto-2); }
 .ap > p:first-of-type { font-size: var(--t-5); color: var(--texto-2); }

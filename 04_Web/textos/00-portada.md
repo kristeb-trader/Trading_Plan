@@ -21,8 +21,6 @@ Un método de trading para NQ y MNQ, traducido a reglas que se pueden medir, seg
 - **Casos** — 21
 - **Términos** — 23
 
-Al llenarse la orden **el día se acabó**: 1 llenada por sesión, y tampoco se sigue analizando.
-
 > 🖼 **Gráfico.** Texto alternativo: Una sesión real con las zonas marcadas y la operación
 > Pie: Empezar por el principio 21 casos reales
 

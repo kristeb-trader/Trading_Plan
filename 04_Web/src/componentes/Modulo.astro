@@ -42,11 +42,6 @@ const destinoFinal = siguiente
 <Marco titulo={m.titulo}>
   <div class="mod" data-mod style={`--tono-mod: ${m.tono}`}>
     <header class="mod-cab">
-      <p class="mod-n">
-        <span class="mn-ic"><Icono nombre={m.icono} /></span>
-        <span class="num">{dos(m.n)}</span>
-        <span class="mn-de">de {dos(MODULOS.length)}</span>
-      </p>
       <h1>{m.titulo}</h1>
       <p class="lead">{m.sub}</p>
     </header>
@@ -241,26 +236,24 @@ const destinoFinal = siguiente
   .mod { min-width: 0; max-width: 48rem; margin-inline: auto; }
 
   /* ── portada del modulo ────────────────────────────────────────────── */
-  .mod-cab { margin-bottom: var(--e-6); }
-  .mod-n {
-    display: flex; align-items: center; gap: var(--e-2);
+  /* El titulo principal lleva el tono del modulo (el mismo cian→azul del
+     menu), centrado y en mayusculas: es el mismo tratamiento del titulo de
+     cada apartado, intercambiado con el titulo principal — pedido por el
+     operador el 03/09/2026. Antes «Premercado» iba en blanco y el apartado
+     «Cómo estoy hoy» llevaba el color; ahora es al reves. */
+  .mod-cab { margin-bottom: var(--e-7); text-align: center; }
+  .mod-cab h1 {
     margin: 0 0 var(--e-3);
-    font-size: var(--t-2);
-    letter-spacing: var(--track-cifra);
-    color: var(--acento);
+    font-size: clamp(var(--t-7), 3vw, var(--t-8));
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--tono-mod, var(--acento));
+    text-wrap: balance;
   }
-  .mn-ic {
-    display: grid; place-items: center;
-    width: 1.75rem; height: 1.75rem;
-    border-radius: var(--radio-2);
-    background: color-mix(in srgb, var(--acento) 16%, transparent);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acento) 26%, transparent);
-    --i: 1rem;
+  .mod-cab .lead {
+    font-size: var(--t-5); color: var(--texto-2);
+    max-width: 48ch; margin: 0 auto;
   }
-  /* El «de 08» conserva el sentido de recorrido sin repetir el menu entero. */
-  .mn-de { color: var(--texto-3); letter-spacing: 0; }
-  .mod-cab h1 { margin: 0 0 var(--e-3); font-size: clamp(var(--t-7), 3vw, var(--t-8)); }
-  .mod-cab .lead { font-size: var(--t-5); color: var(--texto-2); max-width: 48ch; margin: 0; }
 
   /* ── la ruta ───────────────────────────────────────────────────────── */
   .ruta {

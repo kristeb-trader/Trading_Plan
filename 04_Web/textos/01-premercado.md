@@ -38,12 +38,9 @@ Se mira Forex Factory, y solo Forex Factory. Un único calendario evita el probl
 
 #### Qué se anota
 
-1. **¿Hay hoy un evento de la Fed en rojo?** Si lo hay, el día entero cambia de reglas: ver abajo.
+1. **¿Hay hoy un evento de la Fed en rojo?** Si lo hay, el día entero cambia de reglas:**Día con la Fed en rojo:** ese día no se opera el setup de continuación. Solo se permite el Reingreso, con todas sus condiciones normales.
 2. **La hora exacta de cada noticia roja.** Solo aplica el rojo: naranja y amarillo no cuentan, no bloquean nada.
 3. **La ventana de cada una:** no se opera cinco minutos antes y cinco después.
-
-> **[REGLA DURA]**
-> **Día con la Fed en rojo:** ese día no se opera el setup de continuación. Solo se permite el Reingreso, con todas sus condiciones normales.
 
 ---
 
@@ -52,6 +49,8 @@ Se mira Forex Factory, y solo Forex Factory. Un único calendario evita el probl
 ### El gráfico
 
 Se trabaja únicamente con el micro Nasdaq, **MNQ**. Aquí se marcan las zonas, se lee el volumen, se leen los niveles de entrada, stop y objetivo, y desde aquí se manda la orden.
+
+> 🖼 **Gráfico.** Texto alternativo: El gráfico de MNQ a un minuto, con el indicador de volumen
 
 > **[FICHA]**
 > ##### Para todo
@@ -63,8 +62,6 @@ Va a **un minuto**. No hay ningún otro marco temporal en el método: ni cinco m
 - **Prohibidos** — Medias, osciladores, VWAP, perfil de volumen
 - **Qué vale un punto** — $2,00
 - **Qué vale un tick** — 0,25 puntos · $0,50
-
-> 🖼 **Gráfico.** Texto alternativo: El gráfico de MNQ a un minuto, con el indicador de volumen
 
 ---
 
@@ -82,11 +79,10 @@ La estrategia ATM de NinjaTrader se deja configurada antes de empezar y no se to
 - **Auto Trail** — **Apagado**
 - **Stop y objetivo por defecto** — **320 ticks** = 80 puntos = $160
 
-Ese valor por defecto no es el stop de la operación: es lo que protege la posición **entre el llenado y el ajuste a mano**, que son unos segundos. El stop de verdad se coloca después, y sale de la estructura del mercado.
-
 > **[REGLA DURA]**
-> **El valor por defecto es igual al tope de stop a propósito.**
-> Si algún día cambia el tope, hay que cambiar la ATM con él.
+> **Ese valor por defecto no es el stop de la operación:** es lo que protege la posición entre el llenado y el ajuste a mano, que son unos segundos. El stop de verdad se coloca después, y sale de la estructura del mercado.
+
+**El valor por defecto es igual al tope de stop a propósito.**Si algún día cambia el tope, hay que cambiar la ATM con él.
 
 ---
 
