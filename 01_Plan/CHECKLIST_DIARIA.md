@@ -26,7 +26,7 @@
 |---|---|---|
 | ☐ | Gráfico abierto: **MNQ, 1 minuto**, único indicador **Volume Up Down** | `R-09`, `R-01` |
 | ☐ | Escanear desde **19:00 Col** (apertura de Tokio) hasta la apertura americana | `R-20` |
-| ☐ | Toda vela con **MNQ > 6.000 contratos** → marcar zona. **Alcista → resistencia · Bajista → soporte** | `R-20` |
+| ☐ | Toda vela con **MNQ > 6.000** o **NQ > 2.000 contratos** → marcar zona. **Alcista → resistencia · Bajista → soporte** | `R-20` |
 | ☐ | Se marcan **todas** las que superen el umbral, no solo los extremos | `R-20`, `D-09` |
 | ☐ | Límites de cada zona: **del borde del cuerpo a la punta de la mecha** | `R-12` |
 | ☐ | Si una zona candidata **toca** otra existente → **estirar la existente**, no crear una nueva | `R-18` |

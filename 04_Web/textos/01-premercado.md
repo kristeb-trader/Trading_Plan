@@ -89,7 +89,7 @@ La estrategia ATM de NinjaTrader se deja configurada antes de empezar y no se to
 
 ### Zonas por volumen
 
-Si en el premercado se forma una vela con un volumen por encima del umbral (> 6.000 contratos), se debe marcar una zona. Es la única manera de que nazca una zona sin que haya habido un tramo y su descanso.
+Si en el premercado se forma una vela con un volumen por encima del umbral (**> 6.000 contratos en MNQ, > 2.000 contratos en NQ**), se debe marcar una zona. Es la única manera de que nazca una zona sin que haya habido un tramo y su descanso.
 
 > 🖼 **Gráfico.** Texto alternativo: Vela de premercado con volumen por encima del umbral y la zona que deja
 > Pie: Una vela de premercado por encima del umbral y la zona que deja. La zona se comporta después como cualquier otra.
@@ -99,7 +99,8 @@ Si en el premercado se forma una vela con un volumen por encima del umbral (> 6.
 3. **El color de la vela decide el tipo:** vela alcista deja resistencia sobre su mecha superior; vela bajista deja soporte sobre su mecha inferior.
 4. **Los límites son los de siempre:** del borde del cuerpo a la punta de la mecha.
 
-- **Umbral** — **> 6.000 contratos** en una vela de un minuto
+- **Umbral en MNQ** — **> 6.000 contratos** en una vela de un minuto
+- **Umbral en NQ** — **> 2.000 contratos** en una vela de un minuto
 - **Desde cuándo** — 19:00 hora Colombia (apertura de Tokio)
 - **Hasta cuándo** — La apertura del mercado americano
 

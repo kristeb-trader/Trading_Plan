@@ -152,9 +152,10 @@ const SECCIONES = [
     <h2>Zonas por volumen <span class="solo-tecnico mono ref-cod">R-20</span></h2>
     <p>
       Si en el premercado se forma una vela con un volumen por encima del
-      umbral ({v('UMBRAL_VOL_MNQ', '> 6.000 contratos')}), se debe marcar una
-      zona. Es la única manera de que nazca una zona sin que haya habido un
-      tramo y su descanso.
+      umbral (<strong>{v('UMBRAL_VOL_MNQ', '> 6.000 contratos')} en MNQ,{' '}
+      {v('UMBRAL_VOL_NQ', '> 2.000 contratos')} en NQ</strong>), se debe
+      marcar una zona. Es la única manera de que nazca una zona sin que haya
+      habido un tramo y su descanso.
     </p>
 
     <figure class="gr">
@@ -170,8 +171,10 @@ const SECCIONES = [
     </ol>
 
     <dl class="datos">
-      <dt>Umbral</dt>
+      <dt>Umbral en MNQ</dt>
       <dd><strong>{v('UMBRAL_VOL_MNQ', '> 6.000 contratos')}</strong> en una vela de un minuto</dd>
+      <dt>Umbral en NQ</dt>
+      <dd><strong>{v('UMBRAL_VOL_NQ', '> 2.000 contratos')}</strong> en una vela de un minuto</dd>
       <dt>Desde cuándo</dt>
       <dd>{v('PREMERCADO_INICIO', '19:00 hora Colombia')}</dd>
       <dt>Hasta cuándo</dt>

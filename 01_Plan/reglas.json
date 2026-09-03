@@ -965,6 +965,12 @@
         "timeframe": "1m"
       },
       {
+        "variable": "umbral_NQ",
+        "operador": ">",
+        "valor": "2000 contratos",
+        "timeframe": "1m"
+      },
+      {
         "variable": "indicador",
         "operador": "=",
         "valor": "Volume Up Down (R-09)",
@@ -1013,7 +1019,7 @@
     ],
     "prioridad": 2,
     "estado": "confirmada",
-    "nota": "Única forma de que nazca una zona sin corrida ni retroceso. A diferencia de R-12, aquí el COLOR de la vela decide si es soporte o resistencia. El corte en la apertura no es arbitrario: 6000 contratos en 1 min del MNQ es raro en premercado y corriente en sesión. Desviación D-09: Parámetros Chaumer dice 'solo marcamos los extremos'; el operador marca todas, y R-18 fusiona las que se tocan. Verificado con datos el 10/07/2026: escaneando desde 15:00 salen 3 velas sobre umbral; desde 19:00 sale 1, la que el operador marco. Las 2 extra son la subasta de cierre del efectivo del día anterior. Modificada el 03/09/2026: se quita el umbral alternativo en NQ (> 2000 contratos), que existía porque el método analizaba en NQ (R-01, hasta esa fecha). Al pasar el análisis a MNQ, solo queda un umbral."
+    "nota": "Única forma de que nazca una zona sin corrida ni retroceso. A diferencia de R-12, aquí el COLOR de la vela decide si es soporte o resistencia. El corte en la apertura no es arbitrario: 6000 contratos en 1 min del MNQ es raro en premercado y corriente en sesión. Desviación D-09: Parámetros Chaumer dice 'solo marcamos los extremos'; el operador marca todas, y R-18 fusiona las que se tocan. Verificado con datos el 10/07/2026: escaneando desde 15:00 salen 3 velas sobre umbral; desde 19:00 sale 1, la que el operador marco. Las 2 extra son la subasta de cierre del efectivo del día anterior. Modificada el 03/09/2026: el umbral de NQ (> 2000 contratos) se quitó al pasar el análisis a MNQ (R-01), y se restauró el mismo día — el operador confirmó que para marcar zonas por volumen en premercado se sigue mirando también el volumen de NQ, aunque el análisis y la ejecución sean solo en MNQ. Quedan los dos umbrales, uno por instrumento."
   },
   {
     "id": "R-21",

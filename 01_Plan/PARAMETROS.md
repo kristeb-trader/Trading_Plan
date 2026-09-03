@@ -34,7 +34,7 @@
 
 | Parámetro | Valor actual | Dónde actúa |
 |---|---|---|
-| **`UMBRAL_VOL_NQ`** *(deprecado)* | > 2.000 contratos | Ya no aplica. `R-20` analizaba en NQ hasta el 03/09/2026; desde entonces el método es MNQ único, y solo queda `UMBRAL_VOL_MNQ` |
+| **`UMBRAL_VOL_NQ`** | > 2.000 contratos | `R-20` — solo premercado. Restaurado el 03/09/2026: aunque el análisis y la ejecución son solo en MNQ desde esa fecha, para marcar zonas por volumen se sigue mirando también NQ |
 | **`UMBRAL_VOL_MNQ`** | > 6.000 contratos | `R-20` — solo premercado |
 | **`PREMERCADO_INICIO`** | 19:00 hora Colombia (apertura de Tokio) | `R-20` |
 | **`VENTANA_OPERATIVA`** | 09:30–11:30 ET | `R-02` |

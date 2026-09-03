@@ -722,3 +722,27 @@ portal.
 
 **El portal (`04_Web\src\pages\premercado.astro`)** ya refleja el cambio: el apartado «Los dos
 gráficos» pasa a llamarse «El gráfico», con el texto y la ficha de datos en MNQ único.
+
+## 03/09/2026 · R-20 recupera el umbral de NQ
+
+**Corrección sobre la entrada anterior de este mismo día.** Al revisar la sección «Zonas por
+volumen» del portal, el operador reintrodujo el umbral de NQ que se acababa de quitar de
+`R-20`. Se le preguntó directamente si era un despiste o una decisión — confirmó que era
+deliberado: **el análisis y la ejecución siguen siendo solo MNQ (`R-01`), pero para marcar
+zonas por volumen en el premercado se sigue mirando también el volumen de NQ.** Son dos reglas
+distintas y no tenían por qué moverse juntas.
+
+**Restaurado, con nota fechada:**
+
+| Documento | Qué volvió |
+|---|---|
+| `reglas.json` | `R-20` recupera la condición `umbral_NQ` (> 2.000 contratos), junto a `umbral_MNQ` (> 6.000) |
+| `PARAMETROS.md` | `UMBRAL_VOL_NQ` deja de estar marcado deprecado |
+| `GLOSARIO.md` | la nota al pie explica que el ejemplo va en MNQ pero el umbral de NQ existe aparte, para `R-20` |
+| `CHECKLIST_DIARIA.md` | la fila de premercado vuelve a nombrar los dos umbrales |
+| El portal | «Zonas por volumen» muestra ambos umbrales, en el párrafo y en la ficha de datos |
+
+**Lo que no cambia:** `R-01` y `R-09` siguen en MNQ único — ese cambio se mantiene. Solo
+`R-20` queda con dos instrumentos. La lección para la próxima vez que se toque una regla del
+plan: preguntar explícitamente si el cambio es de ESE punto o de todo el instrumento, porque
+aquí no lo eran.

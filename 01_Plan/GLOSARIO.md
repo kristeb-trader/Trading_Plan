@@ -432,7 +432,7 @@ Como el inicio es fijo y el fin se mueve, **la ventana cambia de duración dos v
 
 > 📌 **Por qué el corte no es arbitrario.** El mismo número significa cosas distintas a cada lado de la apertura: en premercado 6.000 contratos en una vela de 1 minuto del MNQ es un evento raro; en sesión es volumen corriente. Sin el corte, el gráfico se llenaría de zonas.
 >
-> *(Modificado el 03/09/2026: el ejemplo usaba NQ porque el método analizaba en NQ hasta esa fecha — ver R-01. Ahora el análisis es en MNQ.)*
+> *(El ejemplo va en MNQ porque el análisis y la ejecución son en MNQ desde el 03/09/2026 — ver R-01. El umbral de NQ sigue existiendo aparte, solo para marcar zonas por volumen: R-20.)*
 
 ### Una vez marcada, es una zona normal
 
