@@ -26,10 +26,10 @@ Un método de trading para NQ y MNQ, traducido a reglas que se pueden medir, seg
 
 La jornada en horas
 
-1. 19:00PremercadoEmpiezan a marcarse zonas por volumen, desde la apertura de Tokio.
-2. 08:30Abre el mercado americanoArranca la única ventana del día en la que se coloca una orden.
-3. 08:31La primera velaDeclara la dirección con su propio cuerpo, y es el origen del primer tramo.
-4. 10:29Última ordenPasado ese minuto ya no se coloca nada, por buena que sea la figura.
-5. 10:30Cierra la ventanaProhíbe abrir, no obliga a cerrar: una operación viva sigue viva.
+1. 19:00 Premercado Empiezan a marcarse zonas por volumen, desde la apertura de Tokio.
+2. 08:30 Abre el mercado americano Arranca la única ventana del día en la que se coloca una orden.
+3. 08:31 La primera vela Declara la dirección con su propio cuerpo, y es el origen del primer movimiento.
+4. 10:29 Última orden Pasado ese minuto ya no se coloca nada, por buena que sea la figura.
+5. 10:30 Cierra la ventana Prohíbe abrir, no obliga a cerrar: una operación viva sigue viva.
 
 Horas de pantalla en **verano de Nueva York**. El ancla es la apertura del mercado americano, no el número del reloj: en invierno la misma ventana cae una hora más tarde.

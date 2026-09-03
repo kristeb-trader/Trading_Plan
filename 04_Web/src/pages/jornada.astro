@@ -65,14 +65,14 @@ const SECCIONES = [
 
     <figure class="gr">
       <img src="/conceptos/12-vela-0831.png" alt="La primera vela de la sesión declarando la dirección inicial del día" loading="eager" />
-      <figcaption class="meta">La primera vela de la ventana declara la dirección con su propio cuerpo, y es el origen desde el que se mide el primer tramo.</figcaption>
+      <figcaption class="meta">La primera vela de la ventana declara la dirección con su propio cuerpo, y es el origen desde el que se mide el primer movimiento.</figcaption>
     </figure>
 
     <dl class="datos">
       <dt>Qué declara</dt>
       <dd>La dirección inicial del día, <strong>con su propio cuerpo</strong>: cierra por encima de su apertura, el día empieza alcista; por debajo, bajista</dd>
       <dt>Qué papel tiene</dt>
-      <dd>Es la <strong>vela origen</strong>. El primer tramo se mide desde su mínimo si es alcista, desde su máximo si es bajista</dd>
+      <dd>Es la <strong>vela origen</strong>. El primer movimiento se mide desde su mínimo si es alcista, desde su máximo si es bajista</dd>
       <dt>Las velas anteriores</dt>
       <dd>No sirven de referencia. La estructura del día empieza aquí</dd>
       <dt>¿Puede sostener una zona?</dt>
@@ -82,13 +82,13 @@ const SECCIONES = [
     <h3>La vela que abarca a la anterior <span class="solo-tecnico mono ref-cod">R-32</span></h3>
     <p>
       Hay un caso que rompe la cuenta: una vela que hace a la vez máximo más
-      alto y mínimo más bajo que la anterior, sin que haya un tramo vivo. Esa
+      alto y mínimo más bajo que la anterior, sin que haya un movimiento vivo. Esa
       vela <strong>no declara dirección</strong>: pasa a ser la nueva vela
       origen, y la dirección la da la siguiente.
     </p>
     <p>
       Si la siguiente vuelve a hacer lo mismo, se repite el mismo criterio, sin
-      límite. Con un tramo ya vivo esto no aplica: manda el tramo.
+      límite. Con un movimiento ya vivo esto no aplica: manda el movimiento.
     </p>
   </section>
 
@@ -105,8 +105,8 @@ const SECCIONES = [
         Se buscan entradas de continuación en los dos sentidos.
       </p>
       <p>
-        Cada tramo deja su zona al terminar, y esa zona se opera a favor de ese
-        tramo — sea el que sea.
+        Cada movimiento deja su zona al terminar, y esa zona se opera a favor de ese
+        movimiento — sea el que sea.
       </p>
     </div>
   </section>
@@ -119,14 +119,14 @@ const SECCIONES = [
     </p>
 
     <figure class="gr">
-      <img src="/conceptos/15-sesion.png" alt="Una sesión completa con la línea que une los extremos de cada tramo" loading="lazy" />
-      <figcaption class="meta">Una sesión entera. La línea blanca une los extremos: cada tramo que avanza y cada descanso que viene después.</figcaption>
+      <img src="/conceptos/15-sesion.png" alt="Una sesión completa con la línea que une los extremos de cada movimiento" loading="lazy" />
+      <figcaption class="meta">Una sesión entera. La línea blanca une los extremos: cada movimiento que avanza y cada descanso que viene después.</figcaption>
     </figure>
 
     <ol class="secuencia">
-      <li><strong>Se sigue la estructura.</strong> Tramo, retroceso, tramo. Cada tramo que termina deja su zona.</li>
+      <li><strong>Se sigue la estructura.</strong> Movimiento, retroceso, movimiento. Cada movimiento que termina deja su zona.</li>
       <li><strong>Se marcan las zonas conforme aparecen.</strong> Ya no por volumen: dentro de sesión solo nacen por estructura.</li>
-      <li><strong>Se vigila si alguna zona se rompe.</strong> Un rompimiento abre la posibilidad de un IRI; un rompimiento que se confirma y luego falla abre la de un Reingreso.</li>
+      <li><strong>Se vigila si alguna zona se rompe.</strong> Un rompimiento abre la posibilidad de un IRI; un rompimiento con consecución que luego falla abre la de un Reingreso.</li>
       <li><strong>Aparece un setup:</strong> se mide, se pasan los filtros y, si los pasa, se manda la orden.</li>
       <li><strong>Con la orden puesta se vigila,</strong> porque hay varias cosas que la cancelan.</li>
       <li><strong>Si la orden se llena, el día se acabó.</strong> No solo la operativa: también el análisis.</li>

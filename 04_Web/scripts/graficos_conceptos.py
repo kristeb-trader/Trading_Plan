@@ -69,7 +69,7 @@ def hora(k):
 
 def dibujar(V, i0, i1, titulo, explicacion, salida,
             zonas=None, zigzag=None, tramos=None, marcas=None,
-            operacion=None, franja=None):
+            operacion=None, franja=None, lineas=None):
     """Un lienzo con el estándar del operador. Sin cuadrícula, sin adornos.
 
     `tramos` son los rótulos importantes: en vez de una flecha a una vela,
@@ -97,9 +97,18 @@ def dibujar(V, i0, i1, titulo, explicacion, salida,
 
     for z in (zonas or []):
         x = max(z["vela"] - i0, 0)
+        tenue = z.get("tenue", False)
         ax.add_patch(Rectangle((x, z["lo"]), n - x + 1, max(z["hi"] - z["lo"], 0.25),
-                               facecolor=ZONA, alpha=0.26, edgecolor=ZONA,
-                               lw=1.4, zorder=1))
+                               facecolor=ZONA, alpha=0.08 if tenue else 0.26,
+                               edgecolor=ZONA, lw=0.8 if tenue else 1.4,
+                               linestyle=":" if tenue else "-", zorder=1))
+        # La etiqueta va DENTRO de la zona, a la derecha, como en el material
+        # del operador. Dice que es y de que vela sale, sin tapar las velas.
+        et = z.get("etiqueta")
+        if et:
+            ax.text(n - 0.5, (z["lo"] + z["hi"]) / 2, et,
+                    color=TENUE if tenue else TXT, fontsize=11.5, weight="bold",
+                    ha="right", va="center", zorder=6)
 
     for i in range(i0, i1):
         k = V[i]
@@ -148,6 +157,16 @@ def dibujar(V, i0, i1, titulo, explicacion, salida,
                     ha="left" if izq else "right", va="center",
                     arrowprops=dict(arrowstyle="->", color=color, lw=1.7, alpha=0.95),
                     zorder=8)
+
+    # Lineas horizontales de referencia (la mitad entre dos zonas, R-17).
+    # A trazos y con su etiqueta a la izquierda: es una medida, no un nivel
+    # del mercado, y tiene que distinguirse de una zona.
+    for ln in (lineas or []):
+        precio, etiqueta, color = ln
+        ax.plot([0, n], [precio, precio], color=color, lw=1.4,
+                linestyle=(0, (6, 4)), alpha=0.9, zorder=5)
+        ax.text(0.4, precio + rango * 0.012, etiqueta, color=color,
+                fontsize=12, weight="bold", ha="left", va="bottom", zorder=7)
 
     ax.tick_params(colors=TENUE, labelsize=10)
     for lado in ("top", "right"):
@@ -214,14 +233,14 @@ def main():
         a, b = max(z["c0"] - 4, i0), min(fin_retro + 5, i1)
         dibujar(V, a, b,
                 "El precio avanza y descansa",
-                "Al tramo que avanza se le llama corrida. Al descanso que viene después, retroceso.",
+                "Al movimiento que avanza se le llama corrida. Al descanso que viene después, retroceso.",
                 os.path.join(SALIDA, "02-corrida-retroceso.png"),
                 tramos=[(z["c0"], z["vela"], "CORRIDA", ALCISTA),
                         (z["vela"], fin_retro, "RETROCESO", ORO)])
 
         # ── 3 · de dónde sale una zona ──────────────────────────────────
         dibujar(V, a, b,
-                "Cada tramo deja un rastro",
+                "Cada movimiento deja un rastro",
                 "La vela del extremo deja una franja gris. Ese rastro es lo que se opera después.",
                 os.path.join(SALIDA, "03-zona.png"),
                 zonas=[z],
@@ -244,14 +263,14 @@ def main():
         a, b = max(z["vela"] - 5, i0), min(conf + 12, i1)
         arriba = z["tipo"] == "R"
         dibujar(V, a, b,
-                "Cruzar la zona no basta: hay que confirmarlo",
-                "Una vela la atraviesa. Solo cuenta cuando la siguiente pasa del extremo de esa vela.",
+                "Cruzar la zona no basta: hace falta la consecución",
+                "Una vela la atraviesa. Solo cuenta cuando otra pasa del extremo de esa vela.",
                 os.path.join(SALIDA, "04-romper-confirmar.png"),
                 zonas=[z],
                 marcas=[(rot, V[rot]["h"] if arriba else V[rot]["l"],
-                         "Esta vela cruza la zona", ORO, 0.20 if arriba else -0.20),
+                         "Esta vela rompe la zona", ORO, 0.20 if arriba else -0.20),
                         (conf, V[conf]["h"] if arriba else V[conf]["l"],
-                         "Esta lo confirma", VERDE, 0.30 if arriba else -0.30)])
+                         "Esta es la consecución", VERDE, 0.30 if arriba else -0.30)])
         hecho = True
         break
     if not hecho:
@@ -271,7 +290,7 @@ def main():
             continue
         a, b = max(z["vela"] - 5, i0), min(rot + 16, i1)
         dibujar(V, a, b,
-                "Si no se confirma, no ha pasado nada",
+                "Sin consecución, no ha pasado nada",
                 "La vela cruza la zona, pero ninguna de las siguientes la supera. La zona sigue viva.",
                 os.path.join(SALIDA, "05-sin-confirmar.png"),
                 zonas=[z],
@@ -420,13 +439,13 @@ def main():
                             else (kr["l"], min(kr["o"], kr["c"])))
             a, b = max(z["vela"] - 4, j0), min(rot + 14, j1)
             dibujar(V, a, b,
-                    "Rompió con el cuerpo y no se confirmó",
-                    "Pasadas cinco velas sin confirmación, la zona original se queda igual y nace una segunda sobre la mecha.",
+                    "Rompió con el cuerpo y no hubo consecución",
+                    "Pasadas cinco velas sin consecución, la zona original se queda igual y nace una segunda sobre la mecha.",
                     os.path.join(SALIDA, "10-zona-apendice.png"),
                     zonas=[z, dict(vela=rot, lo=ap_lo, hi=ap_hi, tipo=z["tipo"])],
                     marcas=[(z["vela"], (z["lo"] + z["hi"]) / 2, "La zona original", TENUE, -0.22 if arriba else 0.22),
                             (rot, (ap_lo + ap_hi) / 2, "La zona apéndice", ORO, 0.24 if arriba else -0.24)],
-                    tramos=[(rot + 1, min(rot + 5, j1 - 1), "CINCO VELAS SIN CONFIRMAR", TENUE)])
+                    tramos=[(rot + 1, min(rot + 5, j1 - 1), "CINCO VELAS SIN CONSECUCIÓN", TENUE)])
             puesto = True
             break
         if puesto:
@@ -477,11 +496,11 @@ def main():
             a, b = max(z["vela"] - 3, j0), min(ent + 14, j1)
             dibujar(V, a, b,
                     "El rompimiento falló: se opera la vuelta",
-                    "Se confirmó y no siguió. El precio atraviesa la zona entera, sale por el otro lado y ahí entra.",
+                    "Hubo consecución y no siguió. El precio atraviesa la zona entera, sale por el otro lado y ahí entra.",
                     os.path.join(SALIDA, "11-reingreso.png"),
                     zonas=[z],
                     marcas=[(conf, V[conf]["h"] if arriba else V[conf]["l"],
-                             "Rompió y confirmó", TENUE, 0.20 if arriba else -0.20),
+                             "Rompimiento y consecución", TENUE, 0.20 if arriba else -0.20),
                             (rein, contra, "Atraviesa la zona entera", ORO, -0.24 if arriba else 0.24),
                             (ent, V[ent]["l"] if arriba else V[ent]["h"],
                              "Aquí entra el reingreso", VERDE, -0.36 if arriba else 0.36)])
@@ -517,14 +536,14 @@ def main():
         sube = k0["c"] >= k0["o"]
         dibujar(V, j0 - 2, min(j0 + 16, j1),
                 "La primera vela declara la dirección",
-                "Cierra %s de su apertura, así que el día empieza %s. Y es el origen desde el que se mide el primer tramo."
+                "Cierra %s de su apertura, así que el día empieza %s. Y es el origen desde el que se mide el primer movimiento."
                 % ("por encima" if sube else "por debajo", "alcista" if sube else "bajista"),
                 os.path.join(SALIDA, "12-vela-0831.png"),
                 marcas=[(j0, k0["c"],
                          "Cierra %s de su apertura" % ("por encima" if sube else "por debajo"),
                          VERDE if sube else ROJO, 0.30 if sube else -0.30),
                         (j0, k0["l"] if sube else k0["h"],
-                         "Y aquí empieza a medirse el primer tramo", ALCISTA,
+                         "Y aquí empieza a medirse el primer movimiento", ALCISTA,
                          -0.30 if sube else 0.30)],
                 franja=(j0, j0 + 1, ORO, "PRIMERA VELA"))
     else:
@@ -613,9 +632,290 @@ def main():
     # 01_Plan, no aqui.
     dibujar(V, i0, i1,
             "Una sesión entera, de la primera vela a la última",
-            "La línea blanca une los extremos: cada tramo que avanza y cada descanso, de la primera vela a la última.",
+            "La línea blanca une los extremos: cada movimiento que avanza y cada descanso, de la primera vela a la última.",
             os.path.join(SALIDA, "15-sesion.png"),
             zigzag=zz)
+
+    # ══════════════════════════════════════════════════════════════════
+    # MARCACION DE ZONAS — 16 a 23
+    # El modulo 2 necesita una imagen por casuistica. Todas se buscan en
+    # datos reales del operador; ninguna se dibuja a mano.
+    # ══════════════════════════════════════════════════════════════════
+
+    def sesiones():
+        """Los dias validados, con su ventana y su estructura ya calculada."""
+        for d in DIAS:
+            a, b = ventana_sesion(V, d)
+            if a is None or b - a < 30:
+                continue
+            yield d, a, b, motor.estructura(V, a, b)
+
+    def borde_de(z):
+        return z["hi"] if z["tipo"] == "R" else z["lo"]
+
+    def busca_rompimiento(z, j1, desde=None):
+        """La primera vela que pasa el borde de la zona por un tick."""
+        arriba = z["tipo"] == "R"
+        borde = borde_de(z)
+        ini = desde if desde is not None else z["vela"] + 2
+        for i in range(ini, min(z["vela"] + 60, j1)):
+            if (V[i]["h"] > borde) if arriba else (V[i]["l"] < borde):
+                return i
+        return None
+
+    def busca_consecucion(z, rot, j1, plazo=5):
+        """La vela que pasa del extremo de la que rompio, dentro del plazo."""
+        arriba = z["tipo"] == "R"
+        for j in range(rot + 1, min(rot + 1 + plazo, j1)):
+            if (V[j]["h"] > V[rot]["h"]) if arriba else (V[j]["l"] < V[rot]["l"]):
+                return j
+        return None
+
+    def con_cuerpo(z, rot):
+        """El cierre quedo al otro lado del borde: rompimiento con cuerpo."""
+        borde = borde_de(z)
+        return (V[rot]["c"] > borde) if z["tipo"] == "R" else (V[rot]["c"] < borde)
+
+    # ── 16 · la corrida bajista ─────────────────────────────────────────
+    # El apartado del movimiento necesita los dos sentidos, no solo el alza.
+    hecho = False
+    for d, j0, j1, zs in sesiones():
+        cand = [z for z in zs if z["tipo"] == "S" and z["c1"] - z["c0"] >= 5]
+        if not cand:
+            continue
+        z = max(cand, key=lambda z: V[z["c0"]]["h"] - V[z["vela"]]["l"])
+        fin_retro = min(z["c1"] + 4, j1 - 1)
+        a, b = max(z["c0"] - 4, j0), min(fin_retro + 5, j1)
+        z2 = dict(z, etiqueta="SOPORTE")
+        dibujar(V, a, b,
+                "El mismo movimiento, hacia abajo",
+                "La corrida baja y el retroceso sube. El soporte sale de la vela más baja del movimiento.",
+                os.path.join(SALIDA, "16-corrida-bajista.png"),
+                zonas=[z2],
+                tramos=[(z["c0"], z["vela"], "CORRIDA", BAJISTA),
+                        (z["vela"], fin_retro, "RETROCESO", ORO)])
+        hecho = True
+        break
+    if not hecho:
+        print("  aviso: sin corrida bajista larga y limpia")
+
+    # ── 17 · la vela designada y sus dos bordes ─────────────────────────
+    # De donde salen exactamente los dos limites de la zona.
+    hecho = False
+    for d, j0, j1, zs in sesiones():
+        cand = [z for z in zs if z["tipo"] == "R"
+                and V[z["vela"]]["h"] - max(V[z["vela"]]["o"], V[z["vela"]]["c"]) > 3.0
+                and z["c1"] - z["c0"] >= 3]
+        if not cand:
+            continue
+        z = cand[0]
+        k = V[z["vela"]]
+        a, b = max(z["c0"] - 3, j0), min(z["c1"] + 10, j1)
+        z2 = dict(z, etiqueta="RESISTENCIA")
+        dibujar(V, a, b,
+                "Los dos bordes salen de una sola vela",
+                "Del borde del cuerpo a la punta de la mecha. Ni un tick más, ni un tick menos.",
+                os.path.join(SALIDA, "17-vela-designada.png"),
+                zonas=[z2],
+                marcas=[(z["vela"], k["h"], "Punta de la mecha", ZONA, 0.16),
+                        (z["vela"], max(k["o"], k["c"]), "Borde del cuerpo", ZONA, -0.22)])
+        hecho = True
+        break
+    if not hecho:
+        print("  aviso: sin vela con mecha larga para el detalle")
+
+    # ── 18 y 19 · rompimiento con mecha y con cuerpo ────────────────────
+    # La diferencia importa despues: decide si la zona se estira o si nace
+    # una apendice (R-15 / R-16).
+    for etiqueta, quiere_cuerpo, archivo, titulo, expl in [
+        ("mecha", False, "18-rompe-mecha.png",
+         "Rompimiento con mecha",
+         "La vela pasa el borde pero cierra dentro de la zona. Sigue siendo rompimiento: basta un tick."),
+        ("cuerpo", True, "19-rompe-cuerpo.png",
+         "Rompimiento con cuerpo",
+         "Aquí la vela cierra al otro lado del borde. Mismo rompimiento, pero deja otro rastro si no llega la consecución."),
+    ]:
+        hecho = False
+        for d, j0, j1, zs in sesiones():
+            for z in sorted(zs, key=lambda z: z["vela"]):
+                rot = busca_rompimiento(z, j1)
+                if rot is None or rot + 8 >= j1:
+                    continue
+                if con_cuerpo(z, rot) != quiere_cuerpo:
+                    continue
+                conf = busca_consecucion(z, rot, j1)
+                if not conf:
+                    continue
+                arriba = z["tipo"] == "R"
+                a, b = max(z["vela"] - 5, j0), min(conf + 12, j1)
+                z2 = dict(z, etiqueta="RESISTENCIA" if arriba else "SOPORTE")
+                dibujar(V, a, b, titulo, expl,
+                        os.path.join(SALIDA, archivo),
+                        zonas=[z2],
+                        marcas=[(rot, V[rot]["h"] if arriba else V[rot]["l"],
+                                 "Rompimiento", ORO, 0.20 if arriba else -0.20),
+                                (conf, V[conf]["h"] if arriba else V[conf]["l"],
+                                 "Consecución", VERDE, 0.32 if arriba else -0.32)])
+                hecho = True
+                break
+            if hecho:
+                break
+        if not hecho:
+            print("  aviso: sin rompimiento con " + etiqueta)
+
+    # ── 20 · la zona apendice, ya rota ──────────────────────────────────
+    # El PDF del operador dedica dos paginas a esto: lo que pasa DESPUES de
+    # que nace la apendice. La original queda traspasada en los dos sentidos.
+    hecho = False
+    for d, j0, j1, zs in sesiones():
+        for z in sorted(zs, key=lambda z: z["vela"]):
+            rot = busca_rompimiento(z, j1)
+            if rot is None or rot + 14 >= j1:
+                continue
+            if not con_cuerpo(z, rot):
+                continue
+            if busca_consecucion(z, rot, j1):
+                continue                      # aqui hace falta que NO la haya
+            arriba = z["tipo"] == "R"
+            k = V[rot]
+            ap_lo, ap_hi = ((max(k["o"], k["c"]), k["h"]) if arriba
+                            else (k["l"], min(k["o"], k["c"])))
+            ap = dict(vela=rot, lo=ap_lo, hi=ap_hi, tipo=z["tipo"],
+                      etiqueta="APÉNDICE")
+            a = max(z["vela"] - 4, j0)
+            b = min(rot + 22, j1)
+            z2 = dict(z, etiqueta="ZONA ORIGINAL")
+            dibujar(V, a, b,
+                    "La zona apéndice nace del rompimiento sin consecución",
+                    "Rompió con cuerpo y pasaron las cinco velas. La original no se toca; la apéndice se marca sobre la mecha de la vela que rompió.",
+                    os.path.join(SALIDA, "20-apendice-nace.png"),
+                    zonas=[z2, ap],
+                    marcas=[(rot, k["h"] if arriba else k["l"],
+                             "Rompió con cuerpo", ORO, 0.20 if arriba else -0.20)])
+            hecho = True
+            break
+        if hecho:
+            break
+    if not hecho:
+        print("  aviso: sin caso de zona apendice")
+
+    # ── 21 · dos zonas que se tocan se funden en una ────────────────────
+    hecho = False
+    for d, j0, j1, zs in sesiones():
+        mismo = {}
+        for z in zs:
+            mismo.setdefault(z["tipo"], []).append(z)
+        for tipo, lista in mismo.items():
+            lista = sorted(lista, key=lambda z: z["vela"])
+            for x, y in zip(lista, lista[1:]):
+                if not (y["lo"] <= x["hi"] and y["hi"] >= x["lo"]):
+                    continue
+                if y["vela"] - x["vela"] < 2 or y["vela"] - x["vela"] > 25:
+                    continue
+                union = dict(vela=x["vela"], tipo=tipo,
+                             lo=min(x["lo"], y["lo"]), hi=max(x["hi"], y["hi"]),
+                             etiqueta="UNA SOLA ZONA")
+                a = max(x["vela"] - 5, j0)
+                b = min(y["vela"] + 16, j1)
+                dibujar(V, a, b,
+                        "Si la nueva toca a la existente, se estira",
+                        "No quedan dos zonas pegadas: queda una sola, estirada hasta el extremo nuevo. El otro borde no se mueve.",
+                        os.path.join(SALIDA, "21-zonas-se-funden.png"),
+                        zonas=[union],
+                        marcas=[(x["vela"], (x["lo"] + x["hi"]) / 2,
+                                 "La que ya estaba", ZONA, 0.20),
+                                (y["vela"], (y["lo"] + y["hi"]) / 2,
+                                 "La que iba a marcarse", ZONA, -0.24)])
+                hecho = True
+                break
+            if hecho:
+                break
+        if hecho:
+            break
+    if not hecho:
+        print("  aviso: sin dos zonas que se toquen")
+
+    # ── 22 · zona entre zonas: la mitad manda ───────────────────────────
+    hecho = False
+    for d, j0, j1, zs in sesiones():
+        orden = sorted(zs, key=lambda z: z["vela"])
+        for z in orden:
+            vivas = [w for w in orden if w["vela"] < z["c0"]]
+            arr = [w for w in vivas if w["lo"] > V[z["vela"]]["h"]]
+            aba = [w for w in vivas if w["hi"] < V[z["vela"]]["l"]]
+            if not arr or not aba:
+                continue
+            sup = min(arr, key=lambda w: w["lo"])
+            inf = max(aba, key=lambda w: w["hi"])
+            mitad = (sup["lo"] + inf["hi"]) / 2
+            alto = max(V[i]["h"] for i in range(z["c0"], z["c1"] + 1))
+            bajo = min(V[i]["l"] for i in range(z["c0"], z["c1"] + 1))
+            if alto > mitad and bajo < mitad:
+                continue                       # este cruza: no sirve de ejemplo
+            if sup["lo"] - inf["hi"] < 12:
+                continue                       # banda demasiado estrecha
+            a = max(min(sup["vela"], inf["vela"]) - 2, j0)
+            b = min(z["c1"] + 14, j1)
+            zonas_img = [dict(sup, etiqueta="ZONA DE ARRIBA"),
+                         dict(inf, etiqueta="ZONA DE ABAJO"),
+                         dict(z, etiqueta="SE MARCA")]
+            dibujar(V, a, b,
+                    "Entre dos zonas, solo si el movimiento no cruza la mitad",
+                    "El movimiento entero se queda del lado en el que empezó. Por eso esta zona sí se marca.",
+                    os.path.join(SALIDA, "22-entre-zonas.png"),
+                    zonas=zonas_img,
+                    lineas=[(mitad, "LA MITAD", ORO)])
+            hecho = True
+            break
+        if hecho:
+            break
+    if not hecho:
+        print("  aviso: sin zona entre zonas que respete la mitad")
+
+    # ── 23 · zona traspasada en los dos sentidos ────────────────────────
+    hecho = False
+    for d, j0, j1, zs in sesiones():
+        for z in sorted(zs, key=lambda z: z["vela"]):
+            rot = busca_rompimiento(z, j1)
+            if rot is None:
+                continue
+            conf = busca_consecucion(z, rot, j1)
+            if not conf or conf + 12 >= j1:
+                continue
+            arriba = z["tipo"] == "R"
+            borde2 = z["lo"] if arriba else z["hi"]
+            rot2 = None
+            for i in range(conf + 1, min(conf + 50, j1)):
+                if (V[i]["l"] < borde2) if arriba else (V[i]["h"] > borde2):
+                    rot2 = i
+                    break
+            if rot2 is None or rot2 + 6 >= j1:
+                continue
+            conf2 = None
+            for j in range(rot2 + 1, min(rot2 + 6, j1)):
+                if (V[j]["l"] < V[rot2]["l"]) if arriba else (V[j]["h"] > V[rot2]["h"]):
+                    conf2 = j
+                    break
+            if conf2 is None:
+                continue
+            a = max(z["vela"] - 4, j0)
+            b = min(conf2 + 12, j1)
+            z2 = dict(z, etiqueta="YA NO CUENTA", tenue=True)
+            dibujar(V, a, b,
+                    "Traspasada en los dos sentidos: deja de contar",
+                    "Se superó hacia un lado y después hacia el otro, las dos veces con consecución. A partir de ahí no bloquea ni sirve para entrar.",
+                    os.path.join(SALIDA, "23-zona-invalida.png"),
+                    zonas=[z2],
+                    marcas=[(conf, V[conf]["h"] if arriba else V[conf]["l"],
+                             "Traspaso de ida", VERDE, 0.20 if arriba else -0.20),
+                            (conf2, V[conf2]["l"] if arriba else V[conf2]["h"],
+                             "Traspaso de vuelta", VERDE, -0.26 if arriba else 0.26)])
+            hecho = True
+            break
+        if hecho:
+            break
+    if not hecho:
+        print("  aviso: sin zona traspasada en los dos sentidos")
 
     print("\nlistos en public/conceptos/")
     return 0

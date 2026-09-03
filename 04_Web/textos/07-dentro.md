@@ -45,7 +45,7 @@ Colocados el stop y el objetivo, la operación deja de gestionarse.
 Palabras del operador: *«no se toca nada, jamás… Repito, jamás se gestiona»*. Es la única regla del método enunciada como prohibición absoluta y sin una sola excepción.
 
 > **[REGLA DURA]**
-> **Esto es lo que convierte cada operación en una medida limpia.**El resultado mide el setup, no la habilidad para gestionar. Si se interviene, deja de saberse qué se estaba midiendo.
+> **Esto es lo que convierte cada operación en una medida limpia.** El resultado mide el setup, no la habilidad para gestionar. Si se interviene, deja de saberse qué se estaba midiendo.
 
 ---
 

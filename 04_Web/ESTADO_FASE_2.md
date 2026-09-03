@@ -111,7 +111,7 @@ entero de una vez es demasiado.
 |---|---|---|---|---|
 | | Portada | `/` | ✅ **2026-09-02** | marca nueva, menú con iconos, dos portadas, pie del operador. Detalle en el historial |
 | 01 | Premercado | `/premercado` | ⬜ | |
-| 02 | Marcación de zonas | `/zonas` | ⬜ | |
+| 02 | Marcación de zonas | `/zonas` | 🚧 **2026-09-03** | reescrito en 8 apartados, cada uno con su imagen. Falta el visto bueno del operador sobre los textos |
 | 03 | Setups operativos | `/setups` | ⬜ | |
 | 04 | Jornada operativa | `/jornada` | ⬜ | |
 | 05 | Mecánica de entrada | `/entrada` | ⬜ | |
@@ -141,6 +141,58 @@ entero de una vez es demasiado.
 ---
 
 ## Historial
+
+### 2026-09-03 · marcación de zonas, reescrito en ocho apartados
+
+**Lo que pidió el operador:** rehacer el análisis de cómo se marcan las zonas y
+de sus casuísticas, mirar las imágenes de `00_Guias\Parámetros Chaumer.pdf`
+para ver *cómo* explican ellos el flujo, y montar el nuestro con **imágenes
+propias generadas de mercado real**. Una imagen en **cada** apartado, porque la
+sección tiene demasiados casos para explicarlos solo con prosa.
+
+**Vocabulario, decidido por él:**
+
+- se dice **movimiento**, no *tramo* — aplicado en **todo el portal**, no solo
+  aquí;
+- después del rompimiento se dice **consecución**, no *confirmación* — es el
+  término del glosario. También aplicado en todo el portal.
+
+**Los ocho apartados** (antes eran seis):
+
+| | Apartado | Imagen |
+|---|---|---|
+| 1 | Corrida y retroceso | movimiento alcista **y** bajista |
+| 2 | De dónde sale la zona | la vela designada y sus dos bordes, y la zona ya extendida |
+| 3 | Rompimiento y consecución | el traspaso entero · rompe con mecha · rompe con cuerpo |
+| 4 | Cuando no llega la consecución | la zona que se estira |
+| 5 | La zona apéndice | cómo nace, y un segundo caso real |
+| 6 | Varias zonas a la vez | dos que se funden · la mitad entre zonas |
+| 7 | Cuándo deja de contar | traspasada en los dos sentidos |
+| 8 | El recorrido completo | diagrama del flujo, con la bifurcación de la consecución |
+
+**Ocho gráficos nuevos** (16 a 23) generados con `scripts/graficos_conceptos.py`
+sobre `NQ 09-26.Last.txt`. Antes de generarlos se sondearon las 48 sesiones del
+archivo para comprobar que **cada casuística tiene ejemplos reales**: los tiene
+todas, así que **no hay ni un gráfico inventado**.
+
+**Solo reglas confirmadas.** Del PDF se tomó la *forma* de explicar, no
+contenido: lo que allí aparece y no está en `01_Plan\` se quedó fuera. Lo que sí
+se dice, porque el plan lo dice, es que **las reglas de entrada sobre una zona
+apéndice están pendientes**.
+
+#### Dos arreglos que salieron por el camino
+
+- **El riel de apartados cortaba los títulos.** Con ocho paradas la columna es
+  más estrecha y a dos líneas se perdían palabras enteras. Ahora admite tres
+  líneas y parte por sílabas.
+- 🔴 **Astro pegaba palabras en todo el portal.** Con `compressHTML` (activado
+  por defecto) desaparecía el salto de línea que hay antes de un `<strong>` o de
+  un `{parámetro}`, y salían cosas como «lo hizocon el cuerpo», «pasan5 velas» o
+  «19:00PremercadoEmpiezan a marcarse zonas». Estaba en la portada, premercado,
+  setups, jornada, filtros, dentro, riesgo y contextualización. Se apagó
+  `compressHTML` en `astro.config.mjs`; el peso de más no se nota y el texto
+  vuelve a leerse.
+
 
 
 Correcciones del operador sobre la tanda anterior.

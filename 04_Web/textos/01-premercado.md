@@ -38,7 +38,7 @@ Se mira Forex Factory, y solo Forex Factory. Un único calendario evita el probl
 
 #### Qué se anota
 
-1. **¿Hay hoy un evento de la Fed en rojo?** Si lo hay, el día entero cambia de reglas:**Día con la Fed en rojo:** ese día no se opera el setup de continuación. Solo se permite el Reingreso, con todas sus condiciones normales.
+1. **¿Hay hoy un evento de la Fed en rojo?** Si lo hay, el día entero cambia de reglas: **Día con la Fed en rojo:** ese día no se opera el setup de continuación. Solo se permite el Reingreso, con todas sus condiciones normales.
 2. **La hora exacta de cada noticia roja.** Solo aplica el rojo: naranja y amarillo no cuentan, no bloquean nada.
 3. **La ventana de cada una:** no se opera cinco minutos antes y cinco después.
 
@@ -81,7 +81,7 @@ La estrategia ATM de NinjaTrader se deja configurada antes de empezar y no se to
 > **[REGLA DURA]**
 > **Ese valor por defecto no es el stop de la operación:** es lo que protege la posición entre el llenado y el ajuste a mano, que son unos segundos. El stop de verdad se coloca después, y sale de la estructura del mercado.
 
-**El valor por defecto es igual al tope de stop a propósito.**Si algún día cambia el tope, hay que cambiar la ATM con él.
+**El valor por defecto es igual al tope de stop a propósito.** Si algún día cambia el tope, hay que cambiar la ATM con él.
 
 ---
 
@@ -89,7 +89,7 @@ La estrategia ATM de NinjaTrader se deja configurada antes de empezar y no se to
 
 ### Zonas por volumen
 
-Si en el premercado se forma una vela con un volumen por encima del umbral (**> 6.000 contratos en MNQ, > 2.000 contratos en NQ**), se debe marcar una zona. Es la única manera de que nazca una zona sin que haya habido un tramo y su descanso.
+Si en el premercado se forma una vela con un volumen por encima del umbral (**> 6.000 contratos en MNQ, > 2.000 contratos en NQ**), se debe marcar una zona. Es la única manera de que nazca una zona sin que haya habido un movimiento y su descanso.
 
 > 🖼 **Gráfico.** Texto alternativo: Vela de premercado con volumen por encima del umbral y la zona que deja
 > Pie: Una vela de premercado por encima del umbral y la zona que deja. La zona se comporta después como cualquier otra.

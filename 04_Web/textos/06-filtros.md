@@ -45,7 +45,7 @@ Con el setup identificado y el stop y el objetivo ya medidos, se pasan cuatro co
 > Pie: Un setup que cumple todo menos el tope de riesgo. El stop estructural queda por encima del máximo, y no se opera.
 
 > **[REGLA DURA]**
-> **El tope de riesgo es una línea dura, no una zona de aviso.**Un stop de 79,75 puntos se opera exactamente igual que uno de 30.
+> **El tope de riesgo es una línea dura, no una zona de aviso.** Un stop de 79,75 puntos se opera exactamente igual que uno de 30.
 > No existe «está muy cerca del límite, mejor la dejo». Un caso real de julio se tomó con el 94 % del tope consumido, y se ganó.
 
 > **[NO SE HACE]**

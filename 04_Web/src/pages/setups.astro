@@ -59,15 +59,15 @@ const SECCIONES = [
     </p>
 
     <figure class="gr">
-      <img src="/conceptos/04-romper-confirmar.png" alt="Un IRI completo: tramo, retroceso, zona, rompimiento y confirmación" loading="eager" />
-      <figcaption class="meta">Los cinco pasos sobre una sesión real. La vela que confirma es la que entra.</figcaption>
+      <img src="/conceptos/04-romper-confirmar.png" alt="Un IRI completo: movimiento, retroceso, zona, rompimiento y consecución" loading="eager" />
+      <figcaption class="meta">Los cinco pasos sobre una sesión real. La vela de la consecución es la que entra.</figcaption>
     </figure>
 
     <ol class="secuencia">
-      <li><strong>Una corrida.</strong> El precio avanza un tramo.</li>
-      <li><strong>Un retroceso.</strong> El tramo se para a descansar.</li>
-      <li><strong>La zona.</strong> El tramo deja su zona en la vela extrema. Sin zona no hay IRI.</li>
-      <li><strong>Rompimiento de esa misma zona</strong>, en el sentido del tramo original, por al menos un tick.</li>
+      <li><strong>Una corrida.</strong> El precio avanza un movimiento.</li>
+      <li><strong>Un retroceso.</strong> El movimiento se para a descansar.</li>
+      <li><strong>La zona.</strong> El movimiento deja su zona en la vela extrema. Sin zona no hay IRI.</li>
+      <li><strong>Rompimiento de esa misma zona</strong>, en el sentido del movimiento original, por al menos un tick.</li>
       <li><strong>Confirmación: y esa es la entrada.</strong> Una vela pasa el extremo de la vela que rompió.</li>
     </ol>
 
@@ -92,7 +92,7 @@ const SECCIONES = [
     </p>
 
     <figure class="gr">
-      <img src="/conceptos/11-reingreso.png" alt="Un Reingreso: rompimiento confirmado que falla y el precio recupera la zona entera" loading="lazy" />
+      <img src="/conceptos/11-reingreso.png" alt="Un Reingreso: rompimiento con consecución que falla y el precio recupera la zona entera" loading="lazy" />
       <figcaption class="meta">El rompimiento se confirmó y no siguió. El precio atraviesa la zona completa y sale por el borde contrario: ahí empieza el Reingreso.</figcaption>
     </figure>
 
@@ -125,7 +125,7 @@ const SECCIONES = [
     <div class="duro">
       <p>
         <strong>El Reingreso es inmediato o no es.</strong> La ventana se abre
-        con la vela que confirma y se cierra en cuanto el precio supera el
+        con la vela de la consecución y se cierra en cuanto el precio supera el
         extremo de esa misma vela.
       </p>
       <p>Cuando el precio sigue de largo, la ventana se cerró para siempre. No se espera a que vuelva.</p>
@@ -152,12 +152,12 @@ const SECCIONES = [
           </tr>
           <tr>
             <th>Dirección</th>
-            <td>A favor del tramo</td>
+            <td>A favor del movimiento</td>
             <td>Contraria al rompimiento</td>
           </tr>
           <tr>
             <th>Plazo</th>
-            <td>{v('PLAZO_CONSECUCION', '5 velas')} para confirmar</td>
+            <td>{v('PLAZO_CONSECUCION', '5 velas')} para la consecución</td>
             <td>Sin plazo para aparecer; inmediato para entrar</td>
           </tr>
           <tr>

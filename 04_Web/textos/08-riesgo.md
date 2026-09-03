@@ -55,7 +55,7 @@ Una operación al día es también lo que hace lenta la recuperación: no hay fo
 > **Siempre 1 MNQ contrato de MNQ.** No sube porque la cuenta crezca. No baja tras una mala racha. No cambia por convicción.
 > El tamaño solo se puede revisar una vez al año.
 
-Esto tiene una consecuencia aritmética que conviene tener presente: con el tamaño fijo y el tope de riesgo fijo en dólares,**el riesgo porcentual crece a medida que la cuenta cae**. Los mismos $160 son el 5 % de $3.000 y el 11 % de $1.400.
+Esto tiene una consecuencia aritmética que conviene tener presente: con el tamaño fijo y el tope de riesgo fijo en dólares, **el riesgo porcentual crece a medida que la cuenta cae**. Los mismos $160 son el 5 % de $3.000 y el 11 % de $1.400.
 
 ---
 

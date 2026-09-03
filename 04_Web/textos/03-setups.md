@@ -37,13 +37,13 @@ El método no busca oportunidades: busca **dos figuras concretas**. Si lo que ha
 
 El IRI es autocontenido: el propio movimiento crea la zona que después rompe. Impulso, retroceso, impulso — y el segundo impulso es la entrada.
 
-> 🖼 **Gráfico.** Texto alternativo: Un IRI completo: tramo, retroceso, zona, rompimiento y confirmación
-> Pie: Los cinco pasos sobre una sesión real. La vela que confirma es la que entra.
+> 🖼 **Gráfico.** Texto alternativo: Un IRI completo: movimiento, retroceso, zona, rompimiento y consecución
+> Pie: Los cinco pasos sobre una sesión real. La vela de la consecución es la que entra.
 
-1. **Una corrida.** El precio avanza un tramo.
-2. **Un retroceso.** El tramo se para a descansar.
-3. **La zona.** El tramo deja su zona en la vela extrema. Sin zona no hay IRI.
-4. **Rompimiento de esa misma zona**, en el sentido del tramo original, por al menos un tick.
+1. **Una corrida.** El precio avanza un movimiento.
+2. **Un retroceso.** El movimiento se para a descansar.
+3. **La zona.** El movimiento deja su zona en la vela extrema. Sin zona no hay IRI.
+4. **Rompimiento de esa misma zona**, en el sentido del movimiento original, por al menos un tick.
 5. **Confirmación: y esa es la entrada.** Una vela pasa el extremo de la vela que rompió.
 
 - **Plazo para la confirmación** — **5 velas** desde la siguiente a la que rompió. Lo normal es la primera o la segunda
@@ -59,7 +59,7 @@ El IRI es autocontenido: el propio movimiento crea la zona que después rompe. I
 
 Es el contrario exacto del IRI. Aquí el rompimiento se confirmó pero el precio **no continuó**: se dio la vuelta y se comió la zona entera. Se opera esa vuelta.
 
-> 🖼 **Gráfico.** Texto alternativo: Un Reingreso: rompimiento confirmado que falla y el precio recupera la zona entera
+> 🖼 **Gráfico.** Texto alternativo: Un Reingreso: rompimiento con consecución que falla y el precio recupera la zona entera
 > Pie: El rompimiento se confirmó y no siguió. El precio atraviesa la zona completa y sale por el borde contrario: ahí empieza el Reingreso.
 
 1. **Sobre una zona hubo rompimiento y confirmación.** El traspaso está hecho.
@@ -77,7 +77,7 @@ Es el contrario exacto del IRI. Aquí el rompimiento se confirmó pero el precio
 El Reingreso es el único setup con un segundo filtro de objetivo. El punto de referencia es **el extremo del retroceso que originó la zona**. Si el objetivo cae más allá de ese punto, el Reingreso no es válido y no se opera.
 
 > **[REGLA DURA]**
-> **El Reingreso es inmediato o no es.** La ventana se abre con la vela que confirma y se cierra en cuanto el precio supera el extremo de esa misma vela.
+> **El Reingreso es inmediato o no es.** La ventana se abre con la vela de la consecución y se cierra en cuanto el precio supera el extremo de esa misma vela.
 > Cuando el precio sigue de largo, la ventana se cerró para siempre. No se espera a que vuelva.
 
 ---
@@ -90,8 +90,8 @@ Comparten la mecánica de entrada — los dos entran con la confirmación — pe
 
 |  | IRI | Reingreso |
 | Qué opera | El rompimiento que funciona | El rompimiento que falló |
-| Dirección | A favor del tramo | Contraria al rompimiento |
-| Plazo | 5 velas para confirmar | Sin plazo para aparecer; inmediato para entrar |
+| Dirección | A favor del movimiento | Contraria al rompimiento |
+| Plazo | 5 velas para la consecución | Sin plazo para aparecer; inmediato para entrar |
 | Stop | Extremo del retroceso | Extremo de la corrida fallida |
 | Filtros de objetivo | Camino libre de zonas vivas | Camino libre *y* dentro del punto de referencia |
 | Día de la Fed | Prohibido | Permitido |

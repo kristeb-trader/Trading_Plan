@@ -319,9 +319,12 @@ const destinoFinal = siguiente
   .ri-t {
     font-size: var(--t-2);
     line-height: 1.3;
-    /* Dos lineas como maximo: los titulos largos no descuadran la ruta. */
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    /* Tres lineas como maximo: con ocho paradas la columna es estrecha y a
+       dos lineas se cortaban titulos enteros. */
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
     overflow: hidden;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .ruta-i > a:hover { color: var(--texto); }
