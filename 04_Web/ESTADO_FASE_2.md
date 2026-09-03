@@ -165,6 +165,57 @@ Alfredo Chaumer,» y dejaba un «de» colgando. Ahora son tres líneas limpias.
 estaba bien. Es el mismo caso ya anotado: parar el servidor y borrar
  y . **Si algo no se refleja, empieza por ahí.**
 
+### 2026-09-02 · la portada, rematada: fuera los módulos repetidos
+
+Tres cosas que vio el operador sobre la portada nueva, y las tres eran ciertas.
+
+**1 · Los ocho módulos salían dos veces.** Estaban en el menú de la izquierda
+y otra vez en el centro de la portada. Es exactamente el defecto que se le
+criticó a la portada anterior, y se coló de nuevo.
+
+**Lo que ocupa su sitio: la jornada en horas.** Una banda horizontal debajo de
+las dos columnas, alineada con el eje de horas del gráfico de arriba:
+
+| | | |
+|---|---|---|
+| `19:00` | Premercado | empiezan las zonas por volumen, desde la apertura de Tokio |
+| `08:30` | Abre el mercado americano | arranca la única ventana del día |
+| `08:31` | La primera vela | declara la dirección y es el origen del primer tramo |
+| `10:29` | Última orden | pasado ese minuto no se coloca nada |
+| `10:30` | Cierra la ventana | prohíbe abrir, no obliga a cerrar |
+
+Ninguna hora está inventada: salen de `PARAMETROS.md` y de los módulos de
+premercado y jornada. La banda lleva al pie la salvedad de siempre — son horas
+de pantalla en verano de Nueva York, y **el ancla es la apertura americana, no
+el número del reloj**.
+
+**2 · Las dos columnas no acababan al mismo nivel.** Medido: **261 px de
+desfase**. Culpa de un `align-items: start` que puse para tapar un hueco vacío
+en el panel — y que era justo lo que las mantenía alineadas. Ahora vuelven a
+estirarse igual y el desfase es **0**, con el pie del panel empujado al fondo
+(`margin-top: auto`), así que tampoco queda hueco muerto.
+
+**3 · «La imagen se ve pixelada».** Medido: **no se amplía**. Se pinta al 34 %
+de su tamaño real, igual que en la propuesta, y el recorte quita exactamente
+215 px y ni uno más. Lo que había pasado es que el panel se quedó pequeño
+(679×287) y una franja tan baja parece un recorte de miniatura. Al alinear las
+columnas y estrechar la del texto, el gráfico pasa a **695×294** y recupera
+presencia.
+
+> ⚠️ **Si algo no se ve reflejado, es Vite.** Volvió a pasar dos veces en esta
+> tanda: el CSS con ámbito se queda cacheado y la página se sirve con estilos
+> viejos. **Parar el servidor y borrar `node_modules/.vite` y `.astro`** antes
+> de tocar nada más. Ya van tres veces.
+
+**Un detalle de rejilla que costó un rato:** la nota del titular usa
+`display: grid` con dos columnas, y la rejilla reparte **un hijo por celda**.
+Sin envolver el texto en un `span`, el `<strong>` se iba a su propia celda y
+partía la frase por la mitad en móvil.
+
+**Comprobado:** pies alineados al píxel, cero hueco en el panel, la imagen sin
+ampliar, cinco paradas en la banda, sin desbordes a 375 ni 1440, ningún
+objetivo táctil bajo 44 px y el detector sin hallazgos.
+
 ### 2026-09-02 · portada nueva: la propuesta «Terminal»
 
 El operador rechazó el diseño de la portada. En vez de seguir parcheando se
