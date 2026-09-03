@@ -52,9 +52,8 @@ Se trabaja únicamente con el micro Nasdaq, **MNQ**. Aquí se marcan las zonas, 
 
 > 🖼 **Gráfico.** Texto alternativo: El gráfico de MNQ a un minuto, con el indicador de volumen
 
-> **[FICHA]**
-> ##### Para todo
-> Análisis y ejecución van en el mismo gráfico. No hay un segundo instrumento de referencia.
+> **[REGLA DURA]**
+> **Para todo, el mismo gráfico:** análisis y ejecución. No hay un segundo instrumento de referencia.
 
 Va a **un minuto**. No hay ningún otro marco temporal en el método: ni cinco minutos para «ver el contexto», ni diario para «ver la tendencia».
 
@@ -67,7 +66,7 @@ Va a **un minuto**. No hay ningún otro marco temporal en el método: ni cinco m
 
 <!-- id: atm -->
 
-### La ATM
+### Estrategia ATM
 
 La estrategia ATM de NinjaTrader se deja configurada antes de empezar y no se toca durante la sesión.
 

@@ -18,7 +18,7 @@ const SECCIONES = [
   { id: 'estado', t: 'Cómo estoy hoy' },
   { id: 'noticias', t: 'El calendario' },
   { id: 'instrumento', t: 'El gráfico' },
-  { id: 'atm', t: 'La ATM' },
+  { id: 'atm', t: 'Estrategia ATM' },
   { id: 'zonas-vol', t: 'Zonas por volumen' },
 ];
 ---
@@ -86,9 +86,8 @@ const SECCIONES = [
            alt="El gráfico de MNQ a un minuto, con el indicador de volumen" />
     </figure>
 
-    <div class="tarj">
-      <h4>Para todo</h4>
-      <p>Análisis y ejecución van en el mismo gráfico. No hay un segundo instrumento de referencia.</p>
+    <div class="duro duro-espaciado">
+      <p><strong>Para todo, el mismo gráfico:</strong> análisis y ejecución. No hay un segundo instrumento de referencia.</p>
     </div>
 
     <p>
@@ -110,7 +109,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="atm">
-    <h2>La ATM <span class="solo-tecnico mono ref-cod">R-08</span></h2>
+    <h2>Estrategia ATM <span class="solo-tecnico mono ref-cod">R-08</span></h2>
     <p>
       La estrategia ATM de NinjaTrader se deja configurada antes de empezar y
       no se toca durante la sesión.
@@ -197,4 +196,8 @@ const SECCIONES = [
 
 <style>
   .ref-cod { margin-left: var(--e-2); font-size: var(--t-1); color: var(--texto-3); }
+
+  /* El aviso de «El gráfico» quedaba pegado al párrafo de después: el margen
+     inferior normal de .duro no bastaba aquí. */
+  .duro-espaciado { margin-bottom: var(--e-7); }
 </style>

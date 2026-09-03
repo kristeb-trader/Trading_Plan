@@ -329,15 +329,15 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
 
 /* Un apartado del módulo. El ancla del índice lateral. */
 .ap { margin-bottom: var(--e-8); scroll-margin-top: calc(var(--alto-cabecera) + 4.5rem); }
-/* El titulo del apartado: en blanco resaltado, alineado a la derecha, tal
-   cual esta escrito (mayuscula solo en la primera letra — «Cómo estoy hoy»).
-   Antes llevaba el tono del modulo y mayusculas; ese tratamiento paso al
-   titulo principal del modulo (--tono-mod), y aqui queda al reves —
-   intercambio pedido por el operador el 03/09/2026. */
+/* El titulo del apartado: en blanco resaltado, a la izquierda (el operador
+   probo alineado a la derecha y no le convencio), tal cual esta escrito
+   (mayuscula solo en la primera letra — «Cómo estoy hoy»). Antes llevaba el
+   tono del modulo y mayusculas; ese tratamiento paso al titulo principal del
+   modulo (--tono-mod), y aqui queda al reves. */
 .ap > h2 {
   margin: 0 0 var(--e-5);
   font-size: var(--t-7);
-  text-align: right;
+  text-align: left;
   color: var(--texto);
   text-wrap: balance;
 }

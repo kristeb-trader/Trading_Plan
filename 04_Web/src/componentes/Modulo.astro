@@ -199,7 +199,15 @@ const destinoFinal = siguiente
       }
 
       if (mover) {
-        var arriba = raiz.getBoundingClientRect().top + window.scrollY - 16;
+        // El «-16» a secas dejaba el titulo TAPADO por la cabecera fija: si
+        // el usuario ya habia bajado (leyendo un apartado largo) y saltaba a
+        // otro, el titulo aterrizaba detras de la barra superior, que se ve
+        // encima de todo. Hay que restar tambien lo que mide esa barra, no
+        // un numero fijo — y de paso se lee en directo, porque en movil la
+        // cabecera es mas alta (dos filas) que en escritorio.
+        var cabecera = document.querySelector('.cabecera');
+        var altoCabecera = cabecera ? cabecera.getBoundingClientRect().height : 0;
+        var arriba = raiz.getBoundingClientRect().top + window.scrollY - altoCabecera - 16;
         window.scrollTo({ top: Math.max(arriba, 0), behavior: 'smooth' });
         secs[i].focus({ preventScroll: true });
       }
@@ -233,7 +241,10 @@ const destinoFinal = siguiente
      y graficos. Antes el contenedor media 1145px y los parrafos paraban en
      699 (la medida de 62ch), asi que sobraban 446px a la derecha mientras los
      avisos si llegaban al borde. Eso es lo que se leia como una pared. */
-  .mod { min-width: 0; max-width: 48rem; margin-inline: auto; }
+  /* Un poco mas arriba que el resto de paginas: con el titulo centrado y
+     grande, el aire por defecto de .contenido se notaba de sobra. Solo aqui,
+     no se toca el relleno compartido de Marco.astro. */
+  .mod { min-width: 0; max-width: 48rem; margin-inline: auto; margin-top: calc(var(--e-6) * -1); }
 
   /* ── portada del modulo ────────────────────────────────────────────── */
   /* El titulo principal lleva el tono del modulo (el mismo cian→azul del
