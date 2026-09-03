@@ -37,12 +37,10 @@ const GRUPOS = [
     items: [{ icono: 'house', href: '/', texto: 'Inicio', tono: 'var(--acento)' }],
   },
   {
-    // El tono del icono avanza del cian al azul a lo largo de los ocho
-    // modulos. No codifica nada nuevo: acompana al numero, que ya dice el
-    // orden. Los dos colores son los del estandar; no se inventa ninguno.
-    items: MODULOS.map((m, i) => ({
-      n: m.n, icono: m.icono, href: '/' + m.slug, texto: m.corto,
-      tono: `color-mix(in srgb, var(--info) ${Math.round(100 - (i * 100) / (MODULOS.length - 1))}%, var(--acento))`,
+    // El tono sale de modulos.mjs, que es donde se calcula una sola vez, para
+    // que el menu y el titulo de los apartados usen exactamente el mismo.
+    items: MODULOS.map((m) => ({
+      n: m.n, icono: m.icono, href: '/' + m.slug, texto: m.corto, tono: m.tono,
     })),
   },
   {

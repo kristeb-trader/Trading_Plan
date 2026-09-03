@@ -40,7 +40,7 @@ const destinoFinal = siguiente
 ---
 
 <Marco titulo={m.titulo}>
-  <div class="mod" data-mod>
+  <div class="mod" data-mod style={`--tono-mod: ${m.tono}`}>
     <header class="mod-cab">
       <p class="mod-n">
         <span class="mn-ic"><Icono nombre={m.icono} /></span>
@@ -222,7 +222,11 @@ const destinoFinal = siguiente
 </script>
 
 <style>
-  .mod { min-width: 0; }
+  /* Una sola columna de lectura para todo el modulo: texto, avisos, tarjetas
+     y graficos. Antes el contenedor media 1145px y los parrafos paraban en
+     699 (la medida de 62ch), asi que sobraban 446px a la derecha mientras los
+     avisos si llegaban al borde. Eso es lo que se leia como una pared. */
+  .mod { min-width: 0; max-width: 48rem; margin-inline: auto; }
 
   /* ── portada del modulo ────────────────────────────────────────────── */
   .mod-cab { margin-bottom: var(--e-6); }

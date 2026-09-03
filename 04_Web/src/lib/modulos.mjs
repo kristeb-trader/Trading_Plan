@@ -77,6 +77,19 @@ export const MODULOS = [
   },
 ];
 
+/**
+ * El tono de cada modulo: avanza del cian al azul a lo largo de los ocho.
+ * No codifica nada nuevo — acompana al numero, que ya dice el orden. Los dos
+ * colores salen del estandar del operador; no se inventa ninguno.
+ *
+ * Se calcula aqui y no en cada sitio para que el menu lateral y el titulo de
+ * los apartados usen exactamente el mismo, siempre.
+ */
+for (const [i, m] of MODULOS.entries()) {
+  const cian = Math.round(100 - (i * 100) / (MODULOS.length - 1));
+  m.tono = `color-mix(in srgb, var(--info) ${cian}%, var(--acento))`;
+}
+
 /** El modulo por su direccion, para que la pagina no repita sus propios datos. */
 export function modulo(slug) {
   const m = MODULOS.find((x) => x.slug === slug);
