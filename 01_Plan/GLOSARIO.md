@@ -425,12 +425,14 @@ Como el inicio es fijo y el fin se mueve, **la ventana cambia de duración dos v
 
 **El umbral de volumen solo existe en premercado.** Confirmado por el operador el 24/08/2026.
 
-| Momento | Vela de 3.000 contratos en NQ |
+| Momento | Vela de 8.000 contratos en MNQ |
 |---|---|
 | **Antes** de la apertura americana | → **marca zona** por `R-20` |
 | **Después** de la apertura americana | → **no marca nada.** Dentro de sesión solo se marcan zonas por estructura (`R-12`) |
 
-> 📌 **Por qué el corte no es arbitrario.** El mismo número significa cosas distintas a cada lado de la apertura: en premercado 2.000 contratos en una vela de 1 minuto del NQ es un evento raro; en sesión es volumen corriente. Sin el corte, el gráfico se llenaría de zonas.
+> 📌 **Por qué el corte no es arbitrario.** El mismo número significa cosas distintas a cada lado de la apertura: en premercado 6.000 contratos en una vela de 1 minuto del MNQ es un evento raro; en sesión es volumen corriente. Sin el corte, el gráfico se llenaría de zonas.
+>
+> *(Modificado el 03/09/2026: el ejemplo usaba NQ porque el método analizaba en NQ hasta esa fecha — ver R-01. Ahora el análisis es en MNQ.)*
 
 ### Una vez marcada, es una zona normal
 

@@ -49,25 +49,22 @@ Se mira Forex Factory, y solo Forex Factory. Un único calendario evita el probl
 
 <!-- id: instrumento -->
 
-### Los dos gráficos
+### El gráfico
 
-Se trabaja con dos instrumentos a la vez, y cada uno tiene un papel distinto. No son intercambiables.
-
-> **[FICHA]**
-> #### Para mirar
-> Aquí se marcan las zonas y se lee el volumen. Es el gráfico del análisis.
+Se trabaja únicamente con el micro Nasdaq, **MNQ**. Aquí se marcan las zonas, se lee el volumen, se leen los niveles de entrada, stop y objetivo, y desde aquí se manda la orden.
 
 > **[FICHA]**
-> #### Para operar
-> Aquí se leen los niveles reales de entrada, stop y objetivo, y desde aquí se manda la orden. La ejecución es siempre en MNQ.
+> ##### Para todo
+> Análisis y ejecución van en el mismo gráfico. No hay un segundo instrumento de referencia.
 
-Los dos van a **un minuto**. No hay ningún otro marco temporal en el método: ni cinco minutos para «ver el contexto», ni diario para «ver la tendencia».
+Va a **un minuto**. No hay ningún otro marco temporal en el método: ni cinco minutos para «ver el contexto», ni diario para «ver la tendencia».
 
 - **Indicadores en pantalla** — **Uno solo: Volume Up Down.** Nada más
 - **Prohibidos** — Medias, osciladores, VWAP, perfil de volumen
-- **Qué vale un punto** — MNQ: $2,00 · NQ: $20,00
-- **Qué vale un tick** — 0,25 puntos · MNQ: $0,50
-- **Diferencia entre los dos** — Hasta 3 ticks. Por eso los niveles se leen en MNQ y no se copian de NQ
+- **Qué vale un punto** — $2,00
+- **Qué vale un tick** — 0,25 puntos · $0,50
+
+> 🖼 **Gráfico.** Texto alternativo: El gráfico de MNQ a un minuto, con el indicador de volumen
 
 ---
 
@@ -97,7 +94,7 @@ Ese valor por defecto no es el stop de la operación: es lo que protege la posic
 
 ### Zonas por volumen
 
-Si en el premercado se forma una vela con un volumen por encima del umbral (en MNQ, > 6.000 contratos; en NQ, > 2.000 contratos), se debe marcar una zona. Es la única manera de que nazca una zona sin que haya habido un tramo y su descanso.
+Si en el premercado se forma una vela con un volumen por encima del umbral (> 6.000 contratos), se debe marcar una zona. Es la única manera de que nazca una zona sin que haya habido un tramo y su descanso.
 
 > 🖼 **Gráfico.** Texto alternativo: Vela de premercado con volumen por encima del umbral y la zona que deja
 > Pie: Una vela de premercado por encima del umbral y la zona que deja. La zona se comporta después como cualquier otra.
@@ -107,8 +104,7 @@ Si en el premercado se forma una vela con un volumen por encima del umbral (en M
 3. **El color de la vela decide el tipo:** vela alcista deja resistencia sobre su mecha superior; vela bajista deja soporte sobre su mecha inferior.
 4. **Los límites son los de siempre:** del borde del cuerpo a la punta de la mecha.
 
-- **Umbral en NQ** — **> 2.000 contratos** en una vela de un minuto
-- **Umbral en MNQ** — **> 6.000 contratos**
+- **Umbral** — **> 6.000 contratos** en una vela de un minuto
 - **Desde cuándo** — 19:00 hora Colombia (apertura de Tokio)
 - **Hasta cuándo** — La apertura del mercado americano
 

@@ -686,3 +686,39 @@ el filtro del portal.
 
 **No se renumera ni se corrige nada de `01_Plan\`.** El portal cuenta el contenido real y
 enseña el número real.
+
+## 03/09/2026 · primera modificación de una regla tras el cierre
+
+**La fase 1 está cerrada desde el 01/09/2026, y esto es una excepción deliberada, no una
+reapertura.** El operador, revisando el texto de la portada del portal, decidió que el método
+deja de usar NQ como gráfico de análisis: **de dos instrumentos a la vez pasa a uno solo,
+MNQ**, para todo — marcar zonas, leer volumen, leer los niveles y ejecutar. Confirmación
+explícita del operador, pedida antes de tocar nada: *«Ahora es solo MNQ [...] ya no se usa NQ
+para nada»*.
+
+**Tocado en `01_Plan\`, con nota fechada en cada sitio, sin borrar el texto anterior:**
+
+| Documento | Qué cambió |
+|---|---|
+| `reglas.json` | `R-01` reescrita: un único gráfico de MNQ, no dos. `R-09` (lectura de volumen) pasa de NQ a MNQ. `R-20` (zonas por volumen en premercado) pierde el umbral alternativo en NQ |
+| `PARAMETROS.md` | `UMBRAL_VOL_NQ` marcado **deprecado**, no borrado — ya no lo usa ninguna regla |
+| `GLOSARIO.md` | el ejemplo del umbral de premercado pasa de «3.000 contratos en NQ» a «8.000 en MNQ», consistente con el nuevo umbral único |
+| `CHECKLIST_DIARIA.md` | «gráficos abiertos: NQ y MNQ» → «gráfico abierto: MNQ». El umbral de la fila de premercado pasa a MNQ |
+
+**🔴 Sin tocar, y queda contradiciendo lo anterior — pendiente de decisión del operador:**
+`TRADING_PLAN_CHAUMER.md` sigue describiendo el método de dos gráficos en su sección
+«R-01 · Instrumento, gráficos y timeframe» (línea 358 en adelante), con un diagrama Mermaid
+que referencia el gráfico de MNQ para leer el nivel de entrada dentro de ese flujo de dos
+instrumentos. Es un documento largo con su propio historial de versiones (`v2.0` al cerrar);
+reescribirlo no es un cambio de una línea y no se ha tocado sin que el operador diga cómo
+quiere manejar la versión.
+
+**Tampoco se ha tocado:** `05_Backtesting\datos\NQ 09-26.Last.txt` es la única fuente de datos
+de mercado del proyecto, y es de NQ. Si el análisis pasa a MNQ, hay que decidir si esos datos
+siguen sirviendo (los dos índices se mueven casi igual — hasta 3 ticks de diferencia, según
+`R-01` antes de esta edición) o si hace falta conseguir datos de MNQ. No se ha tocado
+`05_Backtesting\` ni se ha traído ningún dato nuevo: es una decisión del operador, no del
+portal.
+
+**El portal (`04_Web\src\pages\premercado.astro`)** ya refleja el cambio: el apartado «Los dos
+gráficos» pasa a llamarse «El gráfico», con el texto y la ficha de datos en MNQ único.

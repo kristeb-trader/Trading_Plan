@@ -2,16 +2,10 @@
   {
     "id": "R-01",
     "categoria": "contexto",
-    "enunciado": "Analiza y marca zonas sobre NQ; lee el trigger, el stop y el target sobre MNQ; ejecuta exclusivamente en MNQ.",
+    "enunciado": "Analiza, marca zonas, lee volumen, lee el trigger, el stop y el target, y ejecuta: todo sobre un único gráfico de MNQ.",
     "condiciones": [
       {
-        "variable": "instrumento_analisis",
-        "operador": "=",
-        "valor": "NQ",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "instrumento_ejecucion",
+        "variable": "instrumento_unico",
         "operador": "=",
         "valor": "MNQ",
         "timeframe": "1m"
@@ -47,34 +41,17 @@
         "timeframe": "-"
       },
       {
-        "variable": "valor_punto_NQ",
-        "operador": "=",
-        "valor": "20.00 USD",
-        "timeframe": "-"
-      },
-      {
-        "variable": "valor_tick_NQ",
-        "operador": "=",
-        "valor": "0.25 pts = 5.00 USD",
-        "timeframe": "-"
-      },
-      {
-        "variable": "desfase_observado_NQ_MNQ",
-        "operador": "<=",
-        "valor": "3 ticks",
-        "timeframe": "1m"
-      },
-      {
         "variable": "timeframes_que_deciden",
         "operador": "=",
         "valor": "1m únicamente",
         "timeframe": "1m"
       }
     ],
-    "accion": "Mantener dos gráficos de 1 minuto abiertos. Marcar zonas y leer volumen en NQ. Leer máximo/mínimo real de la vela en MNQ y aplicar el desplazamiento de 1 tick sobre ese valor. Enviar la orden desde el gráfico de MNQ.",
+    "accion": "Mantener un único gráfico de 1 minuto abierto, en MNQ. Marcar zonas, leer volumen, leer el trigger, el stop y el target, y enviar la orden, todo desde ese mismo gráfico.",
     "excepciones": [],
     "prioridad": 1,
-    "estado": "confirmada"
+    "estado": "confirmada",
+    "nota": "Modificada el 03/09/2026, con el visto bueno explícito del operador: el método deja de usar NQ como gráfico de análisis. Hasta esa fecha decía: «Analiza y marca zonas sobre NQ; lee el trigger, el stop y el target sobre MNQ; ejecuta exclusivamente en MNQ», con dos gráficos abiertos a la vez. El operador: «Ahora es solo MNQ [...] ya no se usa NQ para nada»."
   },
   {
     "id": "R-02",
@@ -357,7 +334,7 @@
       {
         "variable": "grafico_de_lectura_de_volumen",
         "operador": "=",
-        "valor": "NQ",
+        "valor": "MNQ",
         "timeframe": "1m"
       },
       {
@@ -370,7 +347,8 @@
     "accion": "No añadir ninguna herramienta al gráfico sin revisar este plan.",
     "excepciones": [],
     "prioridad": 3,
-    "estado": "confirmada"
+    "estado": "confirmada",
+    "nota": "Modificada el 03/09/2026 junto con R-01: el volumen se lee en MNQ, no en NQ. Ver la nota de R-01."
   },
   {
     "id": "R-10",
@@ -981,12 +959,6 @@
         "timeframe": "1m"
       },
       {
-        "variable": "umbral_NQ",
-        "operador": ">",
-        "valor": "2000 contratos",
-        "timeframe": "1m"
-      },
-      {
         "variable": "umbral_MNQ",
         "operador": ">",
         "valor": "6000 contratos",
@@ -1041,7 +1013,7 @@
     ],
     "prioridad": 2,
     "estado": "confirmada",
-    "nota": "Única forma de que nazca una zona sin corrida ni retroceso. A diferencia de R-12, aquí el COLOR de la vela decide si es soporte o resistencia. El corte en la apertura no es arbitrario: 2000 contratos en 1 min del NQ es raro en premercado y corriente en sesión. Desviación D-09: Parámetros Chaumer dice 'solo marcamos los extremos'; el operador marca todas, y R-18 fusiona las que se tocan. Verificado con datos el 10/07/2026: escaneando desde 15:00 salen 3 velas sobre umbral; desde 19:00 sale 1, la que el operador marco. Las 2 extra son la subasta de cierre del efectivo del día anterior."
+    "nota": "Única forma de que nazca una zona sin corrida ni retroceso. A diferencia de R-12, aquí el COLOR de la vela decide si es soporte o resistencia. El corte en la apertura no es arbitrario: 6000 contratos en 1 min del MNQ es raro en premercado y corriente en sesión. Desviación D-09: Parámetros Chaumer dice 'solo marcamos los extremos'; el operador marca todas, y R-18 fusiona las que se tocan. Verificado con datos el 10/07/2026: escaneando desde 15:00 salen 3 velas sobre umbral; desde 19:00 sale 1, la que el operador marco. Las 2 extra son la subasta de cierre del efectivo del día anterior. Modificada el 03/09/2026: se quita el umbral alternativo en NQ (> 2000 contratos), que existía porque el método analizaba en NQ (R-01, hasta esa fecha). Al pasar el análisis a MNQ, solo queda un umbral."
   },
   {
     "id": "R-21",

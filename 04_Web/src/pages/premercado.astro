@@ -17,7 +17,7 @@ const v = (n, alt) => par.get(n)?.valor ?? alt;
 const SECCIONES = [
   { id: 'estado', t: 'Cómo estoy hoy' },
   { id: 'noticias', t: 'El calendario' },
-  { id: 'instrumento', t: 'Los dos gráficos' },
+  { id: 'instrumento', t: 'El gráfico' },
   { id: 'atm', t: 'La ATM' },
   { id: 'zonas-vol', t: 'Zonas por volumen' },
 ];
@@ -72,43 +72,42 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="instrumento">
-    <h2>Los dos gráficos <span class="solo-tecnico mono ref-cod">R-01 · R-09</span></h2>
-    <p>
-      Se trabaja con dos instrumentos a la vez, y cada uno tiene un papel
-      distinto. No son intercambiables.
-    </p>
+    <h2>El gráfico <span class="solo-tecnico mono ref-cod">R-01 · R-09</span></h2>
+    <div class="ap-dividido">
+      <div class="ap-texto">
+        <p>
+          Se trabaja únicamente con el micro Nasdaq, <strong>MNQ</strong>. Aquí
+          se marcan las zonas, se lee el volumen, se leen los niveles de
+          entrada, stop y objetivo, y desde aquí se manda la orden.
+        </p>
 
-    <div class="rejilla dos">
-      <div class="tarj">
-        <span class="tarj-n">NQ</span>
-        <h3>Para mirar</h3>
-        <p>Aquí se marcan las zonas y se lee el volumen. Es el gráfico del análisis.</p>
+        <div class="tarj">
+          <h4>Para todo</h4>
+          <p>Análisis y ejecución van en el mismo gráfico. No hay un segundo instrumento de referencia.</p>
+        </div>
+
+        <p>
+          Va a <strong>un minuto</strong>. No hay ningún otro marco temporal en
+          el método: ni cinco minutos para «ver el contexto», ni diario para
+          «ver la tendencia».
+        </p>
+
+        <dl class="datos">
+          <dt>Indicadores en pantalla</dt>
+          <dd><strong>Uno solo: Volume Up Down.</strong> Nada más</dd>
+          <dt>Prohibidos</dt>
+          <dd>Medias, osciladores, VWAP, perfil de volumen</dd>
+          <dt>Qué vale un punto</dt>
+          <dd><span class="cifra-en">$2,00</span></dd>
+          <dt>Qué vale un tick</dt>
+          <dd><span class="cifra-en">0,25</span> puntos · <span class="cifra-en">$0,50</span></dd>
+        </dl>
       </div>
-      <div class="tarj">
-        <span class="tarj-n">MNQ</span>
-        <h3>Para operar</h3>
-        <p>Aquí se leen los niveles reales de entrada, stop y objetivo, y desde aquí se manda la orden. La ejecución es siempre en MNQ.</p>
-      </div>
+      <figure class="gr">
+        <img src="/screenshots/premercado/grafico-mnq.jpg" width="1171" height="912" loading="lazy"
+             alt="El gráfico de MNQ a un minuto, con el indicador de volumen" />
+      </figure>
     </div>
-
-    <p>
-      Los dos van a <strong>un minuto</strong>. No hay ningún otro marco
-      temporal en el método: ni cinco minutos para «ver el contexto», ni
-      diario para «ver la tendencia».
-    </p>
-
-    <dl class="datos">
-      <dt>Indicadores en pantalla</dt>
-      <dd><strong>Uno solo: Volume Up Down.</strong> Nada más</dd>
-      <dt>Prohibidos</dt>
-      <dd>Medias, osciladores, VWAP, perfil de volumen</dd>
-      <dt>Qué vale un punto</dt>
-      <dd>MNQ: <span class="cifra-en">$2,00</span> · NQ: <span class="cifra-en">$20,00</span></dd>
-      <dt>Qué vale un tick</dt>
-      <dd><span class="cifra-en">0,25</span> puntos · MNQ: <span class="cifra-en">$0,50</span></dd>
-      <dt>Diferencia entre los dos</dt>
-      <dd>Hasta <span class="cifra-en">3</span> ticks. Por eso los niveles se leen en MNQ y no se copian de NQ</dd>
-    </dl>
   </section>
 
   <section class="ap" id="atm">
@@ -153,10 +152,9 @@ const SECCIONES = [
     <h2>Zonas por volumen <span class="solo-tecnico mono ref-cod">R-20</span></h2>
     <p>
       Si en el premercado se forma una vela con un volumen por encima del
-      umbral (en MNQ, {v('UMBRAL_VOL_MNQ', '> 6.000 contratos')}; en NQ,{' '}
-      {v('UMBRAL_VOL_NQ', '> 2.000 contratos')}), se debe marcar una zona. Es
-      la única manera de que nazca una zona sin que haya habido un tramo y su
-      descanso.
+      umbral ({v('UMBRAL_VOL_MNQ', '> 6.000 contratos')}), se debe marcar una
+      zona. Es la única manera de que nazca una zona sin que haya habido un
+      tramo y su descanso.
     </p>
 
     <figure class="gr">
@@ -172,10 +170,8 @@ const SECCIONES = [
     </ol>
 
     <dl class="datos">
-      <dt>Umbral en NQ</dt>
-      <dd><strong>{v('UMBRAL_VOL_NQ', '> 2.000 contratos')}</strong> en una vela de un minuto</dd>
-      <dt>Umbral en MNQ</dt>
-      <dd><strong>{v('UMBRAL_VOL_MNQ', '> 6.000 contratos')}</strong></dd>
+      <dt>Umbral</dt>
+      <dd><strong>{v('UMBRAL_VOL_MNQ', '> 6.000 contratos')}</strong> en una vela de un minuto</dd>
       <dt>Desde cuándo</dt>
       <dd>{v('PREMERCADO_INICIO', '19:00 hora Colombia')}</dd>
       <dt>Hasta cuándo</dt>
