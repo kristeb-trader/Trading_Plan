@@ -22,7 +22,9 @@ La primera pregunta del día no es sobre el mercado. Es sobre uno mismo: ¿estoy
 > **Si la respuesta es no, no se opera.** El día se cierra ahí, sin abrir la plataforma.
 > Es la única condición del método que no tiene una medida. No la tiene a propósito: la decide el operador y nadie más la puede comprobar por él.
 
-Esta pregunta se contesta **antes de abrir NinjaTrader**. Con el gráfico delante ya no es la misma pregunta.
+Esta pregunta se contesta **antes de abrir NinjaTrader**.
+
+> 🖼 **Gráfico.** Texto alternativo: Anotación del operador sobre su estado antes de abrir la plataforma
 
 ---
 
@@ -32,18 +34,16 @@ Esta pregunta se contesta **antes de abrir NinjaTrader**. Con el gráfico delant
 
 Se mira Forex Factory, y solo Forex Factory. Un único calendario evita el problema de dos fuentes que no siempre coinciden.
 
+> 🖼 **Gráfico.** Texto alternativo: El calendario de Forex Factory con un evento de la Fed en rojo
+
 #### Qué se anota
 
 1. **¿Hay hoy un evento de la Fed en rojo?** Si lo hay, el día entero cambia de reglas: ver abajo.
-2. **La hora exacta de cada noticia roja.** Naranja y amarillo no cuentan, no bloquean nada.
-3. **La ventana de cada una:** cinco minutos antes y cinco después. Once minutos en total.
-4. **Cuáles caen dentro del horario de operativa.** Las que caen fuera no molestan.
+2. **La hora exacta de cada noticia roja.** Solo aplica el rojo: naranja y amarillo no cuentan, no bloquean nada.
+3. **La ventana de cada una:** no se opera cinco minutos antes y cinco después.
 
 > **[REGLA DURA]**
 > **Día con la Fed en rojo:** ese día no se opera el setup de continuación. Solo se permite el Reingreso, con todas sus condiciones normales.
-> El veto dura **el día entero**, no solo la hora del anuncio.
-
-El nivel «rojo» lo decide el icono de Forex Factory, no el criterio propio. Si está en rojo, cuenta; si no, no.
 
 ---
 
@@ -77,8 +77,10 @@ Los dos van a **un minuto**. No hay ningún otro marco temporal en el método: n
 
 La estrategia ATM de NinjaTrader se deja configurada antes de empezar y no se toca durante la sesión.
 
+> 🖼 **Gráfico.** Texto alternativo: La estrategia ATM K1 configurada en NinjaTrader
+
 - **Cuál** — **K1**
-- **Contratos** — **1 MNQ MNQ**
+- **Contratos** — **1 MNQ**
 - **Auto Breakeven** — **Apagado**
 - **Auto Trail** — **Apagado**
 - **Stop y objetivo por defecto** — **320 ticks** = 80 puntos = $160
@@ -86,7 +88,7 @@ La estrategia ATM de NinjaTrader se deja configurada antes de empezar y no se to
 Ese valor por defecto no es el stop de la operación: es lo que protege la posición **entre el llenado y el ajuste a mano**, que son unos segundos. El stop de verdad se coloca después, y sale de la estructura del mercado.
 
 > **[REGLA DURA]**
-> **El valor por defecto es igual al tope de stop a propósito.**Si fuera más ajustado, el mercado podría sacar de una operación todavía viva antes de haber movido el stop a su sitio.
+> **El valor por defecto es igual al tope de stop a propósito.**
 > Si algún día cambia el tope, hay que cambiar la ATM con él.
 
 ---
@@ -95,7 +97,7 @@ Ese valor por defecto no es el stop de la operación: es lo que protege la posic
 
 ### Zonas por volumen
 
-Antes de la apertura hay una forma de marcar zonas que no existe durante la sesión: por volumen. Es la única manera de que nazca una zona sin que haya habido un tramo y su descanso.
+Si en el premercado se forma una vela con un volumen por encima del umbral (en MNQ, > 6.000 contratos; en NQ, > 2.000 contratos), se debe marcar una zona. Es la única manera de que nazca una zona sin que haya habido un tramo y su descanso.
 
 > 🖼 **Gráfico.** Texto alternativo: Vela de premercado con volumen por encima del umbral y la zona que deja
 > Pie: Una vela de premercado por encima del umbral y la zona que deja. La zona se comporta después como cualquier otra.
@@ -112,6 +114,5 @@ Antes de la apertura hay una forma de marcar zonas que no existe durante la sesi
 
 > **[REGLA DURA]**
 > **En la apertura, la regla del volumen se apaga.** A partir de ahí las zonas solo nacen de la estructura, por alto que sea el volumen de una vela.
-> No es un corte arbitrario: dos mil contratos en un minuto es raro de madrugada y completamente normal en sesión.
 
 Estas zonas se comportan luego **igual que cualquier otra**: se rompen igual, se estiran igual, caducan igual y sirven de borde para medir las que vengan después.

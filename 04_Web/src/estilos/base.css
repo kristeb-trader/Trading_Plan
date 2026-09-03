@@ -349,6 +349,24 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
 .ap > p { color: var(--texto-2); }
 .ap > p:first-of-type { font-size: var(--t-5); color: var(--texto-2); }
 
+/* Los párrafos de un apartado llenan su columna de lado a lado y se
+   justifican, como pidió el operador («márgenes tipo Word»). Antes cada <p>
+   tope aba en 62ch (699px) dentro de una caja de 768: sobraban 69px a la
+   derecha, y como el título va centrado, ese margen se leía como un corte.
+   Con hyphens:auto (el <html lang="es"> ya está puesto en Marco.astro) el
+   justificado no deja ríos de espacio en blanco. Las listas y fichas de
+   datos se quedan alineadas a la izquierda: justificar líneas cortas se ve
+   peor, no mejor. */
+.ap p {
+  max-width: none;
+  text-align: justify;
+  text-align-last: left;
+  hyphens: auto;
+}
+/* La última línea de un párrafo no se estira: es la regla de siempre en
+   texto justificado, y sin ella la última línea corta queda con huecos
+   enormes entre dos o tres palabras. */
+
 /* Gráfico con su pie.
    Con un apartado por pantalla el gráfico deja de ser un adorno al margen y
    pasa a ser el centro del apartado: marco de cristal, halo azul y el pie
@@ -371,6 +389,24 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
 .gr figcaption {
   margin: 0;
   padding: var(--e-3) var(--e-4) var(--e-2);
+}
+
+/* Apartado partido en dos: texto a la izquierda, una imagen de referencia a
+   la derecha — una captura real de la plataforma, no un gráfico de mercado.
+   Se usa cuando el apartado necesita enseñar una pantalla (la ATM, el
+   calendario) sin cortar la lectura con una figura a todo el ancho. */
+.ap-dividido {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14rem;
+  gap: var(--e-6);
+  align-items: start;
+}
+.ap-dividido .ap-texto { min-width: 0; }
+.ap-dividido .gr { margin-top: 0; }
+
+@media (max-width: 700px) {
+  .ap-dividido { grid-template-columns: 1fr; }
+  .ap-dividido .gr { max-width: 20rem; margin-inline: auto; }
 }
 
 /* Ficha de datos: lo medible de un apartado, en dos columnas. */

@@ -22,6 +22,14 @@ Si de verdad quieres cambiar un valor —el tope de stop, el umbral de volumen,
 una hora— **dímelo aparte**, porque eso no es corregir un texto: es cambiar el
 plan, y se cambia en `01_Plan\`.
 
+## Tres marcadores que puedes usar
+
+| Marcador | Para qué |
+|---|---|
+| `<!-- id: … -->` | ya viene puesto. **No lo toques**: dice a qué bloque de la página vuelve el texto |
+| `[IMAGEN: descripción]` | pides una imagen nueva ahí. Escríbelo donde quieras que aparezca, y cuando me avises adjúntame también el archivo (PNG o JPG) con un nombre que se entienda. Si son varias, numéralas: `[IMAGEN 1: ...]`, `[IMAGEN 2: ...]` |
+| `[NOTA: comentario]` | una anotación para mí — dudas, algo que revisar, contexto. **No se sube a la página**: la leo y la tengo en cuenta, pero nunca se publica como si fuera texto de Alfredo |
+
 ## Qué NO está aquí, y por qué
 
 | | |

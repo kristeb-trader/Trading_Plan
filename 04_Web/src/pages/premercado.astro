@@ -26,18 +26,25 @@ const SECCIONES = [
 <Modulo slug="premercado" secciones={SECCIONES}>
   <section class="ap" id="estado">
     <h2>Cómo estoy hoy <span class="solo-tecnico mono ref-cod">R-28</span></h2>
-    <p>
-      La primera pregunta del día no es sobre el mercado. Es sobre uno mismo:
-      ¿estoy bien, física y mentalmente?
-    </p>
-    <div class="veto">
-      <p><strong>Si la respuesta es no, no se opera.</strong> El día se cierra ahí, sin abrir la plataforma.</p>
-      <p>Es la única condición del método que no tiene una medida. No la tiene a propósito: la decide el operador y nadie más la puede comprobar por él.</p>
+    <div class="ap-dividido">
+      <div class="ap-texto">
+        <p>
+          La primera pregunta del día no es sobre el mercado. Es sobre uno mismo:
+          ¿estoy bien, física y mentalmente?
+        </p>
+        <div class="veto">
+          <p><strong>Si la respuesta es no, no se opera.</strong> El día se cierra ahí, sin abrir la plataforma.</p>
+          <p>Es la única condición del método que no tiene una medida. No la tiene a propósito: la decide el operador y nadie más la puede comprobar por él.</p>
+        </div>
+        <p>
+          Esta pregunta se contesta <strong>antes de abrir NinjaTrader</strong>.
+        </p>
+      </div>
+      <figure class="gr">
+        <img src="/screenshots/premercado/como-estoy-hoy.jpg" width="848" height="1264" loading="lazy"
+             alt="Anotación del operador sobre su estado antes de abrir la plataforma" />
+      </figure>
     </div>
-    <p>
-      Esta pregunta se contesta <strong>antes de abrir NinjaTrader</strong>. Con
-      el gráfico delante ya no es la misma pregunta.
-    </p>
   </section>
 
   <section class="ap" id="noticias">
@@ -47,23 +54,21 @@ const SECCIONES = [
       el problema de dos fuentes que no siempre coinciden.
     </p>
 
+    <figure class="gr">
+      <img src="/screenshots/premercado/calendario-fomc.jpg" width="1737" height="608" loading="lazy"
+           alt="El calendario de Forex Factory con un evento de la Fed en rojo" />
+    </figure>
+
     <h3>Qué se anota</h3>
     <ol class="secuencia">
       <li><strong>¿Hay hoy un evento de la Fed en rojo?</strong> Si lo hay, el día entero cambia de reglas: ver abajo.</li>
-      <li><strong>La hora exacta de cada noticia roja.</strong> Naranja y amarillo no cuentan, no bloquean nada.</li>
-      <li><strong>La ventana de cada una:</strong> cinco minutos antes y cinco después. Once minutos en total.</li>
-      <li><strong>Cuáles caen dentro del horario de operativa.</strong> Las que caen fuera no molestan.</li>
+      <li><strong>La hora exacta de cada noticia roja.</strong> Solo aplica el rojo: naranja y amarillo no cuentan, no bloquean nada.</li>
+      <li><strong>La ventana de cada una:</strong> no se opera cinco minutos antes y cinco después.</li>
     </ol>
 
     <div class="duro">
       <p><strong>Día con la Fed en rojo:</strong> ese día no se opera el setup de continuación. Solo se permite el Reingreso, con todas sus condiciones normales.</p>
-      <p>El veto dura <strong>el día entero</strong>, no solo la hora del anuncio.</p>
     </div>
-
-    <p>
-      El nivel «rojo» lo decide el icono de Forex Factory, no el criterio
-      propio. Si está en rojo, cuenta; si no, no.
-    </p>
   </section>
 
   <section class="ap" id="instrumento">
@@ -113,11 +118,16 @@ const SECCIONES = [
       no se toca durante la sesión.
     </p>
 
+    <figure class="gr">
+      <img src="/screenshots/premercado/atm.jpg" width="1331" height="784" loading="lazy"
+           alt="La estrategia ATM K1 configurada en NinjaTrader" />
+    </figure>
+
     <dl class="datos">
       <dt>Cuál</dt>
       <dd><strong>K1</strong></dd>
       <dt>Contratos</dt>
-      <dd><strong>{v('CONTRATOS', '1')} MNQ</strong></dd>
+      <dd><strong>{v('CONTRATOS', '1 MNQ')}</strong></dd>
       <dt>Auto Breakeven</dt>
       <dd><strong>Apagado</strong></dd>
       <dt>Auto Trail</dt>
@@ -134,11 +144,7 @@ const SECCIONES = [
     </p>
 
     <div class="duro">
-      <p>
-        <strong>El valor por defecto es igual al tope de stop a propósito.</strong>
-        Si fuera más ajustado, el mercado podría sacar de una operación
-        todavía viva antes de haber movido el stop a su sitio.
-      </p>
+      <p><strong>El valor por defecto es igual al tope de stop a propósito.</strong></p>
       <p>Si algún día cambia el tope, hay que cambiar la ATM con él.</p>
     </div>
   </section>
@@ -146,9 +152,11 @@ const SECCIONES = [
   <section class="ap" id="zonas-vol">
     <h2>Zonas por volumen <span class="solo-tecnico mono ref-cod">R-20</span></h2>
     <p>
-      Antes de la apertura hay una forma de marcar zonas que no existe durante
-      la sesión: por volumen. Es la única manera de que nazca una zona sin que
-      haya habido un tramo y su descanso.
+      Si en el premercado se forma una vela con un volumen por encima del
+      umbral (en MNQ, {v('UMBRAL_VOL_MNQ', '> 6.000 contratos')}; en NQ,{' '}
+      {v('UMBRAL_VOL_NQ', '> 2.000 contratos')}), se debe marcar una zona. Es
+      la única manera de que nazca una zona sin que haya habido un tramo y su
+      descanso.
     </p>
 
     <figure class="gr">
@@ -179,10 +187,6 @@ const SECCIONES = [
         <strong>En la apertura, la regla del volumen se apaga.</strong> A partir
         de ahí las zonas solo nacen de la estructura, por alto que sea el
         volumen de una vela.
-      </p>
-      <p>
-        No es un corte arbitrario: dos mil contratos en un minuto es raro de
-        madrugada y completamente normal en sesión.
       </p>
     </div>
 

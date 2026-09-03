@@ -143,6 +143,18 @@ const destinoFinal = siguiente
 
       secs.forEach(function (s, j) { s.hidden = j !== i; });
 
+      // Las imagenes con loading="lazy" de un apartado que arranca oculto
+      // nunca cargan solas: el navegador calcula si estan lejos del viewport
+      // ANTES de que este script las oculte, y al mostrarlas despues no
+      // vuelve a intentarlo. Se fuerza la carga la primera vez que su
+      // apartado se ve.
+      secs[i].querySelectorAll('img[loading="lazy"]').forEach(function (img) {
+        if (!img.complete || img.naturalWidth === 0) {
+          img.loading = 'eager';
+          img.src = img.src;
+        }
+      });
+
       items.forEach(function (li, j) {
         li.classList.toggle('hecho', j < i);
         li.classList.toggle('aqui', j === i);

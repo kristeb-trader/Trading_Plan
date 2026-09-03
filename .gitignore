@@ -44,3 +44,10 @@ __pycache__/
 
 # informes de auditoria de diseno: se regeneran ejecutando la revision
 .impeccable/
+
+# imagenes que caen en textos/ al corregir contenido: se copian a public/
+# con su nombre y quedan fuera de git; textos/ es texto, no assets
+04_Web/textos/*.jfif
+04_Web/textos/*.jpg
+04_Web/textos/*.jpeg
+04_Web/textos/*.png

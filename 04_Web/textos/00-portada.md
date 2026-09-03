@@ -6,7 +6,7 @@
 
 <!-- id: cabecera -->
 
-## La metodología de Alfredo Chaumer, explicada.
+## Plan de trading enfocado en la metodología de Alfredo Chaumer.
 
 Un método de trading para NQ y MNQ, traducido a reglas que se pueden medir, seguir y operar.
 
