@@ -165,6 +165,47 @@ Alfredo Chaumer,» y dejaba un «de» colgando. Ahora son tres líneas limpias.
 estaba bien. Es el mismo caso ya anotado: parar el servidor y borrar
  y . **Si algo no se refleja, empieza por ahí.**
 
+### 2026-09-02 · portada nueva: la propuesta «Terminal»
+
+El operador rechazó el diseño de la portada. En vez de seguir parcheando se
+montaron **tres propuestas completas** —Editorial, Terminal y Bento— en sus
+propias direcciones, con contenido real y sin tocar la portada de entonces.
+Las direcciones salieron de la skill **ui-ux-pro-max** que él mismo instaló,
+consultada con tres ajustes distintos de variación y densidad.
+
+**Eligió la 2, «Terminal».** Las otras dos y el selector **se borraron**: no
+se dejan páginas muertas en el portal.
+
+**Cómo es la portada ahora**
+
+| | |
+|---|---|
+| Arriba | franja de estado en monoespaciada: instrumento, marco, ventana horaria, reglas, casos y términos. Es la firma del formato — se lee como la barra de una plataforma |
+| Izquierda | el titular y los ocho módulos en una lista compacta con filete entre filas |
+| Derecha | el gráfico en un panel con borde, y debajo los dos botones **centrados** |
+| Forma | radio corto (`--radio-1`) y bordes visibles en todo. Es deliberado: es lo que da el aire de consola |
+
+**Correcciones del operador sobre la propuesta elegida**
+
+- **Nada de «Trading Plan NQ» como titular.** Ya está en el banner de la
+  cabecera y salía dos veces. Vuelve el titular de siempre: «La metodología de
+  Alfredo Chaumer, explicada.»
+- **Fuera la banda de titulares del gráfico**: la fecha, el recuento de zonas
+  y la línea verde de la operación que el PNG trae impresa.
+- Los dos botones, centrados.
+
+> **Cómo se quitó la banda del gráfico, y por qué así.** No se tocó el
+> archivo: se recorta por proporción en CSS (`aspect-ratio: 2000 / 845` más
+> `object-fit: cover` anclado abajo). El original de `02_Assets` queda intacto
+> y **la galería lo sigue mostrando entero**, con la fecha y los datos de la
+> operación, que allí sí hacen falta. Si se recortara el PNG se perdería esa
+> información para siempre.
+
+**Comprobado:** panel y lista a la misma altura (366 y 386 px, sin hueco
+muerto), la portada entera en 1051 px contra una ventana de 980 — casi una
+sola pantalla, sin desbordes a 375 ni 1440, ningún objetivo táctil por debajo
+de 44 px, y el detector sin hallazgos.
+
 ### 2026-09-02 · vuelta al texto a la izquierda, y fuera las velas del banner
 
 Correcciones del operador sobre la tanda anterior.

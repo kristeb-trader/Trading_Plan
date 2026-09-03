@@ -1,188 +1,227 @@
 ---
 /**
- * Portada de bienvenida — la que abre Alfredo.
+ * Portada — la que abre Alfredo.
  *
- * Presenta el metodo en pocas lineas y deja elegir camino: recorrerlo, o ver
- * como se aplica. No explica el metodo aqui: para eso estan los ocho modulos.
+ * Direccion «Terminal», elegida por el operador el 02/09/2026 entre tres
+ * propuestas. Densa y de herramienta: franja de estado arriba en
+ * monoespaciada, lista compacta de los ocho modulos a la izquierda y el
+ * grafico en un panel a la derecha. Entra casi entera en una pantalla.
  *
- * Lo que NO va en esta pagina (decidido por el operador el 02/09/2026):
- * el aviso de «no probado», los cuatro huecos declarados y los contadores del
- * plan. Todo eso vive en /tecnico, del lado del operador. Lo que no esta
- * probado es la transcripcion del metodo, no el metodo de Alfredo.
+ * Bordes visibles y radio corto en todo: es lo que da el aire de consola, y
+ * es deliberado. Sale de ui-ux-pro-max (variance 8, density 9).
  *
- * El material visual son los graficos reales del operador, presentados de
- * frente. Nada de cajas inventadas simulando una pantalla.
+ * Lo que NO va aqui (decidido el 02/09/2026):
+ *   - «Trading Plan NQ» como titular: ya esta en el banner de la cabecera.
+ *   - El aviso de «no probado» y los cuatro huecos declarados: viven en
+ *     /tecnico, del lado del operador. Lo que no esta probado es la
+ *     transcripcion del metodo, no el metodo de Alfredo.
  */
 import Marco from '../componentes/Marco.astro';
 import Icono from '../componentes/Icono.astro';
+import { MODULOS } from '../lib/modulos.mjs';
 import * as P from '../lib/parsers.mjs';
 
 const galeria = P.galeria();
+const reglas = P.reglas();
+const glosario = P.glosario();
 
 const img = (id) => galeria.find((c) => c.id === id)?.imagen ?? null;
 const heroe = img('G-16') ?? img('G-13') ?? galeria.find((c) => c.imagen)?.imagen;
+const dos = (n) => String(n).padStart(2, '0');
 
-// Dos bloques, los dos con el texto a la izquierda y la imagen a la
-// derecha. Antes iban en zigzag (uno invertido); el operador lo cambio el
-// 02/09/2026: leer siempre por el mismo lado cansa menos y ademas la pagina
-// queda mas corta, que era lo que buscaba.
-const CAMINOS = [
-  {
-    href: '/premercado',
-    titulo: 'Recorrer el método',
-    texto: 'Ocho módulos, en el orden real de la jornada: qué se prepara antes, qué se busca en el gráfico, cómo se entra y cuándo no se entra.',
-    imagen: '/conceptos/02-corrida-retroceso.png',
-    cta: 'Empezar por aquí',
-    principal: true,
-  },
-  {
-    href: '/galeria',
-    titulo: 'Ver cómo se aplica',
-    texto: `${galeria.length} sesiones reales del gráfico del operador, cada una etiquetada con lo que la explica. Es el material con el que se entrena el ojo.`,
-    imagen: img('G-19') ?? img('G-17'),
-    cta: 'Ver los casos',
-  },
+// Los tres primeros salen del plan; los tres ultimos se cuentan del archivo.
+const ESTADO = [
+  { k: 'Instrumento', v: 'NQ · MNQ' },
+  { k: 'Marco', v: '1 min' },
+  { k: 'Ventana', v: '08:31 – 10:30' },
+  { k: 'Reglas', v: String(reglas.length) },
+  { k: 'Casos', v: String(galeria.length) },
+  { k: 'Términos', v: String(glosario.length) },
 ];
 ---
 
 <Marco titulo="Inicio">
-  <!-- ── bienvenida ────────────────────────────────────────────────────── -->
-  <section class="hero" aria-label="Bienvenida">
-    <div class="hero-txt entra">
-      <h1>
-        La metodología de <span class="h1-nom">Alfredo Chaumer,</span>{' '}
-        <span class="h1-ac">explicada.</span>
-      </h1>
-      <p class="lead">
-        Un método de trading para NQ y MNQ, traducido a reglas que se pueden
-        medir, seguir y operar.
-      </p>
-      <!-- Sin botones aquí, por decisión del operador (02/09/2026): los dos
-           que había repetían los de las secciones de abajo, que además
-           explican a dónde llevan. El titular no necesita competencia. -->
+  <!-- ── franja de estado ───────────────────────────────────────────── -->
+  <dl class="tm-estado" aria-label="Parámetros del método">
+    {ESTADO.map((e) => (
+      <div class="tm-e">
+        <dt>{e.k}</dt>
+        <dd class="num">{e.v}</dd>
+      </div>
+    ))}
+  </dl>
+
+  <div class="tm-rej">
+    <!-- ── columna izquierda: titular y los ocho ────────────────────── -->
+    <div class="tm-izq">
+      <header class="tm-cab">
+        <h1>
+          La metodología de <span class="tm-nom">Alfredo Chaumer,</span>{' '}
+          <span class="tm-ac">explicada.</span>
+        </h1>
+        <p>
+          Un método de trading para NQ y MNQ, traducido a reglas que se pueden
+          medir, seguir y operar.
+        </p>
+      </header>
+
+      <p class="tm-et">Recorrido · {MODULOS.length} módulos</p>
+      <ol class="tm-l">
+        {MODULOS.map((m) => (
+          <li>
+            <a href={`/${m.slug}`}>
+              <span class="tm-n num">{dos(m.n)}</span>
+              <span class="tm-ic"><Icono nombre={m.icono} /></span>
+              <span class="tm-t">{m.corto}</span>
+              <span class="tm-fl" aria-hidden="true"><Icono nombre="caret-right" /></span>
+            </a>
+          </li>
+        ))}
+      </ol>
     </div>
 
-    {heroe && (
-      <figure class="hero-gr entra" style="--retraso:120ms">
-        <div class="hero-gr-in vidrio borde-vivo">
-          <img src={heroe} width="2000" height="1060" decoding="async"
-               alt="Una sesión real con las zonas marcadas y la operación" loading="eager" />
-        </div>
-      </figure>
-    )}
-  </section>
-
-  <!-- ── los dos caminos, en zigzag ────────────────────────────────────── -->
-  {CAMINOS.map((c) => (
-    <section class="camino entra" aria-label={c.titulo}>
-      <div class="cm-txt">
-        <h2>{c.titulo}</h2>
-        <p>{c.texto}</p>
-        <a class:list={[c.principal ? 'btn-1' : 'btn-2']} href={c.href}>
-          {c.cta} <Icono nombre="arrow-right" />
-        </a>
+    <!-- ── columna derecha: el panel del gráfico ────────────────────── -->
+    <figure class="tm-panel">
+      <!-- El recorte esconde la banda de titulares que el grafico trae
+           impresa: la fecha, el recuento de zonas y la linea verde de la
+           operacion. NO se toca el archivo — la galeria lo sigue mostrando
+           entero, con esa informacion, que alli si hace falta.
+           2000x1060 originales, menos 215px de banda = 2000x845. -->
+      <div class="tm-corte">
+        <img src={heroe} width="2000" height="1060" decoding="async" loading="eager"
+             alt="Una sesión real con las zonas marcadas y la operación" />
       </div>
-      {c.imagen && (
-        <a class="cm-fig" href={c.href} aria-hidden="true" tabindex="-1">
-          <img src={c.imagen} width="1760" height="880" decoding="async" alt="" loading="lazy" />
-        </a>
-      )}
-    </section>
-  ))}
+      <figcaption class="tm-p-pie">
+        <a class="tm-b1" href="/premercado">Empezar por el principio <Icono nombre="arrow-right" /></a>
+        <a class="tm-b2" href="/galeria">{galeria.length} casos reales</a>
+      </figcaption>
+    </figure>
+  </div>
 </Marco>
 
 <style>
-  /* ── bienvenida ──────────────────────────────────────────────────────── */
-  /* Texto a la izquierda, grafico a la derecha. La columna del texto lleva
-     algo mas de ancho que la del grafico: con el titular a 58px, al reves se
-     partia en «La metodologia / de / Alfredo Chaumer,» y dejaba un «de»
-     colgando. */
-  .hero {
-    display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
-    gap: var(--e-7); align-items: center;
-    margin-bottom: var(--e-8);
-  }
-  .hero-txt h1 {
+  /* ── franja de estado ─────────────────────────────────────────────── */
+  /* Un pixel de separacion sobre el color del borde: las celdas quedan
+     pegadas y con filete, como una tabla de plataforma. */
+  .tm-estado {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 1px;
     margin: 0 0 var(--e-5);
-    font-size: clamp(var(--t-9), 4vw, var(--t-10));
+    background: var(--borde);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-1);
+    overflow: hidden;
   }
-  /* Enfasis por color, no por degradado: el degradado partia la palabra en
-     «ex» blanco y «plicada.» azul. */
-  .h1-ac { color: var(--acento); }
-  /* Su nombre no se parte entre dos lineas. */
-  .h1-nom { white-space: nowrap; }
-  .lead { font-size: var(--t-5); color: var(--texto-2); max-width: 42ch; }
+  .tm-e { padding: var(--e-3) var(--e-4); background: var(--superficie); }
+  .tm-e dt {
+    font-size: var(--t-1); letter-spacing: var(--track-etiqueta);
+    text-transform: uppercase; color: var(--texto-3);
+  }
+  .tm-e dd {
+    margin: 2px 0 0;
+    font-size: var(--t-4); font-weight: var(--peso-medio); color: var(--texto);
+    letter-spacing: var(--track-cifra);
+  }
 
-  .btn-1, .btn-2 {
+  /* ── reparto ──────────────────────────────────────────────────────── */
+  /* align-items:start para que el panel del grafico mida lo que mide y no
+     se estire hasta el alto de la lista, que dejaba un hueco vacio debajo
+     de los botones. */
+  .tm-rej {
+    display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    gap: var(--e-5); align-items: start;
+  }
+  .tm-izq { min-width: 0; }
+
+  .tm-cab { margin-bottom: var(--e-6); }
+  .tm-cab h1 {
+    margin: 0 0 var(--e-4);
+    font-size: clamp(var(--t-7), 2.4vw, var(--t-8));
+    letter-spacing: -0.03em; line-height: 1.12;
+  }
+  /* Su nombre no se parte entre dos lineas. */
+  .tm-nom { white-space: nowrap; }
+  .tm-ac { color: var(--acento); }
+  .tm-cab p { margin: 0; font-size: var(--t-4); color: var(--texto-2); }
+
+  .tm-et {
+    margin: 0 0 var(--e-2);
+    font-size: var(--t-1); letter-spacing: var(--track-etiqueta);
+    text-transform: uppercase; color: var(--texto-3);
+  }
+
+  /* ── lista densa ──────────────────────────────────────────────────── */
+  .tm-l {
+    list-style: none; margin: 0; padding: 0; max-width: none;
+    border: 1px solid var(--borde); border-radius: var(--radio-1);
+    overflow: hidden;
+  }
+  .tm-l li { margin: 0; }
+  .tm-l li + li { border-top: 1px solid var(--borde); }
+  .tm-l a {
+    display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: center; gap: var(--e-3);
+    min-height: var(--alto-control);
+    padding: var(--e-3) var(--e-4);
+    background: var(--superficie);
+    font-size: var(--t-3); color: var(--texto-2);
+  }
+  .tm-l a:hover { background: var(--elevado); color: var(--texto); }
+  .tm-n { font-family: var(--fuente-mono); font-size: var(--t-1); color: var(--acento); }
+  .tm-ic { display: flex; color: var(--texto-3); --i: 1rem; }
+  .tm-l a:hover .tm-ic { color: var(--texto-2); }
+  .tm-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tm-fl { display: flex; color: var(--texto-3); --i: 0.875rem; }
+
+  /* ── panel del gráfico ────────────────────────────────────────────── */
+  .tm-panel {
+    margin: 0; min-width: 0;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-1);
+    background: var(--superficie);
+    overflow: hidden;
+  }
+  /* Recorte por proporcion: la caja es mas baja que la imagen, y `cover`
+     anclado abajo deja fuera la banda de arriba. Asi no hay que recortar el
+     archivo ni recalcular nada si cambia el ancho. */
+  .tm-corte { aspect-ratio: 2000 / 845; overflow: hidden; }
+  .tm-corte img {
+    width: 100%; height: 100%; display: block;
+    object-fit: cover; object-position: 50% 100%;
+  }
+  .tm-p-pie {
+    display: flex; align-items: center; justify-content: center;
+    gap: var(--e-3); flex-wrap: wrap;
+    padding: var(--e-4);
+    border-top: 1px solid var(--borde);
+  }
+  .tm-b1 {
     display: inline-flex; align-items: center; gap: var(--e-2);
     min-height: var(--alto-control);
-    padding: var(--e-3) var(--e-5);
-    border-radius: var(--radio-2);
-    font-size: var(--t-3); font-weight: var(--peso-medio);
-    transition: background var(--normal), box-shadow var(--normal), transform var(--normal);
-  }
-  .btn-1 {
+    padding: var(--e-2) var(--e-5);
+    border-radius: var(--radio-1);
     background: var(--acento); color: var(--sobre-acento);
-    box-shadow: var(--halo-boton);
+    font-size: var(--t-3); font-weight: var(--peso-medio);
+    transition: background var(--normal);
   }
-  .btn-1:hover { background: var(--acento-vivo); color: var(--sobre-acento); transform: translateY(-1px); }
-  /* El anillo de foco global es del color del acento, y sobre un boton de
-     acento no se ve. Aqui se pinta en claro. */
-  .btn-1:focus-visible { outline-color: var(--texto); }
-  .btn-2 {
-    background: var(--vidrio-fondo); color: var(--texto);
-    border: 1px solid var(--vidrio-borde);
-    backdrop-filter: var(--desenfoque);
+  .tm-b1:hover { background: var(--acento-vivo); color: var(--sobre-acento); }
+  /* El anillo de foco global es del color del acento y sobre este relleno no
+     se veria. Aqui se pinta en claro. */
+  .tm-b1:focus-visible { outline-color: var(--texto); }
+  .tm-b2 {
+    display: inline-flex; align-items: center;
+    min-height: var(--alto-control);
+    padding: var(--e-2) var(--e-5);
+    border-radius: var(--radio-1);
+    border: 1px solid var(--borde);
+    color: var(--texto-2); font-size: var(--t-3);
+    transition: border-color var(--normal), color var(--normal);
   }
-  .btn-2:hover { background: var(--vidrio-hover); color: var(--texto); }
+  .tm-b2:hover { border-color: var(--n-600); color: var(--texto); }
 
-  /* El grafico va de frente. Es una grafica real del operador y el estandar
-     que el valido dice «cuanto mas limpio, mejor»: inclinarla en 3D la dejaba
-     ilegible y contradecia su propia norma. El volumen lo da el cristal. */
-  .hero-gr { margin: 0; }
-  .hero-gr-in {
-    padding: var(--e-2);
-    box-shadow: var(--halo-azul), var(--sombra-3);
-  }
-  .hero-gr-in img { width: 100%; height: auto; display: block; border-radius: calc(var(--radio-4) - var(--e-2)); }
-
-  /* ── caminos ─────────────────────────────────────────────────────────── */
-  .camino {
-    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    gap: var(--e-7); align-items: center;
-    margin-bottom: var(--e-8);
-  }
-  .camino:last-of-type { margin-bottom: var(--e-5); }
-  .cm-txt h2 { margin: 0 0 var(--e-4); font-size: var(--t-7); }
-  .cm-txt p { font-size: var(--t-4); color: var(--texto-2); max-width: 44ch; }
-  .cm-txt .btn-1, .cm-txt .btn-2 { margin-top: var(--e-4); }
-
-  .cm-fig {
-    display: block; overflow: hidden;
-    border-radius: var(--radio-3);
-    border: 1px solid var(--vidrio-borde);
-    background: var(--fondo);
-  }
-  .cm-fig img { width: 100%; height: auto; display: block; transition: transform var(--entrada); }
-  .cm-fig:hover img { transform: scale(1.02); }
-
-  /* Dos anchos, y cada uno con su motivo:
-
-     1200 — con el rail lateral puesto, dos columnas dejan al titular unos
-     300px y se parte en cinco lineas. El hero y los caminos se apilan antes
-     de que eso pase. Es una decision de contenido.
-
-     900 — el marco: aqui el rail pasa a barra superior. Lo fija Marco.astro
-     y esta pagina no lo toca. (El fallo viejo era tener 1000 aqui y 900 alli:
-     una franja con rail lateral y hero ya apilado.) */
-  /* En pantalla estrecha el titular baja de escalon: a 60px se parte en
-     «La metodologia / de / Alfredo Chaumer,» y deja un «de» solo. */
-  @media (max-width: 600px) {
-    .hero-txt h1 { font-size: var(--t-8); }
-  }
-
-  @media (max-width: 1200px) {
-    .hero, .camino { grid-template-columns: 1fr; gap: var(--e-6); }
-    .hero-gr, .cm-fig { max-width: 46rem; }
+  /* Por debajo de este ancho la columna del texto se queda sin sitio para el
+     titular, y las dos columnas se apilan. */
+  @media (max-width: 1100px) {
+    .tm-rej { grid-template-columns: 1fr; }
   }
 </style>
