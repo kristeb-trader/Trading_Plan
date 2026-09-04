@@ -150,9 +150,6 @@ Si el rompimiento **fue con cuerpo** y pasan 5 velas sin consecución, no se est
 - **El otro borde** — El extremo de su mecha
 - **Zonas resultantes** — 2: la original y su apéndice
 
-> 🖼 **Gráfico.** Texto alternativo: Otro caso real de zona apéndice sobre la mecha de la vela de rompimiento
-> Pie: Otro caso real: la apéndice ocupa exactamente la mecha que sobresalió, nada más.
-
 > **[REGLA DURA]**
 > **La apéndice no nace por acción del precio sobre ella.** No es una zona más que apareció: es el rastro de un rompimiento que se quedó sin consecución.
 
