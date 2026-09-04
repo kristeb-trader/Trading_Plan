@@ -111,7 +111,7 @@ entero de una vez es demasiado.
 |---|---|---|---|---|
 | | Portada | `/` | ✅ **2026-09-02** | marca nueva, menú con iconos, dos portadas, pie del operador. Detalle en el historial |
 | 01 | Premercado | `/premercado` | ⬜ | |
-| 02 | Marcación de zonas | `/zonas` | 🚧 **2026-09-03** | reescrito en 8 apartados, cada uno con su imagen. Falta el visto bueno del operador sobre los textos |
+| 02 | Marcación de zonas | `/zonas` | 🚧 **2026-09-03** | dos vueltas: reescrito en apartados con imagen, y luego sus correcciones de `02-zonas.md`. Quedan 4 cosas que quitó, pendientes de su respuesta |
 | 03 | Setups operativos | `/setups` | ⬜ | |
 | 04 | Jornada operativa | `/jornada` | ⬜ | |
 | 05 | Mecánica de entrada | `/entrada` | ⬜ | |
@@ -141,6 +141,69 @@ entero de una vez es demasiado.
 ---
 
 ## Historial
+
+### 2026-09-03 · zonas, segunda vuelta: el repaso del operador
+
+Corrigió `textos/02-zonas.md` a mano y volvió a pasarlo. Aplicado entero al
+portal, más **ocho gráficos rehechos y tres nuevos** a partir de sus notas.
+
+#### Lo que cambió en el texto
+
+- Apartado 1 reescrito: «el mercado solo tiene dos fases». Fuera la frase de la
+  vela que mata la corrida.
+- Apartado 2 pasa a llamarse **«Generación de zonas»**; la lista de pasos va
+  ahora **antes** del gráfico, y se dice «la vela de la zona», no «la vela
+  designada».
+- Apartado 3: las dos fichas suben por delante del gráfico del traspaso. Fuera
+  el párrafo del plazo.
+- Apartado 4 y 5: añadido *«o si aparece una estructura nueva antes de las cinco
+  velas, también se marca»*, cada uno con gráfico propio.
+- Apartado 6 pasa a llamarse **«Zonas entre zonas»** y baja de tres reglas a dos.
+- **Fuera el apartado 8** («El recorrido completo»). El módulo queda en siete.
+
+#### Los gráficos, uno por nota suya
+
+| Gráfico | Qué pidió |
+|---|---|
+| 02 y 16 | flechas de corrida y retroceso en vez de llaves |
+| 03 | pasa a **bajista**: corrida a la baja, retroceso al alza, zona de soporte |
+| 05 | más simple, y que enseñe **la zona estirada**, no solo que nadie la superó |
+| 14 | rótulos a la izquierda, que se solapaban con las velas |
+| 17 | más simple y **alcista de verdad**: cuatro velas de subida y un retroceso corto |
+| 20 | marcadas **las cinco velas**, y recortado a seis velas tras el rompimiento |
+| 22 | estaba mal: solo enseñaba el caso que sí se marca |
+| **26** *(nuevo)* | el caso que **no** se marca, como en su propia imagen anotada |
+| **24 y 25** *(nuevos)* | la estructura nueva llegando antes que las cinco velas |
+
+Ninguna sesión del archivo tiene los dos casos de «zonas entre zonas» en la
+misma banda y lo bastante separados como para leerse juntos, así que van en dos
+gráficos, uno por caso.
+
+También, en el motor de dibujo: flechas de recorrido, rótulos con lado
+elegible, y fondo propio bajo la etiqueta de cada zona — se montaban sobre las
+velas del borde derecho.
+
+#### 🟠 Cuatro cosas que quitó, y que están pendientes de su respuesta
+
+**Se aplicaron sus cambios tal cual.** Esto queda anotado porque toca reglas
+confirmadas, no por discutirlo.
+
+1. **«Si se tocan, se funden» ya no se explica en ningún sitio.** Era una regla
+   confirmada, y además es de lo que depende que su propia frase nueva —«también
+   se estira la zona»— sea cierta: una zona solo se estira si la nueva la toca.
+2. **De «se busca la vela de la zona» desapareció «esa incluida».** Es una
+   corrección fechada del plan (26/08/2026), con caso real: la vela que dispara
+   el retroceso puede ser ella misma la del extremo.
+3. **De «entre dos zonas» desapareció «se mide el recorrido del precio, no el
+   rectángulo».** Es el núcleo de la regla, y es justo el error que él mismo
+   anotó en `02_Assets/invalidos/R-17_invalido_01.png`.
+4. **Ya no se muestra que las entradas sobre zona apéndice están pendientes.**
+
+Y una duda de fondo, del apartado 5: su texto dice que si llega la estructura
+nueva antes del plazo «también se genera la nueva zona apéndice». Por las reglas
+lo que se marca es **la zona de esa estructura nueva**; la apéndice es lo que
+pasa si el plazo se cumple sin consecución. El gráfico 25 enseña lo segundo.
+
 
 ### 2026-09-03 · marcación de zonas, reescrito en ocho apartados
 

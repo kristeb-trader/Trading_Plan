@@ -18,10 +18,10 @@ Qué es una zona, de qué vela sale y cómo se dibuja
 
 El mercado solo tiene dos fases: se mueve con fuerza hacia una dirección (arriba o abajo) o hace una pausa y retrocede un poco, ya sea para continuar el movimiento o para cambiar de sentido. El movimiento con dirección es la **corrida**; la pausa es el **retroceso**. Todo lo que pasa en el gráfico cae en una de esas dos categorías.
 
-> 🖼 **Gráfico.** Texto alternativo: Un movimiento alcista real separado en su corrida y su retroceso [NOTA: Podemos modificar la grafica para colocar con una flecha como es la corrida y otra flecha para el retroceso]
+> 🖼 **Gráfico.** Texto alternativo: Un movimiento alcista real separado en su corrida y su retroceso
 > Pie: Movimiento alcista: la corrida sube y el retroceso baja.
 
-> 🖼 **Gráfico.** Texto alternativo: El mismo mecanismo en un movimiento bajista real [NOTA: Podemos modificar la grafica para colocar con una flecha como es la corrida y otra flecha para el retroceso]
+> 🖼 **Gráfico.** Texto alternativo: El mismo mecanismo en un movimiento bajista real
 > Pie: El mismo mecanismo hacia abajo: la corrida baja y el retroceso sube.
 
 - **Cuándo nace una corrida** — Surge en la vela que rompe y supera el extremo de la anterior
@@ -30,7 +30,6 @@ El mercado solo tiene dos fases: se mueve con fuerza hacia una dirección (arrib
 - **Duración** — No tiene límite
 - **El color de la vela** — No importa en absoluto
 - **Una vela dentro de la anterior** — No interrumpe ni altera la continuidad de la corrida
-
 
 > **[REGLA DURA]**
 > **Un retroceso no tiene tamaño mínimo ni máximo de velas.** Puede ser una sola vela. No se descarta un movimiento por parecer demasiado corto o demasiado largo.
@@ -41,7 +40,7 @@ Del retroceso interesa un punto concreto: **su extremo** — el más bajo si la 
 
 <!-- id: nace -->
 
-### Generación de Zonas
+### Generación de zonas
 
 Cuando una corrida termina, deja un rastro en el gráfico: una franja de precio que se llama **zona**. No se dibuja a ojo. Sale siempre de la misma vela y con los mismos límites.
 
@@ -49,21 +48,18 @@ Cuando una corrida termina, deja un rastro en el gráfico: una franja de precio 
 2. **Se dibuja una zona del borde del cuerpo a la punta de la mecha** de esa vela. Ese es todo el criterio.
 3. **Se extiende hacia la derecha**, a lo largo del gráfico.
 
-> 🖼 **Gráfico.** Texto alternativo: La vela designada de un movimiento y los dos bordes exactos de la zona
-[NOTA: Puedes dibujar una grafica mas sencilla, mercado Alcista, puedes ser una corrida con 4 velas, y un retroceso de 2 velas, y luego otra corrida.]
+> 🖼 **Gráfico.** Texto alternativo: La vela que genera la zona y los dos bordes exactos que la delimitan
 > Pie: La vela que genera zona y sus dos bordes: del borde del cuerpo a la punta de la mecha. Ni un tick más, ni un tick menos.
 
-- **Corrida alcista** — Deja una zona de **resistencia** en la parte de arriba.
-- **Corrida bajista** — Deja una zona de **soporte** en la parte de abajo. 
-- **Y su retroceso** — El retroceso de una corrida alcista deja **soporte**; el de una corrida bajista genera una **resistencia** arriba.
-- **Vela sin mecha** — La zona queda dibujada como una línea sobre el precio de cierre/apertura.
-- **Vela sin cuerpo** — La zona se traza desde el precio de apertura/cierre hasta la punta de la mecha.
+- **Corrida alcista** — Deja una zona de **resistencia** en la parte de arriba
+- **Corrida bajista** — Deja una zona de **soporte** en la parte de abajo
+- **Y su retroceso** — El retroceso de una corrida alcista deja **soporte**; el de una corrida bajista genera una **resistencia** arriba
+- **Vela sin mecha** — La zona queda dibujada como una línea sobre el precio de cierre o apertura
+- **Vela sin cuerpo** — La zona se traza desde el precio de apertura o cierre hasta la punta de la mecha
 - **Una vela con máximo mayor y mínimo menor** — El orden dentro de la vela decide cuál sostiene la zona
 
 > 🖼 **Gráfico.** Texto alternativo: La zona ya dibujada y extendida hacia la derecha sobre una sesión real
-[NOTA: Puedes cambiar la grafica a una grafica bajista, marcando corrida bajista, retroceso alcista, zona de soporte]
 > Pie: Ya extendida: el rectángulo se dibuja desde la vela de origen, no desde donde el precio vuelva más tarde.
-
 
 #### Cuándo se dibuja cada una
 
@@ -99,9 +95,7 @@ Superar una zona son dos cosas, no una. Primero el rompimiento, después la cons
 > Recién ahí la zona quedó traspasada.
 
 > 🖼 **Gráfico.** Texto alternativo: La vela que pasa el borde de la zona y la que después pasa de su extremo
-[NOTA: Puedes arreglar la grafica para que se vea mejor los textos de rompimiento y consecución, ya que se ocultan con las velas, mejor que se vean en la parte izquierda de las velas que no se solapen con las velas]
 > Pie: Las dos velas del traspaso sobre una sesión real: la que rompe, y la consecución que pasa de su extremo.
-
 
 #### Dos maneras de romper
 
@@ -117,8 +111,6 @@ El cierre no decide si hay rompimiento, pero sí deja un rastro distinto. Esa di
 > **Un rompimiento solo, sin consecución, no invalida nada.** La zona sigue viva y sigue contando para todo.
 > Y la vela que da la consecución de un traspaso no abre a la vez el rompimiento del lado contrario: eso se busca a partir de la siguiente.
 
-
-
 ---
 
 <!-- id: estira -->
@@ -129,20 +121,17 @@ Si el precio rompe una zona y pasan 5 velas sin que llegue la consecución, la z
 
 Cuando el rompimiento fue **con la mecha** —el cierre se quedó dentro— la zona **se estira** hasta la punta de esa mecha. El otro borde no se mueve. Sigue habiendo una sola zona, más grande, y conserva su historial.
 
-
 > 🖼 **Gráfico.** Texto alternativo: Una vela cruza la zona y ninguna de las siguientes supera su extremo
-[NOTA: Puedes cambiar el grafico, algo mas sencillo mostrando la zona original, el rompimiento con mecha, y la exención de la zona, así como el primer grafico de la R-15 visualizando esa regla]
 > Pie: El caso más común: la vela cruza la zona, pero ninguna de las siguientes pasa de su extremo. No hubo traspaso y la zona sigue viva.
 
-
-O Si aparece una nueva estructura (un nuevo retroceso), antes de las 5 velas, también se estira la zona.
+O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas, también se estira la zona.
 
 > **[REGLA DURA]**
 > **Las 5 velas son un tope, no una espera obligatoria.** Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en ese momento y no se espera más.
 > Actúa lo que llegue primero.
 
-
-[IMAGEN: Me puedes generar una imagen para visualizar la explicación anterior]
+> 🖼 **Gráfico.** Texto alternativo: Un retroceso nuevo aparece antes de las cinco velas y la zona se estira ya
+> Pie: No hizo falta esperar: apareció un retroceso nuevo antes de las cinco velas y la zona se estiró en ese momento.
 
 ---
 
@@ -152,9 +141,7 @@ O Si aparece una nueva estructura (un nuevo retroceso), antes de las 5 velas, ta
 
 Si el rompimiento **fue con cuerpo** y pasan 5 velas sin consecución, no se estira esa zona: **nace una zona nueva**, pegada a la anterior. Se llama **zona apéndice** y se marca desde el cuerpo de la vela que hizo rompimiento hasta la punta de la mecha.
 
-
 > 🖼 **Gráfico.** Texto alternativo: Rompimiento con cuerpo sin consecución: la zona original y la apéndice que nace bajo ella
-[NOTA: Puedes cambiar el grafico indicando las 5 velas sin consecución, puedes cortar las velas, de la derecha, es decir, puedes dejar 6 velas después de la vela de rompimiento, para que el gráfico quede un poco mas amplio y dibujar mejor la explicación]
 > Pie: La original se queda intacta y la apéndice se marca sobre la mecha de la vela que rompió. Ahora hay dos.
 
 - **Qué lo dispara** — Rompimiento con cuerpo **+ 5 velas** sin consecución
@@ -169,14 +156,14 @@ Si el rompimiento **fue con cuerpo** y pasan 5 velas sin consecución, no se est
 > **[REGLA DURA]**
 > **La apéndice no nace por acción del precio sobre ella.** No es una zona más que apareció: es el rastro de un rompimiento que se quedó sin consecución.
 
-O Si aparece una nueva estructura (un nuevo retroceso), antes de las 5 velas, también se genera la nueva zona apéndice.
+O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas, también se genera la zona apéndice.
 
 > **[REGLA DURA]**
 > **Las 5 velas son un tope, no una espera obligatoria.** Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en ese momento y no se espera más.
 > Actúa lo que llegue primero.
 
-[IMAGEN: Me puedes generar una imagen para visualizar la explicación anterior]
-
+> 🖼 **Gráfico.** Texto alternativo: Rompimiento con cuerpo y un retroceso nuevo antes de que se cumpla el plazo
+> Pie: Rompió con cuerpo, pero antes de las cinco velas llegó un retroceso nuevo: se marca zona en ese momento.
 
 ---
 
@@ -184,20 +171,20 @@ O Si aparece una nueva estructura (un nuevo retroceso), antes de las 5 velas, ta
 
 ### Zonas entre zonas
 
-En una jornada aparecen muchas zonas candidatas. 2 reglas evitan que el gráfico se llene de rectángulos y que se acabe operando ruido.
+En una jornada aparecen muchas zonas candidatas. Dos reglas evitan que el gráfico se llene de rectángulos y que se acabe operando ruido.
 
 #### Entre dos zonas, solo si no cruza la mitad
 
 Cuando hay una zona por arriba y otra por abajo, se calcula el punto medio entre sus bordes internos. Solo se marca zona nueva si el movimiento que la genera **se queda entero de un lado** de esa mitad.
 
-> 🖼 **Gráfico.** Texto alternativo: Una zona marcada entre otras dos, con la mitad de la banda señalada
-[NOTA: ese grafico esta mal, lo podemos cambiar, podemos tomar los gráficos de la R-17, pero indicando que el caso 2 no se marca, y con velas azules y blancas de nuestro contexto]
+> 🖼 **Gráfico.** Texto alternativo: Una zona marcada entre otras dos: el movimiento se quedó de un lado de la mitad
 > Pie: El movimiento entero se queda del lado en el que empezó. Por eso esta zona sí se marca.
 
+> 🖼 **Gráfico.** Texto alternativo: Un movimiento entre dos zonas que cruza la mitad y por eso no marca zona
+> Pie: El mismo caso al revés: el movimiento cruzó la mitad, así que ahí no se marca nada.
+
 > **[REGLA DURA]**
-> **Solo se marca una sola zona entre zonas** entre cada resistencia y soporte, si cumple las reglas, es decir, si se presentan mas zonas en el dia, entre ese rango de resistencia y soporte, ya no se marcan mas zonas.
-
-
+> **Solo se marca una sola zona entre zonas** entre cada resistencia y soporte, si cumple las reglas. Es decir: si se presentan más zonas en el día entre ese rango de resistencia y soporte, ya no se marcan más zonas.
 
 #### Una sola por franja y por jornada
 
@@ -225,6 +212,3 @@ Una zona muere cuando ha sido superada **en las dos direcciones**: rompimiento y
 - **En pantalla** — Se deja dibujada en tono muy tenue, solo como recuerdo
 
 Esa distinción importa más de lo que parece: una zona que sigue viva puede impedir una entrada perfectamente válida, porque se cruza en el camino del objetivo.
-
----
-
