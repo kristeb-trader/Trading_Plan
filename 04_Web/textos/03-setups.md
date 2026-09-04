@@ -98,3 +98,12 @@ Comparten la mecánica de entrada — los dos entran con la confirmación — pe
 
 > **[REGLA DURA]**
 > **El stop del Reingreso suele salir más ancho.** Se mide contra la corrida fallida, que está al otro lado de la zona, así que incluye la zona entera. Por eso el tope de riesgo descarta más Reingresos que IRIs.
+
+---
+
+## Anotaciones que seguian abiertas
+
+Venian del archivo anterior y todavia no estan reflejadas en la pagina.
+Borralas cuando ya no hagan falta.
+- [NOTA: Puedes modificar el grafico, colocar uno mas tendencial y sencillo, explicando Impulso, Retroceso, Impulso]
+- [NOTA: Puedes modificar el grafico, colocar uno mas sencillo, con menos velas, pero que se entienda el setup de Reingreso]

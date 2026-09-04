@@ -254,9 +254,26 @@ function pagina(p) {
     bloqueAMd(html, out);
   }
 
-  const texto = out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+  let texto = out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
   fs.mkdirSync(SALIDA, { recursive: true });
-  fs.writeFileSync(path.join(SALIDA, p.archivo), texto, 'utf8');
+  // Las anotaciones del operador NO se pierden al regenerar. Si el archivo
+  // anterior tenia [NOTA: ...] o [IMAGEN: ...] que todavia no estan en la
+  // pagina, se arrastran al final en vez de desaparecer.
+  const destino = path.join(SALIDA, p.archivo);
+  if (fs.existsSync(destino)) {
+    const antes = fs.readFileSync(destino, 'utf8');
+    const notas = (antes.match(/\[(?:NOTA|IMAGEN):[^\]]*\]/g) || [])
+      .filter((n) => !texto.includes(n));
+    if (notas.length) {
+      texto += [
+        '', '---', '',
+        '## Anotaciones que seguian abiertas', '',
+        'Venian del archivo anterior y todavia no estan reflejadas en la pagina.',
+        'Borralas cuando ya no hagan falta.', '',
+      ].join('\n') + notas.map((n) => '- ' + n).join('\n') + '\n';
+    }
+  }
+  fs.writeFileSync(destino, texto, 'utf8');
   return { palabras: texto.split(/\s+/).length, bytes: Buffer.byteLength(texto) };
 }
 
