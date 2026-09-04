@@ -31,11 +31,12 @@ const imagenes = P.imagenesDeReglas().get(regla.id) ?? [];
 const excepciones = Array.isArray(regla.excepciones)
   ? regla.excepciones.filter((e) => e && String(e).trim()) : [];
 
-const ETIQUETA_CAT = {
-  contexto: 'Contexto', gestion: 'Gestión', filtro: 'Filtros', entrada: 'Entrada',
-  setup: 'Setup', marcado_zonas: 'Marcado de zonas', riesgo: 'Riesgo',
-  proceso: 'Proceso', estructura: 'Estructura', zonas: 'Zonas',
-  contexto_operativo: 'Contexto operativo', vigencia_zonas: 'Vigencia de zonas',
+// El nombre del grupo sale del propio archivo de reglas, igual que en el
+// indice. Aqui hubo un mapa escrito a mano con las doce categorias viejas.
+const NOMBRE_SUB = { marcado: 'Marcado', vigencia: 'Vigencia' };
+const etiquetaCat = (r) => {
+  const base = r.categoria_nombre ?? r.categoria;
+  return r.subcategoria ? `${base} · ${NOMBRE_SUB[r.subcategoria] ?? r.subcategoria}` : base;
 };
 const rico = (t) => P.enriquecer(t, { sinEnlaceA: regla.id });
 ---
@@ -47,7 +48,7 @@ const rico = (t) => P.enriquecer(t, { sinEnlaceA: regla.id });
     <header class="f-cab entra">
       <div class="f-meta">
         <span class="f-id mono solo-tecnico">{regla.id}</span>
-        <span class="f-cat">{ETIQUETA_CAT[regla.categoria] ?? regla.categoria}</span>
+        <span class="f-cat">{etiquetaCat(regla)}</span>
         {regla.prioridad && <span class="f-pri meta">prioridad {regla.prioridad}</span>}
       </div>
       <h1 class="f-e" set:html={rico(regla.enunciado)} />

@@ -142,6 +142,58 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-04 · la pantalla de reglas, rehecha
+
+**Lo que estaba mal**, en palabras del operador: texto que se corta, tarjetas
+todas iguales sin jerarquía, y una lista lateral que repite lo que ya hacen los
+filtros de arriba.
+
+**Nada se corta.** La tarjeta enseña el enunciado **entero**, sin recorte ni
+alto fijo: manda el texto y la fila crece. El detalle largo —condiciones,
+excepciones, casos, diagrama— se lee en un **cajón lateral** que se desliza
+desde la derecha, sin salir de la lista ni perder el filtro puesto. Se navega
+con ← →, se cierra con Esc, y al cerrarlo la página vuelve donde estaba.
+
+**Las categorías viven en un solo sitio.** El lateral es la navegación del
+portal y no compite con los filtros. Para dejar sitio a la rejilla, **ahora se
+pliega a iconos** y lo recuerda entre visitas — botón arriba del todo. Se aplica
+a todo el portal, y solo en escritorio: por debajo de 900px el lateral ya es una
+tira horizontal y ahí el texto tiene que verse.
+
+**El color del grupo dice el orden del día.** Los siete van del cian al azul,
+igual que los ocho módulos del recorrido: el tono es una posición, no un adorno,
+y se calcula, no se escribe. El grupo se reconoce por el punto de la pastilla,
+por la etiqueta de la tarjeta y por el filo de color de arriba.
+
+> 🔴 **Verde y rojo no se usan aquí**, aunque el encargo los pedía para las
+> reglas de riesgo. El rojo está reservado a un dato negativo real y el oro a
+> los avisos: es lo que dice el estándar y romperlo aquí lo rompe en todo el
+> portal. Los avisos del cajón —las notas— sí van en oro.
+
+**Rejilla** de 1 columna en móvil, 2 en tablet y 3 en escritorio.
+**Buscador** con `Ctrl/Cmd + K`; además, escribir con el foco fuera lleva al
+campo. Contador de resultados y «quitar filtros» cuando hay alguno puesto.
+
+#### Tres errores encontrados por el camino
+
+- 🔴 **La ficha individual seguía con el mapa de las doce categorías viejas.**
+  Se me pasó al cambiar solo el índice: mostraba `setup_entrada` y
+  `riesgo_gestion` en crudo. Ya no hay ningún nombre de categoría escrito a
+  mano en el portal.
+- **El cajón arrastraba la página al fondo al abrirse.** Era el foco: sin
+  `preventScroll`, el navegador lleva la página hasta el elemento enfocado.
+- **`overflow: hidden` en el body no sirve para bloquear el scroll.** El
+  viewport hereda ese overflow y la página pega un salto. Se congela con
+  `position: fixed` y un desplazamiento negativo, y al cerrar se devuelve.
+
+**Sobre la petición de React + Tailwind:** no se ha introducido ninguna de las
+dos. El portal es Astro estático con estilos de componente y tokens, y meter dos
+sistemas nuevos por una pantalla dejaría el resto del sitio hablando otro
+idioma. El propio encargo admitía «JavaScript funcional», que es lo que hay:
+sin dependencias en el navegador y sin librería de iconos —los de Phosphor se
+incrustan al compilar—.
+
+
 ### 2026-09-04 · el plan pasa a v2.3: siete grupos y el stop corregido
 
 Releído `01_Plan\` entero. **38 reglas, siete categorías, ninguna `R-39`** — nunca

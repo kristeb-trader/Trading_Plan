@@ -535,3 +535,20 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
   color: var(--texto);
   letter-spacing: var(--track-cifra);
 }
+
+/* El lateral plegado. Vive aqui y no en el componente porque la clase la pone
+   un script de <head> sobre <html>, antes de que exista ningun componente. */
+@media (min-width: 901px) {
+  html.rail-plegado { --rail: var(--rail-plegado); }
+}
+
+/* Con un cajon abierto, la pagina de detras se queda quieta. `overflow:hidden`
+   a secas no vale: el viewport hereda el overflow del body y la pagina pega un
+   salto hasta arriba. Se congela con position:fixed y un desplazamiento
+   negativo, y al cerrar se devuelve el scroll a donde estaba. */
+body.sin-scroll {
+  position: fixed;
+  inset-inline: 0;
+  width: 100%;
+  overflow: hidden;
+}

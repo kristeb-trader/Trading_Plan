@@ -46,9 +46,9 @@ El IRI es autocontenido: el propio movimiento crea la zona que después rompe. I
 4. **Rompimiento de esa misma zona**, en el sentido del movimiento original, por al menos un tick.
 5. **Confirmación: y esa es la entrada.** Una vela pasa el extremo de la vela que rompió.
 
-- **Plazo para la confirmación** — **5 velas** desde la siguiente a la que rompió. Lo normal es la primera o la segunda
+- **Plazo para la consecución** — **5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)*** desde la siguiente a la que rompió. Lo normal es la primera o la segunda
 - **Si no llega a tiempo** — La entrada queda invalidada. La zona sigue su propio camino
-- **Dónde va el stop** — En el **extremo del retroceso**
+- **Dónde va el stop** — En el punto más extremo alcanzado **desde que nació la zona hasta la vela que rompió**
 - **Filtro de objetivo** — El camino debe estar libre de zonas vivas
 
 ---
@@ -68,7 +68,7 @@ Es el contrario exacto del IRI. Aquí el rompimiento se confirmó pero el precio
 4. **Confirmación: y esa es la entrada.** Una vela pasa el extremo de la vela anterior, igual que en el IRI.
 
 - **Dirección** — Contraria a la del rompimiento que falló
-- **Plazo para que aparezca** — **Ninguno.** El límite de 5 velas no aplica aquí
+- **Plazo para que aparezca** — **Ninguno.** El límite de 5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)* no aplica aquí
 - **Dónde va el stop** — En el extremo de la **corrida fallida**, la que rompió y no continuó
 - **Filtro propio** — El objetivo debe caber **dentro del punto de referencia**
 
@@ -91,7 +91,7 @@ Comparten la mecánica de entrada — los dos entran con la confirmación — pe
 |  | IRI | Reingreso |
 | Qué opera | El rompimiento que funciona | El rompimiento que falló |
 | Dirección | A favor del movimiento | Contraria al rompimiento |
-| Plazo | 5 velas para la consecución | Sin plazo para aparecer; inmediato para entrar |
+| Plazo | 5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)* para la consecución | Sin plazo para aparecer; inmediato para entrar |
 | Stop | Extremo del retroceso | Extremo de la corrida fallida |
 | Filtros de objetivo | Camino libre de zonas vivas | Camino libre *y* dentro del punto de referencia |
 | Día de la Fed | Prohibido | Permitido |

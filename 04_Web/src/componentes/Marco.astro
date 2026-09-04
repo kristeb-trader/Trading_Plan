@@ -82,6 +82,16 @@ const activa = (href: string) =>
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{titulo} · Trading Plan de Futuros NQ</title>
+    <script is:inline>
+      // El estado del lateral se aplica ANTES de pintar. Si se hiciera al
+      // final del body, la primera pintura saldria desplegada y daria un
+      // salto de 13rem en cuanto cargase el script.
+      try {
+        if (localStorage.getItem('chaumer.rail') === 'plegado') {
+          document.documentElement.classList.add('rail-plegado');
+        }
+      } catch (e) { /* sin almacenamiento: se queda desplegado */ }
+    </script>
   </head>
 
   <body class="sin-js">
@@ -107,12 +117,19 @@ const activa = (href: string) =>
 
     <div class="marco">
       <aside class="rail">
-        <nav class="nav" aria-label="Secciones">
+        <button class="rail-plegar" type="button" data-plegar
+                aria-expanded="true" aria-controls="nav-secciones">
+          <span class="rp-ic" aria-hidden="true"><Icono nombre="sidebar-simple" /></span>
+          <span class="rp-t">Plegar el menú</span>
+        </button>
+
+        <nav class="nav" id="nav-secciones" aria-label="Secciones">
           {GRUPOS.map((g) => (
             <div class:list={['nav-g', { 'solo-tecnico': g.soloTecnico }]}>
               {g.grupo && <p class="etiqueta nav-t">{g.grupo}</p>}
               {g.items.map((s) => (
-                <a href={s.href} class:list={['nav-i', { activa: activa(s.href) }]}>
+                <a href={s.href} title={s.texto}
+                   class:list={['nav-i', { activa: activa(s.href) }]}>
                   <span class="nav-ic" style={s.tono ? `--tono:${s.tono}` : undefined}><Icono nombre={s.icono} /></span>
                   <span class="nav-x">{s.texto}</span>
                   {s.n && <span class="nav-n num">{String(s.n).padStart(2, '0')}</span>}
@@ -182,6 +199,29 @@ const activa = (href: string) =>
 
     <script is:inline>
       document.body.classList.remove('sin-js');
+
+      // ── lateral plegable ──────────────────────────────────────────────
+      (function () {
+        var boton = document.querySelector('[data-plegar]');
+        if (!boton) return;
+        var raiz = document.documentElement;
+
+        function pinta() {
+          var plegado = raiz.classList.contains('rail-plegado');
+          boton.setAttribute('aria-expanded', plegado ? 'false' : 'true');
+          boton.title = plegado ? 'Desplegar el menú' : 'Plegar el menú';
+        }
+
+        boton.addEventListener('click', function () {
+          var plegado = raiz.classList.toggle('rail-plegado');
+          try {
+            localStorage.setItem('chaumer.rail', plegado ? 'plegado' : 'abierto');
+          } catch (e) { /* sin almacenamiento: dura lo que dure la pagina */ }
+          pinta();
+        });
+
+        pinta();
+      })();
 
       // ── modo técnico ──────────────────────────────────────────────────
       // Los códigos de regla van ocultos por defecto: «R-22» no le dice nada
@@ -508,6 +548,40 @@ const activa = (href: string) =>
 
       /* ── pie del rail ──────────────────────────────────────────────── */
       .rail-pie { display: grid; gap: var(--e-2); justify-items: end; }
+
+      /* ── plegado ──────────────────────────────────────────────────────
+         Solo cambia el ancho y esconde las palabras. Los iconos, el orden y
+         el resalte de la pagina activa siguen exactamente igual: plegar no
+         puede obligar a reaprender el menu. */
+      .rail-plegar {
+        display: flex; align-items: center; gap: var(--e-3);
+        width: 100%;
+        padding: var(--e-2) var(--e-3);
+        border: 0; border-radius: var(--radio-2);
+        background: none; color: var(--texto-3);
+        font: inherit; font-size: var(--t-2); text-align: left;
+        cursor: pointer;
+        transition: background var(--normal), color var(--normal);
+      }
+      .rail-plegar:hover { background: var(--vidrio-hover); color: var(--texto); }
+      .rp-ic { display: flex; --i: 1.1rem; }
+
+      /* Solo en escritorio. Por debajo de 900px el lateral ya es una tira
+         horizontal, y ahi el texto tiene que verse: en tactil no hay tooltip
+         que rescate un icono suelto. */
+      @media (min-width: 901px) {
+        :global(html.rail-plegado) .rail { padding-inline: var(--e-2); }
+        :global(html.rail-plegado) .rail-plegar { justify-content: center; }
+        :global(html.rail-plegado) .rp-t,
+        :global(html.rail-plegado) .nav-t,
+        :global(html.rail-plegado) .nav-x,
+        :global(html.rail-plegado) .nav-n,
+        :global(html.rail-plegado) .nav-c { display: none; }
+        :global(html.rail-plegado) .nav-i { justify-content: center; padding-inline: 0; }
+        :global(html.rail-plegado) .nav-i:hover { transform: none; }
+        :global(html.rail-plegado) .rail-pie { justify-items: center; }
+      }
+      @media (max-width: 900px) { .rail-plegar { display: none; } }
       .tec-chip { justify-self: stretch; }
 
       /* La puerta al detalle: un icono pequeño y apagado. Se ve si se busca,

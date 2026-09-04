@@ -104,6 +104,7 @@
   --medida: 62ch;
   --ancho: 72rem;
   --rail: 17.5rem;  /* con icono, contador y texto sin cortar */
+  --rail-plegado: 4rem;  /* solo el icono, centrado */
 
   /* Alto minimo de cualquier cosa que se pueda pulsar: 44px, el objetivo
      tactil. De aqui salen botones, filas del menu y campos. */

@@ -117,17 +117,17 @@ El cierre no decide si hay rompimiento, pero sí deja un rastro distinto. Esa di
 
 ### Cuando no llega la consecución
 
-Si el precio rompe una zona y pasan 5 velas sin que llegue la consecución, la zona cambia de forma, es decir, se extiende la zona original hasta la punta de esa mecha.
+Si el precio rompe una zona y pasan 5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)* sin que llegue la consecución, la zona cambia de forma, es decir, se extiende la zona original hasta la punta de esa mecha.
 
 Cuando el rompimiento fue **con la mecha** —el cierre se quedó dentro— la zona **se estira** hasta la punta de esa mecha. El otro borde no se mueve. Sigue habiendo una sola zona, más grande, y conserva su historial.
 
 > 🖼 **Gráfico.** Texto alternativo: Una vela cruza la zona y ninguna de las siguientes supera su extremo
 > Pie: El caso más común: la vela cruza la zona, pero ninguna de las siguientes pasa de su extremo. No hubo traspaso y la zona sigue viva.
 
-O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas, también se estira la zona.
+O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)*, también se estira la zona.
 
 > **[REGLA DURA]**
-> **Las 5 velas son un tope, no una espera obligatoria.** Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en ese momento y no se espera más.
+> **Las 5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)* son un tope, no una espera obligatoria.** Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en ese momento y no se espera más.
 > Actúa lo que llegue primero.
 
 > 🖼 **Gráfico.** Texto alternativo: Un retroceso nuevo aparece antes de las cinco velas y la zona se estira ya
@@ -139,12 +139,12 @@ O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas,
 
 ### La zona apéndice
 
-Si el rompimiento **fue con cuerpo** y pasan 5 velas sin consecución, no se estira esa zona: **nace una zona nueva**, pegada a la anterior. Se llama **zona apéndice** y se marca desde el cuerpo de la vela que hizo rompimiento hasta la punta de la mecha.
+Si el rompimiento **fue con cuerpo** y pasan 5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)* sin consecución, no se estira esa zona: **nace una zona nueva**, pegada a la anterior. Se llama **zona apéndice** y se marca desde el cuerpo de la vela que hizo rompimiento hasta la punta de la mecha.
 
 > 🖼 **Gráfico.** Texto alternativo: Caso 1: pasan las cinco velas sin consecución y ahí se marca la zona apéndice
 > Pie: Caso 1: ninguna de las cinco velas vuelve a pasar de la mecha. Al vencer el plazo se marca la apéndice, y la original se queda intacta.
 
-- **Qué lo dispara** — Rompimiento con cuerpo **+ 5 velas** sin consecución
+- **Qué lo dispara** — Rompimiento con cuerpo **+ 5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)*** sin consecución
 - **La zona original** — No se modifica
 - **Un borde de la apéndice** — El borde del cuerpo de la vela que rompió
 - **El otro borde** — El extremo de su mecha
@@ -153,10 +153,10 @@ Si el rompimiento **fue con cuerpo** y pasan 5 velas sin consecución, no se est
 > **[REGLA DURA]**
 > **La apéndice no nace por acción del precio sobre ella.** No es una zona más que apareció: es el rastro de un rompimiento que se quedó sin consecución.
 
-O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas, también se genera la zona apéndice.
+O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)*, también se genera la zona apéndice.
 
 > **[REGLA DURA]**
-> **Las 5 velas son un tope, no una espera obligatoria.** Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en ese momento y no se espera más.
+> **Las 5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)* son un tope, no una espera obligatoria.** Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en ese momento y no se espera más.
 > Actúa lo que llegue primero.
 
 > 🖼 **Gráfico.** Texto alternativo: Caso 2: antes de las cinco velas el mercado arma una estructura en sentido contrario

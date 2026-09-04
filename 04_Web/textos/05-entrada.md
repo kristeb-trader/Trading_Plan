@@ -46,7 +46,7 @@ Los dos se miden desde el nivel de entrada, y en este orden: primero el stop, qu
 > Pie: La distancia hasta el stop, repetida al otro lado. Esa es toda la aritmética.
 
 1. **Se ancla en la entrada.** Todo se mide desde ahí.
-2. **Se coloca el stop en su referencia estructural.** En un IRI, el extremo del retroceso. En un Reingreso, el extremo de la corrida fallida.
+2. **Se coloca el stop en su referencia estructural.** En un IRI, el punto más extremo que alcanzó el precio **desde que nació la zona hasta la vela que rompió** — no solo el extremo del retroceso que la originó. En un Reingreso, el extremo de la corrida fallida.
 3. **Se mide esa distancia** y se pone el objetivo a la misma distancia al otro lado.
 
 - **Relación** — **1:1.** El objetivo recorre exactamente lo mismo que el stop

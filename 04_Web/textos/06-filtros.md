@@ -76,11 +76,11 @@ Una orden puesta que todavía no se ha llenado muere con lo primero que llegue d
 
 > **[FICHA]**
 > #### Se agota el plazo
-> Pasan 5 velas desde el rompimiento sin que el precio llegue al nivel de la orden.
+> Pasan 5 velas — es un TOPE, no una espera obligatoria *(`R-19`, precisada 01/09/2026)* desde el rompimiento sin que el precio llegue al nivel de la orden.
 
 > **[FICHA]**
 > #### El precio vuelve al stop
-> El precio regresa al extremo del retroceso, que es justo donde estaba el stop.
+> El precio regresa al punto del stop: el extremo alcanzado desde que nació la zona hasta la vela que rompió.
 
 > **[FICHA]**
 > #### Se acaba la ventana
