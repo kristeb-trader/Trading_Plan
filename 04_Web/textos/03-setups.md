@@ -19,8 +19,8 @@ Los dos únicos setups que se operan: IRI y Reingreso
 El método no busca oportunidades: busca **dos figuras concretas**. Si lo que hay delante no es una de las dos, no hay operación, por bien que se vea el gráfico.
 
 > **[FICHA]**
-> #### Continuación
-> El precio rompe una zona y sigue. Se opera **a favor** del rompimiento.
+> #### Impulso-Retroceso-Impulso
+> El precio rompe una zona y sigue. Se opera **a favor** del rompimiento y a favor de la **tendencia**
 
 > **[FICHA]**
 > #### Rompimiento fallido
@@ -33,11 +33,12 @@ El método no busca oportunidades: busca **dos figuras concretas**. Si lo que ha
 
 <!-- id: iri -->
 
-### IRI · continuación
+### IRI · Impulso-Retroceso-Impulso
 
-El IRI es autocontenido: el propio movimiento crea la zona que después rompe. Impulso, retroceso, impulso — y el segundo impulso es la entrada.
+El IRI es un movimiento tendencial hacia una dirección: el propio movimiento crea la zona que después rompe. Impulso, retroceso, impulso — y el segundo impulso es la entrada.
 
 > 🖼 **Gráfico.** Texto alternativo: Un IRI completo: movimiento, retroceso, zona, rompimiento y consecución
+ [NOTA: Puedes modificar el grafico, colocar uno mas tendencial y sencillo, explicando Impulso, Retroceso, Impulso]
 > Pie: Los cinco pasos sobre una sesión real. La vela de la consecución es la que entra.
 
 1. **Una corrida.** El precio avanza un movimiento.
@@ -60,6 +61,7 @@ El IRI es autocontenido: el propio movimiento crea la zona que después rompe. I
 Es el contrario exacto del IRI. Aquí el rompimiento se confirmó pero el precio **no continuó**: se dio la vuelta y se comió la zona entera. Se opera esa vuelta.
 
 > 🖼 **Gráfico.** Texto alternativo: Un Reingreso: rompimiento con consecución que falla y el precio recupera la zona entera
+ [NOTA: Puedes modificar el grafico, colocar uno mas sencillo, con menos velas, pero que se entienda el setup de Reingreso]
 > Pie: El rompimiento se confirmó y no siguió. El precio atraviesa la zona completa y sale por el borde contrario: ahí empieza el Reingreso.
 
 1. **Sobre una zona hubo rompimiento y confirmación.** El traspaso está hecho.

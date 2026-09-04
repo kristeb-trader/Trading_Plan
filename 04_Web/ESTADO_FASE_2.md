@@ -644,6 +644,37 @@ Se dejan escritos porque cuestan tiempo si se repiten.
 
 ## Cómo se trabaja aquí
 
+### Tocar el portal a mano y ver el cambio al momento
+
+**VS Code**, con la carpeta `E:\Proyectos\Chaumer` abierta entera (no solo
+`04_Web`: así se ve el plan al lado del portal).
+
+Al abrirla, VS Code ofrece instalar dos extensiones y **levanta el portal solo**
+— está en `.vscode	asks.json`. Si hiciera falta a mano:
+
+```
+npm run dev --prefix 04_Web
+```
+
+Queda en `http://localhost:4321`. **Se guarda el archivo y la página se
+actualiza sola**, sin recargar.
+
+Para verlo al lado del código sin salir del editor: `Ctrl+Shift+P` →
+*Simple Browser: Show* → esa dirección. El navegador queda en la mitad derecha.
+
+**Los textos del portal viven en `04_Web\src\pages\*.astro`**, uno por módulo,
+en prosa normal. Lo de arriba entre `---` es cálculo; lo de abajo es lo que se
+lee en pantalla.
+
+> ⚠️ Si un cambio de estilo no aparece, es el caché de Vite. Se para el
+> servidor, se borran `node_modules\.vite` y `.astro`, y se vuelve a arrancar.
+
+*(Antigravity también sirve —es un VS Code por dentro— pero la extensión de
+Astro se instala desde otro repositorio de extensiones y no siempre está al día.
+Para este proyecto, que es casi todo `.astro`, VS Code va mejor.)*
+
+---
+
 ### Publicar un cambio
 
 ```
