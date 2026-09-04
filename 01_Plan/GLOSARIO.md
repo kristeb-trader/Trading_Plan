@@ -259,7 +259,7 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 | Elemento | Condición medible |
 |---|---|
-| **Disparador** | rompimiento **con cuerpo** + **el plazo resuelto**: o pasan **5 velas sin consecución**, o antes de eso el mercado **arma una estructura completa en sentido contrario** *(`R-39`, 01/09/2026)* |
+| **Disparador** | rompimiento **con cuerpo** + **el plazo resuelto**: o pasan **5 velas sin consecución**, o antes de eso el mercado **arma una estructura completa en sentido contrario** *(`R-19`, precisada 01/09/2026)* |
 | **Acción** | se marca una **zona nueva**, llamada **zona apéndice** |
 | **Zona original** | **no se toca** |
 | **Límites de la apéndice** | del **borde del cuerpo** de la vela de rompimiento al **extremo de su mecha** — es decir, **solo esa mecha** |
@@ -292,7 +292,7 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 **Cómo se dibuja:** la apéndice es **del mismo gris que cualquier otra zona** y se dibuja **desde la vela de rompimiento**, que es su vela origen — aunque no esté marcada hasta que el plazo se resuelve.
 
 **Diagramas:** `../02_Assets/diagramas/apendice_caso1_plazo.png` (por plazo) y `../02_Assets/diagramas/apendice_caso2_estructura.png` (por estructura contraria) · también `R-15_extension_apendice.png`
-**Reglas asociadas:** `R-16` y `R-39` · **Estado:** ✅ Confirmada 24/08/2026 · precisada 27/08/2026 · **ampliada 01/09/2026**
+**Reglas asociadas:** `R-16` y `R-19` · **Estado:** ✅ Confirmada 24/08/2026 · precisada 27/08/2026 · **ampliada 01/09/2026**
 
 ---
 

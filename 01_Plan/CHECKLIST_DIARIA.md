@@ -80,7 +80,7 @@
 | ☐ | Causa de cancelación | Regla |
 |---|---|---|
 | ☐ | **Pasan 5 velas desde el rompimiento sin consecución** (el precio no llega al nivel de la orden) | `R-04` |
-| ☐ | El precio **vuelve al punto del stop** — el extremo del retroceso | `R-04` |
+| ☐ | El precio **vuelve al punto del stop** — el extremo alcanzado desde que nació la zona (`R-24`) | `R-04` |
 | ☐ | Son las **11:29 ET** | `R-04` |
 | ☐ | ⚠️ **Un retroceso nuevo NO cancela.** La orden sigue viva | `R-04` |
 | ☐ | Entra una **ventana de noticia roja** | `R-21` |

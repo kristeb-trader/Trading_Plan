@@ -45,6 +45,9 @@ const GRUPOS = [
   },
   {
     items: [
+      // Las reglas suben aqui el 04/09/2026: el operador las quiere a la vista
+      // desde la portada, no escondidas en el detalle tecnico.
+      { icono: 'list-checks', href: '/reglas', texto: 'Las reglas', cuenta: P.reglas().length, tono: 'var(--info)' },
       { icono: 'images', href: '/galeria', texto: 'Casos reales', cuenta: P.galeria().length, tono: 'var(--info)' },
       { icono: 'chat-teardrop-text', href: '/observaciones', texto: 'Observaciones', tono: 'var(--acento)' },
     ],
@@ -57,7 +60,6 @@ const GRUPOS = [
     items: [
       { icono: 'compass', href: '/tecnico', texto: 'Portada técnica' },
       { icono: 'file-text', href: '/plan-completo', texto: 'El plan completo' },
-      { icono: 'list-checks', href: '/reglas', texto: 'Las reglas', cuenta: P.reglas().length },
       { icono: 'book-open', href: '/glosario', texto: 'Vocabulario', cuenta: P.glosario().length },
       { icono: 'sliders-horizontal', href: '/parametros', texto: 'Parámetros' },
       { icono: 'check-square', href: '/checklist', texto: 'Checklist diaria' },

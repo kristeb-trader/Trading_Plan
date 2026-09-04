@@ -22,7 +22,7 @@ No es una web de marketing, no es un curso y no es un bot. Es la herramienta de 
 
 Lo importante no es que sea bonito: es que **cuando llega el momento de mandar la orden, todos los filtros ya estén comprobados**. Los tres que pueden anular una entrada son el tope de stop, que el objetivo esté libre de zonas, y —solo en Reingreso— el punto de referencia.
 
-### 2 · Las 39 reglas, consultables en caliente
+### 2 · Las 38 reglas, consultables en caliente
 Construidas **desde `reglas.json`**, no copiadas a mano. Buscables, filtrables por categoría, enlazadas entre sí y con el glosario. Cada regla con sus condiciones medibles y, cuando exista, el caso real que la fijó.
 
 ### 3 · Los parámetros en un solo sitio

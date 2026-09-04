@@ -434,21 +434,21 @@ La fase 1 se cierra **sin ejecutar `F1.11`**, por decisión explícita del opera
 
 ---
 
-# 🔵 Abiertos con `R-39` · 01/09/2026
+# 🔵 Abiertos con la precisión del plazo · 01/09/2026
 
 ## `P-30` · ¿La resolución anticipada aplica también al ESTIRAMIENTO? — ABIERTO 2026-09-01
 
-`R-39` se confirmó sobre el caso de la **zona apéndice** (rompimiento con cuerpo). El operador dijo *"en el caso 1… en el caso 2, es lo mismo"*, refiriéndose a los dos diagramas de la apéndice.
+La regla del plazo como tope (`R-19`) se precisó sobre el caso de la **zona apéndice** (rompimiento con cuerpo). El operador dijo *"en el caso 1… en el caso 2, es lo mismo"*, refiriéndose a los dos diagramas de la apéndice.
 
 **Falta confirmar** si el otro camino —rompimiento **con mecha**, que estira la zona en vez de crear una apéndice— también se resuelve de forma anticipada cuando se arma la estructura contraria, o si ése sí espera siempre a la quinta vela.
 
-Escrito en `R-39` como si aplicara a los dos, por simetría. **Es una extrapolación del auditor, no una confirmación del operador.**
+Escrito como si aplicara a los dos, por simetría. **Es una extrapolación del auditor, no una confirmación del operador.**
 
 **Estado:** ⏳ pendiente. **Preguntar antes de darlo por bueno.**
 
 ---
 
-## `P-31` · El motor todavía no aplica `R-39` — ABIERTO 2026-09-01
+## `P-31` · El motor todavía no aplica la resolución anticipada — ABIERTO 2026-09-01
 
 `05_Backtesting\lector.py` resuelve el plazo **solo por vencimiento de las 5 velas**. No detecta la estructura contraria.
 

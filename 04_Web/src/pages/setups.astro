@@ -72,12 +72,12 @@ const SECCIONES = [
     </ol>
 
     <dl class="datos">
-      <dt>Plazo para la confirmación</dt>
+      <dt>Plazo para la consecución</dt>
       <dd><strong>{v('PLAZO_CONSECUCION', '5 velas')}</strong> desde la siguiente a la que rompió. Lo normal es la primera o la segunda</dd>
       <dt>Si no llega a tiempo</dt>
       <dd>La entrada queda invalidada. La zona sigue su propio camino</dd>
       <dt>Dónde va el stop</dt>
-      <dd>En el <strong>extremo del retroceso</strong></dd>
+      <dd>En el punto más extremo alcanzado <strong>desde que nació la zona hasta la vela que rompió</strong></dd>
       <dt>Filtro de objetivo</dt>
       <dd>El camino debe estar libre de zonas vivas</dd>
     </dl>

@@ -142,6 +142,46 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-04 · el plan pasa a v2.3: siete grupos y el stop corregido
+
+Releído `01_Plan\` entero. **38 reglas, siete categorías, ninguna `R-39`** — nunca
+llegó al portal, así que no hubo nada que quitar.
+
+**Lo que estaba mal y ya no.**
+
+- **El portal servía las categorías viejas.** No lee `01_Plan\` directamente:
+  `sync.mjs` deja una copia en `src/content/`, y esa copia tenía todavía las
+  doce categorías (`contexto`, `marcado_zonas`, `vigencia_zonas`…). Se refresca
+  al compilar, pero hasta entonces se veía lo anterior.
+- **`categorias()` ordenaba por tamaño.** Con siete grupos eso ponía Zonas
+  primera y Proceso última, que no es el orden de la jornada. Ahora usa
+  `categoria_nombre`, `categoria_descripcion` y `categoria_orden` tal como
+  vienen en el archivo, y devuelve además los apartados de Zonas.
+- **La definición del stop, en tres sitios.** Decían *«el extremo del
+  retroceso»*, que es la definición anterior al 27/08/2026. La buena es **el
+  extremo alcanzado desde que nació la zona hasta la vela de rompimiento**.
+  Corregido en mecánica de entrada, en setups y en el filtro de cancelación de
+  la orden. La galería ya lo decía bien.
+
+  > ⚠️ No confundir con el **punto de referencia** del Reingreso, que **sí** es
+  > el extremo del retroceso que originó la zona. Esa frase de setups es
+  > correcta y no se toca.
+
+**Zonas, como pidió la propuesta:** una sola categoría con dos apartados dentro
+—marcado (11) y vigencia (3)—. Los apartados solo aparecen al elegir Zonas, y
+se reinician al cambiar de grupo. La regla del rompimiento y la consecución
+vive en Zonas·Vigencia pero **también sale al filtrar por Setup y entrada**, que
+pasa de 5 a 6; en su ficha se lee «también en Setup y entrada». Está declarado
+en `ENLACES_CRUZADOS`, en `parsers.mjs`, porque el archivo de reglas no lo dice.
+
+**Las reglas suben al menú principal**, justo encima de Casos reales. Salen del
+bloque de detalle técnico: el operador las quiere a la vista desde la portada.
+
+**Anotado y no tocado:** en la regla del retroceso quedó una medida con la
+definición vieja del stop. Va en `PROPUESTAS_AL_PLAN.md`, pendiente de que él
+lo decida. `01_Plan\` no se modifica desde aquí.
+
+
 ### 2026-09-03 · zonas, segunda vuelta: el repaso del operador
 
 Corrigió `textos/02-zonas.md` a mano y volvió a pasarlo. Aplicado entero al

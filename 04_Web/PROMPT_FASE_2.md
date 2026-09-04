@@ -21,7 +21,7 @@ Construir el módulo web **"Trading Plan"**: una página **privada**, de solo le
 
 | Archivo | Qué aporta |
 |---|---|
-| `01_Plan\reglas.json` | **la fuente de verdad de las reglas.** 39 reglas con id, categoría, enunciado, condiciones medibles, acción, excepciones, prioridad, estado, fuente y nota |
+| `01_Plan\reglas.json` | **la fuente de verdad de las reglas.** 38 reglas con id, categoría, enunciado, condiciones medibles, acción, excepciones, prioridad, estado, fuente y nota |
 | `01_Plan\TRADING_PLAN_CHAUMER.md` | documento maestro: razonamiento, casos y sub-fases |
 | `01_Plan\PARAMETROS.md` | **imprescindible.** Los números que pueden cambiar. Las reglas citan el parámetro **por nombre, no por valor** — sin este archivo la web dirá "el tope de stop" sin decir nunca que son 80 puntos |
 | `01_Plan\GLOSARIO.md` | 24 términos con definición medible |
@@ -46,7 +46,7 @@ La web **no reinterpreta ni resume el plan: renderiza lo que dicen los documento
 
 ## 🚨 EL PLAN NO ESTÁ PROBADO — Y LA WEB TIENE QUE DECIRLO
 
-El plan está en **v2.1**, con 39 reglas, cerrado el 01/09/2026 y contrastado contra 11 sesiones reales al tick. **No está congelado y no está validado.** Se cerró con **cuatro huecos declarados**, y los cuatro **deben verse en la web, no esconderse**:
+El plan está en **v2.3**, con 38 reglas, cerrado el 01/09/2026 y contrastado contra 11 sesiones reales al tick. **No está congelado y no está validado.** Se cerró con **cuatro huecos declarados**, y los cuatro **deben verse en la web, no esconderse**:
 
 1. **El test ciego nunca se ejecutó.** No hay ninguna medida de si el documento se sostiene solo, sin el operador corrigiendo al lado.
 2. **No hay regla de parada.** El plan no dice cuándo se deja de operar en la semana o el mes. Cada operación arriesga el 5,3 % de la cuenta objetivo.
@@ -63,9 +63,25 @@ El plan está en **v2.1**, con 39 reglas, cerrado el 01/09/2026 y contrastado co
    - ⚠️ **Son doce, no once.** `F1.12` (estructura y marcado) contiene **cinco reglas** y es la más reciente. Un rango que pare en `F1.11` se la deja fuera sin avisar.
    - `F1.11` (test de operabilidad) **no tiene contenido que renderizar**: se muestra como **hueco declarado**, no como sección vacía.
    - En el documento maestro las sub-fases **no están en orden numérico**. Respeta el orden del documento, no el del número.
-2. **Buscador** que filtre por texto, por id de regla (`R-14`) y por categoría. Las categorías reales están en `reglas.json`: `contexto`, `gestion`, `filtro`, `entrada`, `setup`, `marcado_zonas`, `riesgo`, `proceso`, `estructura`, `zonas`, `contexto_operativo`, `vigencia_zonas`. **No inventes categorías nuevas ni las renombres.**
+2. **Buscador** que filtre por texto, por id de regla (`R-14`) y por categoría.
+   Las categorías vienen de `reglas.json` y son **siete**, ya ordenadas en el archivo por `categoria_orden`:
+
+   | # | `categoria` | `categoria_nombre` | Reglas |
+   |---|---|---|---|
+   | 1 | `perimetro` | Perímetro operativo | 4 |
+   | 2 | `estructura` | Estructura del precio | 4 |
+   | 3 | `zonas` | **Zonas** | **14** |
+   | 4 | `setup_entrada` | Setup y entrada | 5 |
+   | 5 | `riesgo_gestion` | Riesgo, orden y gestión | 7 |
+   | 6 | `filtros` | Filtros de no-operar | 3 |
+   | 7 | `proceso` | Proceso diario | 1 |
+
+   - **`zonas` lleva un segundo nivel** en el campo `subcategoria`: `marcado` (11) y `vigencia` (3). Muéstralo como **una sola categoría con dos apartados dentro**, no como dos categorías. Son 14 de 38 reglas: sin el segundo nivel el filtro devuelve más de un tercio del plan.
+   - Cada regla trae además `categoria_nombre`, `categoria_descripcion` y `categoria_orden`. **Úsalos: no escribas los nombres a mano ni inventes el orden.**
+   - `R-13` (rompimiento y consecución) está en `zonas · vigencia` pero define también la entrada: **enlázala desde Setup y entrada**.
+   - **No inventes categorías nuevas ni las renombres.**
 3. **Ficha de regla:** enunciado, condiciones medibles, acción, excepciones, estado, fuente y nota.
-   - ⚠️ **`reglas.json` no tiene campo de imagen, y la mayoría de las reglas no tiene ninguna.** En todo el proyecto hay **9 diagramas** (`02_Assets\diagramas\`, nombrados por regla o por concepto — los dos de `apendice_*` ilustran `R-15`, `R-16` y `R-39`) y **un solo contraejemplo** (`02_Assets\invalidos\R-17_invalido_01.png`).
+   - ⚠️ **`reglas.json` no tiene campo de imagen, y la mayoría de las reglas no tiene ninguna.** En todo el proyecto hay **9 diagramas** (`02_Assets\diagramas\`, nombrados por regla o por concepto — los dos de `apendice_*` ilustran `R-15`, `R-16` y `R-19`) y **un solo contraejemplo** (`02_Assets\invalidos\R-17_invalido_01.png`).
    - Asocia imagen a regla **solo cuando el nombre del archivo lo diga**. Si una regla no tiene imagen, **la ficha simplemente no muestra imagen**: nada de placeholders, ni huecos, ni "imagen pendiente".
 4. **Diagramas Mermaid.** Hay exactamente **dos** en todo el plan. Que rendericen bien y sean legibles en móvil; el zoom es opcional.
 5. **Galería de casos**, con lightbox y filtro por regla. Fuente: `GALERIA.md`, **21 casos**.
@@ -73,9 +89,9 @@ El plan está en **v2.1**, con 39 reglas, cerrado el 01/09/2026 y contrastado co
    - Los archivos sueltos que hay en `02_Assets\galeria\` son **anteriores** a ese estándar. Si un caso tiene las dos versiones, usa la de `sesiones\`.
    - Los casos sin imagen se muestran **igualmente**, con su texto.
 6. **Modo checklist:** vista imprimible del proceso operativo diario, desde `CHECKLIST_DIARIA.md` — **cuatro bloques**: antes de abrir NinjaTrader · premercado · ventana operativa · después del llenado.
-7. **Vista de pendientes:** los 8 puntos abiertos de `PENDIENTES.md` más los cuatro huecos declarados. ⚠️ **Ninguna de las 39 reglas está marcada como `PENDIENTE`** — todas están confirmadas. Lo pendiente vive en `PENDIENTES.md` y en `CIERRE_FASE_1.md`; no lo busques en el estado de las reglas.
+7. **Vista de pendientes:** los 8 puntos abiertos de `PENDIENTES.md` más los cuatro huecos declarados. ⚠️ **Ninguna de las 38 reglas está marcada como `PENDIENTE`** — todas están confirmadas. Lo pendiente vive en `PENDIENTES.md` y en `CIERRE_FASE_1.md`; no lo busques en el estado de las reglas.
 8. **Vista de contextualización**, claramente separada de las reglas y marcada como **"esto NO es regla"**.
-9. **Versión del plan y fecha de última actualización**, visibles. Hoy: **v2.1 · 2026-09-01**. Léelas del documento, no las escribas a mano.
+9. **Versión del plan y fecha de última actualización**, visibles. Hoy: **v2.3 · 2026-09-04**. Léelas del documento, no las escribas a mano.
 10. **Responsive:** tiene que leerse bien en iPhone durante la sesión.
 
 ---
@@ -125,7 +141,7 @@ Dos frases del operador que valen como criterio: *"entre más limpio sea el grá
 ## CRITERIOS DE ACEPTACIÓN
 
 - [ ] Cambiar una línea en `01_Plan\TRADING_PLAN_CHAUMER.md`, ejecutar el sync y ver el cambio en la web **sin tocar código**
-- [ ] **Las 39 reglas de `reglas.json` aparecen en la web** — cuéntalas, no lo des por hecho
+- [ ] **Las 38 reglas de `reglas.json` aparecen en la web** — cuéntalas, no lo des por hecho
 - [ ] **Las 12 sub-fases están en la navegación**, incluida `F1.12`
 - [ ] **Los cuatro huecos declarados se ven**, y las cifras del backtesting nunca aparecen sin sus advertencias
 - [ ] Los valores de los parámetros se resuelven desde `PARAMETROS.md`: en ningún sitio se lee un número escrito a mano

@@ -48,13 +48,49 @@ export function reglas() {
   return json('reglas.json');
 }
 
+/**
+ * Las siete categorias del plan, en el orden que declara el propio archivo.
+ *
+ * No se cuentan a ojo ni se renombran aqui: cada regla trae `categoria_nombre`,
+ * `categoria_descripcion` y `categoria_orden`, y ese es el orden del dia
+ * operativo, no el del tamano del grupo.
+ *
+ * Zonas es la unica con `subcategoria` — marcado y vigencia. Se devuelve como
+ * UNA categoria con sus dos apartados dentro: cuando al operador le surge una
+ * duda piensa «es de zonas», no «es de marcado». Pero son 14 de 38, y un
+ * filtro que devuelve un tercio del plan no filtra nada, de ahi los apartados.
+ */
 export function categorias() {
-  const cuenta = new Map();
-  for (const r of reglas()) cuenta.set(r.categoria, (cuenta.get(r.categoria) || 0) + 1);
-  return [...cuenta.entries()]
-    .map(([id, n]) => ({ id, n }))
-    .sort((a, b) => b.n - a.n || a.id.localeCompare(b.id));
+  const mapa = new Map();
+  for (const r of reglas()) {
+    if (!mapa.has(r.categoria)) {
+      mapa.set(r.categoria, {
+        id: r.categoria,
+        nombre: r.categoria_nombre ?? r.categoria,
+        descripcion: r.categoria_descripcion ?? null,
+        orden: r.categoria_orden ?? 99,
+        n: 0,
+        subs: new Map(),
+      });
+    }
+    const c = mapa.get(r.categoria);
+    c.n += 1;
+    if (r.subcategoria) c.subs.set(r.subcategoria, (c.subs.get(r.subcategoria) || 0) + 1);
+  }
+  return [...mapa.values()]
+    .map((c) => ({ ...c, subs: [...c.subs.entries()].map(([id, n]) => ({ id, n })) }))
+    .sort((a, b) => a.orden - b.orden);
 }
+
+/**
+ * Reglas que viven en una categoria pero contestan tambien desde otra.
+ *
+ * Declarado a mano porque el archivo de reglas no lo dice: sale de
+ * `01_Plan/PROPUESTA_LIMPIEZA_REGLAS.md`, punto 4. Hoy es un solo caso — la
+ * regla del rompimiento y la consecucion define como muere una zona Y como se
+ * entra, asi que tiene que aparecer en los dos sitios.
+ */
+export const ENLACES_CRUZADOS = new Map([['R-13', ['setup_entrada']]]);
 
 // ─────────────────────────────────────────────────────────────── sub-fases
 /** El indice declarado por el propio documento, en su orden (no el numerico). */

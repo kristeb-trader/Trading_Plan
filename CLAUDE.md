@@ -1,6 +1,6 @@
 # Proyecto Chaumer — instrucciones para Claude Code
 
-**Qué es esto:** la metodología de trading de Alfredo Chaumer para NQ/MNQ en NinjaTrader 8, extraída durante la fase 1 a un plan mecánico de **39 reglas medibles**.
+**Qué es esto:** la metodología de trading de Alfredo Chaumer para NQ/MNQ en NinjaTrader 8, extraída durante la fase 1 a un plan mecánico de **38 reglas medibles**.
 
 **Fase actual:** 🚧 **FASE 2 — construir el portal web** en `04_Web\` (hoy vacía).
 **Fase 1:** 🏁 cerrada el 2026-09-01. Ver `01_Plan\CIERRE_FASE_1.md`.
@@ -23,7 +23,7 @@
 
 | Archivo | Qué es |
 |---|---|
-| `01_Plan\reglas.json` | **la fuente de verdad legible por máquina.** 39 reglas con id, categoría, enunciado, condiciones medibles, acción, excepciones, prioridad y estado. **El portal se construye contra este archivo.** |
+| `01_Plan\reglas.json` | **la fuente de verdad legible por máquina.** 38 reglas, **ordenadas por grupo**. Cada una trae `categoria`, `categoria_nombre`, `categoria_descripcion`, `categoria_orden` y —solo en `zonas`— `subcategoria` (`marcado` / `vigencia`). Siete grupos: perímetro (4) · estructura (4) · **zonas (14)** · setup y entrada (5) · riesgo y gestión (7) · filtros (3) · proceso (1). **El portal se construye contra este archivo, y usa esos campos: no escribas nombres de categoría a mano.** |
 | `01_Plan\TRADING_PLAN_CHAUMER.md` | el texto largo: razonamiento, casos reales y por qué cada regla dice lo que dice |
 | `01_Plan\PARAMETROS.md` | los números que pueden cambiar, en un solo sitio. Las reglas citan el **nombre** del parámetro, no el valor |
 | `01_Plan\GLOSARIO.md` | 24 términos con definición medible |

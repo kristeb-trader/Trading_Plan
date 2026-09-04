@@ -2,8 +2,13 @@
 /**
  * Las 38 reglas, con filtro por texto y por categoria.
  *
- * Las categorias son las 12 reales de reglas.json. No se renombran, no se
- * agrupan y no se inventan: el filtro se construye contando el archivo.
+ * Las siete categorias salen de reglas.json tal cual: nombre, descripcion y
+ * orden vienen en el propio archivo (v2.3, 04/09/2026). Aqui no se renombra
+ * ninguna ni se decide el orden.
+ *
+ * Zonas es la unica con apartados dentro — marcado y vigencia—. Va como UNA
+ * categoria: la duda del operador es «esto es de zonas», no «esto es de
+ * marcado». Pero son 14 de 38, asi que al elegirla aparecen los dos apartados.
  *
  * El filtrado ocurre en el navegador sobre lo ya renderizado, asi que sin
  * JavaScript se ven las 38 igual.
@@ -18,12 +23,16 @@ const casos = P.casosPorRegla();
 const secciones = P.seccionesDeReglas();
 const manifiesto = P.imagenesDeReglas();
 
-const ETIQUETA_CAT = {
-  contexto: 'Contexto', gestion: 'Gestión', filtro: 'Filtros', entrada: 'Entrada',
-  setup: 'Setup', marcado_zonas: 'Marcado de zonas', riesgo: 'Riesgo',
-  proceso: 'Proceso', estructura: 'Estructura', zonas: 'Zonas',
-  contexto_operativo: 'Contexto operativo', vigencia_zonas: 'Vigencia de zonas',
+// El nombre de cada categoria y de cada apartado sale del archivo. Lo unico
+// que se escribe aqui es como se lee un apartado en pantalla.
+const NOMBRE_CAT = new Map(cats.map((c) => [c.id, c.nombre]));
+const NOMBRE_SUB = { marcado: 'Marcado', vigencia: 'Vigencia' };
+const etiqueta = (r) => {
+  const base = NOMBRE_CAT.get(r.categoria) ?? r.categoria;
+  return r.subcategoria ? `${base} · ${NOMBRE_SUB[r.subcategoria] ?? r.subcategoria}` : base;
 };
+// Las que ademas contestan desde otra categoria (hoy solo la del rompimiento).
+const tambien = (r) => P.ENLACES_CRUZADOS.get(r.id) ?? [];
 ---
 
 <Marco titulo="Reglas">
@@ -31,8 +40,8 @@ const ETIQUETA_CAT = {
     <h1>Las {reglas.length} reglas</h1>
     <p class="lead">
       Cada una con sus condiciones medibles y su acción. Sin adjetivos: solo
-      ticks, puntos, número de velas y horas exactas. Reparto en {cats.length} categorías,
-      contadas del archivo.
+      ticks, puntos, número de velas y horas exactas. Repartidas en
+      {cats.length} grupos, en el orden en que se usan durante la jornada.
     </p>
   </header>
 
@@ -44,14 +53,29 @@ const ETIQUETA_CAT = {
       <span class="campo-n meta" data-contador>{reglas.length}</span>
     </label>
     <div class="chips" role="group" aria-label="Filtrar por categoría">
-      <button class="chip activa" type="button" data-cat="">Todas</button>
+      <button class="chip activa" type="button" data-cat="" data-desc="">Todas</button>
       {cats.map((c) => (
-        <button class="chip" type="button" data-cat={c.id}>
-          {ETIQUETA_CAT[c.id] ?? c.id}
+        <button class="chip" type="button" data-cat={c.id} data-desc={c.descripcion ?? ''}>
+          {c.nombre}
           <span class="chip-n">{c.n}</span>
         </button>
       ))}
     </div>
+
+    {cats.filter((c) => c.subs.length > 1).map((c) => (
+      <div class="chips subs" data-subs={c.id} hidden
+           role="group" aria-label={`Apartados de ${c.nombre}`}>
+        <button class="chip menuda activa" type="button" data-sub="">Todo</button>
+        {c.subs.map((sb) => (
+          <button class="chip menuda" type="button" data-sub={sb.id}>
+            {NOMBRE_SUB[sb.id] ?? sb.id}
+            <span class="chip-n">{sb.n}</span>
+          </button>
+        ))}
+      </div>
+    ))}
+
+    <p class="desc meta" data-descripcion hidden></p>
   </div>
 
   <p class="vacio" data-vacio hidden>
@@ -62,11 +86,13 @@ const ETIQUETA_CAT = {
     {reglas.map((r, i) => (
       <li class="celda entra" style={`--retraso:${Math.min(i, 10) * 25}ms`}
           data-cat={r.categoria}
-          data-txt={[r.id, r.enunciado, r.accion, r.nota, r.categoria].filter(Boolean).join(' ').toLowerCase()}>
+          data-sub={r.subcategoria ?? ''}
+          data-tambien={tambien(r).join(' ')}
+          data-txt={[r.id, r.enunciado, r.accion, r.nota, etiqueta(r)].filter(Boolean).join(' ').toLowerCase()}>
         <a class="regla" href={`/reglas/${r.id}`}>
           <span class="r-cab">
             <span class="r-id mono solo-tecnico">{r.id}</span>
-            <span class="r-cat">{ETIQUETA_CAT[r.categoria] ?? r.categoria}</span>
+            <span class="r-cat">{etiqueta(r)}</span>
             {manifiesto.has(r.id) && <span class="r-mark" title="Tiene diagrama"><Icono nombre="image-square" /></span>}
           </span>
           <span class="r-e">{r.enunciado}</span>
@@ -74,6 +100,9 @@ const ETIQUETA_CAT = {
             <span>{r.condiciones.length} condiciones</span>
             {casos.has(r.id) && <span>{casos.get(r.id).length} casos</span>}
             {secciones.has(r.id) && <span>explicada en el plan</span>}
+            {tambien(r).map((id) => (
+              <span class="r-tambien">también en {NOMBRE_CAT.get(id) ?? id}</span>
+            ))}
           </span>
         </a>
       </li>
@@ -84,20 +113,29 @@ const ETIQUETA_CAT = {
 <script is:inline>
   (function () {
     var campo = document.querySelector('[data-filtro]');
-    var chips = document.querySelectorAll('[data-cat]');
     var celdas = document.querySelectorAll('.celda');
     var contador = document.querySelector('[data-contador]');
     var vacio = document.querySelector('[data-vacio]');
+    var desc = document.querySelector('[data-descripcion]');
+    var cajasSub = document.querySelectorAll('[data-subs]');
     if (!campo) return;
+
     var cat = '';
+    var sub = '';
 
     function aplicar() {
       var q = campo.value.trim().toLowerCase();
       var n = 0;
       celdas.forEach(function (c) {
-        var okCat = !cat || c.getAttribute('data-cat') === cat;
+        // Una regla entra por su categoria o por las otras desde las que
+        // tambien contesta: la del rompimiento vive en Zonas y contesta en
+        // Setup y entrada.
+        var suyas = (c.getAttribute('data-cat') + ' ' + (c.getAttribute('data-tambien') || '')).split(' ');
+        var okCat = !cat || suyas.indexOf(cat) >= 0;
+        // El apartado solo se aplica dentro de su propia categoria.
+        var okSub = !sub || c.getAttribute('data-sub') === sub;
         var okTxt = !q || c.getAttribute('data-txt').indexOf(q) >= 0;
-        var ver = okCat && okTxt;
+        var ver = okCat && okSub && okTxt;
         c.hidden = !ver;
         if (ver) n++;
       });
@@ -105,15 +143,47 @@ const ETIQUETA_CAT = {
       vacio.hidden = n > 0;
     }
 
-    campo.addEventListener('input', aplicar);
-    document.querySelectorAll('.chip').forEach(function (b) {
+    function pintaGrupo(botones, activo) {
+      botones.forEach(function (b) { b.classList.remove('activa'); });
+      activo.classList.add('activa');
+    }
+
+    var chipsCat = document.querySelectorAll('.chips:not(.subs) .chip');
+    chipsCat.forEach(function (b) {
       b.addEventListener('click', function () {
-        document.querySelectorAll('.chip').forEach(function (o) { o.classList.remove('activa'); });
-        b.classList.add('activa');
+        pintaGrupo(chipsCat, b);
         cat = b.getAttribute('data-cat');
+        sub = '';
+
+        // Los apartados solo se ven cuando su categoria esta elegida, y se
+        // reinician al cambiar de grupo.
+        cajasSub.forEach(function (caja) {
+          var mia = caja.getAttribute('data-subs') === cat;
+          caja.hidden = !mia;
+          caja.querySelectorAll('.chip').forEach(function (o, i) {
+            o.classList.toggle('activa', i === 0);
+          });
+        });
+
+        var texto = b.getAttribute('data-desc') || '';
+        desc.textContent = texto;
+        desc.hidden = !texto;
         aplicar();
       });
     });
+
+    cajasSub.forEach(function (caja) {
+      var botones = caja.querySelectorAll('.chip');
+      botones.forEach(function (b) {
+        b.addEventListener('click', function () {
+          pintaGrupo(botones, b);
+          sub = b.getAttribute('data-sub');
+          aplicar();
+        });
+      });
+    });
+
+    campo.addEventListener('input', aplicar);
   })();
 </script>
 
@@ -162,6 +232,17 @@ const ETIQUETA_CAT = {
   }
   .chip-n { font-size: var(--t-1); color: var(--texto-3); font-variant-numeric: tabular-nums; }
   .chip.activa .chip-n { color: var(--texto-2); }
+
+  /* Apartados de una categoria: mismo lenguaje que los chips, un peldano
+     por debajo, y sangrados para que se lea que cuelgan del de arriba. */
+  .chips.subs { margin-left: var(--e-4); }
+  .chips.subs[hidden] { display: none; }
+  .chip.menuda { font-size: var(--t-1); padding: var(--e-1) var(--e-3); }
+
+  .desc { margin: 0; color: var(--texto-3); font-size: var(--t-2); }
+  .desc[hidden] { display: none; }
+
+  .r-tambien { color: var(--texto-3); font-style: italic; }
 
   .vacio { color: var(--texto-2); font-size: var(--t-3); padding: var(--e-6) 0; }
 

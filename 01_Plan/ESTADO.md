@@ -691,3 +691,90 @@ actualizados a 39 reglas.
 > 🔑 **Anotado sin dramatizarlo:** el plan llevaba dos días en cero reglas movidas y aun así una
 > conversación de dibujo destapó una precisión que no estaba escrita. No contradice nada — amplía —
 > pero es justo el tipo de hallazgo que el test ciego habría buscado a propósito.
+
+
+---
+
+# 🔧 04/09/2026 — REVISIÓN COMPLETA DE LAS REGLAS
+
+## Lo aplicado: se elimina `R-39`, era `R-19` otra vez
+El auditor escribió `R-39` el 01/09 sin buscar antes. **`R-19`, confirmada el 24/08, ya decía
+lo mismo con esas palabras:** *"el plazo de 5 velas es un tope, no una espera"*.
+
+- `R-39` eliminada de `reglas.json` y de todos los documentos.
+- Su aportación real —la **definición medible de las tres velas** de la estructura contraria—
+  vive ahora dentro de `R-19`.
+- `R-19` gana **sección propia** en el plan. Hasta hoy existía solo como una fila de tabla,
+  **y ésa es la causa de raíz por la que se pudo duplicar**.
+- Plan **v2.2 · 38 reglas**.
+
+## Lo encontrado al revisar las 38 una por una — `PROPUESTA_LIMPIEZA_REGLAS.md`
+
+### 🔴 Cinco contradicciones vivas (más graves que el duplicado)
+Reglas confirmadas que siguen diciendo lo que decían **antes** de que el operador las corrigiera:
+
+1. **El stop, en CUATRO sitios con la definición vieja** — `R-24` en `reglas.json`, `R-11`,
+   `R-08` y `R-04` siguen diciendo *"el extremo del retroceso"* en vez de *"el extremo desde
+   que nació la zona"*, corregido el 27/08.
+   ⚠️ **La de `reglas.json` es la peligrosa: el portal se construye contra ese archivo**, así
+   que hoy el portal mostraría la definición vieja del stop.
+2. **`R-13`** sigue diciendo que la consecución es *"dentro de las 5 velas siguientes"*, cuando
+   el 27/08 se confirmó que **la consecución que traspasa una zona no tiene plazo**.
+
+### 🟡 Cuatro fusiones propuestas — 38 → 33
+- `R-03` + `R-05` + `R-30` → *"una operación por sesión, la primera que se llene, y ahí termina el día"*
+- `R-06` + `R-25` → *"solo hay dos salidas: stop o target"*
+- `R-31` + `R-34` → *"la vela de apertura: origen sí, sesgo no"*
+- `R-38` disuelta: cinco de sus seis precisiones ya viven en otra regla; solo la de no solapar
+  zonas de tipo distinto es propia.
+
+### 🟢 Ocho grupos propuestos, verificados
+Perímetro (4) · Estructura (4) · **Marcado de zonas (11)** · Vigencia (3) · Setup y entrada (5) ·
+Riesgo, orden y gestión (7) · Filtros de no-operar (3) · Proceso (1). **Las 38 entran, ninguna
+se repite, ninguna se queda fuera.**
+
+Hoy las categorías del archivo de reglas están desordenadas: doce reglas en un cajón llamado
+`contexto`, y once del mismo tema —marcado de zonas— repartidas en cinco categorías distintas.
+El buscador del portal se construye sobre eso.
+
+## Nada más está aplicado
+Todo lo de arriba salvo la eliminación del duplicado **es propuesta y espera visto bueno**.
+
+
+---
+
+# ✅ 04/09/2026 — CINCO CORRECCIONES Y LA NUEVA CATEGORIZACIÓN
+
+## Las cinco definiciones superadas, corregidas
+La corrección del stop del **27/08** —*el extremo alcanzado desde que nació la zona*, no solo el
+del retroceso— se escribió en el texto de `R-24` y **nunca se propagó**. Seguía la versión vieja en:
+
+| Dónde | Ya corregido |
+|---|---|
+| `R-24` en `reglas.json` | ⚠️ **la peligrosa** — es el archivo contra el que se construye el portal |
+| `R-11` | decía que el stop iba en el extremo del retroceso |
+| `R-08` | el filtro del tope medía contra el extremo del retroceso |
+| `R-04` | la cancelación se medía contra el extremo del retroceso |
+| `R-13` | el enunciado decía que la consecución es *"dentro de las 5 velas siguientes"* |
+
+**Sobre `R-04`, una precisión que no es menor.** Las palabras del operador el 27/08 fueron
+*"llega al mismo punto del retroceso, que sería el mismo punto del stop"*. Entonces coincidían.
+Desde que `R-24` se corrigió **pueden no coincidir**, y manda **el punto del stop**.
+No es interpretación del auditor: se comprobó en `lector.py` que es exactamente lo que hizo el
+motor en las **11 sesiones validadas**.
+
+## La nueva categorización, aplicada
+Siete grupos, con **Zonas** como una sola categoría de 14 reglas y dos apartados dentro:
+
+`perímetro 4 · estructura 4 · ZONAS 14 (marcado 11 + vigencia 3) · setup y entrada 5 ·
+riesgo, orden y gestión 7 · filtros de no-operar 3 · proceso 1`
+
+`reglas.json` gana cuatro campos —`categoria_nombre`, `categoria_descripcion`, `categoria_orden`
+y `subcategoria`— y **queda ordenado por grupo**, para que el portal no tenga que inventar nada.
+
+`R-13` queda en zonas · vigencia, pero define también la entrada: **debe enlazarse desde Setup y
+entrada**.
+
+## Estado
+Plan **v2.3 · 38 reglas · cero contradicciones vivas**.
+Pendiente: **las cuatro fusiones** de `PROPUESTA_LIMPIEZA_REGLAS.md` — llevarían el plan a 33.

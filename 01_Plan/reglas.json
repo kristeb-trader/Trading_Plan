@@ -1,7 +1,7 @@
 [
   {
     "id": "R-01",
-    "categoria": "contexto",
+    "categoria": "perimetro",
     "enunciado": "Analiza y marca zonas sobre NQ; lee el trigger, el stop y el target sobre MNQ; ejecuta exclusivamente en MNQ.",
     "condiciones": [
       {
@@ -74,11 +74,14 @@
     "accion": "Mantener dos graficos de 1 minuto abiertos. Marcar zonas y leer volumen en NQ. Leer maximo/minimo real de la vela en MNQ y aplicar el desplazamiento de 1 tick sobre ese valor. Enviar la orden desde el grafico de MNQ.",
     "excepciones": [],
     "prioridad": 1,
-    "estado": "confirmada"
+    "estado": "confirmada",
+    "categoria_nombre": "Perímetro operativo",
+    "categoria_descripcion": "qué, cuándo y con qué",
+    "categoria_orden": 1
   },
   {
     "id": "R-02",
-    "categoria": "contexto",
+    "categoria": "perimetro",
     "enunciado": "Opera unicamente durante los 120 minutos siguientes a la apertura de la sesion americana.",
     "condiciones": [
       {
@@ -127,225 +130,14 @@
     "accion": "No colocar ninguna orden antes del inicio ni despues del fin de ventana. El ancla es la apertura americana, no el numero del reloj en pantalla.",
     "excepciones": [],
     "prioridad": 1,
-    "estado": "confirmada"
-  },
-  {
-    "id": "R-03",
-    "categoria": "riesgo",
-    "enunciado": "Ejecuta como maximo una operacion por sesion.",
-    "condiciones": [
-      {
-        "variable": "ordenes_llenadas_por_sesion",
-        "operador": "<=",
-        "valor": "1",
-        "timeframe": "sesion"
-      },
-      {
-        "variable": "orden_no_llenada_consume_cupo",
-        "operador": "=",
-        "valor": "false",
-        "timeframe": "sesion"
-      },
-      {
-        "variable": "cupo_consumido_por_resultado",
-        "operador": "=",
-        "valor": "indiferente (target o stop)",
-        "timeframe": "sesion"
-      }
-    ],
-    "accion": "Tras la primera orden llenada, no colocar ninguna orden mas en esa sesion aunque aparezcan setups validos.",
-    "excepciones": [],
-    "prioridad": 1,
-    "estado": "confirmada"
-  },
-  {
-    "id": "R-04",
-    "categoria": "entrada",
-    "enunciado": "Manten la orden pendiente hasta que se llene, hasta que se agoten 5 velas sin consecucion, hasta que el precio vuelva al punto del stop, o hasta el fin de la ventana.",
-    "condiciones": [
-      {
-        "variable": "cancelacion_1_plazo",
-        "operador": "=",
-        "valor": "pasan 5 velas desde el rompimiento sin que el precio alcance el nivel de la orden",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "cancelacion_2_vuelta_al_stop",
-        "operador": "=",
-        "valor": "el precio vuelve al extremo del retroceso, que es el mismo punto del stop",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "cancelacion_3_hora",
-        "operador": "=",
-        "valor": "11:29:00 ET",
-        "timeframe": "-"
-      },
-      {
-        "variable": "NO_es_causa_de_cancelacion",
-        "operador": "=",
-        "valor": "la aparicion de un retroceso nuevo. Un retroceso nuevo deja la orden intacta",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "orden_de_comprobacion",
-        "operador": "=",
-        "valor": "la caducidad se comprueba ANTES del llenado: pasado el plazo la orden no existe y no puede llenarse",
-        "timeframe": "1m"
-      }
-    ],
-    "accion": "Cancelar al ocurrir lo PRIMERO de las tres causas. El cupo de R-03 no se consume; se puede esperar un setup nuevo dentro de la ventana de R-02.",
-    "excepciones": [],
-    "prioridad": 2,
-    "estado": "REESCRITA 27/08/2026 - la redaccion anterior decia lo contrario en los dos puntos",
-    "nota": "Cierra P-19. El retroceso nuevo es el mismo evento que dispara R-19: marca zona nueva Y mata la orden pendiente. Un evento, dos consecuencias."
-  },
-  {
-    "id": "R-05",
-    "categoria": "setup",
-    "enunciado": "Toma el primer setup valido cuya orden se llene.",
-    "condiciones": [
-      {
-        "variable": "criterio_de_seleccion",
-        "operador": "=",
-        "valor": "cronologico (primero en cumplir todas las condiciones necesarias)",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "comparacion_con_setups_posteriores",
-        "operador": "=",
-        "valor": "prohibida",
-        "timeframe": "sesion"
-      }
-    ],
-    "accion": "Ejecutar el primer setup valido. Una vez llenada la orden, ignorar el resto de la sesion.",
-    "excepciones": [
-      "Un setup valido cuya orden caduque sin llenarse (R-04) no consume el cupo ni bloquea los siguientes."
-    ],
-    "prioridad": 1,
-    "estado": "confirmada"
-  },
-  {
-    "id": "R-06",
-    "categoria": "gestion",
-    "enunciado": "Una operacion abierta se gestiona hasta stop o target, aunque termine la ventana operativa.",
-    "condiciones": [
-      {
-        "variable": "fin_ventana_obliga_a_cerrar",
-        "operador": "=",
-        "valor": "false",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "fin_ventana_prohibe_abrir",
-        "operador": "=",
-        "valor": "true",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "cierre_por_tiempo",
-        "operador": "=",
-        "valor": "no existe",
-        "timeframe": "1m"
-      }
-    ],
-    "accion": "No ejecutar ninguna accion por hora. Solo stop o target cierran la posicion.",
-    "excepciones": [],
-    "prioridad": 2,
-    "estado": "confirmada"
-  },
-  {
-    "id": "R-07",
-    "categoria": "entrada",
-    "enunciado": "Entra siempre con orden stop en reposo colocada al cierre de la vela de rompimiento.",
-    "condiciones": [
-      {
-        "variable": "tipo_de_orden_long",
-        "operador": "=",
-        "valor": "Buy Stop Market",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "tipo_de_orden_short",
-        "operador": "=",
-        "valor": "Sell Stop Market",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "nivel_de_entrada_long",
-        "operador": "=",
-        "valor": "maximo de la vela de rompimiento + 1 tick, leido en MNQ",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "nivel_de_entrada_short",
-        "operador": "=",
-        "valor": "minimo de la vela de rompimiento - 1 tick, leido en MNQ",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "momento_de_colocacion",
-        "operador": "=",
-        "valor": "al cierre de la vela de rompimiento",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "orden_a_mercado",
-        "operador": "=",
-        "valor": "prohibida",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "orden_limite",
-        "operador": "=",
-        "valor": "prohibida",
-        "timeframe": "1m"
-      }
-    ],
-    "accion": "Colocar la orden Stop Market en el Chart Trader de MNQ y esperar. No perseguir el precio a mano.",
-    "excepciones": [],
-    "prioridad": 1,
-    "estado": "confirmada"
-  },
-  {
-    "id": "R-08",
-    "categoria": "gestion",
-    "enunciado": "Ejecuta con la ATM K1 al valor de ATM_DEFECTO y ajusta stop y target a mano tras el llenado, en ese orden.",
-    "condiciones": [
-      {
-        "variable": "ATM",
-        "operador": "=",
-        "valor": "K1 · 1 contrato MNQ · Auto Breakeven OFF · Auto Trail OFF",
-        "timeframe": "-"
-      },
-      {
-        "variable": "defecto",
-        "operador": "=",
-        "valor": "ATM_DEFECTO = 320 ticks = 80 puntos = $160. Igual a STOP_MAX a proposito: el stop provisional nunca debe ser mas ajustado que el estructural",
-        "timeframe": "-"
-      },
-      {
-        "variable": "filtro_previo_al_envio",
-        "operador": "<=",
-        "valor": "STOP_MAX = 80 puntos. IRI: distancia entrada <-> extremo del RETROCESO. Reingreso: distancia entrada <-> extremo de la CORRIDA FALLIDA. Si lo supera aunque sea por 1 tick, NO se opera",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "tras_el_llenado",
-        "operador": "=",
-        "valor": "1o el stop a su referencia estructural, 2o el target a distancia 1:1 (R-24)",
-        "timeframe": "-"
-      }
-    ],
-    "accion": "Verificar distancia antes de enviar. Si supera 240 ticks, no operar. Tras el llenado arrastrar stop y luego target. No volver a moverlos.",
-    "excepciones": [],
-    "prioridad": 1,
     "estado": "confirmada",
-    "nota": "CORREGIDA 24/08/2026. Antes fundia dos numeros distintos en uno solo: el defecto de la ATM (posterior al llenado) y el maximo de stop (filtro previo al envio). Son cosas distintas y ahora estan separadas. Los valores viven en PARAMETROS.md."
+    "categoria_nombre": "Perímetro operativo",
+    "categoria_descripcion": "qué, cuándo y con qué",
+    "categoria_orden": 1
   },
   {
     "id": "R-09",
-    "categoria": "contexto",
+    "categoria": "perimetro",
     "enunciado": "Opera con un grafico limpio: velas de 1 minuto y volumen, nada mas.",
     "condiciones": [
       {
@@ -370,11 +162,53 @@
     "accion": "No anadir ninguna herramienta al grafico sin revisar este plan.",
     "excepciones": [],
     "prioridad": 3,
-    "estado": "confirmada"
+    "estado": "confirmada",
+    "categoria_nombre": "Perímetro operativo",
+    "categoria_descripcion": "qué, cuándo y con qué",
+    "categoria_orden": 1
+  },
+  {
+    "id": "R-26",
+    "categoria": "perimetro",
+    "enunciado": "Opera siempre 1 contrato MNQ. El tamano no cambia por capital, racha ni conviccion.",
+    "condiciones": [
+      {
+        "variable": "tamano",
+        "operador": "=",
+        "valor": "1 contrato MNQ, siempre",
+        "timeframe": "-"
+      },
+      {
+        "variable": "escalado_por_capital",
+        "operador": "=",
+        "valor": "NO. El tamano no sube aunque la cuenta crezca",
+        "timeframe": "-"
+      },
+      {
+        "variable": "reduccion_por_racha",
+        "operador": "=",
+        "valor": "NO. El tamano no baja aunque la cuenta caiga",
+        "timeframe": "-"
+      },
+      {
+        "variable": "revision",
+        "operador": "=",
+        "valor": "ANUAL. Es el unico momento en que se evalua cambiar el numero de contratos",
+        "timeframe": "-"
+      }
+    ],
+    "accion": "Enviar siempre 1 contrato. Cualquier cambio de tamano solo puede decidirse en la revision anual.",
+    "excepciones": [],
+    "prioridad": 1,
+    "estado": "confirmada",
+    "nota": "Consecuencia aritmetica sin resolver: con tamano fijo, el riesgo PORCENTUAL crece a medida que la cuenta cae. Ver P-21.",
+    "categoria_nombre": "Perímetro operativo",
+    "categoria_descripcion": "qué, cuándo y con qué",
+    "categoria_orden": 1
   },
   {
     "id": "R-10",
-    "categoria": "contexto",
+    "categoria": "estructura",
     "enunciado": "Una corrida (= impulso) es la secuencia de velas que arranca cuando una vela supera el extremo de la anterior y termina en la primera vela que retrocede al menos 1 tick contra ella.",
     "condiciones": [
       {
@@ -460,11 +294,14 @@
     "excepciones": [],
     "prioridad": 1,
     "estado": "confirmada",
-    "nota": "corrida e impulso son sinonimos; el plan usa solo 'corrida'. NO existe tope de velas: el propio Chaumer (nota de voz 24/08/2026) confirma que la sobreextension no es un parametro operativo sino un elemento de contextualizacion."
+    "nota": "corrida e impulso son sinonimos; el plan usa solo 'corrida'. NO existe tope de velas: el propio Chaumer (nota de voz 24/08/2026) confirma que la sobreextension no es un parametro operativo sino un elemento de contextualizacion.",
+    "categoria_nombre": "Estructura del precio",
+    "categoria_descripcion": "el vocabulario",
+    "categoria_orden": 2
   },
   {
     "id": "R-11",
-    "categoria": "contexto",
+    "categoria": "estructura",
     "enunciado": "El retroceso es la secuencia de velas que arranca en la vela que mata la corrida y termina cuando nace la siguiente corrida.",
     "condiciones": [
       {
@@ -494,13 +331,13 @@
       {
         "variable": "nivel_de_referencia_alcista",
         "operador": "=",
-        "valor": "minimo MAS BAJO de todas las velas del retroceso",
+        "valor": "minimo MAS BAJO de todas las velas del retroceso. OJO: esto define el RETROCESO, no el stop",
         "timeframe": "1m"
       },
       {
         "variable": "nivel_de_referencia_bajista",
         "operador": "=",
-        "valor": "maximo MAS ALTO de todas las velas del retroceso",
+        "valor": "maximo MAS ALTO de todas las velas del retroceso. OJO: esto define el RETROCESO, no el stop",
         "timeframe": "1m"
       },
       {
@@ -528,15 +365,84 @@
         "timeframe": "1m"
       }
     ],
-    "accion": "Localizar el nivel de referencia del retroceso. Ahi va el stop (R-08) y ahi se produce la invalidacion total (R-04).",
+    "accion": "Localizar el nivel de referencia del retroceso. El STOP no se mide aqui: se mide con R-24, sobre el extremo alcanzado DESDE QUE NACIO LA ZONA hasta la vela de rompimiento (corregido 27/08/2026; NO es solo el extremo del retroceso que la origino).",
     "excepciones": [],
     "prioridad": 1,
-    "estado": "confirmada",
-    "nota": "Anula el suelo del rango $40-$120 de la guia v4; solo sobrevive el techo. Ver P-12."
+    "estado": "confirmada · referencia al stop corregida 04/09/2026",
+    "nota": "Anula el suelo del rango $40-$120 de la guia v4; solo sobrevive el techo. Ver P-12. | CORREGIDO 04/09/2026: decia que el stop iba en el extremo del retroceso.",
+    "categoria_nombre": "Estructura del precio",
+    "categoria_descripcion": "el vocabulario",
+    "categoria_orden": 2
+  },
+  {
+    "id": "R-31",
+    "categoria": "estructura",
+    "enunciado": "La vela de las 08:31 declara la direccion inicial de la sesion con su propio cuerpo y es la vela origen.",
+    "condiciones": [
+      {
+        "variable": "direccion",
+        "operador": "=",
+        "valor": "cierre por encima de su apertura = inicia alcista; por debajo = inicia bajista",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "premercado",
+        "operador": "=",
+        "valor": "las velas de 08:30 y anteriores no sirven como n-1",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "origen",
+        "operador": "=",
+        "valor": "la corrida se mide desde su minimo si es alcista, desde su maximo si es bajista",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "puede_sostener_zona",
+        "operador": "=",
+        "valor": "si",
+        "timeframe": "1m"
+      }
+    ],
+    "estado": "Confirmada 26/08/2026",
+    "pendiente": "P-23: cierre exactamente igual a la apertura",
+    "categoria_nombre": "Estructura del precio",
+    "categoria_descripcion": "el vocabulario",
+    "categoria_orden": 2
+  },
+  {
+    "id": "R-32",
+    "categoria": "estructura",
+    "enunciado": "Vela con maximo mayor y minimo menor sin corrida viva: pasa a ser la nueva vela origen y la direccion la da la siguiente.",
+    "condiciones": [
+      {
+        "variable": "condicion",
+        "operador": "=",
+        "valor": "maximo[n]>maximo[n-1] y minimo[n]<minimo[n-1] sin corrida viva",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "repeticion",
+        "operador": "=",
+        "valor": "si n+1 tambien lo es, se repite sin limite",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "no_aplica",
+        "operador": "=",
+        "valor": "con corrida viva manda R-10",
+        "timeframe": "1m"
+      }
+    ],
+    "estado": "Confirmada 26/08/2026",
+    "pendiente": "P-24: con R-31 puede no ocurrir nunca",
+    "categoria_nombre": "Estructura del precio",
+    "categoria_descripcion": "el vocabulario",
+    "categoria_orden": 2
   },
   {
     "id": "R-12",
-    "categoria": "contexto",
+    "categoria": "zonas",
     "enunciado": "Marca la zona sobre la vela designada, desde el borde de su cuerpo hasta el extremo de su mecha, y extiendela hacia la derecha.",
     "condiciones": [
       {
@@ -610,117 +516,15 @@
     "excepciones": [],
     "prioridad": 1,
     "estado": "confirmada",
-    "nota": "CORREGIDA 26/08/2026: la busqueda de la vela extrema INCLUYE la vela que dispara el retroceso. Una vela puede hacer maximo mayor y minimo menor a la vez: dispara el retroceso y aun asi puede ser la mas alta del movimiento. Caso real 10/07/2026 vela 8:36."
-  },
-  {
-    "id": "R-13",
-    "categoria": "entrada",
-    "enunciado": "Rompimiento es superar el borde de la zona por al menos un tick; consecucion es superar por un tick el extremo de la vela de rompimiento dentro de las 5 velas siguientes.",
-    "condiciones": [
-      {
-        "variable": "rompimiento",
-        "operador": ">=",
-        "valor": "1 tick mas alla del borde de la zona",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "cierre_de_la_vela_de_rompimiento",
-        "operador": "=",
-        "valor": "irrelevante para que haya rompimiento",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "rompimiento_con_cuerpo",
-        "operador": "=",
-        "valor": "el cierre queda mas alla del borde traspasado",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "rompimiento_con_mecha",
-        "operador": "=",
-        "valor": "el cierre NO queda mas alla del borde traspasado",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "consecucion_al_alza",
-        "operador": ">=",
-        "valor": "maximo de la vela de rompimiento + 1 tick",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "consecucion_a_la_baja",
-        "operador": "<=",
-        "valor": "minimo de la vela de rompimiento - 1 tick",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "plazo_de_consecucion",
-        "operador": "<=",
-        "valor": "5 velas contadas desde la vela siguiente a la de rompimiento",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "plazo_del_traspaso",
-        "operador": "=",
-        "valor": "el traspaso de la zona NO tiene plazo: el rompimiento queda pendiente indefinidamente y la consecucion lo confirma cuando llegue. El plazo de 5 velas solo gobierna la geometria (R-15/R-16) y la vida de la orden (R-04)",
-        "timeframe": "1m"
-      }
-    ],
-    "accion": "La consecucion al alza es la entrada de R-07. El mismo motor sirve para matar una zona y para entrar.",
-    "excepciones": [],
-    "prioridad": 1,
-    "estado": "Ampliada 27/08/2026"
-  },
-  {
-    "id": "R-14",
-    "categoria": "filtro",
-    "enunciado": "Una zona deja de tener efecto cuando ha sido superada en las dos direcciones.",
-    "condiciones": [
-      {
-        "variable": "superada_en_una_direccion",
-        "operador": "=",
-        "valor": "rompimiento Y consecucion en ese sentido",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "solo_rompimiento_sin_consecucion",
-        "operador": "=",
-        "valor": "la zona sigue vigente",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "zona_invalida",
-        "operador": "=",
-        "valor": "superada en las dos direcciones",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "efecto_de_zona_invalida",
-        "operador": "=",
-        "valor": "ninguno: no bloquea el target ni sirve para entrar",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "tratamiento_visual_zona_invalida",
-        "operador": "=",
-        "valor": "se conserva con tonalidad muy tenue, solo como recuerdo visual",
-        "timeframe": "-"
-      },
-      {
-        "variable": "invalida_es_invalida",
-        "operador": "=",
-        "valor": "una zona traspasada en ambos sentidos no cuenta para nada: ni bloquea el target, ni sirve para entrar, ni cuenta para medir el 50 por ciento entre zonas",
-        "timeframe": "1m"
-      }
-    ],
-    "accion": "Retirar del calculo de filtros toda zona superada en ambas direcciones; dejarla dibujada en tono minimo.",
-    "excepciones": [],
-    "prioridad": 2,
-    "estado": "Precisada 27/08/2026"
+    "nota": "CORREGIDA 26/08/2026: la busqueda de la vela extrema INCLUYE la vela que dispara el retroceso. Una vela puede hacer maximo mayor y minimo menor a la vez: dispara el retroceso y aun asi puede ser la mas alta del movimiento. Caso real 10/07/2026 vela 8:36.",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
   },
   {
     "id": "R-15",
-    "categoria": "contexto",
+    "categoria": "zonas",
     "enunciado": "Si el rompimiento fue con mecha y pasan 5 velas sin consecucion, extiende la zona original hasta la punta de esa mecha.",
     "condiciones": [
       {
@@ -751,11 +555,15 @@
     "accion": "Estirar la zona existente. No se crea ninguna zona nueva.",
     "excepciones": [],
     "prioridad": 2,
-    "estado": "confirmada"
+    "estado": "confirmada",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
   },
   {
     "id": "R-16",
-    "categoria": "contexto",
+    "categoria": "zonas",
     "enunciado": "Si el rompimiento fue con cuerpo y pasan 5 velas sin consecucion, marca una zona apendice sobre la mecha de la vela de rompimiento.",
     "condiciones": [
       {
@@ -793,11 +601,15 @@
     "excepciones": [],
     "prioridad": 2,
     "estado": "confirmada",
-    "nota": "Reglas de entrada asociadas PENDIENTES para F1.3: 'la zona apendice alta solo sirve para largo' y 'no se puede entrar entre zonas apendices'."
+    "nota": "Reglas de entrada asociadas PENDIENTES para F1.3: 'la zona apendice alta solo sirve para largo' y 'no se puede entrar entre zonas apendices'.",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
   },
   {
     "id": "R-17",
-    "categoria": "contexto",
+    "categoria": "zonas",
     "enunciado": "Marca una zona entre dos zonas solo si el movimiento que la genera queda entero dentro de la mitad en la que empezo.",
     "condiciones": [
       {
@@ -853,11 +665,15 @@
     "excepciones": [],
     "prioridad": 2,
     "estado": "confirmada",
-    "nota": "Contraejemplo real anotado por el operador en 02_Assets/invalidos/R-17_invalido_01.png. Desviacion D-06: el curso cierra el marcado tras la primera zona; el operador no pone limite."
+    "nota": "Contraejemplo real anotado por el operador en 02_Assets/invalidos/R-17_invalido_01.png. Desviacion D-06: el curso cierra el marcado tras la primera zona; el operador no pone limite.",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
   },
   {
     "id": "R-18",
-    "categoria": "contexto",
+    "categoria": "zonas",
     "enunciado": "Si la zona que ibas a marcar toca una existente, no marques una nueva: estira la existente.",
     "condiciones": [
       {
@@ -913,12 +729,16 @@
     "excepciones": [],
     "prioridad": 2,
     "estado": "Ampliada 26/08/2026",
-    "nota": "Desviacion D-08: el curso recorta la zona nueva y deja dos zonas; el operador une en una sola."
+    "nota": "Desviacion D-08: el curso recorta la zona nueva y deja dos zonas; el operador une en una sola.",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
   },
   {
     "id": "R-19",
-    "categoria": "contexto",
-    "enunciado": "Si aparece una nueva estructura (un nuevo retroceso), marca zona sin esperar a las 5 velas.",
+    "categoria": "zonas",
+    "enunciado": "El plazo de 5 velas es un TOPE, no una espera obligatoria: si antes el mercado arma una estructura completa en sentido contrario al rompimiento, la geometria se resuelve en ese momento.",
     "condiciones": [
       {
         "variable": "naturaleza_del_plazo_de_5_velas",
@@ -927,19 +747,49 @@
         "timeframe": "1m"
       },
       {
-        "variable": "disparador_anticipado",
+        "variable": "estructura_contraria_vela_1",
         "operador": "=",
-        "valor": "aparece un nuevo retroceso (nueva estructura)",
+        "valor": "no da la consecucion y va en sentido contrario al rompimiento; su extremo NO pasa del extremo de la vela de rompimiento",
         "timeframe": "1m"
       },
       {
-        "variable": "accion_anticipada",
+        "variable": "estructura_contraria_vela_2",
         "operador": "=",
-        "valor": "marcar zona de inmediato",
+        "valor": "hace retroceso: su extremo es MENOR (rompimiento bajista) o MAYOR (rompimiento alcista) que el de la vela anterior, y NO pasa del extremo de la vela de rompimiento",
         "timeframe": "1m"
       },
       {
-        "variable": "si_no_hay_nueva_estructura",
+        "variable": "estructura_contraria_vela_3",
+        "operador": "=",
+        "valor": "no continua el retroceso: vuelve en el sentido de la estructura contraria. AQUI queda armada la estructura y AQUI se marca la zona",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "si_el_retroceso_pasa_el_extremo",
+        "operador": "=",
+        "valor": "entonces NO es retroceso: es la CONSECUCION. No hay apendice ni estiramiento; la zona queda traspasada",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "que_se_marca",
+        "operador": "=",
+        "valor": "lo mismo que al vencer el plazo: rompimiento con mecha estira la zona (R-15); rompimiento con cuerpo hace nacer la zona apendice (R-16). Solo cambia el momento",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "dibujo",
+        "operador": "=",
+        "valor": "la apendice es del MISMO GRIS que cualquier zona y se dibuja desde la vela de rompimiento, su vela origen, aunque no este marcada hasta que la estructura queda armada",
+        "timeframe": "-"
+      },
+      {
+        "variable": "simetria",
+        "operador": "=",
+        "valor": "aplica igual hacia arriba: resistencia rota con cuerpo + estructura bajista completa antes del plazo",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "si_no_hay_estructura_contraria",
         "operador": "=",
         "valor": "esperar a las 5 velas y aplicar R-15 o R-16",
         "timeframe": "1m"
@@ -951,15 +801,22 @@
         "timeframe": "1m"
       }
     ],
-    "accion": "Actuar con lo que llegue primero: nueva estructura, o 5 velas sin consecucion.",
-    "excepciones": [],
+    "accion": "Resolver la geometria del rompimiento sin consecucion con lo que llegue primero: la estructura contraria completa, o las 5 velas.",
+    "excepciones": [
+      "Si el precio simplemente se va en sentido contrario SIN hacer retroceso en el medio, no hay estructura: se espera al plazo. Contraejemplo real 20/07/2026, velas 8:42 a 8:45."
+    ],
     "prioridad": 2,
-    "estado": "confirmada",
-    "nota": "El curso lo llama 'extender la zona' y el operador 'crear una zona nueva'; con R-18 es el mismo resultado. | ESTRUCTURA = retroceso nuevo que SI genera zona. El unico retroceso que no genera zona es el bloqueado por R-17 (entre soporte y resistencia, superando el 50%). Consecuencia: si el retroceso nuevo cae en ese caso NO hay estructura nueva, R-19 no dispara y el reloj de 5 velas sigue corriendo hacia R-15/R-16."
+    "estado": "Confirmada 24/08/2026 · definicion medible anadida 01/09/2026 (absorbe la antigua R-39)",
+    "nota": "FUSIONADA 04/09/2026: la antigua R-39 decia exactamente lo mismo que esta regla y se elimino; su definicion medible de las tres velas vive ahora aqui. | ESTRUCTURA = retroceso nuevo que SI genera zona. El unico retroceso que no genera zona es el bloqueado por R-17. | Diagramas: 02_Assets/diagramas/apendice_caso1_plazo.png y apendice_caso2_estructura.png",
+    "fuente": "operador",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
   },
   {
     "id": "R-20",
-    "categoria": "contexto",
+    "categoria": "zonas",
     "enunciado": "En la ventana de premercado (19:00 hora Colombia del dia anterior hasta la apertura americana), marca zona sobre TODA vela cuyo volumen supere el umbral. Fuera de esa ventana la regla no aplica.",
     "condiciones": [
       {
@@ -1041,65 +898,393 @@
     ],
     "prioridad": 2,
     "estado": "confirmada",
-    "nota": "Unica forma de que nazca una zona sin corrida ni retroceso. A diferencia de R-12, aqui el COLOR de la vela decide si es soporte o resistencia. El corte en la apertura no es arbitrario: 2000 contratos en 1 min del NQ es raro en premercado y corriente en sesion. Desviacion D-09: Parametros Chaumer dice 'solo marcamos los extremos'; el operador marca todas, y R-18 fusiona las que se tocan. Verificado con datos el 10/07/2026: escaneando desde 15:00 salen 3 velas sobre umbral; desde 19:00 sale 1, la que el operador marco. Las 2 extra son la subasta de cierre del efectivo del dia anterior."
+    "nota": "Unica forma de que nazca una zona sin corrida ni retroceso. A diferencia de R-12, aqui el COLOR de la vela decide si es soporte o resistencia. El corte en la apertura no es arbitrario: 2000 contratos en 1 min del NQ es raro en premercado y corriente en sesion. Desviacion D-09: Parametros Chaumer dice 'solo marcamos los extremos'; el operador marca todas, y R-18 fusiona las que se tocan. Verificado con datos el 10/07/2026: escaneando desde 15:00 salen 3 velas sobre umbral; desde 19:00 sale 1, la que el operador marco. Las 2 extra son la subasta de cierre del efectivo del dia anterior.",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
   },
   {
-    "id": "R-21",
-    "categoria": "filtro",
-    "enunciado": "No operes en la ventana de +/-5 minutos alrededor de una noticia roja de Forex Factory.",
+    "id": "R-33",
+    "categoria": "zonas",
+    "enunciado": "La zona de la corrida se marca al aparecer el retroceso; la del retroceso solo cuando el retroceso queda confirmado. Antes es solo una linea provisional.",
     "condiciones": [
       {
-        "variable": "fuente",
+        "variable": "zona_corrida",
         "operador": "=",
-        "valor": "Forex Factory (unica fuente). Investing / 3 toros NO se usa",
-        "timeframe": "-"
-      },
-      {
-        "variable": "nivel",
-        "operador": "=",
-        "valor": "solo impacto ROJO. Naranja y amarillo no bloquean",
-        "timeframe": "-"
-      },
-      {
-        "variable": "bloqueo_previo",
-        "operador": "=",
-        "valor": "5 minutos antes de la hora publicada",
+        "valor": "se dibuja en la primera vela del retroceso, en vivo",
         "timeframe": "1m"
       },
       {
-        "variable": "bloqueo_posterior",
+        "variable": "linea_provisional",
         "operador": "=",
-        "valor": "5 minutos despues de la hora publicada",
+        "valor": "mientras el retroceso vive, linea en el extremo alcanzado; se mueve con cada vela que lo supere",
         "timeframe": "1m"
       },
       {
-        "variable": "ventana_total",
+        "variable": "confirmacion",
         "operador": "=",
-        "valor": "11 minutos (T-5 a T+5, ambos inclusive)",
+        "valor": "al aparecer estructura contraria la linea se convierte en zona sobre la vela del extremo",
         "timeframe": "1m"
       },
       {
-        "variable": "orden_pendiente",
+        "variable": "la_linea_no_opera",
         "operador": "=",
-        "valor": "se cancela al entrar la ventana T-5. No consume el cupo de R-03 (R-04)",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "reentrada_tras_T+5",
-        "operador": "=",
-        "valor": "si el setup sigue vivo se vuelve a colocar la orden. Sujeto a P-19 (conflicto con el reloj de 5 velas de R-13)",
+        "valor": "no admite rompimiento, consecucion ni reingreso",
         "timeframe": "1m"
       }
     ],
-    "accion": "No colocar orden dentro de la ventana. Si ya hay orden pendiente sin llenar, se CANCELA al entrar T-5. Pasado T+5, si el setup sigue vivo, se vuelve a colocar la orden.",
+    "estado": "Confirmada 26/08/2026",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
+  },
+  {
+    "id": "R-35",
+    "categoria": "zonas",
+    "enunciado": "Dentro de una banda entre dos zonas se marca como maximo una zona en toda la jornada, y es la del primer retroceso.",
+    "condiciones": [
+      {
+        "variable": "banda",
+        "operador": "=",
+        "valor": "del borde interno de la zona de abajo al borde interno de la de arriba",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "turno",
+        "operador": "=",
+        "valor": "lo resuelve el PRIMER retroceso que aparezca dentro",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "resultado",
+        "operador": "=",
+        "valor": "si respeta el 50 por ciento se marca; si no, no se marca. En los dos casos la banda queda cerrada por el resto de la jornada",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "no_reabre",
+        "operador": "=",
+        "valor": "la banda no se vuelve a abrir aunque se mueran las zonas que la formaron",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "bordes_de_la_banda",
+        "operador": "=",
+        "valor": "cualquier zona viva sirve de borde, incluidas las zonas de premercado de R-20",
+        "timeframe": "1m"
+      }
+    ],
+    "estado": "Confirmada 27/08/2026; borde de premercado confirmado 01/09/2026",
+    "fuente": "Alfredo Chaumer via el operador",
+    "nota": "Caso real 14/07/2026: banda entre el soporte de la vela 8:36 (29685.00-29693.00) y la resistencia de premercado de las 19:31 (29901.25-29908.25). Mitad en 29797.13. El primer retroceso, el de la vela 8:39, sube a 29798.00 y se pasa por 0.875 puntos (3.5 ticks): no se marca y la banda queda cerrada. De 8:41 a 9:10 no se marca ninguna zona.",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
+  },
+  {
+    "id": "R-36",
+    "categoria": "zonas",
+    "enunciado": "Salir de una zona o de una banda es rompimiento mas consecucion, no geometria.",
+    "condiciones": [
+      {
+        "variable": "prohibicion",
+        "operador": "=",
+        "valor": "no se marca zona al otro lado de una zona viva cuyo rompimiento espera consecucion",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "medida",
+        "operador": "=",
+        "valor": "decide el EXTREMO del movimiento, no el rectangulo de la zona candidata",
+        "timeframe": "1m"
+      }
+    ],
+    "estado": "Confirmada 27/08/2026",
+    "fuente": "operador, casos 8/07 y 7/07",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
+  },
+  {
+    "id": "R-38",
+    "categoria": "zonas",
+    "enunciado": "Seis precisiones de dibujo de zonas.",
+    "condiciones": [
+      {
+        "variable": "1_rompimiento_por_mecha",
+        "operador": "=",
+        "valor": "el rompimiento se lee por la mecha, no por el cierre; basta 1 tick",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "2_no_invalida_sola",
+        "operador": "=",
+        "valor": "el rompimiento solo no invalida: hace falta la consecucion",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "3_rectangulo",
+        "operador": "=",
+        "valor": "el rectangulo se dibuja desde la vela origen, no desde la que confirma",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "4_estirar",
+        "operador": "=",
+        "valor": "se estira solo hacia el nuevo extremo",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "5_no_solapar",
+        "operador": "=",
+        "valor": "no se solapan zonas de tipo distinto; una zona superada cambia de papel y sigue ocupando su franja",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "6_orden_intravela",
+        "operador": "=",
+        "valor": "cuando una vela hace maximo mayor y minimo menor, el orden intravela decide que vela sostiene la zona",
+        "timeframe": "1m"
+      }
+    ],
+    "estado": "Confirmadas 26-27/08/2026",
+    "fuente": "operador, casos 8/07 y 10/07",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "marcado"
+  },
+  {
+    "id": "R-13",
+    "categoria": "zonas",
+    "enunciado": "Rompimiento es superar el borde de la zona por al menos un tick; consecucion es superar por un tick el extremo de la vela de rompimiento. La consecucion que TRASPASA una zona no tiene plazo.",
+    "condiciones": [
+      {
+        "variable": "rompimiento",
+        "operador": ">=",
+        "valor": "1 tick mas alla del borde de la zona",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "cierre_de_la_vela_de_rompimiento",
+        "operador": "=",
+        "valor": "irrelevante para que haya rompimiento",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "rompimiento_con_cuerpo",
+        "operador": "=",
+        "valor": "el cierre queda mas alla del borde traspasado",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "rompimiento_con_mecha",
+        "operador": "=",
+        "valor": "el cierre NO queda mas alla del borde traspasado",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "consecucion_al_alza",
+        "operador": ">=",
+        "valor": "maximo de la vela de rompimiento + 1 tick",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "consecucion_a_la_baja",
+        "operador": "<=",
+        "valor": "minimo de la vela de rompimiento - 1 tick",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "plazo_de_consecucion",
+        "operador": "<=",
+        "valor": "5 velas contadas desde la vela siguiente a la de rompimiento",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "plazo_del_traspaso",
+        "operador": "=",
+        "valor": "el traspaso de la zona NO tiene plazo: el rompimiento queda pendiente indefinidamente y la consecucion lo confirma cuando llegue. El plazo de 5 velas solo gobierna la geometria (R-15/R-16) y la vida de la orden (R-04)",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "plazo_de_la_consecucion",
+        "operador": "=",
+        "valor": "NINGUNO para el traspaso de la zona: puede llegar muchas velas despues (caso real 13/07/2026, 25 velas). El plazo de 5 velas gobierna la GEOMETRIA de la zona (R-15, R-16, R-19) y la VIDA DE LA ORDEN (R-04), no el traspaso",
+        "timeframe": "1m"
+      }
+    ],
+    "accion": "La consecucion al alza es la entrada de R-07. El mismo motor sirve para matar una zona y para entrar.",
+    "excepciones": [],
+    "prioridad": 1,
+    "estado": "Ampliada 27/08/2026 · enunciado corregido 04/09/2026",
+    "nota": " | CORREGIDO 04/09/2026: el enunciado decia \"dentro de las 5 velas siguientes\", contradiciendo la correccion del 27/08/2026.",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "vigencia"
+  },
+  {
+    "id": "R-14",
+    "categoria": "zonas",
+    "enunciado": "Una zona deja de tener efecto cuando ha sido superada en las dos direcciones.",
+    "condiciones": [
+      {
+        "variable": "superada_en_una_direccion",
+        "operador": "=",
+        "valor": "rompimiento Y consecucion en ese sentido",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "solo_rompimiento_sin_consecucion",
+        "operador": "=",
+        "valor": "la zona sigue vigente",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "zona_invalida",
+        "operador": "=",
+        "valor": "superada en las dos direcciones",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "efecto_de_zona_invalida",
+        "operador": "=",
+        "valor": "ninguno: no bloquea el target ni sirve para entrar",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "tratamiento_visual_zona_invalida",
+        "operador": "=",
+        "valor": "se conserva con tonalidad muy tenue, solo como recuerdo visual",
+        "timeframe": "-"
+      },
+      {
+        "variable": "invalida_es_invalida",
+        "operador": "=",
+        "valor": "una zona traspasada en ambos sentidos no cuenta para nada: ni bloquea el target, ni sirve para entrar, ni cuenta para medir el 50 por ciento entre zonas",
+        "timeframe": "1m"
+      }
+    ],
+    "accion": "Retirar del calculo de filtros toda zona superada en ambas direcciones; dejarla dibujada en tono minimo.",
+    "excepciones": [],
+    "prioridad": 2,
+    "estado": "Precisada 27/08/2026",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "vigencia"
+  },
+  {
+    "id": "R-37",
+    "categoria": "zonas",
+    "enunciado": "La vela que confirma un traspaso no abre a la vez el rompimiento del lado contrario.",
+    "condiciones": [
+      {
+        "variable": "cuando",
+        "operador": "=",
+        "valor": "el rompimiento contrario se busca a partir de la vela SIGUIENTE",
+        "timeframe": "1m"
+      }
+    ],
+    "estado": "Confirmada 27/08/2026",
+    "fuente": "operador, caso 13/07/2026",
+    "categoria_nombre": "Zonas",
+    "categoria_descripcion": "todo lo que tiene que ver con una zona",
+    "categoria_orden": 3,
+    "subcategoria": "vigencia"
+  },
+  {
+    "id": "R-05",
+    "categoria": "setup_entrada",
+    "enunciado": "Toma el primer setup valido cuya orden se llene.",
+    "condiciones": [
+      {
+        "variable": "criterio_de_seleccion",
+        "operador": "=",
+        "valor": "cronologico (primero en cumplir todas las condiciones necesarias)",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "comparacion_con_setups_posteriores",
+        "operador": "=",
+        "valor": "prohibida",
+        "timeframe": "sesion"
+      }
+    ],
+    "accion": "Ejecutar el primer setup valido. Una vez llenada la orden, ignorar el resto de la sesion.",
+    "excepciones": [
+      "Un setup valido cuya orden caduque sin llenarse (R-04) no consume el cupo ni bloquea los siguientes."
+    ],
+    "prioridad": 1,
+    "estado": "confirmada",
+    "categoria_nombre": "Setup y entrada",
+    "categoria_descripcion": "cuándo se opera",
+    "categoria_orden": 4
+  },
+  {
+    "id": "R-07",
+    "categoria": "setup_entrada",
+    "enunciado": "Entra siempre con orden stop en reposo colocada al cierre de la vela de rompimiento.",
+    "condiciones": [
+      {
+        "variable": "tipo_de_orden_long",
+        "operador": "=",
+        "valor": "Buy Stop Market",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "tipo_de_orden_short",
+        "operador": "=",
+        "valor": "Sell Stop Market",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "nivel_de_entrada_long",
+        "operador": "=",
+        "valor": "maximo de la vela de rompimiento + 1 tick, leido en MNQ",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "nivel_de_entrada_short",
+        "operador": "=",
+        "valor": "minimo de la vela de rompimiento - 1 tick, leido en MNQ",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "momento_de_colocacion",
+        "operador": "=",
+        "valor": "al cierre de la vela de rompimiento",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "orden_a_mercado",
+        "operador": "=",
+        "valor": "prohibida",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "orden_limite",
+        "operador": "=",
+        "valor": "prohibida",
+        "timeframe": "1m"
+      }
+    ],
+    "accion": "Colocar la orden Stop Market en el Chart Trader de MNQ y esperar. No perseguir el precio a mano.",
     "excepciones": [],
     "prioridad": 1,
     "estado": "confirmada",
-    "nota": "Nivel rojo definido por el icono de Forex Factory, no por criterio propio. Fuente unica: evita el conflicto de dos calendarios que no siempre coinciden."
+    "categoria_nombre": "Setup y entrada",
+    "categoria_descripcion": "cuándo se opera",
+    "categoria_orden": 4
   },
   {
     "id": "R-22",
-    "categoria": "setup",
+    "categoria": "setup_entrada",
     "enunciado": "Setup IRI: corrida, retroceso, zona, rompimiento de esa zona y consecucion. La consecucion es la entrada.",
     "condiciones": [
       {
@@ -1163,11 +1348,14 @@
     ],
     "prioridad": 1,
     "estado": "confirmada",
-    "nota": "El IRI es autocontenido: el setup crea la zona que despues rompe. Impulso-Retroceso-Impulso; el segundo impulso es la entrada."
+    "nota": "El IRI es autocontenido: el setup crea la zona que despues rompe. Impulso-Retroceso-Impulso; el segundo impulso es la entrada.",
+    "categoria_nombre": "Setup y entrada",
+    "categoria_descripcion": "cuándo se opera",
+    "categoria_orden": 4
   },
   {
     "id": "R-23",
-    "categoria": "setup",
+    "categoria": "setup_entrada",
     "enunciado": "Setup Reingreso: tras un rompimiento con consecucion que falla, el precio recupera la zona entera y se opera en sentido contrario.",
     "condiciones": [
       {
@@ -1223,11 +1411,186 @@
     "excepciones": [],
     "prioridad": 1,
     "estado": "Confirmada 24/08/2026, plazo anadido 27/08/2026",
-    "nota": "Es la contraria del IRI: el IRI opera el rompimiento que funciona, el Reingreso el que fallo. Unico setup del plan con un segundo filtro de target. La orden muere solo por R-04."
+    "nota": "Es la contraria del IRI: el IRI opera el rompimiento que funciona, el Reingreso el que fallo. Unico setup del plan con un segundo filtro de target. La orden muere solo por R-04.",
+    "categoria_nombre": "Setup y entrada",
+    "categoria_descripcion": "cuándo se opera",
+    "categoria_orden": 4
+  },
+  {
+    "id": "R-34",
+    "categoria": "setup_entrada",
+    "enunciado": "La direccion de la vela de las 08:31 marca por donde empieza el dia pero no obliga a operar en ese sentido toda la sesion.",
+    "condiciones": [
+      {
+        "variable": "sentido",
+        "operador": "=",
+        "valor": "se buscan entradas de continuacion en los dos sentidos",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "zona_y_sentido",
+        "operador": "=",
+        "valor": "cada tramo deja su zona al terminar y esa zona se opera a favor de ese tramo",
+        "timeframe": "1m"
+      }
+    ],
+    "estado": "Confirmada 27/08/2026",
+    "fuente": "operador, caso 9/07/2026",
+    "categoria_nombre": "Setup y entrada",
+    "categoria_descripcion": "cuándo se opera",
+    "categoria_orden": 4
+  },
+  {
+    "id": "R-03",
+    "categoria": "riesgo_gestion",
+    "enunciado": "Ejecuta como maximo una operacion por sesion.",
+    "condiciones": [
+      {
+        "variable": "ordenes_llenadas_por_sesion",
+        "operador": "<=",
+        "valor": "1",
+        "timeframe": "sesion"
+      },
+      {
+        "variable": "orden_no_llenada_consume_cupo",
+        "operador": "=",
+        "valor": "false",
+        "timeframe": "sesion"
+      },
+      {
+        "variable": "cupo_consumido_por_resultado",
+        "operador": "=",
+        "valor": "indiferente (target o stop)",
+        "timeframe": "sesion"
+      }
+    ],
+    "accion": "Tras la primera orden llenada, no colocar ninguna orden mas en esa sesion aunque aparezcan setups validos.",
+    "excepciones": [],
+    "prioridad": 1,
+    "estado": "confirmada",
+    "categoria_nombre": "Riesgo, orden y gestión",
+    "categoria_descripcion": "cuánto y hasta dónde",
+    "categoria_orden": 5
+  },
+  {
+    "id": "R-04",
+    "categoria": "riesgo_gestion",
+    "enunciado": "Manten la orden pendiente hasta que se llene, hasta que se agoten 5 velas sin consecucion, hasta que el precio vuelva al punto del stop, o hasta el fin de la ventana.",
+    "condiciones": [
+      {
+        "variable": "cancelacion_1_plazo",
+        "operador": "=",
+        "valor": "pasan 5 velas desde el rompimiento sin que el precio alcance el nivel de la orden",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "cancelacion_2_vuelta_al_stop",
+        "operador": "=",
+        "valor": "el precio vuelve al PUNTO DEL STOP tal como lo define R-24 (el extremo alcanzado DESDE QUE NACIO LA ZONA hasta la vela de rompimiento (corregido 27/08/2026; NO es solo el extremo del retroceso que la origino)). Las palabras originales del operador el 27/08/2026 fueron \"llega al mismo punto del retroceso, que seria el mismo punto del stop\": entonces coincidian. Desde que R-24 se corrigio pueden NO coincidir, y manda el punto del stop. Asi lo aplico el motor en las 11 sesiones validadas.",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "cancelacion_3_hora",
+        "operador": "=",
+        "valor": "11:29:00 ET",
+        "timeframe": "-"
+      },
+      {
+        "variable": "NO_es_causa_de_cancelacion",
+        "operador": "=",
+        "valor": "la aparicion de un retroceso nuevo. Un retroceso nuevo deja la orden intacta",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "orden_de_comprobacion",
+        "operador": "=",
+        "valor": "la caducidad se comprueba ANTES del llenado: pasado el plazo la orden no existe y no puede llenarse",
+        "timeframe": "1m"
+      }
+    ],
+    "accion": "Cancelar al ocurrir lo PRIMERO de las tres causas. El cupo de R-03 no se consume; se puede esperar un setup nuevo dentro de la ventana de R-02.",
+    "excepciones": [],
+    "prioridad": 2,
+    "estado": "REESCRITA 27/08/2026 - la redaccion anterior decia lo contrario en los dos puntos",
+    "nota": "Cierra P-19. El retroceso nuevo es el mismo evento que dispara R-19: marca zona nueva Y mata la orden pendiente. Un evento, dos consecuencias. | PRECISADO 04/09/2026: la cancelacion se mide contra el stop de R-24, no contra el extremo del retroceso.",
+    "categoria_nombre": "Riesgo, orden y gestión",
+    "categoria_descripcion": "cuánto y hasta dónde",
+    "categoria_orden": 5
+  },
+  {
+    "id": "R-06",
+    "categoria": "riesgo_gestion",
+    "enunciado": "Una operacion abierta se gestiona hasta stop o target, aunque termine la ventana operativa.",
+    "condiciones": [
+      {
+        "variable": "fin_ventana_obliga_a_cerrar",
+        "operador": "=",
+        "valor": "false",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "fin_ventana_prohibe_abrir",
+        "operador": "=",
+        "valor": "true",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "cierre_por_tiempo",
+        "operador": "=",
+        "valor": "no existe",
+        "timeframe": "1m"
+      }
+    ],
+    "accion": "No ejecutar ninguna accion por hora. Solo stop o target cierran la posicion.",
+    "excepciones": [],
+    "prioridad": 2,
+    "estado": "confirmada",
+    "categoria_nombre": "Riesgo, orden y gestión",
+    "categoria_descripcion": "cuánto y hasta dónde",
+    "categoria_orden": 5
+  },
+  {
+    "id": "R-08",
+    "categoria": "riesgo_gestion",
+    "enunciado": "Ejecuta con la ATM K1 al valor de ATM_DEFECTO y ajusta stop y target a mano tras el llenado, en ese orden.",
+    "condiciones": [
+      {
+        "variable": "ATM",
+        "operador": "=",
+        "valor": "K1 · 1 contrato MNQ · Auto Breakeven OFF · Auto Trail OFF",
+        "timeframe": "-"
+      },
+      {
+        "variable": "defecto",
+        "operador": "=",
+        "valor": "ATM_DEFECTO = 320 ticks = 80 puntos = $160. Igual a STOP_MAX a proposito: el stop provisional nunca debe ser mas ajustado que el estructural",
+        "timeframe": "-"
+      },
+      {
+        "variable": "filtro_previo_al_envio",
+        "operador": "<=",
+        "valor": "STOP_MAX = 80 puntos. La distancia se mide entre la ENTRADA y el stop estructural de R-24: IRI = el extremo alcanzado DESDE QUE NACIO LA ZONA hasta la vela de rompimiento (corregido 27/08/2026; NO es solo el extremo del retroceso que la origino). Reingreso = extremo de la CORRIDA FALLIDA.",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "tras_el_llenado",
+        "operador": "=",
+        "valor": "1o el stop a su referencia estructural, 2o el target a distancia 1:1 (R-24)",
+        "timeframe": "-"
+      }
+    ],
+    "accion": "Verificar distancia antes de enviar. Si supera 240 ticks, no operar. Tras el llenado arrastrar stop y luego target. No volver a moverlos.",
+    "excepciones": [],
+    "prioridad": 1,
+    "estado": "confirmada · filtro alineado con R-24 el 04/09/2026",
+    "nota": "CORREGIDA 24/08/2026. Antes fundia dos numeros distintos en uno solo: el defecto de la ATM (posterior al llenado) y el maximo de stop (filtro previo al envio). Son cosas distintas y ahora estan separadas. Los valores viven en PARAMETROS.md. | CORREGIDO 04/09/2026: decia \"distancia entrada <-> extremo del RETROCESO\".",
+    "categoria_nombre": "Riesgo, orden y gestión",
+    "categoria_descripcion": "cuánto y hasta dónde",
+    "categoria_orden": 5
   },
   {
     "id": "R-24",
-    "categoria": "gestion",
+    "categoria": "riesgo_gestion",
     "enunciado": "Ancla la regla en el nivel de entrada, mide el stop hasta su referencia estructural y pon el target a esa misma distancia.",
     "condiciones": [
       {
@@ -1239,13 +1602,13 @@
       {
         "variable": "stop_IRI_largo",
         "operador": "=",
-        "valor": "el punto MAS BAJO del retroceso",
+        "valor": "el punto MAS BAJO alcanzado desde que nacio la zona hasta la vela de rompimiento",
         "timeframe": "1m"
       },
       {
         "variable": "stop_IRI_corto",
         "operador": "=",
-        "valor": "el punto MAS ALTO del retroceso",
+        "valor": "el punto MAS ALTO alcanzado desde que nacio la zona hasta la vela de rompimiento",
         "timeframe": "1m"
       },
       {
@@ -1294,12 +1657,15 @@
     "accion": "Si CUALQUIERA de los tres filtros falla, la entrada queda INVALIDADA y no se opera. El target NUNCA se acorta para que quepa.",
     "excepciones": [],
     "prioridad": 1,
-    "estado": "Corregida 27/08/2026",
-    "nota": "Geometria: el stop del Reingreso mide contra la corrida fallida, que esta al otro lado de la zona, asi que incluye el ancho de la zona entera y tiende a ser mayor que el de un IRI. El filtro STOP_MAX muerde mas en Reingreso."
+    "estado": "Corregida 27/08/2026 · json alineado 04/09/2026",
+    "nota": "Geometria: el stop del Reingreso mide contra la corrida fallida, que esta al otro lado de la zona, asi que incluye el ancho de la zona entera y tiende a ser mayor que el de un IRI. El filtro STOP_MAX muerde mas en Reingreso. | CORREGIDO 04/09/2026: este archivo seguia diciendo \"el extremo del retroceso\", la definicion anterior al 27/08/2026. El texto del plan ya tenia la buena; el json no. Caso real 7/07/2026: con la vieja el riesgo daba 71,50 pts y la entrada pasaba; con la correcta da 86,25 y queda DESCARTADA por STOP_MAX.",
+    "categoria_nombre": "Riesgo, orden y gestión",
+    "categoria_descripcion": "cuánto y hasta dónde",
+    "categoria_orden": 5
   },
   {
     "id": "R-25",
-    "categoria": "gestion",
+    "categoria": "riesgo_gestion",
     "enunciado": "Una vez ajustados stop y target, NO se gestiona la posicion. Nunca.",
     "condiciones": [
       {
@@ -1355,47 +1721,110 @@
     "excepciones": [],
     "prioridad": 1,
     "estado": "confirmada",
-    "nota": "Palabras del operador, 24/08/2026: 'no se toca nada, jamas... Repito, jamas se gestiona.' Es la unica regla del plan enunciada como prohibicion absoluta y sin excepciones. Convierte cada operacion en un experimento limpio: el resultado mide el setup, no la gestion."
+    "nota": "Palabras del operador, 24/08/2026: 'no se toca nada, jamas... Repito, jamas se gestiona.' Es la unica regla del plan enunciada como prohibicion absoluta y sin excepciones. Convierte cada operacion en un experimento limpio: el resultado mide el setup, no la gestion.",
+    "categoria_nombre": "Riesgo, orden y gestión",
+    "categoria_descripcion": "cuánto y hasta dónde",
+    "categoria_orden": 5
   },
   {
-    "id": "R-26",
-    "categoria": "riesgo",
-    "enunciado": "Opera siempre 1 contrato MNQ. El tamano no cambia por capital, racha ni conviccion.",
+    "id": "R-30",
+    "categoria": "riesgo_gestion",
+    "enunciado": "Al llenarse la orden termina el ANALISIS del dia, no solo la operativa.",
     "condiciones": [
       {
-        "variable": "tamano",
+        "variable": "al_llenarse",
         "operador": "=",
-        "valor": "1 contrato MNQ, siempre",
+        "valor": "se ajustan stop y target (R-08) y se cierra el analisis",
         "timeframe": "-"
       },
       {
-        "variable": "escalado_por_capital",
+        "variable": "marcar_zonas_nuevas",
         "operador": "=",
-        "valor": "NO. El tamano no sube aunque la cuenta crezca",
+        "valor": "PROHIBIDO despues del llenado",
         "timeframe": "-"
       },
       {
-        "variable": "reduccion_por_racha",
+        "variable": "buscar_setups",
         "operador": "=",
-        "valor": "NO. El tamano no baja aunque la cuenta caiga",
+        "valor": "PROHIBIDO despues del llenado",
         "timeframe": "-"
       },
       {
-        "variable": "revision",
+        "variable": "al_cerrar_la_operacion",
         "operador": "=",
-        "valor": "ANUAL. Es el unico momento en que se evalua cambiar el numero de contratos",
+        "valor": "bitacora, observaciones, pantallazo, y CERRAR NinjaTrader",
         "timeframe": "-"
       }
     ],
-    "accion": "Enviar siempre 1 contrato. Cualquier cambio de tamano solo puede decidirse en la revision anual.",
+    "accion": "Solo esperar el resultado. Terminada la operacion, registrar y cerrar la plataforma.",
     "excepciones": [],
     "prioridad": 1,
     "estado": "confirmada",
-    "nota": "Consecuencia aritmetica sin resolver: con tamano fijo, el riesgo PORCENTUAL crece a medida que la cuenta cae. Ver P-21."
+    "nota": "Palabras del operador 26/08/2026: 'ya no marco mas zonas, no hago mas analisis, no hago nada mas'. Va mas alla de R-03 (no mas ordenes) y R-25 (no tocar la posicion): prohibe seguir ANALIZANDO. Sin esta regla, el operador podria seguir marcando zonas mientras ve acercarse su stop, que es el estado mental donde se rompen los planes.",
+    "categoria_nombre": "Riesgo, orden y gestión",
+    "categoria_descripcion": "cuánto y hasta dónde",
+    "categoria_orden": 5
+  },
+  {
+    "id": "R-21",
+    "categoria": "filtros",
+    "enunciado": "No operes en la ventana de +/-5 minutos alrededor de una noticia roja de Forex Factory.",
+    "condiciones": [
+      {
+        "variable": "fuente",
+        "operador": "=",
+        "valor": "Forex Factory (unica fuente). Investing / 3 toros NO se usa",
+        "timeframe": "-"
+      },
+      {
+        "variable": "nivel",
+        "operador": "=",
+        "valor": "solo impacto ROJO. Naranja y amarillo no bloquean",
+        "timeframe": "-"
+      },
+      {
+        "variable": "bloqueo_previo",
+        "operador": "=",
+        "valor": "5 minutos antes de la hora publicada",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "bloqueo_posterior",
+        "operador": "=",
+        "valor": "5 minutos despues de la hora publicada",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "ventana_total",
+        "operador": "=",
+        "valor": "11 minutos (T-5 a T+5, ambos inclusive)",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "orden_pendiente",
+        "operador": "=",
+        "valor": "se cancela al entrar la ventana T-5. No consume el cupo de R-03 (R-04)",
+        "timeframe": "1m"
+      },
+      {
+        "variable": "reentrada_tras_T+5",
+        "operador": "=",
+        "valor": "si el setup sigue vivo se vuelve a colocar la orden. Sujeto a P-19 (conflicto con el reloj de 5 velas de R-13)",
+        "timeframe": "1m"
+      }
+    ],
+    "accion": "No colocar orden dentro de la ventana. Si ya hay orden pendiente sin llenar, se CANCELA al entrar T-5. Pasado T+5, si el setup sigue vivo, se vuelve a colocar la orden.",
+    "excepciones": [],
+    "prioridad": 1,
+    "estado": "confirmada",
+    "nota": "Nivel rojo definido por el icono de Forex Factory, no por criterio propio. Fuente unica: evita el conflicto de dos calendarios que no siempre coinciden.",
+    "categoria_nombre": "Filtros de no-operar",
+    "categoria_descripcion": "los días que no",
+    "categoria_orden": 6
   },
   {
     "id": "R-27",
-    "categoria": "filtro",
+    "categoria": "filtros",
     "enunciado": "En dia de FOMC no se opera IRI. Solo se permite Reingreso.",
     "condiciones": [
       {
@@ -1433,11 +1862,14 @@
     "excepciones": [],
     "prioridad": 1,
     "estado": "confirmada",
-    "nota": "Convive con R-21: un evento rojo de la Fed dispara las dos reglas, el veto de IRI todo el dia y el bloqueo de +/-5 min. Misma fuente unica, sin conflicto de calendarios. El operador descarta el setup que persigue continuacion y conserva el que opera rompimientos fallidos."
+    "nota": "Convive con R-21: un evento rojo de la Fed dispara las dos reglas, el veto de IRI todo el dia y el bloqueo de +/-5 min. Misma fuente unica, sin conflicto de calendarios. El operador descarta el setup que persigue continuacion y conserva el que opera rompimientos fallidos.",
+    "categoria_nombre": "Filtros de no-operar",
+    "categoria_descripcion": "los días que no",
+    "categoria_orden": 6
   },
   {
     "id": "R-28",
-    "categoria": "filtro",
+    "categoria": "filtros",
     "enunciado": "No se opera estando enfermo o sin encontrarse bien mentalmente.",
     "condiciones": [
       {
@@ -1451,7 +1883,10 @@
     "excepciones": [],
     "prioridad": 1,
     "estado": "confirmada",
-    "nota": "UNICA regla del plan sin criterio medible, y la unica que un tercero no puede verificar. Queda fuera del alcance del test ciego de F1.11. El operador la mantiene como criterio libre a proposito."
+    "nota": "UNICA regla del plan sin criterio medible, y la unica que un tercero no puede verificar. Queda fuera del alcance del test ciego de F1.11. El operador la mantiene como criterio libre a proposito.",
+    "categoria_nombre": "Filtros de no-operar",
+    "categoria_descripcion": "los días que no",
+    "categoria_orden": 6
   },
   {
     "id": "R-29",
@@ -1493,333 +1928,9 @@
     "excepciones": [],
     "prioridad": 1,
     "estado": "confirmada",
-    "nota": "No anade criterio operativo: ordena las 28 reglas anteriores en la secuencia real del dia. El registro de los dias SIN operar es lo que permite cerrar P-01, P-20, P-21 y D-09; sin el, esos pendientes no se cierran nunca."
-  },
-  {
-    "id": "R-30",
-    "categoria": "proceso",
-    "enunciado": "Al llenarse la orden termina el ANALISIS del dia, no solo la operativa.",
-    "condiciones": [
-      {
-        "variable": "al_llenarse",
-        "operador": "=",
-        "valor": "se ajustan stop y target (R-08) y se cierra el analisis",
-        "timeframe": "-"
-      },
-      {
-        "variable": "marcar_zonas_nuevas",
-        "operador": "=",
-        "valor": "PROHIBIDO despues del llenado",
-        "timeframe": "-"
-      },
-      {
-        "variable": "buscar_setups",
-        "operador": "=",
-        "valor": "PROHIBIDO despues del llenado",
-        "timeframe": "-"
-      },
-      {
-        "variable": "al_cerrar_la_operacion",
-        "operador": "=",
-        "valor": "bitacora, observaciones, pantallazo, y CERRAR NinjaTrader",
-        "timeframe": "-"
-      }
-    ],
-    "accion": "Solo esperar el resultado. Terminada la operacion, registrar y cerrar la plataforma.",
-    "excepciones": [],
-    "prioridad": 1,
-    "estado": "confirmada",
-    "nota": "Palabras del operador 26/08/2026: 'ya no marco mas zonas, no hago mas analisis, no hago nada mas'. Va mas alla de R-03 (no mas ordenes) y R-25 (no tocar la posicion): prohibe seguir ANALIZANDO. Sin esta regla, el operador podria seguir marcando zonas mientras ve acercarse su stop, que es el estado mental donde se rompen los planes."
-  },
-  {
-    "id": "R-31",
-    "categoria": "estructura",
-    "enunciado": "La vela de las 08:31 declara la direccion inicial de la sesion con su propio cuerpo y es la vela origen.",
-    "condiciones": [
-      {
-        "variable": "direccion",
-        "operador": "=",
-        "valor": "cierre por encima de su apertura = inicia alcista; por debajo = inicia bajista",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "premercado",
-        "operador": "=",
-        "valor": "las velas de 08:30 y anteriores no sirven como n-1",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "origen",
-        "operador": "=",
-        "valor": "la corrida se mide desde su minimo si es alcista, desde su maximo si es bajista",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "puede_sostener_zona",
-        "operador": "=",
-        "valor": "si",
-        "timeframe": "1m"
-      }
-    ],
-    "estado": "Confirmada 26/08/2026",
-    "pendiente": "P-23: cierre exactamente igual a la apertura"
-  },
-  {
-    "id": "R-32",
-    "categoria": "estructura",
-    "enunciado": "Vela con maximo mayor y minimo menor sin corrida viva: pasa a ser la nueva vela origen y la direccion la da la siguiente.",
-    "condiciones": [
-      {
-        "variable": "condicion",
-        "operador": "=",
-        "valor": "maximo[n]>maximo[n-1] y minimo[n]<minimo[n-1] sin corrida viva",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "repeticion",
-        "operador": "=",
-        "valor": "si n+1 tambien lo es, se repite sin limite",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "no_aplica",
-        "operador": "=",
-        "valor": "con corrida viva manda R-10",
-        "timeframe": "1m"
-      }
-    ],
-    "estado": "Confirmada 26/08/2026",
-    "pendiente": "P-24: con R-31 puede no ocurrir nunca"
-  },
-  {
-    "id": "R-33",
-    "categoria": "zonas",
-    "enunciado": "La zona de la corrida se marca al aparecer el retroceso; la del retroceso solo cuando el retroceso queda confirmado. Antes es solo una linea provisional.",
-    "condiciones": [
-      {
-        "variable": "zona_corrida",
-        "operador": "=",
-        "valor": "se dibuja en la primera vela del retroceso, en vivo",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "linea_provisional",
-        "operador": "=",
-        "valor": "mientras el retroceso vive, linea en el extremo alcanzado; se mueve con cada vela que lo supere",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "confirmacion",
-        "operador": "=",
-        "valor": "al aparecer estructura contraria la linea se convierte en zona sobre la vela del extremo",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "la_linea_no_opera",
-        "operador": "=",
-        "valor": "no admite rompimiento, consecucion ni reingreso",
-        "timeframe": "1m"
-      }
-    ],
-    "estado": "Confirmada 26/08/2026"
-  },
-  {
-    "id": "R-34",
-    "categoria": "contexto_operativo",
-    "enunciado": "La direccion de la vela de las 08:31 marca por donde empieza el dia pero no obliga a operar en ese sentido toda la sesion.",
-    "condiciones": [
-      {
-        "variable": "sentido",
-        "operador": "=",
-        "valor": "se buscan entradas de continuacion en los dos sentidos",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "zona_y_sentido",
-        "operador": "=",
-        "valor": "cada tramo deja su zona al terminar y esa zona se opera a favor de ese tramo",
-        "timeframe": "1m"
-      }
-    ],
-    "estado": "Confirmada 27/08/2026",
-    "fuente": "operador, caso 9/07/2026"
-  },
-  {
-    "id": "R-35",
-    "categoria": "marcado_zonas",
-    "enunciado": "Dentro de una banda entre dos zonas se marca como maximo una zona en toda la jornada, y es la del primer retroceso.",
-    "condiciones": [
-      {
-        "variable": "banda",
-        "operador": "=",
-        "valor": "del borde interno de la zona de abajo al borde interno de la de arriba",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "turno",
-        "operador": "=",
-        "valor": "lo resuelve el PRIMER retroceso que aparezca dentro",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "resultado",
-        "operador": "=",
-        "valor": "si respeta el 50 por ciento se marca; si no, no se marca. En los dos casos la banda queda cerrada por el resto de la jornada",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "no_reabre",
-        "operador": "=",
-        "valor": "la banda no se vuelve a abrir aunque se mueran las zonas que la formaron",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "bordes_de_la_banda",
-        "operador": "=",
-        "valor": "cualquier zona viva sirve de borde, incluidas las zonas de premercado de R-20",
-        "timeframe": "1m"
-      }
-    ],
-    "estado": "Confirmada 27/08/2026; borde de premercado confirmado 01/09/2026",
-    "fuente": "Alfredo Chaumer via el operador",
-    "nota": "Caso real 14/07/2026: banda entre el soporte de la vela 8:36 (29685.00-29693.00) y la resistencia de premercado de las 19:31 (29901.25-29908.25). Mitad en 29797.13. El primer retroceso, el de la vela 8:39, sube a 29798.00 y se pasa por 0.875 puntos (3.5 ticks): no se marca y la banda queda cerrada. De 8:41 a 9:10 no se marca ninguna zona."
-  },
-  {
-    "id": "R-36",
-    "categoria": "marcado_zonas",
-    "enunciado": "Salir de una zona o de una banda es rompimiento mas consecucion, no geometria.",
-    "condiciones": [
-      {
-        "variable": "prohibicion",
-        "operador": "=",
-        "valor": "no se marca zona al otro lado de una zona viva cuyo rompimiento espera consecucion",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "medida",
-        "operador": "=",
-        "valor": "decide el EXTREMO del movimiento, no el rectangulo de la zona candidata",
-        "timeframe": "1m"
-      }
-    ],
-    "estado": "Confirmada 27/08/2026",
-    "fuente": "operador, casos 8/07 y 7/07"
-  },
-  {
-    "id": "R-37",
-    "categoria": "vigencia_zonas",
-    "enunciado": "La vela que confirma un traspaso no abre a la vez el rompimiento del lado contrario.",
-    "condiciones": [
-      {
-        "variable": "cuando",
-        "operador": "=",
-        "valor": "el rompimiento contrario se busca a partir de la vela SIGUIENTE",
-        "timeframe": "1m"
-      }
-    ],
-    "estado": "Confirmada 27/08/2026",
-    "fuente": "operador, caso 13/07/2026"
-  },
-  {
-    "id": "R-38",
-    "categoria": "marcado_zonas",
-    "enunciado": "Seis precisiones de dibujo de zonas.",
-    "condiciones": [
-      {
-        "variable": "1_rompimiento_por_mecha",
-        "operador": "=",
-        "valor": "el rompimiento se lee por la mecha, no por el cierre; basta 1 tick",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "2_no_invalida_sola",
-        "operador": "=",
-        "valor": "el rompimiento solo no invalida: hace falta la consecucion",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "3_rectangulo",
-        "operador": "=",
-        "valor": "el rectangulo se dibuja desde la vela origen, no desde la que confirma",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "4_estirar",
-        "operador": "=",
-        "valor": "se estira solo hacia el nuevo extremo",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "5_no_solapar",
-        "operador": "=",
-        "valor": "no se solapan zonas de tipo distinto; una zona superada cambia de papel y sigue ocupando su franja",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "6_orden_intravela",
-        "operador": "=",
-        "valor": "cuando una vela hace maximo mayor y minimo menor, el orden intravela decide que vela sostiene la zona",
-        "timeframe": "1m"
-      }
-    ],
-    "estado": "Confirmadas 26-27/08/2026",
-    "fuente": "operador, casos 8/07 y 10/07"
-  },
-  {
-    "id": "R-39",
-    "categoria": "marcado_zonas",
-    "enunciado": "El plazo de 5 velas es un tope, no una espera obligatoria: si antes el mercado arma una estructura completa en sentido contrario al rompimiento, la geometria se resuelve en ese momento.",
-    "condiciones": [
-      {
-        "variable": "estructura_contraria_vela_1",
-        "operador": "=",
-        "valor": "no da la consecucion y va en sentido contrario al rompimiento; su extremo NO pasa del extremo de la vela de rompimiento",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "estructura_contraria_vela_2",
-        "operador": "=",
-        "valor": "hace retroceso: su extremo es MENOR (rompimiento bajista) o MAYOR (rompimiento alcista) que el de la vela anterior, y NO pasa del extremo de la vela de rompimiento",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "estructura_contraria_vela_3",
-        "operador": "=",
-        "valor": "no continua el retroceso: vuelve en el sentido de la estructura contraria. AQUI queda armada la estructura y AQUI se marca la zona",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "si_el_retroceso_pasa_el_extremo",
-        "operador": "=",
-        "valor": "entonces NO es retroceso: es la CONSECUCION. No hay apendice ni estiramiento; la zona queda traspasada",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "que_se_marca",
-        "operador": "=",
-        "valor": "lo mismo que al vencer el plazo: rompimiento con mecha estira la zona (R-15); rompimiento con cuerpo hace nacer la zona apendice (R-16). Solo cambia el momento",
-        "timeframe": "1m"
-      },
-      {
-        "variable": "dibujo",
-        "operador": "=",
-        "valor": "la apendice es del MISMO GRIS que cualquier zona y se dibuja desde la vela de rompimiento, su vela origen, aunque no este marcada hasta que la estructura queda armada",
-        "timeframe": "-"
-      },
-      {
-        "variable": "simetria",
-        "operador": "=",
-        "valor": "aplica igual hacia arriba: resistencia rota con cuerpo + estructura bajista completa antes del plazo",
-        "timeframe": "1m"
-      }
-    ],
-    "accion": "Resolver la geometria del rompimiento sin consecucion en el momento en que se arma la estructura contraria, sin esperar a la quinta vela.",
-    "excepciones": [
-      "Si el precio simplemente se va en sentido contrario SIN hacer retroceso en el medio, no hay estructura: se espera al plazo. Contraejemplo real 20/07/2026, velas 8:42 a 8:45."
-    ],
-    "prioridad": 2,
-    "estado": "Confirmada 01/09/2026",
-    "fuente": "operador, 01/09/2026",
-    "nota": "Diagramas: 02_Assets/diagramas/apendice_caso1_plazo.png y apendice_caso2_estructura.png. Pendiente P-30: verificar en datos si el caso de ESTIRAMIENTO (rompimiento con mecha) se resuelve tambien de forma anticipada, o solo el de la apendice."
+    "nota": "No anade criterio operativo: ordena las 28 reglas anteriores en la secuencia real del dia. El registro de los dias SIN operar es lo que permite cerrar P-01, P-20, P-21 y D-09; sin el, esos pendientes no se cierran nunca.",
+    "categoria_nombre": "Proceso diario",
+    "categoria_descripcion": "checklist y bitácora",
+    "categoria_orden": 7
   }
 ]
