@@ -1,23 +1,5 @@
 # PROMPT — FASE 2: MÓDULO WEB DEL TRADING PLAN (Claude Code)
 
-> 🔴 **DOCUMENTO SUPERADO — se conserva solo como historia.**
-> Lo que vale hoy está en **`ESTADO_FASE_2.md`**. No trabajes contra este archivo.
-
-
-> ⚠️ **ESTE GUION ESTÁ PARCIALMENTE SUPERADO. Lee antes `DISENO_PORTAL.md`.**
->
-> Se escribió el 31/08/2026 por la mañana. Esa misma tarde el operador redefinió el portal y **tres puntos de aquí dejaron de valer**:
->
-> | Dice este guion | Vigente desde el 31/08/2026 |
-> |---|---|
-> | *«Módulo 100 % estático. No toca base de datos»* | **Toca Supabase.** Las observaciones de Alfredo necesitan guardarse |
-> | *«El repositorio es privado… se publicará más adelante para que Alfredo lo revise»* | El repositorio (`kristeb-trader/Trading_Plan`) **es privado y se queda privado**. Lo que se comparte es **la dirección del portal**, con puerta de Access |
-> | El portal es la herramienta que se usa **mientras se opera** | Es una **herramienta de revisión**. Alfredo lee las reglas y comenta. No se usa operando |
->
-> El **paso 4 de «ANTES DE PROGRAMAR»** ya está cumplido: las cinco decisiones abiertas están contestadas en `BRIEF_PORTAL.md`. **No las vuelvas a preguntar.**
->
-> Todo lo demás de este guion sigue vigente, y en especial las restricciones: no inventar reglas, no completar vacíos, ningún adjetivo como criterio, no tocar `01_Plan\` ni `02_Assets\`, y los cuatro huecos declarados siempre visibles.
-
 **Cómo usarlo:** abre PowerShell, sitúate en **`E:\Proyectos\Chaumer`** (la raíz, **no** en `04_Web`) y lanza Claude Code desde ahí. Pega todo lo que sigue como primer mensaje.
 
 > **Por qué desde la raíz.** Claude Code trata su carpeta de arranque como "el proyecto": lo que queda fuera lo lee pidiendo permiso archivo por archivo, y **sus búsquedas no llegan ahí**. Todo el material fuente (`01_Plan\`, `02_Assets\`) está fuera de `04_Web`, el script de sincronización cruza esa frontera en cada ejecución, y el repositorio git está en la raíz. Arrancando en `04_Web` no encontraría nada al buscar.
@@ -39,7 +21,7 @@ Construir el módulo web **"Trading Plan"**: una página **privada**, de solo le
 
 | Archivo | Qué aporta |
 |---|---|
-| `01_Plan\reglas.json` | **la fuente de verdad de las reglas.** 38 reglas con id, categoría, enunciado, condiciones medibles, acción, excepciones, prioridad, estado, fuente y nota |
+| `01_Plan\reglas.json` | **la fuente de verdad de las reglas.** 39 reglas con id, categoría, enunciado, condiciones medibles, acción, excepciones, prioridad, estado, fuente y nota |
 | `01_Plan\TRADING_PLAN_CHAUMER.md` | documento maestro: razonamiento, casos y sub-fases |
 | `01_Plan\PARAMETROS.md` | **imprescindible.** Los números que pueden cambiar. Las reglas citan el parámetro **por nombre, no por valor** — sin este archivo la web dirá "el tope de stop" sin decir nunca que son 80 puntos |
 | `01_Plan\GLOSARIO.md` | 24 términos con definición medible |
@@ -64,7 +46,7 @@ La web **no reinterpreta ni resume el plan: renderiza lo que dicen los documento
 
 ## 🚨 EL PLAN NO ESTÁ PROBADO — Y LA WEB TIENE QUE DECIRLO
 
-El plan está en **v2.0**, con 38 reglas, cerrado el 01/09/2026 y contrastado contra 11 sesiones reales al tick. **No está congelado y no está validado.** Se cerró con **cuatro huecos declarados**, y los cuatro **deben verse en la web, no esconderse**:
+El plan está en **v2.1**, con 39 reglas, cerrado el 01/09/2026 y contrastado contra 11 sesiones reales al tick. **No está congelado y no está validado.** Se cerró con **cuatro huecos declarados**, y los cuatro **deben verse en la web, no esconderse**:
 
 1. **El test ciego nunca se ejecutó.** No hay ninguna medida de si el documento se sostiene solo, sin el operador corrigiendo al lado.
 2. **No hay regla de parada.** El plan no dice cuándo se deja de operar en la semana o el mes. Cada operación arriesga el 5,3 % de la cuenta objetivo.
@@ -83,7 +65,7 @@ El plan está en **v2.0**, con 38 reglas, cerrado el 01/09/2026 y contrastado co
    - En el documento maestro las sub-fases **no están en orden numérico**. Respeta el orden del documento, no el del número.
 2. **Buscador** que filtre por texto, por id de regla (`R-14`) y por categoría. Las categorías reales están en `reglas.json`: `contexto`, `gestion`, `filtro`, `entrada`, `setup`, `marcado_zonas`, `riesgo`, `proceso`, `estructura`, `zonas`, `contexto_operativo`, `vigencia_zonas`. **No inventes categorías nuevas ni las renombres.**
 3. **Ficha de regla:** enunciado, condiciones medibles, acción, excepciones, estado, fuente y nota.
-   - ⚠️ **`reglas.json` no tiene campo de imagen, y la mayoría de las reglas no tiene ninguna.** En todo el proyecto hay **7 diagramas** (`02_Assets\diagramas\`, nombrados por regla) y **un solo contraejemplo** (`02_Assets\invalidos\R-17_invalido_01.png`).
+   - ⚠️ **`reglas.json` no tiene campo de imagen, y la mayoría de las reglas no tiene ninguna.** En todo el proyecto hay **9 diagramas** (`02_Assets\diagramas\`, nombrados por regla o por concepto — los dos de `apendice_*` ilustran `R-15`, `R-16` y `R-39`) y **un solo contraejemplo** (`02_Assets\invalidos\R-17_invalido_01.png`).
    - Asocia imagen a regla **solo cuando el nombre del archivo lo diga**. Si una regla no tiene imagen, **la ficha simplemente no muestra imagen**: nada de placeholders, ni huecos, ni "imagen pendiente".
 4. **Diagramas Mermaid.** Hay exactamente **dos** en todo el plan. Que rendericen bien y sean legibles en móvil; el zoom es opcional.
 5. **Galería de casos**, con lightbox y filtro por regla. Fuente: `GALERIA.md`, **21 casos**.
@@ -91,9 +73,9 @@ El plan está en **v2.0**, con 38 reglas, cerrado el 01/09/2026 y contrastado co
    - Los archivos sueltos que hay en `02_Assets\galeria\` son **anteriores** a ese estándar. Si un caso tiene las dos versiones, usa la de `sesiones\`.
    - Los casos sin imagen se muestran **igualmente**, con su texto.
 6. **Modo checklist:** vista imprimible del proceso operativo diario, desde `CHECKLIST_DIARIA.md` — **cuatro bloques**: antes de abrir NinjaTrader · premercado · ventana operativa · después del llenado.
-7. **Vista de pendientes:** los 8 puntos abiertos de `PENDIENTES.md` más los cuatro huecos declarados. ⚠️ **Ninguna de las 38 reglas está marcada como `PENDIENTE`** — todas están confirmadas. Lo pendiente vive en `PENDIENTES.md` y en `CIERRE_FASE_1.md`; no lo busques en el estado de las reglas.
+7. **Vista de pendientes:** los 8 puntos abiertos de `PENDIENTES.md` más los cuatro huecos declarados. ⚠️ **Ninguna de las 39 reglas está marcada como `PENDIENTE`** — todas están confirmadas. Lo pendiente vive en `PENDIENTES.md` y en `CIERRE_FASE_1.md`; no lo busques en el estado de las reglas.
 8. **Vista de contextualización**, claramente separada de las reglas y marcada como **"esto NO es regla"**.
-9. **Versión del plan y fecha de última actualización**, visibles. Hoy: **v2.0 · 2026-09-01**. Léelas del documento, no las escribas a mano.
+9. **Versión del plan y fecha de última actualización**, visibles. Hoy: **v2.1 · 2026-09-01**. Léelas del documento, no las escribas a mano.
 10. **Responsive:** tiene que leerse bien en iPhone durante la sesión.
 
 ---
@@ -110,8 +92,8 @@ Dos frases del operador que valen como criterio: *"entre más limpio sea el grá
 
 ## SEGURIDAD Y CONTENIDO
 
-- ~~**Módulo 100 % estático.** No toca base de datos.~~ → **DEROGADO 31/08/2026.** El plan se sirve estático, pero las observaciones de Alfredo se guardan en **Supabase**. La escritura la hace un servidor de Cloudflare que valida la identidad; **el navegador nunca habla con la base**.
-- **El repositorio es privado — y se queda privado.** El riesgo aquí **no son solo las claves: es el contenido.** Este plan es metodología de un tercero (Alfredo Chaumer) y es un plan **no validado**. Lo único que se comparte es **la dirección del portal**, detrás de la puerta de Access.
+- **Módulo 100 % estático.** No toca base de datos.
+- **El repositorio es privado hasta nuevo aviso.** El riesgo aquí **no son solo las claves: es el contenido.** Este plan es metodología de un tercero (Alfredo Chaumer) y es un plan **no validado**.
 - ⚠️ **`00_Guias\` no puede acabar en el repositorio.** Contiene PDFs de terceros y **1,4 GB de video** de sesiones de Chaumer. Añádelo al `.gitignore`. Además, GitHub rechaza archivos de más de 100 MB y esos mp4 pasan de 200 MB cada uno: el push fallaría.
 - **Revisa el `.gitignore` como primera tarea.** Hoy dice `04_Web/` (hay que quitarlo) y no dice `00_Guias/` (hay que añadirlo). Añade también `node_modules/`, `dist/`, `.env*`.
 - Cuando lleguen los módulos de backtesting: **nada de escritura desde el cliente**. Lectura vía RLS con políticas explícitas; escritura autenticada.
@@ -143,7 +125,7 @@ Dos frases del operador que valen como criterio: *"entre más limpio sea el grá
 ## CRITERIOS DE ACEPTACIÓN
 
 - [ ] Cambiar una línea en `01_Plan\TRADING_PLAN_CHAUMER.md`, ejecutar el sync y ver el cambio en la web **sin tocar código**
-- [ ] **Las 38 reglas de `reglas.json` aparecen en la web** — cuéntalas, no lo des por hecho
+- [ ] **Las 39 reglas de `reglas.json` aparecen en la web** — cuéntalas, no lo des por hecho
 - [ ] **Las 12 sub-fases están en la navegación**, incluida `F1.12`
 - [ ] **Los cuatro huecos declarados se ven**, y las cifras del backtesting nunca aparecen sin sus advertencias
 - [ ] Los valores de los parámetros se resuelven desde `PARAMETROS.md`: en ningún sitio se lee un número escrito a mano

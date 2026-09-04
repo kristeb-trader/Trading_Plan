@@ -141,8 +141,8 @@ O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas,
 
 Si el rompimiento **fue con cuerpo** y pasan 5 velas sin consecución, no se estira esa zona: **nace una zona nueva**, pegada a la anterior. Se llama **zona apéndice** y se marca desde el cuerpo de la vela que hizo rompimiento hasta la punta de la mecha.
 
-> 🖼 **Gráfico.** Texto alternativo: Rompimiento con cuerpo sin consecución: la zona original y la apéndice que nace bajo ella
-> Pie: La original se queda intacta y la apéndice se marca sobre la mecha de la vela que rompió. Ahora hay dos.
+> 🖼 **Gráfico.** Texto alternativo: Caso 1: pasan las cinco velas sin consecución y ahí se marca la zona apéndice
+> Pie: Caso 1: ninguna de las cinco velas vuelve a pasar de la mecha. Al vencer el plazo se marca la apéndice, y la original se queda intacta.
 
 - **Qué lo dispara** — Rompimiento con cuerpo **+ 5 velas** sin consecución
 - **La zona original** — No se modifica
@@ -159,8 +159,8 @@ O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas,
 > **Las 5 velas son un tope, no una espera obligatoria.** Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en ese momento y no se espera más.
 > Actúa lo que llegue primero.
 
-> 🖼 **Gráfico.** Texto alternativo: Rompimiento con cuerpo y un retroceso nuevo antes de que se cumpla el plazo
-> Pie: Rompió con cuerpo, pero antes de las cinco velas llegó un retroceso nuevo: se marca zona en ese momento.
+> 🖼 **Gráfico.** Texto alternativo: Caso 2: antes de las cinco velas el mercado arma una estructura en sentido contrario
+> Pie: Caso 2: antes de que venza el plazo el mercado arma una estructura completa en sentido contrario. La apéndice se marca ahí.
 
 ---
 

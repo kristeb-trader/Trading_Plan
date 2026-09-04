@@ -1,40 +1,29 @@
 # BRIEF DEL PORTAL — Fase 2
 
-> 🔴 **DOCUMENTO SUPERADO — se conserva solo como historia.**
-> Lo que vale hoy está en **`ESTADO_FASE_2.md`**. No trabajes contra este archivo.
-
-
-**Fecha:** 2026-09-01 · **Actualizado:** 2026-09-01, tras la decisión del operador del 31/08.
-**Estado:** punto de partida. La especificación viva es `DISENO_PORTAL.md`.
+**Fecha:** 2026-09-01 · **Estado:** punto de partida, no especificación cerrada.
 **Antes de leer esto:** `..\01_Plan\CIERRE_FASE_1.md` y `..\CLAUDE.md`.
-
-> ⚠️ **Este documento se escribió antes de que el operador redefiniera el portal.** Se ha corregido en los puntos que quedaron obsoletos. **Donde este brief y `DISENO_PORTAL.md` se contradigan, manda el diseño.**
 
 ---
 
 ## Para qué es el portal
 
-Para que **Alfredo Chaumer revise las reglas** que se extrajeron de su metodología y **deje observaciones escritas** que el operador lea después.
+Para que el operador **ejecute el plan sin decidir nada** y **audite después lo que hizo**.
 
-No es una web de marketing, no es un curso y no es un bot. **Tampoco es una herramienta de operación: no se usa mientras se opera.** Es la mesa de revisión del plan.
+No es una web de marketing, no es un curso y no es un bot. Es la herramienta de trabajo de una persona, en su escritorio, mientras opera.
 
-> El plan ya existe y está escrito. El portal **no añade metodología**: la hace consultable, revisable y comentable.
-
-**Corregido el 31/08/2026.** La versión anterior decía que el portal servía *"para que el operador ejecute el plan sin decidir nada, en su escritorio, mientras opera"*. Ya no: eso lo decidió el operador al abrir el portal a Alfredo.
+> El plan ya existe y está escrito. El portal **no añade metodología**: la hace consultable, ejecutable paso a paso y auditable.
 
 ---
 
 ## Lo que el portal tiene que resolver, en orden de importancia
 
-*(Orden corregido el 31/08: al dejar de ser herramienta de operación, la checklist deja de ser la función principal y las reglas pasan a serlo.)*
+### 1 · La secuencia del día, sin decidir
+`CHECKLIST_DIARIA.md` convertida en algo que se recorre: cuatro bloques —antes de abrir NinjaTrader · premercado · ventana operativa · después del llenado— con las comprobaciones en su orden real.
 
-### 1 · Las 38 reglas, consultables y comentables
-Construidas **desde `reglas.json`**, no copiadas a mano. Buscables, filtrables por categoría, enlazadas entre sí y con el glosario. Cada regla con sus condiciones medibles y, cuando exista, el caso real que la fijó. **Y con la caja donde Alfredo deja su observación sobre esa regla.**
+Lo importante no es que sea bonito: es que **cuando llega el momento de mandar la orden, todos los filtros ya estén comprobados**. Los tres que pueden anular una entrada son el tope de stop, que el objetivo esté libre de zonas, y —solo en Reingreso— el punto de referencia.
 
-### 2 · La secuencia del día, como documento
-`CHECKLIST_DIARIA.md` renderizada: cuatro bloques —antes de abrir NinjaTrader · premercado · ventana operativa · después del llenado— en su orden real, en una vista imprimible.
-
-Los tres filtros que pueden anular una entrada son el tope de stop, que el objetivo esté libre de zonas, y —solo en Reingreso— el punto de referencia. **Se muestran; el portal no los comprueba ni acompaña la operativa en vivo.**
+### 2 · Las 39 reglas, consultables en caliente
+Construidas **desde `reglas.json`**, no copiadas a mano. Buscables, filtrables por categoría, enlazadas entre sí y con el glosario. Cada regla con sus condiciones medibles y, cuando exista, el caso real que la fijó.
 
 ### 3 · Los parámetros en un solo sitio
 Los números que pueden cambiar viven en `PARAMETROS.md` y las reglas los citan **por nombre, no por valor**. El portal debe respetar eso: cambiar el tope de stop en un sitio y que se propague a todo.
@@ -67,17 +56,17 @@ Dos frases suyas que valen como criterio de diseño:
 
 ---
 
-## Las cinco decisiones — ✅ contestadas por el operador el 31/08/2026
+## Decisiones que el operador todavía no ha tomado
 
-| # | Decisión | Respuesta |
-|---|---|---|
-| 1 | ¿Portal local, o accesible desde fuera? | **En internet**, Cloudflare Pages, con puerta de Access y lista blanca de correo |
-| 2 | ¿Lo consulta **mientras** opera? | **No.** Antes y después. No es herramienta de operación |
-| 3 | ¿La bitácora se escribe en el portal? | **No.** Sigue donde está hoy |
-| 4 | ¿Lee los datos de NinjaTrader? | **No.** Ningún dato de NT8. Solo reglas |
-| 5 | ¿Genera las gráficas de backtesting? | **No genera nada.** La galería muestra las 21 imágenes que ya existen |
+No las resuelvas por tu cuenta. Pregúntaselas cuando toquen:
 
-Y una decisión que no estaba en la lista: **las observaciones de Alfredo se guardan en Supabase**, escritas por un servidor de Cloudflare que valida la identidad — nunca por el navegador.
+| # | Decisión |
+|---|---|
+| 1 | ¿Portal local en su equipo, o accesible desde fuera? |
+| 2 | ¿Consulta el portal **mientras** opera, o solo antes y después? |
+| 3 | ¿La bitácora se escribe en el portal, o sigue donde está hoy? |
+| 4 | ¿El portal lee los datos de NinjaTrader, o se le cargan a mano? |
+| 5 | ¿Debe generar las gráficas de backtesting, o solo mostrar las ya generadas? |
 
 ---
 

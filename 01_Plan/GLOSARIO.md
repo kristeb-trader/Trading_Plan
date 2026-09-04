@@ -259,7 +259,7 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 | Elemento | Condición medible |
 |---|---|
-| **Disparador** | rompimiento **con cuerpo** + **5 velas sin consecución** |
+| **Disparador** | rompimiento **con cuerpo** + **el plazo resuelto**: o pasan **5 velas sin consecución**, o antes de eso el mercado **arma una estructura completa en sentido contrario** *(`R-39`, 01/09/2026)* |
 | **Acción** | se marca una **zona nueva**, llamada **zona apéndice** |
 | **Zona original** | **no se toca** |
 | **Límites de la apéndice** | del **borde del cuerpo** de la vela de rompimiento al **extremo de su mecha** — es decir, **solo esa mecha** |
@@ -273,8 +273,26 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 **Caso real 7/07/2026:** la vela **8:39** rompe con cuerpo el soporte de la 8:36 (cierra en 29.502,75, bajo el piso 29.503,75) y ninguna de las 5 velas siguientes baja de 29.491,25 → en la vela de las **8:44** nace la apéndice **29.491,25 – 29.502,75**.
 
-**Diagrama:** `../02_Assets/diagramas/R-15_extension_apendice.png`
-**Regla asociada:** `R-16` · **Estado:** ✅ Confirmada 24/08/2026 · **precisada 27/08/2026**
+> ### 🔵 El plazo es un TOPE, no una espera — *operador, 01/09/2026*
+>
+> No hay que esperar a la quinta vela si el mercado ya dijo lo que tenía que decir. Sobre un **soporte roto hacia abajo**:
+>
+> | Vela | Qué hace | Condición medible |
+> |---|---|---|
+> | 1ª | no da consecución y **sube** | su mínimo no pasa del extremo de la vela de rompimiento |
+> | 2ª | **retroceso** | su mínimo es **MENOR** que el de la vela anterior **y NO pasa** del extremo de la vela de rompimiento |
+> | 3ª | **no sigue bajando: vuelve a subir** | aquí queda armada la estructura → **aquí se marca la zona** |
+>
+> 🔴 Si el mínimo de la 2ª vela **pasara** del extremo de la vela de rompimiento, eso **no es un retroceso: es la consecución**. No hay apéndice: la zona queda traspasada.
+>
+> **Subir no basta.** Hace falta la estructura completa. Contraejemplo real **20/07/2026**: tras romper en la 8:40 el precio subió cuatro velas seguidas sin retroceso en el medio → no armó estructura y la apéndice nació por plazo vencido, en la 8:45.
+>
+> Aplica igual al revés, con una resistencia rota hacia arriba.
+
+**Cómo se dibuja:** la apéndice es **del mismo gris que cualquier otra zona** y se dibuja **desde la vela de rompimiento**, que es su vela origen — aunque no esté marcada hasta que el plazo se resuelve.
+
+**Diagramas:** `../02_Assets/diagramas/apendice_caso1_plazo.png` (por plazo) y `../02_Assets/diagramas/apendice_caso2_estructura.png` (por estructura contraria) · también `R-15_extension_apendice.png`
+**Reglas asociadas:** `R-16` y `R-39` · **Estado:** ✅ Confirmada 24/08/2026 · precisada 27/08/2026 · **ampliada 01/09/2026**
 
 ---
 
@@ -425,14 +443,12 @@ Como el inicio es fijo y el fin se mueve, **la ventana cambia de duración dos v
 
 **El umbral de volumen solo existe en premercado.** Confirmado por el operador el 24/08/2026.
 
-| Momento | Vela de 8.000 contratos en MNQ |
+| Momento | Vela de 3.000 contratos en NQ |
 |---|---|
 | **Antes** de la apertura americana | → **marca zona** por `R-20` |
 | **Después** de la apertura americana | → **no marca nada.** Dentro de sesión solo se marcan zonas por estructura (`R-12`) |
 
-> 📌 **Por qué el corte no es arbitrario.** El mismo número significa cosas distintas a cada lado de la apertura: en premercado 6.000 contratos en una vela de 1 minuto del MNQ es un evento raro; en sesión es volumen corriente. Sin el corte, el gráfico se llenaría de zonas.
->
-> *(El ejemplo va en MNQ porque el análisis y la ejecución son en MNQ desde el 03/09/2026 — ver R-01. El umbral de NQ sigue existiendo aparte, solo para marcar zonas por volumen: R-20.)*
+> 📌 **Por qué el corte no es arbitrario.** El mismo número significa cosas distintas a cada lado de la apertura: en premercado 2.000 contratos en una vela de 1 minuto del NQ es un evento raro; en sesión es volumen corriente. Sin el corte, el gráfico se llenaría de zonas.
 
 ### Una vez marcada, es una zona normal
 

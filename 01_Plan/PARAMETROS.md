@@ -3,7 +3,7 @@
 > **Un solo sitio para los números que pueden cambiar.**
 > Las reglas citan el **nombre** del parámetro, no el valor. Se cambia aquí y se propaga a todo el plan.
 
-**Actualizado:** 2026-09-01
+**Actualizado:** 2026-09-01 (b)
 
 ---
 
@@ -26,7 +26,7 @@
 | Parámetro | Valor actual | Dónde actúa |
 |---|---|---|
 | **`TICK`** | 0,25 puntos | umbral de rompimiento y consecución (`R-13`) |
-| **`PLAZO_CONSECUCION`** | **5 velas** | `R-13`, `R-22`, `R-15`, `R-16` y **`R-04`** (vida de la orden). 🔴 **Gobierna la geometría de la zona y la vida de la orden, NO el traspaso de la zona:** la consecución que invalida una zona **no tiene plazo** *(27/08/2026)* |
+| **`PLAZO_CONSECUCION`** | **5 velas — es un TOPE, no una espera obligatoria** *(`R-39`, 01/09/2026)* | `R-13`, `R-22`, `R-15`, `R-16` y **`R-04`** (vida de la orden). 🔴 **Gobierna la geometría de la zona y la vida de la orden, NO el traspaso de la zona:** la consecución que invalida una zona **no tiene plazo** *(27/08/2026)*. 🔵 **Y se resuelve antes si el mercado arma una estructura completa en sentido contrario** — `R-39` *(01/09/2026)* |
 | **`VENTANA_REINGRESO`** | **hasta que el precio supere el extremo de la vela de consecución** | `R-23`. El reingreso es **inmediato o no es**: en cuanto el precio sigue de largo, la ventana se cierra para siempre *(27/08/2026)* |
 | **`UMBRAL_50`** | 50 % | zonas entre zonas (`R-17`) |
 
@@ -34,7 +34,7 @@
 
 | Parámetro | Valor actual | Dónde actúa |
 |---|---|---|
-| **`UMBRAL_VOL_NQ`** | > 2.000 contratos | `R-20` — solo premercado. Restaurado el 03/09/2026: aunque el análisis y la ejecución son solo en MNQ desde esa fecha, para marcar zonas por volumen se sigue mirando también NQ |
+| **`UMBRAL_VOL_NQ`** | > 2.000 contratos | `R-20` — solo premercado |
 | **`UMBRAL_VOL_MNQ`** | > 6.000 contratos | `R-20` — solo premercado |
 | **`PREMERCADO_INICIO`** | 19:00 hora Colombia (apertura de Tokio) | `R-20` |
 | **`VENTANA_OPERATIVA`** | 09:30–11:30 ET | `R-02` |

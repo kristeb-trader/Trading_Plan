@@ -529,48 +529,10 @@ def main():
 
     # ── 10 · zona apéndice ──────────────────────────────────────────────
     #
-    # Rompimiento CON CUERPO (el cierre queda fuera) que no se confirma en 5
-    # velas: la zona original se queda igual y nace una segunda sobre la
-    # mecha de la vela que rompio.
-    puesto = False
-    for dia in DIAS:
-        j0, j1 = ventana_sesion(V, dia)
-        if j0 is None:
-            continue
-        for z in sorted(motor.estructura(V, j0, j1), key=lambda z: z["vela"]):
-            arriba = z["tipo"] == "R"
-            borde = z["hi"] if arriba else z["lo"]
-            rot = next((i for i in range(z["vela"] + 2, min(z["vela"] + 45, j1))
-                        if (V[i]["h"] > borde if arriba else V[i]["l"] < borde)), None)
-            if rot is None or rot + 10 >= j1:
-                continue
-            # con cuerpo: el CIERRE queda mas alla del borde. Nombre propio:
-            # `con_cuerpo` es el ayudante de main() y aqui lo tapaba.
-            rompio_con_cuerpo = V[rot]["c"] > borde if arriba else V[rot]["c"] < borde
-            if not rompio_con_cuerpo:
-                continue
-            # y ninguna de las 5 siguientes pasa de su extremo
-            if any((V[j]["h"] > V[rot]["h"] if arriba else V[j]["l"] < V[rot]["l"])
-                   for j in range(rot + 1, min(rot + 6, j1))):
-                continue
-            kr = V[rot]
-            ap_lo, ap_hi = ((max(kr["o"], kr["c"]), kr["h"]) if arriba
-                            else (kr["l"], min(kr["o"], kr["c"])))
-            a, b = max(z["vela"] - 4, j0), min(rot + 14, j1)
-            dibujar(V, a, b,
-                    "Rompió con el cuerpo y no hubo consecución",
-                    "Pasadas cinco velas sin consecución, la zona original se queda igual y nace una segunda sobre la mecha.",
-                    os.path.join(SALIDA, "10-zona-apendice.png"),
-                    zonas=[z, dict(vela=rot, lo=ap_lo, hi=ap_hi, tipo=z["tipo"])],
-                    marcas=[(z["vela"], (z["lo"] + z["hi"]) / 2, "La zona original", TENUE, -0.22 if arriba else 0.22),
-                            (rot, (ap_lo + ap_hi) / 2, "La zona apéndice", ORO, 0.24 if arriba else -0.24)],
-                    tramos=[(rot + 1, min(rot + 5, j1 - 1), "CINCO VELAS SIN CONSECUCIÓN", TENUE)])
-            puesto = True
-            break
-        if puesto:
-            break
-    if not puesto:
-        print("  aviso: no se encontró un rompimiento con cuerpo sin confirmar")
+    # RETIRADO el 03/09/2026. El nombre 10-zona-apendice.png lo ocupa ahora un
+    # diagrama didactico que trajo el operador —«caso 1, pasan las 5 velas»— y
+    # regenerarlo se lo comeria. El modulo usa el suyo y el 20 sigue
+    # ensenando el mismo caso sobre mercado real.
 
     # ── 11 · reingreso ──────────────────────────────────────────────────
     #
@@ -1128,13 +1090,16 @@ def main():
                 if not elegidas:
                     continue
                 nueva = elegidas[0]
+                arriba = z["tipo"] == "R"
                 if prefiere_tocar:
-                    # La zona nueva toca a la original: no son dos zonas, es LA
-                    # MISMA estirada hasta el extremo nuevo. Un solo rectangulo.
-                    pintadas = [dict(z, lo=min(z["lo"], nueva["lo"]),
-                                     hi=max(z["hi"], nueva["hi"]),
-                                     etiqueta="LA MISMA ZONA, YA ESTIRADA")]
-                    refs = [(z["hi"] if z["tipo"] == "R" else z["lo"],
+                    # Un solo rectangulo: LA MISMA zona, estirada hasta la
+                    # MECHA de la vela que rompio — no hasta la zona de la
+                    # estructura nueva. Corregido por el operador el
+                    # 03/09/2026 sobre el caso de las 09:10 / 09:17 / 09:20.
+                    pintadas = [dict(z, hi=max(z["hi"], V[rot]["h"])) if arriba
+                                else dict(z, lo=min(z["lo"], V[rot]["l"]))]
+                    pintadas[0]["etiqueta"] = "LA MISMA ZONA, YA ESTIRADA"
+                    refs = [(z["hi"] if arriba else z["lo"],
                              "DONDE ESTABA EL BORDE", TENUE)]
                 else:
                     pintadas = [dict(z, etiqueta="ZONA ORIGINAL"),
@@ -1142,7 +1107,6 @@ def main():
                     refs = None
                 a = max(z["vela"] - 4, j0)
                 b = min(nueva["vela"] + 8, j1)
-                arriba = z["tipo"] == "R"
                 sube = nueva["tipo"] == "R"
                 dibujar(V, a, b, titulo, expl,
                         os.path.join(SALIDA, archivo),

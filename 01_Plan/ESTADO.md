@@ -628,121 +628,66 @@ Nueve operaciones · **−91,00 pts**. Sin valor estadístico, por los cuatro mo
 
 # ▶️ FASE 2 — PORTAL WEB
 
-**Dónde:** `04_Web\`.
+**Dónde:** `04_Web\` (vacía a esta fecha).
 **Cómo se arranca:** abrir Claude Code en `E:\Proyectos\Chaumer`. `CLAUDE.md` se carga solo.
-**Qué leer primero:** `01_Plan\CIERRE_FASE_1.md` → `04_Web\DISENO_PORTAL.md`.
+**Qué leer primero:** `01_Plan\CIERRE_FASE_1.md` → `04_Web\BRIEF_PORTAL.md`.
 **Fuente de verdad del portal:** `01_Plan\reglas.json`.
 
----
+**Primera conversación pendiente con el operador:** las cinco decisiones del brief — portal
+local o accesible desde fuera · si lo consulta mientras opera · dónde vive la bitácora · si
+lee datos de NinjaTrader · si genera gráficas o solo las muestra.
 
-## 31/08/2026 · el operador redefine el portal
-
-Las **cinco decisiones** del brief quedan contestadas, y una de ellas cambia lo que el portal es:
-
-| Decisión | Respuesta |
-|---|---|
-| ¿Local o accesible desde fuera? | **En internet** — Cloudflare Pages con puerta de Access y lista blanca de correo |
-| ¿Lo consulta mientras opera? | **No.** Antes y después |
-| ¿La bitácora vive en el portal? | **No.** Sigue donde está |
-| ¿Lee datos de NinjaTrader? | **No.** Ninguno |
-| ¿Genera gráficas? | **No genera nada.** Muestra las 21 que ya existen |
-
-**El portal deja de ser una herramienta de operación y pasa a ser la mesa de revisión de las
-reglas:** Alfredo Chaumer entra, lee el plan y **deja observaciones escritas** ancladas a lo
-que está mirando. El operador las revisa, responde y las exporta. Una observación **no
-modifica el plan**: el plan solo cambia si el operador cambia `01_Plan\`.
-
-Dos puntos del brief quedan **derogados** con constancia: el módulo ya no es 100 % estático
-—las observaciones van a **Supabase**— y el portal se publica ya, con puerta. Lo que **no**
-queda derogado: ninguna escritura desde el cliente y ninguna clave en el paquete. Sin la
-puerta configurada, no se despliega.
-
-Diseño íntegro en `04_Web\DISENO_PORTAL.md` (v2).
 
 ---
 
-## 01/09/2026 · arranque de la construcción
+# 🔵 01/09/2026 — REGLA NUEVA DESPUÉS DEL CIERRE: `R-39`
 
-**Repositorio:** `kristeb-trader/Trading_Plan` — **privado**, verificado antes de subir nada.
-Rama `main`. Fuera del repositorio quedan `00_Guias\` (1,3 GB de PDFs y vídeo de terceros),
-los datos de mercado y las transcripciones.
+Salió dibujando los diagramas didácticos de la zona apéndice para el portal.
 
-**Corregido en `reglas.json`:** el archivo estaba escrito íntegramente en ASCII, sin una sola
-tilde en 60.785 bytes. Restauradas **168 cadenas**. Verificado que quitarle los acentos al
-archivo nuevo devuelve el anterior carácter por carácter: mismas 38 reglas, mismos
-identificadores, mismas cifras. El campo `categoria` se deja en ASCII a propósito — alimenta
-el filtro del portal.
+## Lo que dijo el operador
+**El plazo de 5 velas es un TOPE, no una espera obligatoria.** Si antes de cumplirse el mercado
+arma una **estructura completa en sentido contrario** al rompimiento, la geometría se resuelve
+ahí mismo: se estira la zona o nace la apéndice, sin esperar.
 
-**Desajustes contados sobre los archivos, que el portal muestra sin corregir el origen:**
-
-| Documento | Dice la cabecera | Hay |
+### La estructura al contrario — tres velas (ejemplo: soporte roto hacia abajo)
+| Vela | Qué hace | Condición medible |
 |---|---|---|
-| `GALERIA.md` | 11 casos | **21** |
-| `PENDIENTES.md` | 8 puntos abiertos | **16** |
-| `TRADING_PLAN_CHAUMER.md` | 12 sub-fases | **13 filas** en el índice, 11 secciones en el cuerpo |
-| `GLOSARIO.md` | 24 términos | **23 encabezados** *(rompimiento y consecución comparten uno)* |
-| `CONTEXTUALIZACION.md` | 10 elementos | 10 conceptos en **12 encabezados**: dos identificadores usados dos veces |
-| Diagramas Mermaid | «exactamente 2» | **4** — 2 en el plan maestro y 2 en el documento de `F1.0` |
+| 1ª | no da consecución y **sube** | su mínimo no pasa del extremo de la vela de rompimiento |
+| 2ª | **retroceso** | su mínimo es **MENOR** que el de la vela anterior **y NO pasa** del extremo de la vela de rompimiento |
+| 3ª | **no sigue bajando: vuelve a subir** | aquí queda armada → **aquí se marca la zona** |
 
-**No se renumera ni se corrige nada de `01_Plan\`.** El portal cuenta el contenido real y
-enseña el número real.
+🔴 Si el mínimo de la 2ª vela pasara del extremo de la vela de rompimiento, **eso es la
+consecución**, no un retroceso: no hay apéndice, la zona queda traspasada.
 
-## 03/09/2026 · primera modificación de una regla tras el cierre
+Aplica igual al revés, con una resistencia rota hacia arriba. Confirmado por el operador.
 
-**La fase 1 está cerrada desde el 01/09/2026, y esto es una excepción deliberada, no una
-reapertura.** El operador, revisando el texto de la portada del portal, decidió que el método
-deja de usar NQ como gráfico de análisis: **de dos instrumentos a la vez pasa a uno solo,
-MNQ**, para todo — marcar zonas, leer volumen, leer los niveles y ejecutar. Confirmación
-explícita del operador, pedida antes de tocar nada: *«Ahora es solo MNQ [...] ya no se usa NQ
-para nada»*.
+## El contraejemplo que la delimita
+**20/07/2026.** Tras romper en la 8:40 el precio subió **cuatro velas seguidas** (8:42 a 8:45)
+**sin hacer retroceso en el medio** → nunca armó estructura → la apéndice nació por plazo
+vencido, en la 8:45. **Subir no basta.** Por eso ese día sigue marcado igual.
 
-**Tocado en `01_Plan\`, con nota fechada en cada sitio, sin borrar el texto anterior:**
+## Precisiones de dibujo
+- La apéndice es **del mismo gris que cualquier zona**.
+- Se dibuja **desde la vela de rompimiento**, su vela origen, aunque no esté marcada hasta que
+  el plazo se resuelve.
 
-| Documento | Qué cambió |
-|---|---|
-| `reglas.json` | `R-01` reescrita: un único gráfico de MNQ, no dos. `R-09` (lectura de volumen) pasa de NQ a MNQ. `R-20` (zonas por volumen en premercado) pierde el umbral alternativo en NQ |
-| `PARAMETROS.md` | `UMBRAL_VOL_NQ` marcado **deprecado**, no borrado — ya no lo usa ninguna regla |
-| `GLOSARIO.md` | el ejemplo del umbral de premercado pasa de «3.000 contratos en NQ» a «8.000 en MNQ», consistente con el nuevo umbral único |
-| `CHECKLIST_DIARIA.md` | «gráficos abiertos: NQ y MNQ» → «gráfico abierto: MNQ». El umbral de la fila de premercado pasa a MNQ |
+## Escrito en
+`TRADING_PLAN_CHAUMER.md` → **v2.1**, nueva `R-39`, **39 reglas** · `reglas.json` → 39 ·
+`GLOSARIO.md` → entrada ZONA APÉNDICE ampliada · `PARAMETROS.md` → el plazo es un tope ·
+`CIERRE_FASE_1.md` → sección nueva sobre una regla que llegó después del cierre ·
+`PENDIENTES.md` → **`P-30`** y **`P-31`** · `CLAUDE.md`, `BRIEF_PORTAL.md` y `PROMPT_FASE_2.md`
+actualizados a 39 reglas.
 
-**🔴 Sin tocar, y queda contradiciendo lo anterior — pendiente de decisión del operador:**
-`TRADING_PLAN_CHAUMER.md` sigue describiendo el método de dos gráficos en su sección
-«R-01 · Instrumento, gráficos y timeframe» (línea 358 en adelante), con un diagrama Mermaid
-que referencia el gráfico de MNQ para leer el nivel de entrada dentro de ese flujo de dos
-instrumentos. Es un documento largo con su propio historial de versiones (`v2.0` al cerrar);
-reescribirlo no es un cambio de una línea y no se ha tocado sin que el operador diga cómo
-quiere manejar la versión.
+**Diagramas nuevos:** `02_Assets\diagramas\apendice_caso1_plazo.png` y
+`apendice_caso2_estructura.png`.
 
-**Tampoco se ha tocado:** `05_Backtesting\datos\NQ 09-26.Last.txt` es la única fuente de datos
-de mercado del proyecto, y es de NQ. Si el análisis pasa a MNQ, hay que decidir si esos datos
-siguen sirviendo (los dos índices se mueven casi igual — hasta 3 ticks de diferencia, según
-`R-01` antes de esta edición) o si hace falta conseguir datos de MNQ. No se ha tocado
-`05_Backtesting\` ni se ha traído ningún dato nuevo: es una decisión del operador, no del
-portal.
+## Lo que queda abierto por esto
+- **`P-30`** — la regla se confirmó sobre la **apéndice**. Que aplique también al
+  **estiramiento** (rompimiento con mecha) es **extrapolación del auditor**, no confirmación.
+- **`P-31`** — el motor todavía resuelve el plazo solo por vencimiento. Hay que implementarlo y
+  volver a pasar las 11 sesiones. Días con eventos de plazo: **7, 13, 16, 17 y 20 de julio**.
+  Ninguna de las 9 operaciones validadas depende de esto, pero conviene comprobarlo.
 
-**El portal (`04_Web\src\pages\premercado.astro`)** ya refleja el cambio: el apartado «Los dos
-gráficos» pasa a llamarse «El gráfico», con el texto y la ficha de datos en MNQ único.
-
-## 03/09/2026 · R-20 recupera el umbral de NQ
-
-**Corrección sobre la entrada anterior de este mismo día.** Al revisar la sección «Zonas por
-volumen» del portal, el operador reintrodujo el umbral de NQ que se acababa de quitar de
-`R-20`. Se le preguntó directamente si era un despiste o una decisión — confirmó que era
-deliberado: **el análisis y la ejecución siguen siendo solo MNQ (`R-01`), pero para marcar
-zonas por volumen en el premercado se sigue mirando también el volumen de NQ.** Son dos reglas
-distintas y no tenían por qué moverse juntas.
-
-**Restaurado, con nota fechada:**
-
-| Documento | Qué volvió |
-|---|---|
-| `reglas.json` | `R-20` recupera la condición `umbral_NQ` (> 2.000 contratos), junto a `umbral_MNQ` (> 6.000) |
-| `PARAMETROS.md` | `UMBRAL_VOL_NQ` deja de estar marcado deprecado |
-| `GLOSARIO.md` | la nota al pie explica que el ejemplo va en MNQ pero el umbral de NQ existe aparte, para `R-20` |
-| `CHECKLIST_DIARIA.md` | la fila de premercado vuelve a nombrar los dos umbrales |
-| El portal | «Zonas por volumen» muestra ambos umbrales, en el párrafo y en la ficha de datos |
-
-**Lo que no cambia:** `R-01` y `R-09` siguen en MNQ único — ese cambio se mantiene. Solo
-`R-20` queda con dos instrumentos. La lección para la próxima vez que se toque una regla del
-plan: preguntar explícitamente si el cambio es de ESE punto o de todo el instrumento, porque
-aquí no lo eran.
+> 🔑 **Anotado sin dramatizarlo:** el plan llevaba dos días en cero reglas movidas y aun así una
+> conversación de dibujo destapó una precisión que no estaba escrita. No contradice nada — amplía —
+> pero es justo el tipo de hallazgo que el test ciego habría buscado a propósito.

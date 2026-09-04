@@ -1,8 +1,8 @@
 # CIERRE DE LA FASE 1
 
-**Fecha:** 2026-09-01
+**Fecha:** 2026-09-01 · *actualizado el mismo día con `R-39`*
 **Decisión:** del operador (Christian), explícita.
-**Estado del plan al cerrar:** `TRADING_PLAN_CHAUMER.md` **v2.0** · **38 reglas** · **12 sub-fases**
+**Estado del plan al cerrar:** `TRADING_PLAN_CHAUMER.md` **v2.1** · **39 reglas** · **12 sub-fases**
 
 ---
 
@@ -15,7 +15,7 @@ Ese objetivo está cumplido en lo que se refiere a **escribir** las reglas.
 | | |
 |---|---|
 | Sub-fases cerradas | **12 de 12** |
-| Reglas confirmadas | **38** |
+| Reglas confirmadas | **39** |
 | Términos con definición medible | 24 |
 | Sesiones reales reconstruidas al tick y validadas por el operador | **11** — 6, 7, 8, 9, 10, 13, 14, 15, 16, 17 y 20 de julio de 2026 |
 | Casos documentados en la galería | **21** |
@@ -95,6 +95,16 @@ Diez elementos quedaron fuera del plan mecánico a propósito, porque el operado
 
 ---
 
+## 🔵 Una regla llegó DESPUÉS del cierre — `R-39`
+
+El mismo 01/09/2026, ya cerrada la fase, el operador precisó al dibujar los diagramas de la zona apéndice que **el plazo de 5 velas es un tope, no una espera obligatoria**: si antes el mercado arma una estructura completa en sentido contrario, la geometría se resuelve ahí. Se escribió como `R-39`.
+
+**Vale la pena registrar lo que esto significa**, sin dramatizarlo y sin taparlo: el plan estaba en cero reglas movidas durante dos días, y aun así una conversación de dibujo destapó una precisión que no estaba escrita. No invalida el cierre — la regla no contradice ninguna otra, las amplía — pero **es exactamente el tipo de hallazgo que un test ciego habría buscado a propósito**.
+
+- **Consecuencia pendiente:** el motor de auditoría (`05_Backtesting\lector.py`) todavía resuelve el plazo solo por vencimiento. Hay que actualizarlo y volver a pasar las 11 sesiones para ver si alguna zona cambia de fecha de nacimiento. Ninguna operación de las validadas depende de esto, pero conviene comprobarlo. Ver `P-31`.
+
+---
+
 ## La señal de convergencia — por qué se cierra ahora y no antes
 
 Se llevó la cuenta de cuántas reglas hubo que **cambiar, añadir o corregir** en cada día revisado:
@@ -128,7 +138,7 @@ El plan **dejó de moverse**: de dos y tres reglas por día al principio, a cero
 
 | Documento | Para qué sirve en el portal |
 |---|---|
-| `reglas.json` | **fuente de verdad legible por máquina** — 38 reglas con sus condiciones medibles |
+| `reglas.json` | **fuente de verdad legible por máquina** — 39 reglas con sus condiciones medibles |
 | `TRADING_PLAN_CHAUMER.md` | texto largo, razonamiento y casos de cada regla |
 | `GLOSARIO.md` | vocabulario con definición medible |
 | `PARAMETROS.md` | los números que pueden cambiar, en un solo sitio |
