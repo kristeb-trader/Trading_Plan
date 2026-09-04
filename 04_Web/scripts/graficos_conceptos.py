@@ -1082,7 +1082,9 @@ def main():
                 marcas=[(z["vela"], (z["lo"] + z["hi"]) / 2,
                          "El soporte sale de esta vela", ZONA, 0.10, "izquierda")],
                 flechas=[(z["c0"], V[z["c0"]]["h"], z["vela"], k["l"],
-                          "CORRIDA", CIAN)])
+                          "CORRIDA", CIAN),
+                         (z["vela"], k["l"], fin_retro, V[fin_retro]["h"],
+                          "RETROCESO", ORO)])
     else:
         print("  aviso: sin corrida bajista limpia para el gráfico de la zona")
 
