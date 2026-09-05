@@ -1,29 +1,21 @@
 ---
 /**
- * Las 38 reglas — consulta rápida durante la sesión.
+ * Las 38 reglas — el índice.
  *
- * Rediseñada el 04/09/2026. El problema no era decorativo: las fichas se
- * cortaban, los grupos no se distinguían entre sí y la lista de la izquierda
- * repetía lo que ya hacían los filtros de arriba.
+ * Rehecha el 05/09/2026 con las correcciones del operador:
  *
- * Cómo está resuelto:
+ *   · AL ENTRAR EN UNA REGLA SE VA A SU FICHA, como siempre. El cajón lateral
+ *     que se probó el 04/09 se retiró: no le gustó y la ficha ya existía.
  *
- *   · LAS CATEGORÍAS VIVEN EN UN SOLO SITIO — la barra de filtros. El lateral
- *     del portal es la navegación del sitio y no compite con ella. Se pliega
- *     a iconos para dejar sitio a la rejilla.
+ *   · LOS GRUPOS VIVEN EN EL LATERAL, colgando de «Las reglas». Aquí no hay
+ *     barra de pastillas: se filtraba en dos sitios y sobraba uno. La página
+ *     lee el grupo del ancla de la dirección (#g=zonas, #g=zonas.marcado).
  *
- *   · NADA SE CORTA. La tarjeta enseña el enunciado entero, sea de la
- *     longitud que sea, y la rejilla se acomoda. El detalle largo —
- *     condiciones, excepciones, casos— se lee en un cajón lateral que se
- *     desliza, sin salir de la lista ni perder el filtro puesto.
+ *   · EL TEXTO NO SE CORTA. Ni aquí ni en ningún sitio: el tope de 62
+ *     caracteres por párrafo salió de tokens.css.
  *
- *   · EL COLOR DEL GRUPO SIGUE EL ORDEN DE LA JORNADA. Los siete van del cian
- *     al azul, igual que los ocho módulos del recorrido: el tono dice en qué
- *     momento del día vive esa regla. Verde y rojo NO se usan aquí; el rojo
- *     está reservado a un dato negativo real y el oro, a los avisos.
- *
- * Las categorías, sus nombres, su descripción y su orden salen de reglas.json.
- * Aquí no se renombra ninguna ni se decide el orden.
+ * Los nombres de los grupos y su orden salen de reglas.json. Aquí no se
+ * renombra ninguno ni se decide el orden.
  */
 import Marco from '../../componentes/Marco.astro';
 import Icono from '../../componentes/Icono.astro';
@@ -32,15 +24,14 @@ import * as P from '../../lib/parsers.mjs';
 const reglas = P.reglas();
 const cats = P.categorias();
 const casos = P.casosPorRegla();
-const secciones = P.seccionesDeReglas();
 const imagenes = P.imagenesDeReglas();
 
 const NOMBRE_SUB = { marcado: 'Marcado', vigencia: 'Vigencia' };
 const NOMBRE_CAT = new Map(cats.map((c) => [c.id, c.nombre]));
 
 // Del cian al azul, en el orden que declara el archivo. Mismo recurso que
-// modulos.mjs usa para los ocho módulos: el tono es una posición, no un
-// adorno, y por eso se calcula y no se escribe a mano.
+// modulos.mjs usa para los ocho módulos del recorrido: el tono es una
+// posición en la jornada, no un adorno, y por eso se calcula.
 const TONO = new Map(cats.map((c, i) => [
   c.id,
   `color-mix(in srgb, var(--info) ${Math.round(100 - (i * 100) / Math.max(cats.length - 1, 1))}%, var(--acento))`,
@@ -51,74 +42,36 @@ const etiqueta = (r) => {
   return r.subcategoria ? `${base} · ${NOMBRE_SUB[r.subcategoria] ?? r.subcategoria}` : base;
 };
 const tambien = (r) => P.ENLACES_CRUZADOS.get(r.id) ?? [];
-const limpias = (r) => (Array.isArray(r.excepciones)
-  ? r.excepciones.filter((e) => e && String(e).trim()) : []);
-const rico = (r, t) => P.enriquecer(t, { sinEnlaceA: r.id });
 ---
 
 <Marco titulo="Reglas">
   <header class="cab entra">
-    <h1>Las {reglas.length} reglas</h1>
+    <h1>Reglas Trading Plan</h1>
     <p class="lead">
-      Cada una con sus condiciones medibles y su acción. Sin adjetivos: solo
-      ticks, puntos, número de velas y horas exactas. Repartidas en
-      {cats.length} grupos, en el orden en que se usan durante la jornada.
+      Las {reglas.length} del método, con sus condiciones medibles y su acción.
+      Sin adjetivos: solo ticks, puntos, número de velas y horas exactas.
     </p>
   </header>
 
-  <!-- ── barra de trabajo ──────────────────────────────────────────────
-       Pegada arriba: al desplazarse por 38 fichas el filtro tiene que
-       seguir a mano, no obligar a volver al principio. -->
   <div class="barra entra">
     <label class="campo">
       <Icono nombre="magnifying-glass" />
       <input type="search" data-filtro autocomplete="off" spellcheck="false"
-             placeholder="Buscar por texto, número de regla o grupo" />
+             placeholder="Buscar por texto o por número de regla" />
       <kbd class="kbd">Ctrl K</kbd>
     </label>
-
-    <div class="pills" role="group" aria-label="Filtrar por grupo">
-      <button class="pill activa" type="button" data-cat="" data-desc="">
-        Todas<span class="pill-n">{reglas.length}</span>
-      </button>
-      {cats.map((c) => (
-        <button class="pill" type="button" data-cat={c.id} data-desc={c.descripcion ?? ''}
-                style={`--c:${TONO.get(c.id)}`}>
-          <span class="punto" aria-hidden="true"></span>
-          {c.nombre}<span class="pill-n">{c.n}</span>
-        </button>
-      ))}
-    </div>
-
-    {cats.filter((c) => c.subs.length > 1).map((c) => (
-      <div class="pills subs" data-subs={c.id} hidden
-           role="group" aria-label={`Apartados de ${c.nombre}`}
-           style={`--c:${TONO.get(c.id)}`}>
-        <span class="subs-t meta">Dentro de {c.nombre}:</span>
-        <button class="pill menuda activa" type="button" data-sub="">Todo<span class="pill-n">{c.n}</span></button>
-        {c.subs.map((sb) => (
-          <button class="pill menuda" type="button" data-sub={sb.id}>
-            {NOMBRE_SUB[sb.id] ?? sb.id}<span class="pill-n">{sb.n}</span>
-          </button>
-        ))}
-      </div>
-    ))}
-
     <p class="estado">
-      <span class="desc" data-descripcion hidden></span>
+      <span class="grupo" data-grupo-activo hidden></span>
       <span class="cuenta meta"><b data-contador>{reglas.length}</b> de {reglas.length}</span>
-      <button class="limpiar" type="button" data-limpiar hidden>Quitar filtros</button>
     </p>
   </div>
 
   <p class="vacio" data-vacio hidden>
-    Ninguna regla coincide con ese filtro. Prueba con otra palabra o quita el grupo.
+    Ninguna regla coincide. Prueba con otra palabra, o elige «Todas» en el menú.
   </p>
 
-  <!-- ── la rejilla ────────────────────────────────────────────────────
-       1 columna en móvil, 2 en tablet, 3 en escritorio. Las tarjetas de una
-       fila se estiran a la misma altura, pero el enunciado NUNCA se recorta:
-       manda el texto y la fila crece. -->
+  <!-- 1 columna en móvil, 2 en tablet, 3 en escritorio. El enunciado NUNCA
+       se recorta: manda el texto y la fila crece. -->
   <ul class="rejilla" data-lista>
     {reglas.map((r, i) => (
       <li class="celda entra" style={`--retraso:${Math.min(i, 11) * 22}ms; --c:${TONO.get(r.categoria)}`}
@@ -126,8 +79,7 @@ const rico = (r, t) => P.enriquecer(t, { sinEnlaceA: r.id });
           data-sub={r.subcategoria ?? ''}
           data-tambien={tambien(r).join(' ')}
           data-txt={[r.id, r.enunciado, r.accion, r.nota, etiqueta(r)].filter(Boolean).join(' ').toLowerCase()}>
-        <button class="tarj" type="button" data-abrir={r.id}
-                aria-label={`Abrir ${r.enunciado.slice(0, 80)}`}>
+        <a class="tarj" href={`/reglas/${r.id}`}>
           <span class="t-cab">
             <span class="badge">{etiqueta(r)}</span>
             <span class="t-id mono solo-tecnico">{r.id}</span>
@@ -148,110 +100,13 @@ const rico = (r, t) => P.enriquecer(t, { sinEnlaceA: r.id });
               <span class="met cruz">también en {NOMBRE_CAT.get(id) ?? id}</span>
             ))}
           </span>
-        </button>
+        </a>
       </li>
     ))}
   </ul>
-
-  <!-- ── el contenido de cada cajón ────────────────────────────────────
-       En <template>: no se pinta hasta que hace falta, así que las 38 fichas
-       completas no pesan en la primera carga. -->
-  {reglas.map((r) => (
-    <template data-ficha={r.id}>
-      <div class="fx-cab" style={`--c:${TONO.get(r.categoria)}`}>
-        <span class="badge">{etiqueta(r)}</span>
-        <span class="fx-id mono solo-tecnico">{r.id}</span>
-      </div>
-
-      <h2 class="fx-e" set:html={rico(r, r.enunciado)} />
-      {r.estado && <p class="fx-estado meta">{r.estado}</p>}
-
-      <section class="fx-bloque">
-        <h3><Icono nombre="list-checks" />Condiciones medibles</h3>
-        <ul class="checklist">
-          {r.condiciones.map((c) => (
-            <li>
-              <span class="ck" aria-hidden="true"><Icono nombre="check" /></span>
-              <span class="ck-cuerpo">
-                <b class="ck-var">{String(c.variable).replace(/_/g, ' ')}</b>
-                {c.operador && c.operador !== '=' && <code class="ck-op">{c.operador}</code>}
-                <span class="ck-val" set:html={rico(r, String(c.valor))} />
-                {c.timeframe && c.timeframe !== '-' && <span class="ck-tf meta">{c.timeframe}</span>}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {r.accion && (
-        <section class="fx-bloque">
-          <h3><Icono nombre="target" />Qué se hace</h3>
-          <p set:html={rico(r, r.accion)} />
-        </section>
-      )}
-
-      {limpias(r).length > 0 && (
-        <section class="fx-bloque">
-          <h3><Icono nombre="warning-circle" />Excepciones</h3>
-          <ul class="fx-lista">
-            {limpias(r).map((e) => <li set:html={rico(r, e)} />)}
-          </ul>
-        </section>
-      )}
-
-      {imagenes.has(r.id) && imagenes.get(r.id).map((im) => (
-        <figure class="fx-gr">
-          <img src={im.url} alt={`Diagrama de la regla ${r.id}`} loading="lazy" />
-        </figure>
-      ))}
-
-      {casos.has(r.id) && (
-        <section class="fx-bloque">
-          <h3><Icono nombre="images" />Casos reales</h3>
-          <ul class="fx-casos">
-            {casos.get(r.id).map((c) => (
-              <li><a href={`/galeria#${c.id}`}>{c.titulo}</a></li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {r.nota && (
-        <aside class="fx-nota">
-          <p set:html={rico(r, r.nota)} />
-        </aside>
-      )}
-
-      <a class="fx-mas" href={`/reglas/${r.id}`}>
-        {secciones.has(r.id) ? 'Ver la ficha completa y su explicación en el plan' : 'Ver la ficha completa'}
-        <Icono nombre="arrow-square-out" />
-      </a>
-    </template>
-  ))}
-
-  <!-- ── el cajón ──────────────────────────────────────────────────────
-       Se desliza desde la derecha y deja la lista detrás, con el filtro
-       intacto. Es lo que evita el corte de texto: aquí el alto no manda. -->
-  <div class="velo" data-velo hidden></div>
-  <aside class="cajon" data-cajon hidden aria-hidden="true"
-         role="dialog" aria-modal="true" aria-label="Detalle de la regla">
-    <header class="cj-cab">
-      <button class="cj-nav" type="button" data-prev title="Regla anterior">
-        <Icono nombre="caret-left" /><span class="solo-lectores">Anterior</span>
-      </button>
-      <button class="cj-nav" type="button" data-next title="Regla siguiente">
-        <Icono nombre="caret-right" /><span class="solo-lectores">Siguiente</span>
-      </button>
-      <span class="cj-pos meta" data-pos></span>
-      <button class="cj-x" type="button" data-cerrar title="Cerrar">
-        <Icono nombre="x" /><span class="solo-lectores">Cerrar</span>
-      </button>
-    </header>
-    <div class="cj-cuerpo" data-cuerpo tabindex="-1"></div>
-  </aside>
 </Marco>
 
-<script is:inline>
+<script is:inline define:vars={{ NOMBRES: Object.fromEntries(cats.map((c) => [c.id, c.nombre])), SUBS: NOMBRE_SUB }}>
   (function () {
     var campo = document.querySelector('[data-filtro]');
     if (!campo) return;
@@ -259,15 +114,12 @@ const rico = (r, t) => P.enriquecer(t, { sinEnlaceA: r.id });
     var celdas = [].slice.call(document.querySelectorAll('.celda'));
     var contador = document.querySelector('[data-contador]');
     var vacio = document.querySelector('[data-vacio]');
-    var desc = document.querySelector('[data-descripcion]');
-    var limpiar = document.querySelector('[data-limpiar]');
-    var cajasSub = [].slice.call(document.querySelectorAll('[data-subs]'));
-    var pillsCat = [].slice.call(document.querySelectorAll('.pills:not(.subs) .pill'));
+    var rotulo = document.querySelector('[data-grupo-activo]');
+    var enlaces = [].slice.call(document.querySelectorAll('[data-grupo]'));
 
     var cat = '';
     var sub = '';
 
-    // ── filtrado ──────────────────────────────────────────────────────
     function aplicar() {
       var q = campo.value.trim().toLowerCase();
       var n = 0;
@@ -284,196 +136,82 @@ const rico = (r, t) => P.enriquecer(t, { sinEnlaceA: r.id });
       });
       contador.textContent = n;
       vacio.hidden = n > 0;
-      limpiar.hidden = !cat && !sub && !q;
+
+      var nombre = cat ? (NOMBRES[cat] || cat) : '';
+      if (nombre && sub) nombre += ' · ' + (SUBS[sub] || sub);
+      rotulo.textContent = nombre;
+      rotulo.hidden = !nombre;
     }
 
-    function pinta(grupo, activo) {
-      grupo.forEach(function (b) { b.classList.remove('activa'); });
-      activo.classList.add('activa');
+    // El grupo se elige en el menú de la izquierda y viaja en el ancla, así
+    // que funciona igual llegando de otra página o volviendo con el botón de
+    // atrás del navegador.
+    function delAncla() {
+      var m = /^#g=([a-z_]+)(?:\.([a-z_]+))?$/.exec(location.hash || '');
+      cat = m ? m[1] : '';
+      sub = m && m[2] ? m[2] : '';
+      var clave = cat + (sub ? '.' + sub : '');
+      enlaces.forEach(function (a) {
+        a.classList.toggle('activa', a.getAttribute('data-grupo') === clave);
+      });
+      aplicar();
     }
 
-    pillsCat.forEach(function (b) {
-      b.addEventListener('click', function () {
-        pinta(pillsCat, b);
-        cat = b.getAttribute('data-cat');
-        sub = '';
-        // Los apartados solo se ven dentro de su grupo, y se reinician al
-        // cambiar de grupo: si no, quedaría un filtro puesto que no se ve.
-        cajasSub.forEach(function (caja) {
-          caja.hidden = caja.getAttribute('data-subs') !== cat;
-          [].slice.call(caja.querySelectorAll('.pill')).forEach(function (o, i) {
-            o.classList.toggle('activa', i === 0);
-          });
-        });
-        var t = b.getAttribute('data-desc') || '';
-        desc.textContent = t;
-        desc.hidden = !t;
-        aplicar();
-      });
-    });
-
-    cajasSub.forEach(function (caja) {
-      var botones = [].slice.call(caja.querySelectorAll('.pill'));
-      botones.forEach(function (b) {
-        b.addEventListener('click', function () {
-          pinta(botones, b);
-          sub = b.getAttribute('data-sub');
-          aplicar();
-        });
-      });
-    });
-
+    window.addEventListener('hashchange', delAncla);
     campo.addEventListener('input', aplicar);
 
-    limpiar.addEventListener('click', function () {
-      campo.value = '';
-      pillsCat[0].click();
-      campo.focus();
-    });
-
-    // ── el cajón ──────────────────────────────────────────────────────
-    var cajon = document.querySelector('[data-cajon]');
-    var velo = document.querySelector('[data-velo]');
-    var cuerpo = document.querySelector('[data-cuerpo]');
-    var pos = document.querySelector('[data-pos]');
-    var btnPrev = document.querySelector('[data-prev]');
-    var btnNext = document.querySelector('[data-next]');
-    var devolverFoco = null;
-    var actual = -1;
-    var scrollGuardado = 0;
-
-    function visibles() {
-      return celdas.filter(function (c) { return !c.hidden; });
-    }
-
-    function abrir(id, foco) {
-      var plantilla = document.querySelector('[data-ficha="' + id + '"]');
-      if (!plantilla) return;
-      devolverFoco = foco || devolverFoco;
-
-      cuerpo.innerHTML = '';
-      cuerpo.appendChild(plantilla.content.cloneNode(true));
-      cuerpo.scrollTop = 0;
-
-      var lista = visibles();
-      actual = lista.findIndex(function (c) {
-        return c.querySelector('[data-abrir]').getAttribute('data-abrir') === id;
-      });
-      pos.textContent = actual >= 0 ? (actual + 1) + ' de ' + lista.length : '';
-      btnPrev.disabled = actual <= 0;
-      btnNext.disabled = actual < 0 || actual >= lista.length - 1;
-
-      velo.hidden = false;
-      cajon.hidden = false;
-      cajon.setAttribute('aria-hidden', 'false');
-      // Dos cuadros: el navegador tiene que ver el elemento visible antes de
-      // que la clase dispare la transición, o entra de golpe.
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () { cajon.classList.add('abierto'); velo.classList.add('abierto'); });
-      });
-      if (!document.body.classList.contains('sin-scroll')) {
-        scrollGuardado = window.scrollY;
-        document.body.style.top = -scrollGuardado + 'px';
-        document.body.classList.add('sin-scroll');
-      }
-      // preventScroll: sin el, el navegador arrastra la pagina de detras hasta
-      // el cajon y, con el scroll bloqueado, se queda mirando el vacio.
-      cuerpo.focus({ preventScroll: true });
-    }
-
-    function cerrar() {
-      cajon.classList.remove('abierto');
-      velo.classList.remove('abierto');
-      cajon.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('sin-scroll');
-      document.body.style.top = '';
-      window.scrollTo(0, scrollGuardado);
-      window.setTimeout(function () {
-        if (cajon.classList.contains('abierto')) return;
-        cajon.hidden = true;
-        velo.hidden = true;
-        cuerpo.innerHTML = '';
-      }, 220);
-      if (devolverFoco) { devolverFoco.focus({ preventScroll: true }); devolverFoco = null; }
-    }
-
-    function salta(paso) {
-      var lista = visibles();
-      var i = actual + paso;
-      if (i < 0 || i >= lista.length) return;
-      var boton = lista[i].querySelector('[data-abrir]');
-      abrir(boton.getAttribute('data-abrir'), boton);
-    }
-
-    celdas.forEach(function (c) {
-      var boton = c.querySelector('[data-abrir]');
-      boton.addEventListener('click', function () {
-        abrir(boton.getAttribute('data-abrir'), boton);
-      });
-    });
-
-    velo.addEventListener('click', cerrar);
-    document.querySelector('[data-cerrar]').addEventListener('click', cerrar);
-    btnPrev.addEventListener('click', function () { salta(-1); });
-    btnNext.addEventListener('click', function () { salta(1); });
-
-    // ── teclado ───────────────────────────────────────────────────────
+    // Ctrl/Cmd + K y escribir con el foco fuera llevan al buscador: durante
+    // la sesión no hay tiempo de ir al ratón.
     document.addEventListener('keydown', function (e) {
-      var abierto = !cajon.hidden;
-
-      // Ctrl/Cmd + K lleva siempre al buscador de esta pantalla.
       if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
-        e.preventDefault();
-        if (abierto) cerrar();
-        campo.focus();
-        campo.select();
-        return;
+        e.preventDefault(); campo.focus(); campo.select(); return;
       }
-
-      if (!abierto) return;
-      if (e.key === 'Escape') { e.preventDefault(); cerrar(); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); salta(-1); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); salta(1); }
-    });
-
-    // Escribir con el foco fuera del campo lleva al campo: durante la sesión
-    // no hay tiempo de ir al ratón.
-    document.addEventListener('keydown', function (e) {
-      if (!cajon.hidden) return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       var d = document.activeElement;
       if (d && (d.tagName === 'INPUT' || d.tagName === 'TEXTAREA' || d.isContentEditable)) return;
+      if (e.key === 'Escape' && campo.value) { campo.value = ''; aplicar(); return; }
       if (e.key.length !== 1 || !/[\wáéíóúñ-]/i.test(e.key)) return;
       campo.focus();
     });
+
+    delAncla();
   })();
 </script>
 
 <style>
-  /* ── cabecera ─────────────────────────────────────────────────────── */
-  .cab { max-width: 44rem; margin-bottom: var(--e-6); }
-  .lead { font-size: var(--t-5); color: var(--texto-2); margin: var(--e-4) 0 0; }
-
-  /* ── barra de trabajo ─────────────────────────────────────────────── */
-  .barra {
-    position: sticky; top: calc(var(--alto-cabecera) + var(--e-2));
-    z-index: 5;
-    display: grid; gap: var(--e-3);
-    margin-bottom: var(--e-6);
-    padding: var(--e-4);
-    border-radius: var(--radio-4);
-    background: var(--vidrio-fondo);
-    background-image: var(--vidrio-brillo);
-    backdrop-filter: var(--desenfoque);
-    border: 1px solid var(--vidrio-borde);
+  /* ── cabecera ─────────────────────────────────────────────────────────
+     Mismo tratamiento que el título de un módulo: centrado, en mayúscula y
+     arriba del todo. Es la misma jerarquía, así que se ve igual. */
+  .cab {
+    text-align: center;
+    margin: calc(var(--e-6) * -1) 0 var(--e-7);
+  }
+  .cab h1 {
+    margin: 0 0 var(--e-3);
+    font-size: clamp(var(--t-7), 3vw, var(--t-8));
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--acento);
+    text-wrap: balance;
+  }
+  .lead {
+    font-size: var(--t-5); color: var(--texto-2);
+    max-width: 52ch; margin: 0 auto;
   }
 
+  /* ── buscador ─────────────────────────────────────────────────────── */
+  .barra {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-3) var(--e-4);
+    margin-bottom: var(--e-6);
+  }
   .campo {
+    flex: 1 1 22rem;
     display: flex; align-items: center; gap: var(--e-3);
     padding: var(--e-3) var(--e-4);
-    background: var(--n-950);
-    border: 1px solid var(--borde-sutil);
+    background: var(--vidrio-fondo);
+    border: 1px solid var(--vidrio-borde);
     border-radius: var(--radio-2);
+    backdrop-filter: var(--desenfoque);
     color: var(--texto-3);
     transition: border-color var(--normal), box-shadow var(--normal);
   }
@@ -494,57 +232,17 @@ const rico = (r, t) => P.enriquecer(t, { sinEnlaceA: r.id });
     white-space: nowrap;
   }
 
-  /* ── pastillas ────────────────────────────────────────────────────── */
-  .pills { display: flex; flex-wrap: wrap; gap: var(--e-2); align-items: center; }
-  .pills.subs { margin-left: var(--e-3); }
-  .pills.subs[hidden] { display: none; }
-  .subs-t { margin-right: var(--e-1); }
-
-  .pill {
-    display: inline-flex; align-items: center; gap: var(--e-2);
-    padding: var(--e-2) var(--e-3);
+  .estado { display: flex; align-items: center; gap: var(--e-3); margin: 0; }
+  .grupo {
+    font-size: var(--t-2); color: var(--texto-2);
+    padding: var(--e-1) var(--e-3);
     border-radius: var(--radio-pill);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--borde-sutil);
-    color: var(--texto-2);
-    font: inherit; font-size: var(--t-2); cursor: pointer;
-    transition: background var(--normal), border-color var(--normal), color var(--normal);
+    background: color-mix(in srgb, var(--acento) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--acento) 40%, transparent);
   }
-  .pill:hover { background: rgba(255, 255, 255, 0.07); color: var(--texto); }
-  .pill.menuda { font-size: var(--t-1); padding: var(--e-1) var(--e-3); }
-
-  /* El punto lleva el tono del grupo. Es lo que hace que la pastilla y la
-     tarjeta se reconozcan de un vistazo sin leer la etiqueta. */
-  .punto {
-    width: 0.45rem; height: 0.45rem; border-radius: 50%;
-    background: var(--c, var(--acento));
-  }
-
-  .pill.activa {
-    background: color-mix(in srgb, var(--c, var(--acento)) 18%, transparent);
-    border-color: color-mix(in srgb, var(--c, var(--acento)) 55%, transparent);
-    color: var(--texto);
-  }
-  .pill-n {
-    font-size: var(--t-1); color: var(--texto-3);
-    font-variant-numeric: tabular-nums;
-  }
-  .pill.activa .pill-n { color: var(--texto-2); }
-
-  .estado {
-    display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-3);
-    margin: 0; font-size: var(--t-2);
-  }
-  .desc { color: var(--texto-3); }
-  .desc[hidden] { display: none; }
-  .cuenta { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .grupo[hidden] { display: none; }
+  .cuenta { font-variant-numeric: tabular-nums; white-space: nowrap; }
   .cuenta b { color: var(--texto); font-weight: var(--peso-medio); }
-  .limpiar {
-    background: none; border: 0; padding: 0;
-    color: var(--acento); font: inherit; font-size: var(--t-2);
-    cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
-  }
-  .limpiar[hidden] { display: none; }
 
   .vacio { color: var(--texto-2); font-size: var(--t-3); padding: var(--e-6) 0; }
 
@@ -561,26 +259,26 @@ const rico = (r, t) => P.enriquecer(t, { sinEnlaceA: r.id });
 
   /* ── tarjeta ──────────────────────────────────────────────────────── */
   .tarj {
+    position: relative; overflow: hidden;
     display: flex; flex-direction: column; gap: var(--e-3);
-    width: 100%; height: 100%;
+    height: 100%;
     padding: var(--e-4) var(--e-4) var(--e-5);
     border-radius: var(--radio-3);
     background: var(--vidrio-fondo);
     background-image: var(--vidrio-brillo);
     border: 1px solid var(--vidrio-borde);
     color: var(--texto-2);
-    font: inherit; text-align: left; cursor: pointer;
     transition: transform var(--normal), box-shadow var(--normal), border-color var(--normal);
   }
-  /* El filo del grupo: una línea de color arriba, del ancho de la tarjeta. */
-  .tarj { position: relative; overflow: hidden; }
+  /* El filo de color dice de qué grupo es sin tener que leer la etiqueta. */
   .tarj::before {
     content: ''; position: absolute; inset: 0 0 auto 0; height: 2px;
-    background: var(--c, var(--acento)); opacity: 0.55;
+    background: var(--c, var(--acento)); opacity: 0.5;
     transition: opacity var(--normal);
   }
   .tarj:hover, .tarj:focus-visible {
     transform: translateY(-2px);
+    color: var(--texto-2);
     border-color: color-mix(in srgb, var(--c, var(--acento)) 40%, var(--vidrio-borde));
     box-shadow: var(--halo-azul), var(--sombra-2);
   }
@@ -603,7 +301,6 @@ const rico = (r, t) => P.enriquecer(t, { sinEnlaceA: r.id });
   }
   .tarj:hover .t-ir { transform: translateX(3px); color: var(--c, var(--acento)); }
 
-  /* El enunciado manda. Ni recorte, ni puntos suspensivos, ni alto fijo. */
   .t-e {
     font-size: var(--t-4); line-height: 1.45;
     color: var(--texto); font-weight: var(--peso-medio);
@@ -617,135 +314,4 @@ const rico = (r, t) => P.enriquecer(t, { sinEnlaceA: r.id });
   }
   .met { display: inline-flex; align-items: center; gap: var(--e-1); --i: 0.9rem; }
   .met.cruz { font-style: italic; }
-
-  /* ── cajón ────────────────────────────────────────────────────────── */
-  .velo {
-    position: fixed; inset: 0; z-index: 40;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(2px);
-    opacity: 0; transition: opacity var(--normal);
-  }
-  .velo.abierto { opacity: 1; }
-  .velo[hidden] { display: none; }
-
-  .cajon {
-    position: fixed; top: 0; right: 0; bottom: 0; z-index: 41;
-    width: min(46rem, 100vw);
-    display: flex; flex-direction: column;
-    background: var(--n-950);
-    border-left: 1px solid var(--vidrio-borde);
-    box-shadow: -24px 0 60px rgba(0, 0, 0, 0.5);
-    transform: translateX(100%);
-    transition: transform var(--normal);
-  }
-  .cajon.abierto { transform: translateX(0); }
-  .cajon[hidden] { display: none; }
-
-  .cj-cab {
-    display: flex; align-items: center; gap: var(--e-2);
-    padding: var(--e-3) var(--e-4);
-    border-bottom: 1px solid var(--borde-sutil);
-  }
-  .cj-nav, .cj-x {
-    display: flex; align-items: center; justify-content: center;
-    width: 2rem; height: 2rem;
-    border: 1px solid var(--borde-sutil); border-radius: var(--radio-2);
-    background: none; color: var(--texto-2); cursor: pointer;
-    transition: background var(--normal), color var(--normal);
-  }
-  .cj-nav:hover:not(:disabled), .cj-x:hover { background: var(--vidrio-hover); color: var(--texto); }
-  .cj-nav:disabled { opacity: 0.35; cursor: default; }
-  .cj-x { margin-left: auto; }
-  .cj-pos { font-variant-numeric: tabular-nums; }
-
-  .cj-cuerpo {
-    flex: 1; min-height: 0; overflow-y: auto;
-    padding: var(--e-5) var(--e-6) var(--e-8);
-    outline: none;
-  }
-
-  /* ── contenido del cajón ──────────────────────────────────────────── */
-  .cj-cuerpo :global(.fx-cab) { display: flex; align-items: center; gap: var(--e-2); }
-  .cj-cuerpo :global(.fx-id) { font-size: var(--t-1); color: var(--texto-3); }
-  .cj-cuerpo :global(.fx-e) {
-    margin: var(--e-4) 0 0; font-size: var(--t-6); line-height: 1.3;
-    color: var(--texto); text-wrap: pretty;
-  }
-  .cj-cuerpo :global(.fx-estado) { margin: var(--e-2) 0 0; }
-
-  .cj-cuerpo :global(.fx-bloque) { margin-top: var(--e-6); }
-  .cj-cuerpo :global(.fx-bloque h3) {
-    display: flex; align-items: center; gap: var(--e-2);
-    margin: 0 0 var(--e-3); --i: 1rem;
-    font-size: var(--t-2); color: var(--texto-3);
-    letter-spacing: var(--track-etiqueta); text-transform: uppercase;
-  }
-  .cj-cuerpo :global(.fx-bloque p) { margin: 0; color: var(--texto-2); }
-
-  .cj-cuerpo :global(.checklist) { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-2); }
-  .cj-cuerpo :global(.checklist li) {
-    display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--e-3);
-    padding: var(--e-3);
-    border-radius: var(--radio-2);
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid var(--borde-sutil);
-  }
-  .cj-cuerpo :global(.ck) { display: flex; --i: 0.9rem; color: var(--c, var(--acento)); margin-top: 0.15rem; }
-  /* La etiqueta ocupa su propia linea y el valor empieza debajo. Con las dos
-     en la misma linea, al envolver el valor parecia continuacion del nombre
-     de la variable y costaba leer donde acababa una y empezaba el otro. */
-  .cj-cuerpo :global(.ck-cuerpo) {
-    display: grid; grid-template-columns: minmax(0, 1fr) auto;
-    align-items: baseline; gap: var(--e-1) var(--e-2); min-width: 0;
-  }
-  .cj-cuerpo :global(.ck-var) {
-    grid-column: 1;
-    color: var(--texto); font-weight: var(--peso-medio); font-size: var(--t-1);
-    letter-spacing: var(--track-etiqueta); text-transform: uppercase;
-  }
-  .cj-cuerpo :global(.ck-op) { grid-column: 1; justify-self: start; }
-  .cj-cuerpo :global(.ck-val) { grid-column: 1 / -1; }
-  .cj-cuerpo :global(.ck-op) {
-    font-family: var(--fuente-mono); font-size: var(--t-1);
-    padding: 0 0.35rem; border-radius: var(--radio-1);
-    background: rgba(255, 255, 255, 0.06); color: var(--texto-2);
-  }
-  .cj-cuerpo :global(.ck-val) { color: var(--texto-2); font-size: var(--t-3); }
-  .cj-cuerpo :global(.ck-tf) { grid-column: 2; grid-row: 1; font-size: var(--t-1); }
-
-  .cj-cuerpo :global(.fx-lista), .cj-cuerpo :global(.fx-casos) {
-    margin: 0; padding-left: var(--e-5); color: var(--texto-2); display: grid; gap: var(--e-2);
-  }
-  .cj-cuerpo :global(.fx-casos a) { color: var(--acento); }
-
-  .cj-cuerpo :global(.fx-gr) {
-    margin: var(--e-5) 0 0; padding: var(--e-2);
-    border-radius: var(--radio-3);
-    background: var(--vidrio-fondo); border: 1px solid var(--vidrio-borde);
-  }
-  .cj-cuerpo :global(.fx-gr img) {
-    width: 100%; display: block; border-radius: calc(var(--radio-3) - var(--e-2));
-    background: var(--n-950);
-  }
-
-  /* La nota es un aviso: oro. El rojo sigue reservado a un dato negativo. */
-  .cj-cuerpo :global(.fx-nota) {
-    margin-top: var(--e-6); padding: var(--e-4);
-    border-radius: var(--radio-2);
-    background: color-mix(in srgb, var(--aviso) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--aviso) 28%, transparent);
-  }
-  .cj-cuerpo :global(.fx-nota p) { margin: 0; color: var(--texto-2); font-size: var(--t-3); }
-
-  .cj-cuerpo :global(.fx-mas) {
-    display: inline-flex; align-items: center; gap: var(--e-2);
-    margin-top: var(--e-7); --i: 0.95rem;
-    color: var(--acento); font-size: var(--t-3);
-  }
-
-  @media (max-width: 46rem) {
-    .barra { position: static; }
-    .cajon { width: 100vw; border-left: 0; }
-    .cj-cuerpo { padding: var(--e-4) var(--e-4) var(--e-7); }
-  }
 </style>

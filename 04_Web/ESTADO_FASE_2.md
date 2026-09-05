@@ -142,6 +142,48 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-05 · la pared invisible, y marcha atras en el cajon
+
+El operador, con razon: **el texto se cortaba contra una pared invisible y lo
+habia pedido cinco veces**. Estaba arreglando sintomas, no la causa.
+
+#### La causa, por fin
+
+`tokens.css` tenia **`--medida: 62ch`**, y `base.css` lo aplicaba como
+`max-width` a **todos** los parrafos y listas del portal. Encima habia otros
+dos topes: `.mod` a 48rem y `.contenido.texto` a 52rem. Un parrafo media 768px
+dentro de un contenedor de 1152: **384px vacios a la derecha en cada pagina**.
+
+Ahora `--medida` es `100%` y los dos topes de contenedor se fueron. Quien
+limita el ancho es el contenedor de la pagina, y nada mas. De paso salieron
+los topes de los encabezados (`.cab`) de ocho paginas, que producian el mismo
+efecto en el titulo y su entradilla, y el del titular de la ficha de regla.
+
+#### Marcha atras en el cajon lateral
+
+Se retira. Al entrar en una regla se va a su ficha, como siempre. La ficha ya
+existia, esta completa y a el le gustaba.
+
+#### Los grupos, al lateral
+
+Fuera la barra de pastillas: se filtraba en dos sitios y sobraba uno. Los
+siete grupos cuelgan ahora de «Las reglas» en el menu de la izquierda, con
+guia vertical, contadores y los dos apartados de Zonas anidados. Solo se
+despliegan estando en esa seccion. El grupo viaja en el ancla
+(`#g=zonas.marcado`), asi que funciona con el boton de atras y se puede
+enlazar.
+
+El titulo pasa a **REGLAS TRADING PLAN**, centrado y en mayuscula, con el
+mismo tratamiento que el titulo de un modulo.
+
+#### Los codigos de regla ya llevan a la regla
+
+En los ocho modulos eran texto muerto desde el primer dia — nunca fueron
+enlaces, aunque el operador recordaba que si. Ahora hay un componente `Refs`
+que los pinta como enlaces a su ficha, con el enunciado en el titulo al pasar
+por encima. Siguen viendose solo en modo tecnico.
+
+
 ### 2026-09-04 · la pantalla de reglas, rehecha
 
 **Lo que estaba mal**, en palabras del operador: texto que se corta, tarjetas

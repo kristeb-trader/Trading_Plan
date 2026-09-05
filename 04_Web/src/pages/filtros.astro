@@ -8,6 +8,7 @@
  */
 import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
+import Refs from '../componentes/Refs.astro';
 
 const par = P.parametros();
 const v = (n, alt) => par.get(n)?.valor ?? alt;
@@ -23,7 +24,7 @@ const SECCIONES = [
 
 <Modulo slug="filtros" secciones={SECCIONES}>
   <section class="ap" id="dia">
-    <h2>No abrir el día <span class="solo-tecnico mono ref-cod">R-28 · R-27</span></h2>
+    <h2>No abrir el día <Refs cods="R-28 · R-27" /></h2>
     <p>
       Hay dos cosas que se deciden antes de mirar un solo gráfico, y las dos
       pueden cerrar el día entero.
@@ -48,7 +49,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="cuatro">
-    <h2>Los cuatro filtros <span class="solo-tecnico mono ref-cod">R-08 · R-24 · R-23 · R-27</span></h2>
+    <h2>Los cuatro filtros <Refs cods="R-08 · R-24 · R-23 · R-27" /></h2>
     <p>
       Con el setup identificado y el stop y el objetivo ya medidos, se pasan
       cuatro comprobaciones. <strong>Basta que falle una</strong> para que no
@@ -100,7 +101,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="noticias">
-    <h2>Las noticias <span class="solo-tecnico mono ref-cod">R-21</span></h2>
+    <h2>Las noticias <Refs cods="R-21" /></h2>
     <p>
       Alrededor de cada noticia roja hay una ventana de once minutos en la que
       no se opera.
@@ -123,7 +124,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="cancelan">
-    <h2>Lo que cancela la orden <span class="solo-tecnico mono ref-cod">R-04</span></h2>
+    <h2>Lo que cancela la orden <Refs cods="R-04" /></h2>
     <p>
       Una orden puesta que todavía no se ha llenado muere con lo primero que
       llegue de esta lista.
@@ -196,5 +197,4 @@ const SECCIONES = [
 </Modulo>
 
 <style>
-  .ref-cod { margin-left: var(--e-2); font-size: var(--t-1); color: var(--texto-3); }
 </style>

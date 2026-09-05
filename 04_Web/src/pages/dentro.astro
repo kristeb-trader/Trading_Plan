@@ -7,6 +7,7 @@
  */
 import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
+import Refs from '../componentes/Refs.astro';
 
 const par = P.parametros();
 const v = (n, alt) => par.get(n)?.valor ?? alt;
@@ -21,7 +22,7 @@ const SECCIONES = [
 
 <Modulo slug="dentro" secciones={SECCIONES}>
   <section class="ap" id="llenado">
-    <h2>Al llenarse <span class="solo-tecnico mono ref-cod">R-08 · R-24</span></h2>
+    <h2>Al llenarse <Refs cods="R-08 · R-24" /></h2>
     <p>
       La orden se llenó. Hay dos cosas que hacer, en este orden exacto, y
       después no hay ninguna más.
@@ -46,7 +47,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="no-tocar">
-    <h2>No se toca nada <span class="solo-tecnico mono ref-cod">R-25</span></h2>
+    <h2>No se toca nada <Refs cods="R-25" /></h2>
     <p>
       Colocados el stop y el objetivo, la operación deja de gestionarse.
     </p>
@@ -76,7 +77,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="salidas">
-    <h2>Solo hay dos salidas <span class="solo-tecnico mono ref-cod">R-06</span></h2>
+    <h2>Solo hay dos salidas <Refs cods="R-06" /></h2>
 
     <dl class="datos">
       <dt>Salida 1</dt>
@@ -94,7 +95,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="cerrar">
-    <h2>Al cerrar <span class="solo-tecnico mono ref-cod">R-30 · R-03</span></h2>
+    <h2>Al cerrar <Refs cods="R-30 · R-03" /></h2>
     <p>
       Terminada la operación, con el resultado que sea:
     </p>
@@ -115,5 +116,4 @@ const SECCIONES = [
 </Modulo>
 
 <style>
-  .ref-cod { margin-left: var(--e-2); font-size: var(--t-1); color: var(--texto-3); }
 </style>

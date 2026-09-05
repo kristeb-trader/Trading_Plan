@@ -10,6 +10,7 @@
  */
 import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
+import Refs from '../componentes/Refs.astro';
 
 const par = P.parametros();
 const v = (n, alt) => par.get(n)?.valor ?? alt;
@@ -25,7 +26,7 @@ const SECCIONES = [
 
 <Modulo slug="premercado" secciones={SECCIONES}>
   <section class="ap" id="estado">
-    <h2>Cómo estoy hoy <span class="solo-tecnico mono ref-cod">R-28</span></h2>
+    <h2>Cómo estoy hoy <Refs cods="R-28" /></h2>
     <div class="ap-dividido">
       <div class="ap-texto">
         <p>
@@ -48,7 +49,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="noticias">
-    <h2>El calendario <span class="solo-tecnico mono ref-cod">R-21 · R-27</span></h2>
+    <h2>El calendario <Refs cods="R-21 · R-27" /></h2>
     <p>
       Se mira Forex Factory, y solo Forex Factory. Un único calendario evita
       el problema de dos fuentes que no siempre coinciden.
@@ -74,7 +75,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="instrumento">
-    <h2>El gráfico <span class="solo-tecnico mono ref-cod">R-01 · R-09</span></h2>
+    <h2>El gráfico <Refs cods="R-01 · R-09" /></h2>
     <p>
       Se trabaja únicamente con el micro Nasdaq, <strong>MNQ</strong>. Aquí
       se marcan las zonas, se lee el volumen, se leen los niveles de
@@ -109,7 +110,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="atm">
-    <h2>Estrategia ATM <span class="solo-tecnico mono ref-cod">R-08</span></h2>
+    <h2>Estrategia ATM <Refs cods="R-08" /></h2>
     <p>
       La estrategia ATM de NinjaTrader se deja configurada antes de empezar y
       no se toca durante la sesión.
@@ -149,7 +150,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="zonas-vol">
-    <h2>Zonas por volumen <span class="solo-tecnico mono ref-cod">R-20</span></h2>
+    <h2>Zonas por volumen <Refs cods="R-20" /></h2>
     <p>
       Si en el premercado se forma una vela con un volumen por encima del
       umbral (<strong>{v('UMBRAL_VOL_MNQ', '> 6.000 contratos')} en MNQ,{' '}
@@ -198,7 +199,6 @@ const SECCIONES = [
 </Modulo>
 
 <style>
-  .ref-cod { margin-left: var(--e-2); font-size: var(--t-1); color: var(--texto-3); }
 
   /* El aviso de «El gráfico» quedaba pegado al párrafo de después: el margen
      inferior normal de .duro no bastaba aquí. */

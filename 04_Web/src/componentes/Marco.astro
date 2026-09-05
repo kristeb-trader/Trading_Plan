@@ -70,6 +70,11 @@ const GRUPOS = [
   },
 ];
 
+// Los siete grupos de reglas, para el submenu. Nombre, orden y apartados
+// salen de reglas.json: aqui no se escribe ninguno a mano.
+const GRUPOS_REGLA = P.categorias();
+const NOMBRE_SUB = { marcado: 'Marcado', vigencia: 'Vigencia' };
+
 const ruta = Astro.url.pathname.replace(/\/$/, '') || '/';
 const activa = (href: string) =>
   ruta === href.replace(/\/$/, '') || (href !== '/' && ruta.startsWith(href));
@@ -128,6 +133,7 @@ const activa = (href: string) =>
             <div class:list={['nav-g', { 'solo-tecnico': g.soloTecnico }]}>
               {g.grupo && <p class="etiqueta nav-t">{g.grupo}</p>}
               {g.items.map((s) => (
+                <>
                 <a href={s.href} title={s.texto}
                    class:list={['nav-i', { activa: activa(s.href) }]}>
                   <span class="nav-ic" style={s.tono ? `--tono:${s.tono}` : undefined}><Icono nombre={s.icono} /></span>
@@ -135,6 +141,42 @@ const activa = (href: string) =>
                   {s.n && <span class="nav-n num">{String(s.n).padStart(2, '0')}</span>}
                   {s.cuenta && <span class="nav-c num">{s.cuenta}</span>}
                 </a>
+
+                <!-- Los grupos de reglas cuelgan de «Las reglas» y solo
+                     aparecen estando en esa seccion: fuera de ella serian
+                     diez lineas de ruido en todas las paginas. -->
+                {s.href === '/reglas' && ruta.startsWith('/reglas') && (
+                  <ul class="sub">
+                    <li>
+                      <a class="sub-i" href="/reglas" data-grupo="">
+                        <span class="sub-x">Todas</span>
+                        <span class="sub-n num">{P.reglas().length}</span>
+                      </a>
+                    </li>
+                    {GRUPOS_REGLA.map((c) => (
+                      <li>
+                        <a class="sub-i" href={`/reglas#g=${c.id}`} data-grupo={c.id}>
+                          <span class="sub-x">{c.nombre}</span>
+                          <span class="sub-n num">{c.n}</span>
+                        </a>
+                        {c.subs.length > 1 && (
+                          <ul class="sub sub2">
+                            {c.subs.map((sb) => (
+                              <li>
+                                <a class="sub-i" href={`/reglas#g=${c.id}.${sb.id}`}
+                                   data-grupo={`${c.id}.${sb.id}`}>
+                                  <span class="sub-x">{NOMBRE_SUB[sb.id] ?? sb.id}</span>
+                                  <span class="sub-n num">{sb.n}</span>
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                </>
               ))}
             </div>
           ))}
@@ -547,6 +589,46 @@ const activa = (href: string) =>
       .nav-i.activa .nav-c { background: color-mix(in srgb, var(--acento) 26%, transparent); color: var(--texto); }
 
       /* ── pie del rail ──────────────────────────────────────────────── */
+      /* ── submenu de grupos ────────────────────────────────────────────
+         Cuelga con una guia vertical a la izquierda, como un arbol. No lleva
+         icono: el icono es de la seccion, y repetirlo en cada hijo solo
+         ensucia. El grupo activo se marca con la guia en color. */
+      .sub {
+        list-style: none;
+        margin: var(--e-1) 0 var(--e-2);
+        padding: 0 0 0 var(--e-4);
+        margin-left: var(--e-4);
+        border-left: 1px solid var(--borde-sutil);
+        display: grid; gap: 1px;
+      }
+      .sub2 { margin-left: var(--e-2); padding-left: var(--e-3); }
+      .sub li { margin: 0; }
+
+      .sub-i {
+        position: relative;
+        display: flex; align-items: center; gap: var(--e-2);
+        padding: var(--e-1) var(--e-2);
+        border-radius: var(--radio-1);
+        color: var(--texto-3); font-size: var(--t-2);
+        transition: background var(--normal), color var(--normal);
+      }
+      .sub-i:hover { background: var(--vidrio-hover); color: var(--texto); }
+      .sub-x { flex: 1; min-width: 0; }
+      .sub-n {
+        font-size: var(--t-1); color: var(--texto-3);
+        font-variant-numeric: tabular-nums;
+      }
+      .sub2 .sub-i { font-size: var(--t-1); }
+
+      .sub-i.activa { color: var(--texto); background: var(--vidrio-hover); }
+      .sub-i.activa::before {
+        content: ''; position: absolute;
+        left: calc(var(--e-4) * -1 - 1px); top: 0; bottom: 0;
+        width: 2px; border-radius: 2px; background: var(--acento);
+      }
+      .sub2 .sub-i.activa::before { left: calc(var(--e-3) * -1 - 1px); }
+      .sub-i.activa .sub-n { color: var(--texto-2); }
+
       .rail-pie { display: grid; gap: var(--e-2); justify-items: end; }
 
       /* ── plegado ──────────────────────────────────────────────────────
@@ -576,7 +658,8 @@ const activa = (href: string) =>
         :global(html.rail-plegado) .nav-t,
         :global(html.rail-plegado) .nav-x,
         :global(html.rail-plegado) .nav-n,
-        :global(html.rail-plegado) .nav-c { display: none; }
+        :global(html.rail-plegado) .nav-c,
+        :global(html.rail-plegado) .sub { display: none; }
         :global(html.rail-plegado) .nav-i { justify-content: center; padding-inline: 0; }
         :global(html.rail-plegado) .nav-i:hover { transform: none; }
         :global(html.rail-plegado) .rail-pie { justify-items: center; }
@@ -601,7 +684,7 @@ const activa = (href: string) =>
       /* ── contenido ─────────────────────────────────────────────────── */
       .cuerpo { display: flex; flex-direction: column; min-width: 0; }
       .contenido { flex: 1; width: 100%; padding: var(--e-8) var(--e-7) var(--e-9); }
-      .contenido.texto { max-width: 52rem; }
+      .contenido.texto { max-width: var(--ancho); }
       .contenido.total { max-width: var(--ancho); }
 
       .pie {

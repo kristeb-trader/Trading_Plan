@@ -192,7 +192,8 @@ const rico = (t) => P.enriquecer(t, { sinEnlaceA: regla.id });
   .f-e {
     margin: var(--e-5) 0 var(--e-3);
     font-size: var(--t-7); line-height: 1.25;
-    max-width: 34ch;
+    /* Sin tope: `text-wrap: balance` reparte las lineas y el titular llena
+       la columna como todo lo demas. */
   }
   .f-estado { margin: 0; }
 

@@ -8,6 +8,7 @@
  */
 import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
+import Refs from '../componentes/Refs.astro';
 
 const par = P.parametros();
 const v = (n, alt) => par.get(n)?.valor ?? alt;
@@ -22,7 +23,7 @@ const SECCIONES = [
 
 <Modulo slug="entrada" secciones={SECCIONES}>
   <section class="ap" id="orden">
-    <h2>Qué orden y dónde <span class="solo-tecnico mono ref-cod">R-07</span></h2>
+    <h2>Qué orden y dónde <Refs cods="R-07" /></h2>
     <p>
       La entrada no se hace a mano. Se deja una orden puesta y se espera a que
       el mercado la llene solo.
@@ -63,7 +64,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="medir">
-    <h2>Stop y objetivo <span class="solo-tecnico mono ref-cod">R-24</span></h2>
+    <h2>Stop y objetivo <Refs cods="R-24" /></h2>
     <p>
       Los dos se miden desde el nivel de entrada, y en este orden: primero el
       stop, que lo decide la estructura; después el objetivo, que sale del stop.
@@ -131,7 +132,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="espera">
-    <h2>La orden esperando <span class="solo-tecnico mono ref-cod">R-04</span></h2>
+    <h2>La orden esperando <Refs cods="R-04" /></h2>
     <p>
       Entre que se coloca la orden y que se llena pueden pasar varias cosas. Solo
       una de ellas es entrar.
@@ -160,6 +161,5 @@ const SECCIONES = [
 </Modulo>
 
 <style>
-  .ref-cod { margin-left: var(--e-2); font-size: var(--t-1); color: var(--texto-3); }
   .mas-filtros { color: var(--texto-3); font-size: var(--t-3); }
 </style>

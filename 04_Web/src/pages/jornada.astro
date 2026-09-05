@@ -8,6 +8,7 @@
  */
 import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
+import Refs from '../componentes/Refs.astro';
 
 const par = P.parametros();
 const v = (n, alt) => par.get(n)?.valor ?? alt;
@@ -23,7 +24,7 @@ const SECCIONES = [
 
 <Modulo slug="jornada" secciones={SECCIONES}>
   <section class="ap" id="ventana">
-    <h2>Las dos horas <span class="solo-tecnico mono ref-cod">R-02</span></h2>
+    <h2>Las dos horas <Refs cods="R-02" /></h2>
     <p>
       Se opera durante los <strong>120 minutos siguientes a la apertura del
       mercado americano</strong>. Fuera de esa ventana no se coloca ninguna
@@ -56,7 +57,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="primera">
-    <h2>La primera vela <span class="solo-tecnico mono ref-cod">R-31</span></h2>
+    <h2>La primera vela <Refs cods="R-31" /></h2>
     <p>
       La primera vela después de la apertura — la de las <span class="cifra-en">08:31</span>
       en horario de verano de Nueva York — tiene un papel especial y es donde
@@ -79,7 +80,7 @@ const SECCIONES = [
       <dd>Sí</dd>
     </dl>
 
-    <h3>La vela que abarca a la anterior <span class="solo-tecnico mono ref-cod">R-32</span></h3>
+    <h3>La vela que abarca a la anterior <Refs cods="R-32" /></h3>
     <p>
       Hay un caso que rompe la cuenta: una vela que hace a la vez máximo más
       alto y mínimo más bajo que la anterior, sin que haya un movimiento vivo. Esa
@@ -93,7 +94,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="direccion">
-    <h2>Por dónde empieza el día <span class="solo-tecnico mono ref-cod">R-34</span></h2>
+    <h2>Por dónde empieza el día <Refs cods="R-34" /></h2>
     <p>
       Que la primera vela declare una dirección no significa que haya que
       operar en ese sentido toda la mañana.
@@ -152,7 +153,7 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="registro">
-    <h2>El registro <span class="solo-tecnico mono ref-cod">R-29</span></h2>
+    <h2>El registro <Refs cods="R-29" /></h2>
     <p>
       Se registran <strong>todas las sesiones</strong>, incluidas aquellas en
       las que no se operó — y en esas, el motivo por el que no se operó.
@@ -176,5 +177,4 @@ const SECCIONES = [
 </Modulo>
 
 <style>
-  .ref-cod { margin-left: var(--e-2); font-size: var(--t-1); color: var(--texto-3); }
 </style>
