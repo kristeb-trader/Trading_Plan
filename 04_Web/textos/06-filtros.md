@@ -14,7 +14,7 @@ Lo que impide colocar la orden y lo que la cancela
 
 <!-- id: dia -->
 
-### No abrir el día R-28 · R-27
+### No abrir el día R-37 · R-36
 
 Hay dos cosas que se deciden antes de mirar un solo gráfico, y las dos pueden cerrar el día entero.
 
@@ -32,7 +32,7 @@ El veto del día de la Fed dura **toda la jornada**, no solo la hora del anuncio
 
 <!-- id: cuatro -->
 
-### Los cuatro filtros R-08 · R-24 · R-23 · R-27
+### Los cuatro filtros R-31 · R-32 · R-26 · R-36
 
 Con el setup identificado y el stop y el objetivo ya medidos, se pasan cuatro comprobaciones. **Basta que falle una** para que no haya operación.
 
@@ -55,7 +55,7 @@ Con el setup identificado y el stop y el objetivo ya medidos, se pasan cuatro co
 
 <!-- id: noticias -->
 
-### Las noticias R-21
+### Las noticias R-35
 
 Alrededor de cada noticia roja hay una ventana de once minutos en la que no se opera.
 
@@ -70,7 +70,7 @@ Alrededor de cada noticia roja hay una ventana de once minutos en la que no se o
 
 <!-- id: cancelan -->
 
-### Lo que cancela la orden R-04
+### Lo que cancela la orden R-29
 
 Una orden puesta que todavía no se ha llenado muere con lo primero que llegue de esta lista.
 

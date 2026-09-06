@@ -14,7 +14,7 @@ Qué es una zona, de qué vela sale y cómo se dibuja
 
 <!-- id: movimiento -->
 
-### Corrida y retroceso R-10 · R-11
+### Corrida y retroceso R-05 · R-06
 
 El mercado solo tiene dos fases: se mueve con fuerza hacia una dirección (arriba o abajo) o hace una pausa y retrocede un poco, ya sea para continuar el movimiento o para cambiar de sentido. El movimiento con dirección es la **corrida**; la pausa es el **retroceso**. Todo lo que pasa en el gráfico cae en una de esas dos categorías.
 
@@ -40,7 +40,7 @@ Del retroceso interesa un punto concreto: **su extremo** — el más bajo si la 
 
 <!-- id: nace -->
 
-### Generación de zonas R-12 · R-33 · R-38
+### Generación de zonas R-09 · R-16 · R-19
 
 Cuando una corrida termina, deja un rastro en el gráfico: una franja de precio que se llama **zona**. No se dibuja a ojo. Sale siempre de la misma vela y con los mismos límites.
 
@@ -80,7 +80,7 @@ Las dos zonas de un movimiento no nacen a la vez, y confundirlo lleva a operar a
 
 <!-- id: consecucion -->
 
-### Rompimiento y consecución R-13 · R-37 · R-38
+### Rompimiento y consecución R-20 · R-22 · R-19
 
 Superar una zona son dos cosas, no una. Primero el rompimiento, después la consecución. Y el mismo mecanismo que supera una zona es el que más tarde dispara la entrada.
 
@@ -115,7 +115,7 @@ El cierre no decide si hay rompimiento, pero sí deja un rastro distinto. Esa di
 
 <!-- id: estira -->
 
-### Cuando no llega la consecución R-15 · R-19
+### Cuando no llega la consecución R-10 · R-14
 
 Si el precio rompe una zona y pasan 5 velas — es un TOPE, no una espera obligatoria *(`R-14`, precisada 01/09/2026)* sin que llegue la consecución, la zona cambia de forma, es decir, se extiende la zona original hasta la punta de esa mecha.
 
@@ -137,7 +137,7 @@ O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas 
 
 <!-- id: apendice -->
 
-### La zona apéndice R-16
+### La zona apéndice R-11
 
 Si el rompimiento **fue con cuerpo** y pasan 5 velas — es un TOPE, no una espera obligatoria *(`R-14`, precisada 01/09/2026)* sin consecución, no se estira esa zona: **nace una zona nueva**, pegada a la anterior. Se llama **zona apéndice** y se marca desde el cuerpo de la vela que hizo rompimiento hasta la punta de la mecha.
 
@@ -166,7 +166,7 @@ O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas 
 
 <!-- id: convivencia -->
 
-### Zonas entre zonas R-17 · R-35 · R-36
+### Zonas entre zonas R-12 · R-17 · R-18
 
 En una jornada aparecen muchas zonas candidatas. Dos reglas evitan que el gráfico se llene de rectángulos y que se acabe operando ruido.
 
@@ -196,7 +196,7 @@ Cualquier zona viva sirve de borde de la franja, incluidas las que se marcaron d
 
 <!-- id: caduca -->
 
-### Cuándo deja de contar R-14
+### Cuándo deja de contar R-21
 
 Una zona muere cuando ha sido superada **en las dos direcciones**: rompimiento y consecución hacia un lado, y rompimiento y consecución hacia el otro.
 

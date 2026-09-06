@@ -14,7 +14,7 @@ Qué se hace al llenarse la orden, y qué no se hace nunca
 
 <!-- id: llenado -->
 
-### Al llenarse R-08 · R-24
+### Al llenarse R-31 · R-32
 
 La orden se llenó. Hay dos cosas que hacer, en este orden exacto, y después no hay ninguna más.
 
@@ -30,7 +30,7 @@ El orden importa. Entre el llenado y este ajuste, la posición corre con el valo
 
 <!-- id: no-tocar -->
 
-### No se toca nada R-25
+### No se toca nada R-33
 
 Colocados el stop y el objetivo, la operación deja de gestionarse.
 
@@ -51,7 +51,7 @@ Palabras del operador: *«no se toca nada, jamás… Repito, jamás se gestiona�
 
 <!-- id: salidas -->
 
-### Solo hay dos salidas R-06
+### Solo hay dos salidas R-30
 
 - **Salida 1** — **El stop.**
 - **Salida 2** — **El objetivo.**
@@ -63,7 +63,7 @@ Si la ventana de dos horas termina con la operación viva, la operación sigue. 
 
 <!-- id: cerrar -->
 
-### Al cerrar R-30 · R-03
+### Al cerrar R-34 · R-28
 
 Terminada la operación, con el resultado que sea:
 

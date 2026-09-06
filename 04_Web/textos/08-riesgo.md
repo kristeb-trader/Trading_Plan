@@ -14,7 +14,7 @@ Cuánto se arriesga, cuántas veces y con cuántos contratos
 
 <!-- id: cuanto -->
 
-### Cuánto se arriesga R-08
+### Cuánto se arriesga R-31
 
 El riesgo de cada operación no lo decide una cuenta: lo decide la estructura del mercado. Lo único que hay es un techo.
 
@@ -37,7 +37,7 @@ Con una sola operación al día y una relación de uno a uno, hace falta acertar
 
 <!-- id: cuantas -->
 
-### Cuántas veces R-03
+### Cuántas veces R-28
 
 - **Operaciones por sesión** — **1 llenada, como máximo**
 - **¿Y si la orden se cancela sin llenarse?** — No consume el cupo. Se puede esperar otro setup
@@ -49,7 +49,7 @@ Una operación al día es también lo que hace lenta la recuperación: no hay fo
 
 <!-- id: tamano -->
 
-### Con cuántos contratos R-26
+### Con cuántos contratos R-04
 
 > **[REGLA DURA]**
 > **Siempre 1 MNQ contrato de MNQ.** No sube porque la cuenta crezca. No baja tras una mala racha. No cambia por convicción.

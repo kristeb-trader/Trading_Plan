@@ -14,7 +14,7 @@ Los dos únicos setups que se operan: IRI y Reingreso
 
 <!-- id: dos -->
 
-### Solo hay dos R-05
+### Solo hay dos R-23
 
 El método no busca oportunidades: busca **dos figuras concretas**. Si lo que hay delante no es una de las dos, no hay operación, por bien que se vea el gráfico.
 
@@ -33,7 +33,7 @@ El método no busca oportunidades: busca **dos figuras concretas**. Si lo que ha
 
 <!-- id: iri -->
 
-### IRI · continuación R-22
+### IRI · continuación R-25
 
 El IRI es autocontenido: el propio movimiento crea la zona que después rompe. Impulso, retroceso, impulso — y el segundo impulso es la entrada.
 
@@ -55,7 +55,7 @@ El IRI es autocontenido: el propio movimiento crea la zona que después rompe. I
 
 <!-- id: reingreso -->
 
-### Reingreso · rompimiento fallido R-23
+### Reingreso · rompimiento fallido R-26
 
 Es el contrario exacto del IRI. Aquí el rompimiento se confirmó pero el precio **no continuó**: se dio la vuelta y se comió la zona entera. Se opera esa vuelta.
 

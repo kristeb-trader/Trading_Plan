@@ -14,10 +14,11 @@
  * que no este ya en el plan.
  *
  * OJO — cuatro cosas que el operador quito en su repaso y estan pendientes de
- * su respuesta (ver ESTADO_FASE_2, historial del 03/09/2026):
- *   - R-18 «si se tocan, se funden» ya no se explica en ningun sitio
- *   - de R-12 desaparecio «esa incluida» (la vela que dispara el retroceso)
- *   - de R-17 desaparecio «se mide el recorrido, no el rectangulo»
+ * su respuesta (ver ESTADO_FASE_2, historial del 03/09/2026; codigos ya
+ * traducidos a la numeracion del 06/09/2026):
+ *   - R-13 «si se tocan, se funden» ya no se explica en ningun sitio
+ *   - de R-09 desaparecio «esa incluida» (la vela que dispara el retroceso)
+ *   - de R-12 desaparecio «se mide el recorrido, no el rectangulo»
  *   - el PENDIENTE de como se entra sobre una zona apendice ya no se muestra
  */
 import Modulo from '../componentes/Modulo.astro';
@@ -41,7 +42,7 @@ const SECCIONES = [
 <Modulo slug="zonas" secciones={SECCIONES}>
   <!-- 1 ─────────────────────────────────────────────────────────────── -->
   <section class="ap" id="movimiento">
-    <h2>Corrida y retroceso <Refs cods="R-10 · R-11" /></h2>
+    <h2>Corrida y retroceso <Refs cods="R-05 · R-06" /></h2>
     <p>
       El mercado solo tiene dos fases: se mueve con fuerza hacia una dirección
       (arriba o abajo) o hace una pausa y retrocede un poco, ya sea para
@@ -94,7 +95,7 @@ const SECCIONES = [
 
   <!-- 2 ─────────────────────────────────────────────────────────────── -->
   <section class="ap" id="nace">
-    <h2>Generación de zonas <Refs cods="R-12 · R-33 · R-38" /></h2>
+    <h2>Generación de zonas <Refs cods="R-09 · R-16 · R-19" /></h2>
     <p>
       Cuando una corrida termina, deja un rastro en el gráfico: una franja de
       precio que se llama <strong>zona</strong>. No se dibuja a ojo. Sale
@@ -159,7 +160,7 @@ const SECCIONES = [
 
   <!-- 3 ─────────────────────────────────────────────────────────────── -->
   <section class="ap" id="consecucion">
-    <h2>Rompimiento y consecución <Refs cods="R-13 · R-37 · R-38" /></h2>
+    <h2>Rompimiento y consecución <Refs cods="R-20 · R-22 · R-19" /></h2>
     <p>
       Superar una zona son dos cosas, no una. Primero el rompimiento, después la
       consecución. Y el mismo mecanismo que supera una zona es el que más tarde
@@ -217,7 +218,7 @@ const SECCIONES = [
 
   <!-- 4 ─────────────────────────────────────────────────────────────── -->
   <section class="ap" id="estira">
-    <h2>Cuando no llega la consecución <Refs cods="R-15 · R-19" /></h2>
+    <h2>Cuando no llega la consecución <Refs cods="R-10 · R-14" /></h2>
     <p>
       Si el precio rompe una zona y pasan {v('PLAZO_CONSECUCION', '5 velas')} sin
       que llegue la consecución, la zona cambia de forma, es decir, se extiende
@@ -258,7 +259,7 @@ const SECCIONES = [
 
   <!-- 5 ─────────────────────────────────────────────────────────────── -->
   <section class="ap" id="apendice">
-    <h2>La zona apéndice <Refs cods="R-16" /></h2>
+    <h2>La zona apéndice <Refs cods="R-11" /></h2>
     <p>
       Si el rompimiento <strong>fue con cuerpo</strong> y pasan
       {v('PLAZO_CONSECUCION', '5 velas')} sin consecución, no se estira esa zona:
@@ -315,7 +316,7 @@ const SECCIONES = [
 
   <!-- 6 ─────────────────────────────────────────────────────────────── -->
   <section class="ap" id="convivencia">
-    <h2>Zonas entre zonas <Refs cods="R-17 · R-35 · R-36" /></h2>
+    <h2>Zonas entre zonas <Refs cods="R-12 · R-17 · R-18" /></h2>
     <p>
       En una jornada aparecen muchas zonas candidatas. Dos reglas evitan que el
       gráfico se llene de rectángulos y que se acabe operando ruido.
@@ -371,7 +372,7 @@ const SECCIONES = [
 
   <!-- 7 ─────────────────────────────────────────────────────────────── -->
   <section class="ap" id="caduca">
-    <h2>Cuándo deja de contar <Refs cods="R-14" /></h2>
+    <h2>Cuándo deja de contar <Refs cods="R-21" /></h2>
     <p>
       Una zona muere cuando ha sido superada <strong>en las dos direcciones</strong>:
       rompimiento y consecución hacia un lado, y rompimiento y consecución hacia

@@ -142,6 +142,49 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-06 · la renumeracion de las reglas, aplicada al portal
+
+El 06/09/2026 las 38 reglas se renumeraron en `01_Plan` para que corran
+seguidas dentro de las siete categorias. El portal **no se entero**.
+
+#### El fallo, y por que ningun comprobador lo veia
+
+Los ocho modulos escriben los codigos **a mano** en el titulo de cada
+apartado. Se escribieron con la numeracion anterior. Tras la renumeracion
+seguian existiendo —`R-10` existe—, solo que **ya no era esa regla**:
+
+| Donde | Decia | Llevaba a | Tenia que llevar a |
+|---|---|---|---|
+| Zonas · Corrida y retroceso | `R-10 · R-11` | «se estira la zona» y «nace la apendice» | `R-05 · R-06` corrida y retroceso |
+| Premercado · Como estoy hoy | `R-28` | «una operacion por sesion» | `R-37` no operar enfermo |
+| Zonas · Rompimiento y consecucion | `R-37` | «no operar enfermo» | `R-20` rompimiento y consecucion |
+
+**47 de las referencias apuntaban a otra regla.** `scripts/enlaces.mjs` las
+daba por buenas porque el destino existia: solo comprueba que la pagina este
+ahi, no que sea la que toca.
+
+#### Lo aplicado
+
+Traducidas las 48 referencias con la tabla de `EQUIVALENCIA_NUMERACION.md`
+—las 47 de los modulos mas el enlace cruzado de `parsers.mjs`, que pasa de
+`R-13` a `R-20`—. Repasadas **una por una** contra el titulo de su apartado:
+todas cuadran.
+
+Verificado ademas que el orden y las categorias se leen del archivo: 38
+reglas de `R-01` a `R-38` en orden ascendente, los siete grupos en su orden
+de uso, y los contadores del submenu cuadrando (4 + 4 + 14 con sus 11 + 3 +
+5 + 7 + 3 + 1).
+
+#### Para que no se repita
+
+Nuevo `scripts/referencias.mjs`, encadenado en `npm run verificar`. Guarda una
+huella de **que enunciado tiene cada codigo escrito a mano**
+(`referencias.lock.json`) y **falla si alguno cambia**, diciendo cual era y
+cual es ahora. No sabe si una referencia es la correcta —eso hay que leerlo—
+pero obliga a releerlas justo cuando la numeracion se mueve, que es cuando se
+rompen. Tras revisarlas se sella con `node scripts/referencias.mjs --sellar`.
+
+
 ### 2026-09-06 · el texto, justificado y sin paredes — de una vez
 
 Sexta vez que el operador pedia lo mismo. **Esta vez se midio antes de tocar

@@ -14,7 +14,7 @@ Cómo se coloca la orden, dónde va el stop y dónde el objetivo
 
 <!-- id: orden -->
 
-### Qué orden y dónde R-07
+### Qué orden y dónde R-24
 
 La entrada no se hace a mano. Se deja una orden puesta y se espera a que el mercado la llene solo.
 
@@ -38,7 +38,7 @@ Colocar la orden un tick más allá del extremo de la vela que rompió es lo mis
 
 <!-- id: medir -->
 
-### Stop y objetivo R-24
+### Stop y objetivo R-32
 
 Los dos se miden desde el nivel de entrada, y en este orden: primero el stop, que lo decide la estructura; después el objetivo, que sale del stop.
 
@@ -87,7 +87,7 @@ Los cuatro filtros, con sus casos límite, están en el módulo siguiente.
 
 <!-- id: espera -->
 
-### La orden esperando R-04
+### La orden esperando R-29
 
 Entre que se coloca la orden y que se llena pueden pasar varias cosas. Solo una de ellas es entrar.
 

@@ -89,8 +89,11 @@ export function categorias() {
  * `01_Plan/PROPUESTA_LIMPIEZA_REGLAS.md`, punto 4. Hoy es un solo caso — la
  * regla del rompimiento y la consecucion define como muere una zona Y como se
  * entra, asi que tiene que aparecer en los dos sitios.
+ *
+ * OJO: es un codigo escrito a mano. Si las reglas se vuelven a renumerar,
+ * hay que traducirlo — `scripts/referencias.mjs` avisa si deja de cuadrar.
  */
-export const ENLACES_CRUZADOS = new Map([['R-13', ['setup_entrada']]]);
+export const ENLACES_CRUZADOS = new Map([['R-20', ['setup_entrada']]]);
 
 // ─────────────────────────────────────────────────────────────── sub-fases
 /** El indice declarado por el propio documento, en su orden (no el numerico). */
