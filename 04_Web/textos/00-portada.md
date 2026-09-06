@@ -4,32 +4,21 @@
 > Corrige el texto libremente. **No borres ni cambies las líneas `<!-- id: … -->`**:
 > son las que dicen a qué parte de la página vuelve cada bloque.
 
-<!-- id: cabecera -->
-
-## Plan de trading enfocado en la metodología de Alfredo Chaumer.
-
-Un método de trading para NQ y MNQ, traducido a reglas que se pueden medir, seguir y operar.
-
 ---
 
 <!-- id: cuerpo -->
 
-- **Instrumento** — NQ · MNQ
+## Una operación al día, decidida por reglas
+
+El método de Alfredo Chaumer para el Nasdaq micro: dos horas de ventana, dos setups y una sola orden. Escrito para seguirse igual todos los días.
+
+- **Instrumento** — MNQ
 - **Marco** — 1 min
-- **Ventana** — 08:30 – 10:30
-- **Reglas** — 38
-- **Casos** — 21
-- **Términos** — 23
+- **Ventana** — 08:31 → 10:30
+- **Órdenes por sesión** — 1
 
-> 🖼 **Gráfico.** Texto alternativo: Una sesión real con las zonas marcadas y la operación
-> Pie: Empezar por el principio 21 casos reales
+### Por dónde entrar
 
-La jornada en horas
-
-1. 19:00 Premercado Empiezan a marcarse zonas por volumen, desde la apertura de Tokio.
-2. 08:30 Abre el mercado americano Arranca la única ventana del día en la que se coloca una orden.
-3. 08:31 La primera vela Declara la dirección con su propio cuerpo, y es el origen del primer movimiento.
-4. 10:29 Última orden Pasado ese minuto ya no se coloca nada, por buena que sea la figura.
-5. 10:30 Cierra la ventana Prohíbe abrir, no obliga a cerrar: una operación viva sigue viva.
-
-Horas de pantalla en **verano de Nueva York**. El ancla es la apertura del mercado americano, no el número del reloj: en invierno la misma ventana cae una hora más tarde.
+- El plan operativo El método completo en ocho módulos, en el orden real de la jornada: desde el premercado hasta el cierre de la operación. PremercadoMarcación de zonasSetups operativosJornada operativa **8** módulos
+- Las reglas Cada decisión del método escrita con sus condiciones medibles. Sin adjetivos: ticks, puntos, velas y horas exactas. PerímetroEstructuraZonasRiesgo **38** reglas
+- Casos reales Sesiones de verdad, marcadas vela a vela: las que se operaron, las que se descartaron y por qué. IRIReingresoDescartes **21** casos

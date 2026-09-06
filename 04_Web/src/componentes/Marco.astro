@@ -31,7 +31,7 @@ const { titulo, ancho = 'total' } = Astro.props;
 // cronologico de la sesion y sin el la lista no se entiende igual.
 const GRUPOS = [
   {
-    items: [{ icono: 'house', href: '/', texto: 'Inicio', tono: 'var(--acento)' }],
+    items: [{ icono: 'house', href: '/', texto: 'Inicio', tono: '#FFFFFF' }],
   },
   {
     // El tono sale de modulos.mjs, que es donde se calcula una sola vez, para
@@ -45,11 +45,11 @@ const GRUPOS = [
     // antes de las observaciones, que es el orden en que se usan al cerrar
     // la jornada.
     items: [
-      { icono: 'list-checks', href: '/reglas', texto: 'Las reglas', cuenta: P.reglas().length, tono: 'var(--info)' },
-      { icono: 'images', href: '/galeria', texto: 'Casos reales', cuenta: P.galeria().length, tono: 'var(--info)' },
-      { icono: 'sliders-horizontal', href: '/parametros', texto: 'Parámetros', tono: 'var(--info)' },
-      { icono: 'check-square', href: '/checklist', texto: 'Checklist diaria', tono: 'var(--acento)' },
-      { icono: 'chat-teardrop-text', href: '/observaciones', texto: 'Observaciones', tono: 'var(--acento)' },
+      { icono: 'list-checks', href: '/reglas', texto: 'Las reglas', cuenta: P.reglas().length, tono: '#A78BFA' },
+      { icono: 'images', href: '/galeria', texto: 'Casos reales', cuenta: P.galeria().length, tono: '#F472B6' },
+      { icono: 'sliders-horizontal', href: '/parametros', texto: 'Parámetros', tono: '#38BDF8' },
+      { icono: 'check-square', href: '/checklist', texto: 'Checklist diaria', tono: '#4ADE80' },
+      { icono: 'chat-teardrop-text', href: '/observaciones', texto: 'Observaciones', tono: '#22D3EE' },
     ],
   },
 ];
@@ -58,6 +58,23 @@ const GRUPOS = [
 // salen de reglas.json: aqui no se escribe ninguno a mano.
 const GRUPOS_REGLA = P.categorias();
 const NOMBRE_SUB = { marcado: 'Marcado', vigencia: 'Vigencia' };
+
+// Estando en la ficha de una regla, la que se marca en el menu es SU grupo,
+// no «Las reglas» a secas. Se resuelve aqui y no en el navegador para que
+// salga marcado ya en la primera pintura.
+// El mismo color por grupo que usa la pagina de reglas: del cian al azul en
+// el orden de la jornada. Se calcula igual para que el menu y la pagina no
+// se contradigan.
+const TONO_GRUPO = Object.fromEntries(GRUPOS_REGLA.map((c, i) => [
+  c.id,
+  `color-mix(in srgb, var(--info) ${Math.round(100 - (i * 100) / Math.max(GRUPOS_REGLA.length - 1, 1))}%, var(--acento))`,
+]));
+
+const idRegla = (Astro.url.pathname.match(/^\/reglas\/(R-\d{1,2})/) || [])[1] ?? null;
+const reglaActual = idRegla ? P.reglas().find((r) => r.id === idRegla) : null;
+const grupoActual = reglaActual
+  ? reglaActual.categoria + (reglaActual.subcategoria ? '.' + reglaActual.subcategoria : '')
+  : null;
 
 const ruta = Astro.url.pathname.replace(/\/$/, '') || '/';
 const activa = (href: string) =>
@@ -100,38 +117,50 @@ const activa = (href: string) =>
                 </a>
 
                 <!-- Los grupos de reglas cuelgan de «Las reglas» y solo
-                     aparecen estando en esa seccion: fuera de ella serian
-                     diez lineas de ruido en todas las paginas. -->
+                     aparecen en esa seccion. El detalle <details> hace el
+                     plegado sin una linea de JavaScript, y recuerda si estaba
+                     abierto porque `open` lo decide el servidor. -->
                 {s.href === '/reglas' && ruta.startsWith('/reglas') && (
-                  <ul class="sub">
-                    <li>
-                      <a class="sub-i" href="/reglas" data-grupo="">
-                        <span class="sub-x">Todas</span>
-                        <span class="sub-n num">{P.reglas().length}</span>
-                      </a>
-                    </li>
-                    {GRUPOS_REGLA.map((c) => (
+                  <details class="sub-caja" open>
+                    <summary class="sub-cab">
+                      <span class="sub-cab-t">Por grupo</span>
+                      <span class="sub-cab-i" aria-hidden="true"><Icono nombre="caret-down" /></span>
+                    </summary>
+                    <ul class="sub">
                       <li>
-                        <a class="sub-i" href={`/reglas#g=${c.id}`} data-grupo={c.id}>
-                          <span class="sub-x">{c.nombre}</span>
-                          <span class="sub-n num">{c.n}</span>
+                        <a class:list={['sub-i', { activa: !grupoActual }]}
+                           href="/reglas" data-grupo="">
+                          <span class="sub-x">Todas</span>
+                          <span class="sub-n num">{P.reglas().length}</span>
                         </a>
-                        {c.subs.length > 1 && (
-                          <ul class="sub sub2">
-                            {c.subs.map((sb) => (
-                              <li>
-                                <a class="sub-i" href={`/reglas#g=${c.id}.${sb.id}`}
-                                   data-grupo={`${c.id}.${sb.id}`}>
-                                  <span class="sub-x">{NOMBRE_SUB[sb.id] ?? sb.id}</span>
-                                  <span class="sub-n num">{sb.n}</span>
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
                       </li>
-                    ))}
-                  </ul>
+                      {GRUPOS_REGLA.map((c) => (
+                        <li style={`--c:${TONO_GRUPO[c.id]}`}>
+                          <a class:list={['sub-i', { activa: grupoActual === c.id
+                                 || (grupoActual || '').startsWith(c.id + '.') }]}
+                             href={`/reglas#g=${c.id}`} data-grupo={c.id}>
+                            <span class="sub-p" aria-hidden="true"></span>
+                            <span class="sub-x">{c.nombre}</span>
+                            <span class="sub-n num">{c.n}</span>
+                          </a>
+                          {c.subs.length > 1 && (
+                            <ul class="sub sub2">
+                              {c.subs.map((sb) => (
+                                <li>
+                                  <a class:list={['sub-i', { activa: grupoActual === c.id + '.' + sb.id }]}
+                                     href={`/reglas#g=${c.id}.${sb.id}`}
+                                     data-grupo={`${c.id}.${sb.id}`}>
+                                    <span class="sub-x">{NOMBRE_SUB[sb.id] ?? sb.id}</span>
+                                    <span class="sub-n num">{sb.n}</span>
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
                 )}
                 </>
               ))}
@@ -333,43 +362,75 @@ const activa = (href: string) =>
 
       /* ── pie del rail ──────────────────────────────────────────────── */
       /* ── submenu de grupos ────────────────────────────────────────────
-         Cuelga con una guia vertical a la izquierda, como un arbol. No lleva
-         icono: el icono es de la seccion, y repetirlo en cada hijo solo
-         ensucia. El grupo activo se marca con la guia en color. */
+         Cuelga de «Las reglas» dentro de un <details>: se pliega con un clic
+         y sin JavaScript. Va en su propia caja, con fondo y borde, para que
+         no parezca una lista suelta pegada debajo del menu. */
+      .sub-caja {
+        margin: var(--e-2) 0 var(--e-3) var(--e-5);
+        border-radius: var(--radio-3);
+        border: 1px solid var(--vidrio-borde);
+        background: rgba(255, 255, 255, 0.022);
+        overflow: hidden;
+      }
+      .sub-cab {
+        display: flex; align-items: center; gap: var(--e-2);
+        padding: var(--e-2) var(--e-3);
+        cursor: pointer; list-style: none;
+        color: var(--texto-3); font-size: var(--t-1);
+        letter-spacing: var(--track-etiqueta); text-transform: uppercase;
+        transition: color var(--normal), background var(--normal);
+      }
+      .sub-cab::-webkit-details-marker { display: none; }
+      .sub-cab:hover { color: var(--texto-2); background: rgba(255, 255, 255, 0.04); }
+      .sub-cab-t { flex: 1; }
+      .sub-cab-i { display: flex; --i: 0.85rem; transition: transform var(--normal); }
+      .sub-caja[open] .sub-cab-i { transform: rotate(180deg); }
+
       .sub {
         list-style: none;
-        margin: var(--e-1) 0 var(--e-2);
-        padding: 0 0 0 var(--e-4);
-        margin-left: var(--e-4);
-        border-left: 1px solid var(--borde-sutil);
+        margin: 0; padding: var(--e-1) var(--e-2) var(--e-2);
         display: grid; gap: 1px;
       }
-      .sub2 { margin-left: var(--e-2); padding-left: var(--e-3); }
+      .sub2 {
+        margin: 1px 0 var(--e-1) var(--e-4);
+        padding: 0 0 0 var(--e-3);
+        border-left: 1px solid var(--borde-sutil);
+      }
       .sub li { margin: 0; }
 
       .sub-i {
         position: relative;
         display: flex; align-items: center; gap: var(--e-2);
-        padding: var(--e-1) var(--e-2);
-        border-radius: var(--radio-1);
+        padding: var(--e-2) var(--e-3);
+        border-radius: var(--radio-2);
         color: var(--texto-3); font-size: var(--t-2);
         transition: background var(--normal), color var(--normal);
       }
       .sub-i:hover { background: var(--vidrio-hover); color: var(--texto); }
+
+      /* El punto lleva el color del grupo. Es lo que hace que el submenu se
+         lea de un vistazo y no como una lista gris. */
+      .sub-p {
+        width: 0.4rem; height: 0.4rem; border-radius: 50%; flex: none;
+        background: var(--c, var(--n-500));
+        opacity: 0.55;
+        transition: opacity var(--normal), box-shadow var(--normal);
+      }
+      .sub-i:hover .sub-p { opacity: 1; }
+
       .sub-x { flex: 1; min-width: 0; }
       .sub-n {
         font-size: var(--t-1); color: var(--texto-3);
         font-variant-numeric: tabular-nums;
       }
-      .sub2 .sub-i { font-size: var(--t-1); }
+      .sub2 .sub-i { font-size: var(--t-1); padding-block: var(--e-1); }
 
-      .sub-i.activa { color: var(--texto); background: var(--vidrio-hover); }
-      .sub-i.activa::before {
-        content: ''; position: absolute;
-        left: calc(var(--e-4) * -1 - 1px); top: 0; bottom: 0;
-        width: 2px; border-radius: 2px; background: var(--acento);
+      .sub-i.activa {
+        color: var(--texto);
+        background: color-mix(in srgb, var(--c, var(--acento)) 16%, transparent);
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c, var(--acento)) 30%, transparent);
       }
-      .sub2 .sub-i.activa::before { left: calc(var(--e-3) * -1 - 1px); }
+      .sub-i.activa .sub-p { opacity: 1; box-shadow: 0 0 0 3px color-mix(in srgb, var(--c, var(--acento)) 22%, transparent); }
       .sub-i.activa .sub-n { color: var(--texto-2); }
 
       /* ── contenido ─────────────────────────────────────────────────── */

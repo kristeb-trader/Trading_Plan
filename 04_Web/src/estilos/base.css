@@ -70,6 +70,14 @@ main :is(p, li, dd, dt, figcaption, blockquote, td, th, h1, h2, h3, h4) {
   hyphens: auto;
 }
 
+/* Un titular de banner no es texto de lectura: justificarlo abre huecos
+   enormes entre palabras. Hereda lo que diga su banner. */
+main .banner :is(h1, p, dt, dd) {
+  text-align: inherit;      /* alineacion-ok: titular de banner */
+  text-align-last: auto;
+  hyphens: manual;
+}
+
 /* Lo que va centrado a proposito sigue centrado: la cabecera de cada pagina
    y de cada modulo, y las etiquetas que dibuja mermaid dentro de un <svg>,
    que no son texto de lectura. */

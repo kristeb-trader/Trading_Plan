@@ -142,6 +142,64 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-06 · portada nueva, menu con color y las reglas en lista
+
+El operador puso de referencia **krea.ai**: menu con iconos de color, banner
+con movimiento arriba y poco mas en la portada. «Los nuestros parecen una
+pagina muerta.»
+
+#### La portada
+
+Se le enseñaron **tres propuestas** montadas y funcionando —«El mercado en
+vivo» con velas dibujandose, «Terminal» con cinta de cotizacion y «Aurora»
+con manchas de luz— y eligio **Terminal**.
+
+Queda: banner con la cinta corriendo, malla de pantalla encendida y los
+cuatro datos de la operativa (MNQ · 1 min · 08:31→10:30 · 1 orden), y debajo
+**tres puertas** en filas anchas: el plan operativo, las reglas y los casos
+reales, con su cifra al lado. Nada mas. Fuera la portada densa anterior.
+
+> 🔴 La cinta lleva simbolos reales pero **numeros de muestra**, y lo dice en
+> la propia cinta. El portal no se conecta a mercado.
+
+#### Los iconos del menu
+
+Los ocho modulos salian de una rampa cian→azul y no se distinguian entre si.
+Ahora **cada uno tiene su color** y se reconoce antes por el color que por el
+texto. Fuera de la paleta quedan **el rojo y el oro**: el rojo esta reservado
+a un dato negativo real y el oro al aviso de «no probado», y gastarlos de
+adorno les quita el significado donde importa.
+
+#### El menu de reglas
+
+- **Se pliega.** Va dentro de un `<details>`: un clic abre, otro cierra, sin
+  una linea de JavaScript.
+- **Caja propia**, con su cabecera «por grupo», fondo y borde, en vez de una
+  lista suelta colgando del menu.
+- **Punto de color por grupo**, el mismo que usa la pagina de reglas.
+- **Marca el grupo en el que estas.** Estando en una regla de zonas se marcaba
+  «Las reglas» a secas; ahora se marca *Zonas* y, si toca, *Marcado*. Se
+  resuelve en el servidor, asi que sale bien ya en la primera pintura.
+
+#### Las reglas, en lista
+
+Fuera las tarjetas. Lista por categoria, con cabecera de grupo, color, cuenta
+y descripcion; Zonas parte ademas en marcado y vigencia. Cada fila: codigo,
+enunciado y sus cifras. Elegir un grupo en el menu deja solo ese.
+
+#### La ficha de una regla, reordenada
+
+Lo pidio asi: **primero la explicacion y el texto, luego el diagrama, y la
+tabla de condiciones medibles al final** — «es muy tecnico y ni lo veo».
+
+Orden nuevo: por que dice esto · accion · excepciones · nota · casos reales ·
+diagrama · condiciones medibles.
+
+Ademas: **«anterior» arriba a la izquierda** —ocupa el sitio del enlace a
+todas las reglas, que se retira— y **«siguiente» arriba a la derecha**. El
+boton de comentar deja de flotar arriba y se coloca al final.
+
+
 ### 2026-09-06 · la renumeracion de las reglas, aplicada al portal
 
 El 06/09/2026 las 38 reglas se renumeraron en `01_Plan` para que corran

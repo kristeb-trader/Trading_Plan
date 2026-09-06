@@ -1,18 +1,15 @@
 ---
 /**
- * Las 38 reglas — el índice.
+ * Las 38 reglas — el índice, en lista.
  *
- * Rehecha el 05/09/2026 con las correcciones del operador:
+ * El operador el 06/09/2026: nada de tarjetas. Una lista ordenada por
+ * categoría, que se lea de arriba abajo y se interprete de un vistazo.
  *
- *   · AL ENTRAR EN UNA REGLA SE VA A SU FICHA, como siempre. El cajón lateral
- *     que se probó el 04/09 se retiró: no le gustó y la ficha ya existía.
- *
- *   · LOS GRUPOS VIVEN EN EL LATERAL, colgando de «Las reglas». Aquí no hay
- *     barra de pastillas: se filtraba en dos sitios y sobraba uno. La página
- *     lee el grupo del ancla de la dirección (#g=zonas, #g=zonas.marcado).
- *
- *   · EL TEXTO NO SE CORTA. Ni aquí ni en ningún sitio: el tope de 62
- *     caracteres por párrafo salió de tokens.css.
+ *   · Cada grupo con su cabecera, su color y su cuenta. Zonas parte además
+ *     en sus dos apartados, marcado y vigencia.
+ *   · El grupo se elige en el menú de la izquierda y viaja en el ancla
+ *     (#g=zonas, #g=zonas.marcado): al elegirlo, la página deja solo ese.
+ *   · El buscador filtra por texto sobre lo que haya a la vista.
  *
  * Los nombres de los grupos y su orden salen de reglas.json. Aquí no se
  * renombra ninguno ni se decide el orden.
@@ -27,21 +24,26 @@ const casos = P.casosPorRegla();
 const imagenes = P.imagenesDeReglas();
 
 const NOMBRE_SUB = { marcado: 'Marcado', vigencia: 'Vigencia' };
-const NOMBRE_CAT = new Map(cats.map((c) => [c.id, c.nombre]));
 
-// Del cian al azul, en el orden que declara el archivo. Mismo recurso que
-// modulos.mjs usa para los ocho módulos del recorrido: el tono es una
-// posición en la jornada, no un adorno, y por eso se calcula.
+// Del cian al azul, en el orden que declara el archivo. El mismo cálculo que
+// hace el menú, para que el color de un grupo sea el mismo en los dos sitios.
 const TONO = new Map(cats.map((c, i) => [
   c.id,
   `color-mix(in srgb, var(--info) ${Math.round(100 - (i * 100) / Math.max(cats.length - 1, 1))}%, var(--acento))`,
 ]));
 
-const etiqueta = (r) => {
-  const base = NOMBRE_CAT.get(r.categoria) ?? r.categoria;
-  return r.subcategoria ? `${base} · ${NOMBRE_SUB[r.subcategoria] ?? r.subcategoria}` : base;
-};
 const tambien = (r) => P.ENLACES_CRUZADOS.get(r.id) ?? [];
+
+/** Las reglas de un grupo, partidas por apartado si los tiene. */
+function bloques(c) {
+  const suyas = reglas.filter((r) => r.categoria === c.id);
+  if (c.subs.length < 2) return [{ sub: null, titulo: null, reglas: suyas }];
+  return c.subs.map((sb) => ({
+    sub: sb.id,
+    titulo: NOMBRE_SUB[sb.id] ?? sb.id,
+    reglas: suyas.filter((r) => r.subcategoria === sb.id),
+  }));
+}
 ---
 
 <Marco titulo="Reglas">
@@ -70,40 +72,52 @@ const tambien = (r) => P.ENLACES_CRUZADOS.get(r.id) ?? [];
     Ninguna regla coincide. Prueba con otra palabra, o elige «Todas» en el menú.
   </p>
 
-  <!-- 1 columna en móvil, 2 en tablet, 3 en escritorio. El enunciado NUNCA
-       se recorta: manda el texto y la fila crece. -->
-  <ul class="rejilla" data-lista>
-    {reglas.map((r, i) => (
-      <li class="celda entra" style={`--retraso:${Math.min(i, 11) * 22}ms; --c:${TONO.get(r.categoria)}`}
-          data-cat={r.categoria}
-          data-sub={r.subcategoria ?? ''}
-          data-tambien={tambien(r).join(' ')}
-          data-txt={[r.id, r.enunciado, r.accion, r.nota, etiqueta(r)].filter(Boolean).join(' ').toLowerCase()}>
-        <a class="tarj" href={`/reglas/${r.id}`}>
-          <span class="t-cab">
-            <span class="badge">{etiqueta(r)}</span>
-            <span class="t-id mono">{r.id}</span>
-            <span class="t-ir" aria-hidden="true"><Icono nombre="caret-right" /></span>
-          </span>
+  {cats.map((c) => (
+    <section class="grupo-s" data-grupo-s={c.id} style={`--c:${TONO.get(c.id)}`}>
+      <header class="g-cab">
+        <span class="g-p" aria-hidden="true"></span>
+        <h2>{c.nombre}</h2>
+        <span class="g-n">{c.n}</span>
+        {c.descripcion && <span class="g-d">{c.descripcion}</span>}
+      </header>
 
-          <span class="t-e">{r.enunciado}</span>
-
-          <span class="t-pie">
-            <span class="met"><Icono nombre="list-checks" />{r.condiciones.length} condiciones</span>
-            {casos.has(r.id) && (
-              <span class="met"><Icono nombre="images" />{casos.get(r.id).length} casos</span>
-            )}
-            {imagenes.has(r.id) && (
-              <span class="met"><Icono nombre="image-square" />diagrama</span>
-            )}
-            {tambien(r).map((id) => (
-              <span class="met cruz">también en {NOMBRE_CAT.get(id) ?? id}</span>
+      {bloques(c).map((b) => (
+        <div class="apartado" data-sub-s={b.sub ?? ''}>
+          {b.titulo && (
+            <h3 class="a-t">{b.titulo}<span class="a-n">{b.reglas.length}</span></h3>
+          )}
+          <ul class="lista">
+            {b.reglas.map((r) => (
+              <li class="fila"
+                  data-cat={r.categoria}
+                  data-sub={r.subcategoria ?? ''}
+                  data-tambien={tambien(r).join(' ')}
+                  data-txt={[r.id, r.enunciado, r.accion, r.nota].filter(Boolean).join(' ').toLowerCase()}>
+                <a href={`/reglas/${r.id}`}>
+                  <span class="f-id mono">{r.id}</span>
+                  <span class="f-e">{r.enunciado}</span>
+                  <span class="f-met">
+                    <span class="met" title="Condiciones medibles">
+                      <Icono nombre="list-checks" />{r.condiciones.length}
+                    </span>
+                    {casos.has(r.id) && (
+                      <span class="met" title="Casos reales que la citan">
+                        <Icono nombre="images" />{casos.get(r.id).length}
+                      </span>
+                    )}
+                    {imagenes.has(r.id) && (
+                      <span class="met" title="Tiene diagrama"><Icono nombre="image-square" /></span>
+                    )}
+                  </span>
+                  <span class="f-ir" aria-hidden="true"><Icono nombre="caret-right" /></span>
+                </a>
+              </li>
             ))}
-          </span>
-        </a>
-      </li>
-    ))}
-  </ul>
+          </ul>
+        </div>
+      ))}
+    </section>
+  ))}
 </Marco>
 
 <script is:inline define:vars={{ NOMBRES: Object.fromEntries(cats.map((c) => [c.id, c.nombre])), SUBS: NOMBRE_SUB }}>
@@ -111,11 +125,12 @@ const tambien = (r) => P.ENLACES_CRUZADOS.get(r.id) ?? [];
     var campo = document.querySelector('[data-filtro]');
     if (!campo) return;
 
-    var celdas = [].slice.call(document.querySelectorAll('.celda'));
+    var filas = [].slice.call(document.querySelectorAll('.fila'));
+    var secciones = [].slice.call(document.querySelectorAll('[data-grupo-s]'));
+    var apartados = [].slice.call(document.querySelectorAll('[data-sub-s]'));
     var contador = document.querySelector('[data-contador]');
     var vacio = document.querySelector('[data-vacio]');
     var rotulo = document.querySelector('[data-grupo-activo]');
-    var enlaces = [].slice.call(document.querySelectorAll('[data-grupo]'));
 
     var cat = '';
     var sub = '';
@@ -123,17 +138,27 @@ const tambien = (r) => P.ENLACES_CRUZADOS.get(r.id) ?? [];
     function aplicar() {
       var q = campo.value.trim().toLowerCase();
       var n = 0;
-      celdas.forEach(function (c) {
+      filas.forEach(function (f) {
         // Una regla entra por su grupo o por aquellos desde los que TAMBIÉN
         // contesta: la del rompimiento vive en Zonas y responde en Setup.
-        var suyas = (c.getAttribute('data-cat') + ' ' + (c.getAttribute('data-tambien') || '')).split(' ');
+        var suyas = (f.getAttribute('data-cat') + ' ' + (f.getAttribute('data-tambien') || '')).split(' ');
         var okCat = !cat || suyas.indexOf(cat) >= 0;
-        var okSub = !sub || c.getAttribute('data-sub') === sub;
-        var okTxt = !q || c.getAttribute('data-txt').indexOf(q) >= 0;
+        var okSub = !sub || f.getAttribute('data-sub') === sub;
+        var okTxt = !q || f.getAttribute('data-txt').indexOf(q) >= 0;
         var ver = okCat && okSub && okTxt;
-        c.hidden = !ver;
+        f.hidden = !ver;
         if (ver) n++;
       });
+
+      // Un apartado o un grupo sin ninguna fila a la vista se esconde entero:
+      // si no, quedan cabeceras huérfanas.
+      apartados.forEach(function (a) {
+        a.hidden = !a.querySelector('.fila:not([hidden])');
+      });
+      secciones.forEach(function (s) {
+        s.hidden = !s.querySelector('.fila:not([hidden])');
+      });
+
       contador.textContent = n;
       vacio.hidden = n > 0;
 
@@ -143,15 +168,12 @@ const tambien = (r) => P.ENLACES_CRUZADOS.get(r.id) ?? [];
       rotulo.hidden = !nombre;
     }
 
-    // El grupo se elige en el menú de la izquierda y viaja en el ancla, así
-    // que funciona igual llegando de otra página o volviendo con el botón de
-    // atrás del navegador.
     function delAncla() {
       var m = /^#g=([a-z_]+)(?:\.([a-z_]+))?$/.exec(location.hash || '');
       cat = m ? m[1] : '';
       sub = m && m[2] ? m[2] : '';
       var clave = cat + (sub ? '.' + sub : '');
-      enlaces.forEach(function (a) {
+      document.querySelectorAll('[data-grupo]').forEach(function (a) {
         a.classList.toggle('activa', a.getAttribute('data-grupo') === clave);
       });
       aplicar();
@@ -160,8 +182,6 @@ const tambien = (r) => P.ENLACES_CRUZADOS.get(r.id) ?? [];
     window.addEventListener('hashchange', delAncla);
     campo.addEventListener('input', aplicar);
 
-    // Ctrl/Cmd + K y escribir con el foco fuera llevan al buscador: durante
-    // la sesión no hay tiempo de ir al ratón.
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
         e.preventDefault(); campo.focus(); campo.select(); return;
@@ -179,30 +199,19 @@ const tambien = (r) => P.ENLACES_CRUZADOS.get(r.id) ?? [];
 </script>
 
 <style>
-  /* ── cabecera ─────────────────────────────────────────────────────────
-     Mismo tratamiento que el título de un módulo: centrado, en mayúscula y
-     arriba del todo. Es la misma jerarquía, así que se ve igual. */
-  .cab {
-    text-align: center;
-    margin: calc(var(--e-6) * -1) 0 var(--e-7);
-  }
+  .cab { text-align: center; margin: calc(var(--e-6) * -1) 0 var(--e-7); }
   .cab h1 {
     margin: 0 0 var(--e-3);
     font-size: clamp(var(--t-7), 3vw, var(--t-8));
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: var(--acento);
-    text-wrap: balance;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    color: var(--acento); text-wrap: balance;
   }
-  .lead {
-    font-size: var(--t-5); color: var(--texto-2);
-    margin: 0 auto;
-  }
+  .lead { font-size: var(--t-5); color: var(--texto-2); margin: 0 auto; }
 
   /* ── buscador ─────────────────────────────────────────────────────── */
   .barra {
     display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-3) var(--e-4);
-    margin-bottom: var(--e-6);
+    margin-bottom: var(--e-7);
   }
   .campo {
     flex: 1 1 22rem;
@@ -228,90 +237,101 @@ const tambien = (r) => P.ENLACES_CRUZADOS.get(r.id) ?? [];
   .kbd {
     font-family: var(--fuente-mono); font-size: var(--t-1);
     padding: 0.1rem 0.4rem; border-radius: var(--radio-1);
-    border: 1px solid var(--borde-sutil); color: var(--texto-3);
-    white-space: nowrap;
+    border: 1px solid var(--borde-sutil); color: var(--texto-3); white-space: nowrap;
   }
-
   .estado { display: flex; align-items: center; gap: var(--e-3); margin: 0; }
   .grupo {
     font-size: var(--t-2); color: var(--texto-2);
-    padding: var(--e-1) var(--e-3);
-    border-radius: var(--radio-pill);
+    padding: var(--e-1) var(--e-3); border-radius: var(--radio-pill);
     background: color-mix(in srgb, var(--acento) 16%, transparent);
     border: 1px solid color-mix(in srgb, var(--acento) 40%, transparent);
   }
   .grupo[hidden] { display: none; }
   .cuenta { font-variant-numeric: tabular-nums; white-space: nowrap; }
   .cuenta b { color: var(--texto); font-weight: var(--peso-medio); }
-
   .vacio { color: var(--texto-2); font-size: var(--t-3); padding: var(--e-6) 0; }
 
-  /* ── rejilla ──────────────────────────────────────────────────────── */
-  .rejilla {
-    list-style: none; padding: 0; margin: 0; max-width: none;
-    display: grid; gap: var(--e-3);
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 46rem) { .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (min-width: 78rem) { .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  .celda { margin: 0; }
-  .celda[hidden] { display: none; }
+  /* ── grupo ────────────────────────────────────────────────────────── */
+  .grupo-s { margin-bottom: var(--e-8); }
+  .grupo-s[hidden] { display: none; }
 
-  /* ── tarjeta ──────────────────────────────────────────────────────── */
-  .tarj {
-    position: relative; overflow: hidden;
-    display: flex; flex-direction: column; gap: var(--e-3);
-    height: 100%;
-    padding: var(--e-4) var(--e-4) var(--e-5);
-    border-radius: var(--radio-3);
-    background: var(--vidrio-fondo);
-    background-image: var(--vidrio-brillo);
-    border: 1px solid var(--vidrio-borde);
-    color: var(--texto-2);
-    transition: transform var(--normal), box-shadow var(--normal), border-color var(--normal);
+  .g-cab {
+    display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--e-3);
+    padding-bottom: var(--e-3);
+    margin-bottom: var(--e-4);
+    border-bottom: 1px solid var(--borde-sutil);
   }
-  /* El filo de color dice de qué grupo es sin tener que leer la etiqueta. */
-  .tarj::before {
-    content: ''; position: absolute; inset: 0 0 auto 0; height: 2px;
-    background: var(--c, var(--acento)); opacity: 0.5;
-    transition: opacity var(--normal);
+  .g-p {
+    width: 0.5rem; height: 0.5rem; border-radius: 50%;
+    background: var(--c); align-self: center;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 18%, transparent);
   }
-  .tarj:hover, .tarj:focus-visible {
-    transform: translateY(-2px);
-    color: var(--texto-2);
-    border-color: color-mix(in srgb, var(--c, var(--acento)) 40%, var(--vidrio-borde));
-    box-shadow: var(--halo-azul), var(--sombra-2);
+  .g-cab h2 {
+    margin: 0; font-size: var(--t-6); color: var(--texto);
+    font-weight: var(--peso-medio);
   }
-  .tarj:hover::before, .tarj:focus-visible::before { opacity: 1; }
+  .g-n {
+    font-size: var(--t-1); color: var(--c);
+    font-variant-numeric: tabular-nums;
+    padding: 0.1rem var(--e-2); border-radius: var(--radio-pill);
+    background: color-mix(in srgb, var(--c) 16%, transparent);
+  }
+  .g-d { flex: 1 1 14rem; font-size: var(--t-2); color: var(--texto-3); }
 
-  .t-cab { display: flex; align-items: center; gap: var(--e-2); }
-  .badge {
-    display: inline-flex; align-items: center;
-    padding: 0.15rem var(--e-2);
-    border-radius: var(--radio-1);
-    background: color-mix(in srgb, var(--c, var(--acento)) 16%, transparent);
-    color: color-mix(in srgb, var(--c, var(--acento)) 75%, var(--texto));
-    font-size: var(--t-1); font-weight: var(--peso-fuerte);
+  .apartado[hidden] { display: none; }
+  .a-t {
+    display: flex; align-items: center; gap: var(--e-2);
+    margin: var(--e-5) 0 var(--e-2);
+    font-size: var(--t-1); color: var(--texto-3);
     letter-spacing: var(--track-etiqueta); text-transform: uppercase;
   }
-  .t-id { font-size: var(--t-1); color: var(--texto-3); }
-  .t-ir {
-    margin-left: auto; display: flex; --i: 1rem; color: var(--texto-3);
-    transition: transform var(--normal), color var(--normal);
-  }
-  .tarj:hover .t-ir { transform: translateX(3px); color: var(--c, var(--acento)); }
+  .a-n { color: var(--texto-3); font-variant-numeric: tabular-nums; opacity: 0.7; }
 
-  .t-e {
-    font-size: var(--t-4); line-height: 1.45;
-    color: var(--texto); font-weight: var(--peso-medio);
-    text-wrap: pretty;
+  /* ── la lista ─────────────────────────────────────────────────────── */
+  .lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .fila { margin: 0; }
+  .fila[hidden] { display: none; }
+
+  .fila > a {
+    display: grid;
+    grid-template-columns: 3.4rem minmax(0, 1fr) auto auto;
+    align-items: center; gap: var(--e-4);
+    padding: var(--e-3) var(--e-4);
+    border-radius: var(--radio-2);
+    border: 1px solid transparent;
+    color: var(--texto-2);
+    transition: background var(--normal), border-color var(--normal), transform var(--normal);
+  }
+  .fila > a:hover, .fila > a:focus-visible {
+    background: var(--vidrio-fondo);
+    border-color: color-mix(in srgb, var(--c) 34%, var(--vidrio-borde));
+    color: var(--texto-2);
+    transform: translateX(2px);
   }
 
-  .t-pie {
-    display: flex; flex-wrap: wrap; gap: var(--e-2) var(--e-4);
-    margin-top: auto; padding-top: var(--e-2);
-    font-size: var(--t-1); color: var(--texto-3);
+  .f-id {
+    font-size: var(--t-1); color: var(--c);
+    padding: 0.12rem var(--e-2); border-radius: var(--radio-1);
+    background: color-mix(in srgb, var(--c) 12%, transparent);
+    text-align: center;
   }
-  .met { display: inline-flex; align-items: center; gap: var(--e-1); --i: 0.9rem; }
-  .met.cruz { font-style: italic; }
+  .f-e { font-size: var(--t-3); color: var(--texto); line-height: 1.45; }
+
+  .f-met { display: flex; align-items: center; gap: var(--e-3); }
+  .met {
+    display: inline-flex; align-items: center; gap: var(--e-1);
+    --i: 0.85rem; font-size: var(--t-1); color: var(--texto-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .f-ir {
+    display: flex; --i: 0.95rem; color: var(--texto-3);
+    opacity: 0; transition: opacity var(--normal), transform var(--normal);
+  }
+  .fila > a:hover .f-ir { opacity: 1; transform: translateX(2px); color: var(--c); }
+
+  @media (max-width: 46rem) {
+    .fila > a { grid-template-columns: 3.2rem minmax(0, 1fr); gap: var(--e-3); }
+    .f-met { grid-column: 2; }
+    .f-ir { display: none; }
+  }
 </style>

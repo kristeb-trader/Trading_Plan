@@ -78,16 +78,33 @@ export const MODULOS = [
 ];
 
 /**
- * El tono de cada modulo: avanza del cian al azul a lo largo de los ocho.
- * No codifica nada nuevo — acompana al numero, que ya dice el orden. Los dos
- * colores salen del estandar del operador; no se inventa ninguno.
+ * El color de cada modulo. Uno propio, no una rampa.
  *
- * Se calcula aqui y no en cada sitio para que el menu lateral y el titulo de
- * los apartados usen exactamente el mismo, siempre.
+ * Hasta el 06/09/2026 los ocho salian de un degradado cian→azul y en el menu
+ * no habia forma de distinguirlos: el operador lo describio como «una pagina
+ * muerta». Ahora cada modulo tiene su tono y se reconoce por el color antes
+ * que por el texto.
+ *
+ * 🔴 Fuera el ROJO y el ORO. El rojo esta reservado a un dato negativo real y
+ * el oro al aviso de «no probado»; gastarlos de adorno en el menu les quita
+ * el significado donde de verdad importa. Ver CLAUDE.md.
+ *
+ * Se define aqui y en ningun otro sitio, para que el menu, el titulo de los
+ * apartados y la portada usen exactamente el mismo.
  */
+const COLORES = [
+  '#22D3EE',  // 1 premercado    · cian, la noche antes de abrir
+  '#2E86FF',  // 2 zonas         · el azul del plan
+  '#8B5CF6',  // 3 setups        · violeta
+  '#38BDF8',  // 4 jornada       · celeste
+  '#14B8A6',  // 5 entrada       · verde azulado
+  '#F472B6',  // 6 filtros       · rosa, lo que frena
+  '#6366F1',  // 7 dentro        · indigo
+  '#4ADE80',  // 8 riesgo        · verde
+];
+
 for (const [i, m] of MODULOS.entries()) {
-  const cian = Math.round(100 - (i * 100) / (MODULOS.length - 1));
-  m.tono = `color-mix(in srgb, var(--info) ${cian}%, var(--acento))`;
+  m.tono = COLORES[i % COLORES.length];
 }
 
 /** El modulo por su direccion, para que la pagina no repita sus propios datos. */
