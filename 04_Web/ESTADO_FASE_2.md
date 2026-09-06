@@ -142,6 +142,49 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-06 · un solo portal
+
+Se acaba la doble modalidad. Ya no hay «modo tecnico» ni interruptor, asi que
+tampoco hace falta encenderlo para ver nada.
+
+**Fuera del menu:** portada tecnica, el plan completo, vocabulario,
+pendientes, contextualizacion y acta de cierre. Las seis paginas se borraron,
+no solo se ocultaron. **Queda:** inicio, los ocho modulos, las reglas, los
+casos reales, los parametros, la checklist diaria y las observaciones — la
+checklist justo antes de las observaciones, que es el orden en que se usan al
+cerrar la jornada.
+
+**Fuera tambien:** el buscador de la cabecera con su paleta, la tuerca del pie
+del rail, el rastro de «modo tecnico encendido» y todo el plegado del lateral.
+Con ellos se fueron unas 190 lineas de codigo y estilo.
+
+**Los codigos de regla se ven siempre.** Estaban detras de la clase
+`solo-tecnico`, que ya no existe. En los titulos de los ocho modulos son
+enlaces a su ficha.
+
+#### Un comprobador de enlaces, y lo que encontro
+
+Nuevo `scripts/enlaces.mjs`: recorre `dist/` y verifica que cada enlace
+interno apunte a una pagina, un archivo o un ancla que exista. Se ejecuta con
+`npm run verificar` (compila y comprueba) y **sale con error si algo esta
+roto**, para que no se publique sin querer.
+
+En la primera pasada: **388 enlaces rotos**. Lo que habia:
+
+- **Las 38 fichas de regla enlazaban a `/plan#R-xx`**, y esa pagina solo tiene
+  anclas de sub-fase. El enlace caia al principio del documento. Ahora la
+  explicacion del documento maestro se **muestra dentro de la propia ficha**,
+  que ademas era donde tenia que estar desde que «el plan completo» salio del
+  menu.
+- **Se enlazaban reglas y casos que ya no existen.** Los documentos citan
+  codigos de versiones anteriores —`R-39` se elimino y el 06/09/2026 se
+  renumero todo—, y el enriquecido los convertia en fichas inexistentes. Ahora
+  solo se enlaza lo que existe hoy, en los dos enriquecedores y en las tres
+  listas que pintan codigos a mano (galeria, parametros y el plan).
+
+Segunda pasada: **0 rotos de 2.504**.
+
+
 ### 2026-09-05 · la pared invisible, y marcha atras en el cajon
 
 El operador, con razon: **el texto se cortaba contra una pared invisible y lo

@@ -47,7 +47,7 @@ const rico = (t) => P.enriquecer(t, { sinEnlaceA: regla.id });
   <article class="ficha" data-obs-tipo="regla" data-obs-id={regla.id} data-obs-titulo={regla.enunciado.slice(0,120)}>
     <header class="f-cab entra">
       <div class="f-meta">
-        <span class="f-id mono solo-tecnico">{regla.id}</span>
+        <span class="f-id mono">{regla.id}</span>
         <span class="f-cat">{etiquetaCat(regla)}</span>
         {regla.prioridad && <span class="f-pri meta">prioridad {regla.prioridad}</span>}
       </div>
@@ -108,7 +108,6 @@ const rico = (t) => P.enriquecer(t, { sinEnlaceA: regla.id });
         <div class="aviso-p">
           <span class="ap-cab"><Icono nombre="warning-diamond" /> Tiene un punto abierto</span>
           <p class="ap-x" set:html={rico(regla.pendiente)} />
-          <a href="/pendientes">Ver todos los pendientes</a>
         </div>
       </section>
     )}
@@ -138,15 +137,17 @@ const rico = (t) => P.enriquecer(t, { sinEnlaceA: regla.id });
       </section>
     )}
 
+    {/* La explicacion del documento maestro va AQUI, entera. Antes habia un
+        enlace a /plan#R-xx, pero esa pagina solo tiene anclas de sub-fase:
+        el enlace caia al principio del documento y no llevaba a ningun
+        sitio. Comprobado el 06/09/2026 con scripts/enlaces.mjs. */}
     {seccion && (
       <section class="bloque entra">
         <h2>Por qué dice esto</h2>
         <p class="apunte">
-          El documento maestro lo explica en la sección <strong>{seccion.titulo}</strong>.
+          Del documento maestro, sección <strong>{seccion.titulo}</strong>.
         </p>
-        <a class="enlace-plan" href={`/plan#${regla.id}`}>
-          <Icono nombre="link-simple" /> Leerlo en el plan completo
-        </a>
+        <div class="md" set:html={P.markdownRico(seccion.cuerpo, { sinEnlaceA: regla.id })} />
       </section>
     )}
   </article>
@@ -234,7 +235,6 @@ const rico = (t) => P.enriquecer(t, { sinEnlaceA: regla.id });
   .fig { margin: 0 0 var(--e-5); }
   .fig figcaption { margin-top: var(--e-3); }
 
-  .enlace-plan { display: inline-flex; align-items: center; gap: var(--e-2); font-size: var(--t-3); }
 
   /* ── anterior y siguiente ────────────────────────────────────────────── */
   .paso {

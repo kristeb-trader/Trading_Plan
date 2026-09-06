@@ -14,7 +14,7 @@ Todo lo que se resuelve antes de que abra el mercado
 
 <!-- id: estado -->
 
-### Cómo estoy hoy
+### Cómo estoy hoy R-28
 
 La primera pregunta del día no es sobre el mercado. Es sobre uno mismo: ¿estoy bien, física y mentalmente?
 
@@ -30,7 +30,7 @@ Esta pregunta se contesta **antes de abrir NinjaTrader**.
 
 <!-- id: noticias -->
 
-### El calendario
+### El calendario R-21 · R-27
 
 Se mira Forex Factory, y solo Forex Factory. Un único calendario evita el problema de dos fuentes que no siempre coinciden.
 
@@ -46,7 +46,7 @@ Se mira Forex Factory, y solo Forex Factory. Un único calendario evita el probl
 
 <!-- id: instrumento -->
 
-### El gráfico
+### El gráfico R-01 · R-09
 
 Se trabaja únicamente con el micro Nasdaq, **MNQ**. Aquí se marcan las zonas, se lee el volumen, se leen los niveles de entrada, stop y objetivo, y desde aquí se manda la orden.
 
@@ -66,7 +66,7 @@ Va a **un minuto**. No hay ningún otro marco temporal en el método: ni cinco m
 
 <!-- id: atm -->
 
-### Estrategia ATM
+### Estrategia ATM R-08
 
 La estrategia ATM de NinjaTrader se deja configurada antes de empezar y no se toca durante la sesión.
 
@@ -87,7 +87,7 @@ La estrategia ATM de NinjaTrader se deja configurada antes de empezar y no se to
 
 <!-- id: zonas-vol -->
 
-### Zonas por volumen
+### Zonas por volumen R-20
 
 Si en el premercado se forma una vela con un volumen por encima del umbral (**> 6.000 contratos en MNQ, > 2.000 contratos en NQ**), se debe marcar una zona. Es la única manera de que nazca una zona sin que haya habido un movimiento y su descanso.
 

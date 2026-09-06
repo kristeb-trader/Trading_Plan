@@ -10,7 +10,9 @@
     "build": "npm run sync && npm run diagramas && astro build",
     "preview": "astro preview",
     "fuentes": "node scripts/contar-fuentes.mjs",
-    "diagramas": "node scripts/diagramas.mjs"
+    "diagramas": "node scripts/diagramas.mjs",
+    "enlaces": "node scripts/enlaces.mjs",
+    "verificar": "npm run build && npm run enlaces"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^11.16.0",

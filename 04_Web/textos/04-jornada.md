@@ -14,7 +14,7 @@ El día paso a paso, desde la vela de las 08:31
 
 <!-- id: ventana -->
 
-### Las dos horas
+### Las dos horas R-02
 
 Se opera durante los **120 minutos siguientes a la apertura del mercado americano**. Fuera de esa ventana no se coloca ninguna orden, pase lo que pase en el gráfico.
 
@@ -33,7 +33,7 @@ Se opera durante los **120 minutos siguientes a la apertura del mercado american
 
 <!-- id: primera -->
 
-### La primera vela
+### La primera vela R-31
 
 La primera vela después de la apertura — la de las 08:31 en horario de verano de Nueva York — tiene un papel especial y es donde arranca todo el análisis del día.
 
@@ -45,7 +45,7 @@ La primera vela después de la apertura — la de las 08:31 en horario de verano
 - **Las velas anteriores** — No sirven de referencia. La estructura del día empieza aquí
 - **¿Puede sostener una zona?** — Sí
 
-#### La vela que abarca a la anterior
+#### La vela que abarca a la anterior R-32
 
 Hay un caso que rompe la cuenta: una vela que hace a la vez máximo más alto y mínimo más bajo que la anterior, sin que haya un movimiento vivo. Esa vela **no declara dirección**: pasa a ser la nueva vela origen, y la dirección la da la siguiente.
 
@@ -55,7 +55,7 @@ Si la siguiente vuelve a hacer lo mismo, se repite el mismo criterio, sin límit
 
 <!-- id: direccion -->
 
-### Por dónde empieza el día
+### Por dónde empieza el día R-34
 
 Que la primera vela declare una dirección no significa que haya que operar en ese sentido toda la mañana.
 
@@ -91,7 +91,7 @@ Cerrada la operación se anota todo, se guarda la captura y **se cierra la plata
 
 <!-- id: registro -->
 
-### El registro
+### El registro R-29
 
 Se registran **todas las sesiones**, incluidas aquellas en las que no se operó — y en esas, el motivo por el que no se operó.
 

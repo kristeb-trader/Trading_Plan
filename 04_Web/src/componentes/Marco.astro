@@ -2,19 +2,18 @@
 /**
  * Marco — cabecera, rail de secciones y contenido.
  *
- * DOS PORTALES EN UNO (decidido por el operador el 02/09/2026):
+ * UN SOLO PORTAL (decidido por el operador el 06/09/2026). Antes habia dos
+ * modalidades y un interruptor para pasar de una a otra; se acabo:
  *
- *   - Lo que ve Alfredo: inicio, los ocho modulos, los casos reales y las
- *     observaciones. Nada mas. Sin buscador, sin codigos y sin el aviso de
- *     «no probado»: lo que no esta probado es la transcripcion del metodo,
- *     no el metodo, y repetirselo cuatro veces no le sirve de nada.
+ *   - fuera el modo tecnico, su clase `solo-tecnico` y la tuerca del pie
+ *   - fuera el buscador de la cabecera
+ *   - fuera el plegado del rail
+ *   - los codigos de regla se ven SIEMPRE, y llevan a su ficha
  *
- *   - Lo que ve el operador: todo lo anterior mas «Todo el detalle» y el
- *     buscador. Se enciende con el icono discreto del pie del rail, que
- *     lleva a /tecnico, o con ?tecnico=1 en cualquier direccion.
- *
- * El aviso de «no probado» y los cuatro huecos declarados viven ahora en
- * /tecnico. Se muestran, no se esconden — pero del lado del operador.
+ * En el menu quedan el recorrido de los ocho modulos, las reglas, los casos
+ * reales, los parametros, la checklist y las observaciones. Las paginas de
+ * auditoria —portada tecnica, plan completo, vocabulario, pendientes,
+ * contextualizacion y acta de cierre— se retiraron el mismo dia.
  */
 import * as P from '../lib/parsers.mjs';
 import { MODULOS } from '../lib/modulos.mjs';
@@ -26,8 +25,6 @@ import '../estilos/base.css';
 
 interface Props { titulo: string; ancho?: 'texto' | 'total' }
 const { titulo, ancho = 'total' } = Astro.props;
-
-const indice = P.indiceBusqueda();
 
 // El menu es el recorrido del metodo, en el orden real de la jornada. Los
 // ocho modulos van numerados a proposito: el numero no decora, es el orden
@@ -44,28 +41,15 @@ const GRUPOS = [
     })),
   },
   {
+    // Lo que queda tras la limpieza del 06/09/2026. La checklist va justo
+    // antes de las observaciones, que es el orden en que se usan al cerrar
+    // la jornada.
     items: [
-      // Las reglas suben aqui el 04/09/2026: el operador las quiere a la vista
-      // desde la portada, no escondidas en el detalle tecnico.
       { icono: 'list-checks', href: '/reglas', texto: 'Las reglas', cuenta: P.reglas().length, tono: 'var(--info)' },
       { icono: 'images', href: '/galeria', texto: 'Casos reales', cuenta: P.galeria().length, tono: 'var(--info)' },
+      { icono: 'sliders-horizontal', href: '/parametros', texto: 'Parámetros', tono: 'var(--info)' },
+      { icono: 'check-square', href: '/checklist', texto: 'Checklist diaria', tono: 'var(--acento)' },
       { icono: 'chat-teardrop-text', href: '/observaciones', texto: 'Observaciones', tono: 'var(--acento)' },
-    ],
-  },
-  {
-    // Solo en modo tecnico. Es el detalle de auditoria: al revisor le sobra,
-    // y tenerlo delante invita a perderse en las 38 fichas.
-    grupo: 'Todo el detalle',
-    soloTecnico: true,
-    items: [
-      { icono: 'compass', href: '/tecnico', texto: 'Portada técnica' },
-      { icono: 'file-text', href: '/plan-completo', texto: 'El plan completo' },
-      { icono: 'book-open', href: '/glosario', texto: 'Vocabulario', cuenta: P.glosario().length },
-      { icono: 'sliders-horizontal', href: '/parametros', texto: 'Parámetros' },
-      { icono: 'check-square', href: '/checklist', texto: 'Checklist diaria' },
-      { icono: 'warning-circle', href: '/pendientes', texto: 'Pendientes' },
-      { icono: 'stack', href: '/contextualizacion', texto: 'Contextualización' },
-      { icono: 'seal-check', href: '/cierre', texto: 'Acta de cierre' },
     ],
   },
 ];
@@ -87,16 +71,6 @@ const activa = (href: string) =>
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{titulo} · Trading Plan de Futuros NQ</title>
-    <script is:inline>
-      // El estado del lateral se aplica ANTES de pintar. Si se hiciera al
-      // final del body, la primera pintura saldria desplegada y daria un
-      // salto de 13rem en cuanto cargase el script.
-      try {
-        if (localStorage.getItem('chaumer.rail') === 'plegado') {
-          document.documentElement.classList.add('rail-plegado');
-        }
-      } catch (e) { /* sin almacenamiento: se queda desplegado */ }
-    </script>
   </head>
 
   <body class="sin-js">
@@ -107,30 +81,13 @@ const activa = (href: string) =>
            es la marca del portal, no una etiqueta de barra de herramientas. -->
       <div class="cab-marca"><Marca /></div>
 
-      <!-- El buscador indexa reglas, parametros y pendientes: material del
-           operador. Un recorrido de ocho modulos en orden no se busca, se
-           recorre. Por eso solo aparece en modo tecnico. -->
-      <button class="buscar solo-tecnico" type="button" data-abrir-buscador>
-        <svg class="buscar-i" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6" />
-          <path d="M13.5 13.5 17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-        </svg>
-        <span class="buscar-t">Buscar una regla, un término, un caso</span>
-        <kbd class="tecla">Ctrl K</kbd>
-      </button>
     </header>
 
     <div class="marco">
       <aside class="rail">
-        <button class="rail-plegar" type="button" data-plegar
-                aria-expanded="true" aria-controls="nav-secciones">
-          <span class="rp-ic" aria-hidden="true"><Icono nombre="sidebar-simple" /></span>
-          <span class="rp-t">Plegar el menú</span>
-        </button>
-
         <nav class="nav" id="nav-secciones" aria-label="Secciones">
           {GRUPOS.map((g) => (
-            <div class:list={['nav-g', { 'solo-tecnico': g.soloTecnico }]}>
+            <div class="nav-g">
               {g.grupo && <p class="etiqueta nav-t">{g.grupo}</p>}
               {g.items.map((s) => (
                 <>
@@ -182,22 +139,6 @@ const activa = (href: string) =>
           ))}
         </nav>
 
-        <div class="rail-pie">
-          <!-- Rastro del modo tecnico. No es un interruptor a la vista: es la
-               forma de saber que esta puesto y de poder quitarlo. -->
-          <a class="tec-chip solo-tecnico" href="/?tecnico=0">
-            <span class="tec-punto" aria-hidden="true"></span>
-            <span>Modo técnico encendido</span>
-            <span class="tec-off meta">apagar</span>
-          </a>
-
-          <!-- La puerta del operador. Discreta a proposito: Alfredo no
-               necesita el detalle de auditoria y no debe tropezar con el.
-               Lleva a /tecnico y de paso enciende el modo. -->
-          <a class="puerta" href="/tecnico?tecnico=1" aria-label="Portada técnica">
-            <Icono nombre="gear-six" />
-          </a>
-        </div>
       </aside>
 
       <div class="cuerpo">
@@ -215,78 +156,11 @@ const activa = (href: string) =>
       </div>
     </div>
 
-    <!-- Buscador. Un dialog nativo: cierra con Esc y atrapa el foco solo. -->
-    <dialog class="paleta" data-paleta aria-label="Buscar en el plan">
-      <div class="paleta-in">
-        <div class="paleta-campo">
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6" />
-            <path d="M13.5 13.5 17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-          </svg>
-          <input type="search" data-paleta-entrada autocomplete="off" spellcheck="false"
-                 placeholder="Escribe para buscar entre reglas, términos, casos y parámetros" />
-          <kbd class="tecla">Esc</kbd>
-        </div>
-        <div class="paleta-lista" data-paleta-lista role="listbox" aria-label="Resultados"></div>
-        <div class="paleta-pie meta">
-          <span>{indice.length} entradas indexadas</span>
-          <span><kbd class="tecla">↑</kbd> <kbd class="tecla">↓</kbd> moverse, <kbd class="tecla">Enter</kbd> abrir</span>
-        </div>
-      </div>
-    </dialog>
-
     <Observaciones />
-
-    <script type="application/json" data-indice set:html={JSON.stringify(indice)} />
 
     <script is:inline>
       document.body.classList.remove('sin-js');
 
-      // ── lateral plegable ──────────────────────────────────────────────
-      (function () {
-        var boton = document.querySelector('[data-plegar]');
-        if (!boton) return;
-        var raiz = document.documentElement;
-
-        function pinta() {
-          var plegado = raiz.classList.contains('rail-plegado');
-          boton.setAttribute('aria-expanded', plegado ? 'false' : 'true');
-          boton.title = plegado ? 'Desplegar el menú' : 'Plegar el menú';
-        }
-
-        boton.addEventListener('click', function () {
-          var plegado = raiz.classList.toggle('rail-plegado');
-          try {
-            localStorage.setItem('chaumer.rail', plegado ? 'plegado' : 'abierto');
-          } catch (e) { /* sin almacenamiento: dura lo que dure la pagina */ }
-          pinta();
-        });
-
-        pinta();
-      })();
-
-      // ── modo técnico ──────────────────────────────────────────────────
-      // Los códigos de regla van ocultos por defecto: «R-22» no le dice nada
-      // a quien llega nuevo. Quien audita lo enciende una vez y se recuerda.
-      (function () {
-        var CLAVE = 'chaumer.tecnico';
-        var on = false;
-        try { on = localStorage.getItem(CLAVE) === '1'; } catch (e) { /* sin almacenamiento */ }
-
-        // El operador abre su enlace con ?tecnico=1 una vez y su navegador
-        // lo recuerda. Es el mismo mecanismo que el nombre del revisor.
-        try {
-          var u = new URL(window.location.href);
-          if (u.searchParams.has('tecnico')) {
-            on = u.searchParams.get('tecnico') !== '0';
-            localStorage.setItem(CLAVE, on ? '1' : '0');
-            u.searchParams.delete('tecnico');
-            history.replaceState({}, '', u.pathname + u.search + u.hash);
-          }
-        } catch (e) { /* sin almacenamiento */ }
-
-        document.body.classList.toggle('tecnico', on);
-      })();
       (function () {
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var hayIO = 'IntersectionObserver' in window;
@@ -306,104 +180,6 @@ const activa = (href: string) =>
           objetivos.forEach(function (e) { obs.observe(e); });
         }
 
-        // ── buscador ────────────────────────────────────────────────────
-        var dlg = document.querySelector('[data-paleta]');
-        var campo = document.querySelector('[data-paleta-entrada]');
-        var lista = document.querySelector('[data-paleta-lista]');
-        var crudo = document.querySelector('[data-indice]');
-        if (!dlg || !campo || !lista || !crudo) return;
-
-        var datos = JSON.parse(crudo.textContent);
-        var sel = 0, vistos = [];
-
-        var ETIQUETAS = {
-          regla: 'Regla', termino: 'Término', caso: 'Caso',
-          parametro: 'Parámetro', pendiente: 'Pendiente',
-        };
-
-        function normalizar(s) {
-          return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-        }
-
-        function buscar(q) {
-          var t = normalizar(q).split(/\s+/).filter(Boolean);
-          if (!t.length) return datos.slice(0, 8);
-          return datos
-            .map(function (d) {
-              var titulo = normalizar(d.titulo), todo = normalizar(d.texto + ' ' + d.id);
-              var p = 0;
-              for (var i = 0; i < t.length; i++) {
-                if (normalizar(d.id) === t[i]) p += 100;
-                else if (normalizar(d.id).indexOf(t[i]) === 0) p += 40;
-                if (titulo.indexOf(t[i]) >= 0) p += 12;
-                if (todo.indexOf(t[i]) >= 0) p += 3;
-                else if (normalizar(d.id).indexOf(t[i]) < 0 && titulo.indexOf(t[i]) < 0) return null;
-              }
-              return { d: d, p: p };
-            })
-            .filter(Boolean)
-            .sort(function (a, b) { return b.p - a.p; })
-            .slice(0, 30)
-            .map(function (x) { return x.d; });
-        }
-
-        function pintar() {
-          vistos = buscar(campo.value);
-          sel = 0;
-          if (!vistos.length) {
-            lista.innerHTML = '<p class="paleta-vacio">Nada coincide con esa búsqueda. '
-              + 'Prueba con el número de una regla, una palabra del glosario o una fecha.</p>';
-            return;
-          }
-          lista.innerHTML = vistos.map(function (d, i) {
-            return '<a class="paleta-r' + (i === 0 ? ' sel' : '') + '" href="' + d.url + '" role="option">'
-              + '<span class="paleta-tipo">' + (ETIQUETAS[d.tipo] || d.tipo) + '</span>'
-              + '<span class="paleta-t">' + d.titulo.replace(/[<>&]/g, '') + '</span>'
-              + '<span class="paleta-id mono">' + d.id + '</span>'
-              + '</a>';
-          }).join('');
-        }
-
-        function mover(paso) {
-          var filas = lista.querySelectorAll('.paleta-r');
-          if (!filas.length) return;
-          filas[sel].classList.remove('sel');
-          sel = (sel + paso + filas.length) % filas.length;
-          filas[sel].classList.add('sel');
-          filas[sel].scrollIntoView({ block: 'nearest' });
-        }
-
-        function abrir() {
-          // El buscador es del operador. Sin modo tecnico no existe, ni con
-          // el atajo: si no, Alfredo lo abre sin querer y ve las 38 fichas.
-          if (!document.body.classList.contains('tecnico')) return;
-          if (dlg.open) return;
-          dlg.showModal();
-          campo.value = '';
-          pintar();
-          campo.focus();
-        }
-
-        document.querySelectorAll('[data-abrir-buscador]').forEach(function (b) {
-          b.addEventListener('click', abrir);
-        });
-
-        document.addEventListener('keydown', function (e) {
-          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); abrir(); }
-        });
-
-        campo.addEventListener('input', pintar);
-        campo.addEventListener('keydown', function (e) {
-          if (e.key === 'ArrowDown') { e.preventDefault(); mover(1); }
-          else if (e.key === 'ArrowUp') { e.preventDefault(); mover(-1); }
-          else if (e.key === 'Enter') {
-            var f = lista.querySelectorAll('.paleta-r')[sel];
-            if (f) { e.preventDefault(); window.location.href = f.getAttribute('href'); }
-          }
-        });
-
-        // Clic fuera del panel cierra.
-        dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
       })();
     </script>
 
@@ -449,41 +225,8 @@ const activa = (href: string) =>
       .cab-marca { grid-column: 2; justify-self: center; position: relative; z-index: 1; }
 
       /* Buscador: solo del lado del operador. Va a la izquierda del banner. */
-      .buscar {
-        grid-column: 1; grid-row: 1; position: relative; z-index: 1;
-        display: flex; align-items: center; gap: var(--e-3);
-        width: 100%; max-width: 26rem;
-        min-height: var(--alto-control);
-        padding: var(--e-2) var(--e-3);
-        background: var(--superficie);
-        border: 1px solid var(--borde);
-        border-radius: var(--radio-2);
-        color: var(--texto-3);
-        font: inherit; font-size: var(--t-3);
-        cursor: pointer; text-align: left;
-        transition: border-color var(--normal), background var(--normal);
-      }
-      .buscar:hover { border-color: var(--n-600); background: var(--tarjeta); }
-      .buscar-i { width: 16px; height: 16px; flex: none; }
-      .buscar-t { flex: 1; }
 
       /* ── rastro del modo técnico ───────────────────────────────────── */
-      .tec-chip {
-        display: flex; align-items: center; gap: var(--e-2);
-        padding: var(--e-2) var(--e-3);
-        border-radius: var(--radio-2);
-        border: 1px solid var(--borde-sutil);
-        background: color-mix(in srgb, var(--acento) 6%, transparent);
-        font-size: var(--t-1);
-        color: var(--texto-3);
-        transition: border-color var(--normal), color var(--normal);
-      }
-      .tec-chip:hover { border-color: var(--n-600); color: var(--texto-2); }
-      .tec-punto {
-        width: 6px; height: 6px; border-radius: 50%;
-        background: var(--acento); flex: none;
-      }
-      .tec-off { margin-left: auto; }
 
       /* ── rail ──────────────────────────────────────────────────────── */
       .marco { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); }
@@ -629,58 +372,6 @@ const activa = (href: string) =>
       .sub2 .sub-i.activa::before { left: calc(var(--e-3) * -1 - 1px); }
       .sub-i.activa .sub-n { color: var(--texto-2); }
 
-      .rail-pie { display: grid; gap: var(--e-2); justify-items: end; }
-
-      /* ── plegado ──────────────────────────────────────────────────────
-         Solo cambia el ancho y esconde las palabras. Los iconos, el orden y
-         el resalte de la pagina activa siguen exactamente igual: plegar no
-         puede obligar a reaprender el menu. */
-      .rail-plegar {
-        display: flex; align-items: center; gap: var(--e-3);
-        width: 100%;
-        padding: var(--e-2) var(--e-3);
-        border: 0; border-radius: var(--radio-2);
-        background: none; color: var(--texto-3);
-        font: inherit; font-size: var(--t-2); text-align: left;
-        cursor: pointer;
-        transition: background var(--normal), color var(--normal);
-      }
-      .rail-plegar:hover { background: var(--vidrio-hover); color: var(--texto); }
-      .rp-ic { display: flex; --i: 1.1rem; }
-
-      /* Solo en escritorio. Por debajo de 900px el lateral ya es una tira
-         horizontal, y ahi el texto tiene que verse: en tactil no hay tooltip
-         que rescate un icono suelto. */
-      @media (min-width: 901px) {
-        :global(html.rail-plegado) .rail { padding-inline: var(--e-2); }
-        :global(html.rail-plegado) .rail-plegar { justify-content: center; }
-        :global(html.rail-plegado) .rp-t,
-        :global(html.rail-plegado) .nav-t,
-        :global(html.rail-plegado) .nav-x,
-        :global(html.rail-plegado) .nav-n,
-        :global(html.rail-plegado) .nav-c,
-        :global(html.rail-plegado) .sub { display: none; }
-        :global(html.rail-plegado) .nav-i { justify-content: center; padding-inline: 0; }
-        :global(html.rail-plegado) .nav-i:hover { transform: none; }
-        :global(html.rail-plegado) .rail-pie { justify-items: center; }
-      }
-      @media (max-width: 900px) { .rail-plegar { display: none; } }
-      .tec-chip { justify-self: stretch; }
-
-      /* La puerta al detalle: un icono pequeño y apagado. Se ve si se busca,
-         no llama si no. Al enfocar o pasar por encima se declara. */
-      /* Caja de 44px para poder tocarla en el movil; el icono de dentro sigue
-         siendo diminuto, que es lo que pidio el operador. */
-      .puerta {
-        display: flex; align-items: center; justify-content: center;
-        width: var(--alto-control); height: var(--alto-control);
-        border-radius: var(--radio-2);
-        color: var(--n-500);
-        --i: 0.875rem;
-        transition: color var(--normal), background var(--normal);
-      }
-      .puerta:hover { color: var(--texto-2); background: var(--vidrio-hover); }
-
       /* ── contenido ─────────────────────────────────────────────────── */
       .cuerpo { display: flex; flex-direction: column; min-width: 0; }
       .contenido { flex: 1; width: 100%; padding: var(--e-8) var(--e-7) var(--e-9); }
@@ -695,56 +386,6 @@ const activa = (href: string) =>
       }
       .pie p { margin: 0; }
 
-      /* ── paleta de busqueda ────────────────────────────────────────── */
-      .paleta {
-        width: min(38rem, calc(100vw - 2rem));
-        margin-top: 12vh;
-        padding: 0;
-        background: var(--tarjeta);
-        border: 0;
-        border-radius: var(--radio-3);
-        box-shadow: var(--sombra-3);
-        color: var(--texto);
-        overflow: hidden;
-      }
-      .paleta::backdrop { background: color-mix(in srgb, var(--n-950) 78%, transparent); backdrop-filter: blur(3px); }
-
-      .paleta-campo {
-        display: flex; align-items: center; gap: var(--e-3);
-        padding: var(--e-4) var(--e-5);
-        border-bottom: 1px solid var(--borde-sutil);
-      }
-      .paleta-campo svg { width: 18px; height: 18px; color: var(--texto-3); flex: none; }
-      .paleta-campo input {
-        flex: 1; background: none; border: 0; outline: none;
-        color: var(--texto); font: inherit; font-size: var(--t-5);
-      }
-      .paleta-campo input::placeholder { color: var(--texto-3); }
-      .paleta-campo input::-webkit-search-cancel-button { display: none; }
-
-      .paleta-lista { max-height: 22rem; overflow-y: auto; padding: var(--e-2); }
-      /* Estos nodos los crea el JS, asi que van sin ambito. */
-      .paleta-lista :global(.paleta-r) {
-        display: grid;
-        grid-template-columns: 5.5rem minmax(0, 1fr) auto;
-        align-items: center; gap: var(--e-3);
-        padding: var(--e-3);
-        border-radius: var(--radio-1);
-        color: var(--texto-2);
-      }
-      .paleta-lista :global(.paleta-r.sel) { background: var(--elevado); color: var(--texto); }
-      .paleta-lista :global(.paleta-tipo) { font-size: var(--t-1); color: var(--texto-3); letter-spacing: var(--track-etiqueta); text-transform: uppercase; }
-      .paleta-lista :global(.paleta-t) { font-size: var(--t-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .paleta-lista :global(.paleta-id) { font-size: var(--t-1); color: var(--texto-3); }
-      .paleta-lista :global(.paleta-vacio) { padding: var(--e-5); margin: 0; color: var(--texto-3); font-size: var(--t-3); }
-
-      .paleta-pie {
-        display: flex; justify-content: space-between; gap: var(--e-4);
-        padding: var(--e-3) var(--e-5);
-        border-top: 1px solid var(--borde-sutil);
-        background: var(--superficie);
-      }
-
       /* ── responsive ────────────────────────────────────────────────── */
       /* 900px es el unico punto de ruptura del portal. Las paginas no
          inventan el suyo: si el rail cambia de forma aqui, todo cambia aqui. */
@@ -758,7 +399,6 @@ const activa = (href: string) =>
           padding: var(--e-3) var(--e-4);
         }
         .cab-marca { grid-column: 1; grid-row: 1; }
-        .buscar { grid-column: 1; grid-row: 2; max-width: none; }
         .marco { grid-template-columns: 1fr; }
         .rail {
           position: static; height: auto;
@@ -785,7 +425,6 @@ const activa = (href: string) =>
           white-space: nowrap;
         }
         .nav-x { overflow: visible; text-overflow: clip; }
-        .rail-pie { display: flex; align-items: center; gap: var(--e-2); margin-left: auto; }
         .contenido { padding: var(--e-6) var(--e-4) var(--e-8); }
         .pie { padding: var(--e-5) var(--e-4); }
       }

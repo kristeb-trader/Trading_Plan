@@ -19,7 +19,7 @@ const enunciados = new Map(P.reglas().map((r) => [r.id, r.enunciado]));
 const ids = cods.split('·').map((t) => t.trim()).filter(Boolean);
 ---
 
-<span class="solo-tecnico mono refs">
+<span class="mono refs">
   {ids.map((id, i) => (
     <>
       {i > 0 && <span class="refs-sep" aria-hidden="true">·</span>}

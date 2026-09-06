@@ -75,12 +75,13 @@ import Icono from '../componentes/Icono.astro';
     avisoLectura.hidden = soyOperador;
     if (soyOperador) exportar.href = '/api/observaciones/export?k=' + encodeURIComponent(clave());
 
+    // Las anclas de termino y pendiente no llevan a ningun sitio desde el
+    // 06/09/2026: esas paginas se retiraron. Caen en `general`, que es la
+    // portada, en vez de a un enlace roto.
     var RUTA = {
       regla: function (id) { return '/reglas/' + id; },
-      termino: function () { return '/glosario'; },
       caso: function (id) { return '/galeria#' + id; },
       parametro: function (id) { return '/parametros#' + id; },
-      pendiente: function () { return '/pendientes'; },
       subfase: function (id) { return '/plan#' + id; },
       general: function () { return '/'; },
     };

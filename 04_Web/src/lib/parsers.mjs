@@ -369,6 +369,26 @@ export function markdownRico(md, opciones = {}) {
  *  lo que es al pasar por encima. Un codigo sin explicacion obliga a
  *  navegar; con el enunciado en el titulo, deja de ser un obstaculo. */
 let _enunciados = null;
+/**
+ * Si una regla existe HOY. Los documentos y las listas de la galeria citan
+ * codigos de versiones anteriores del plan; enlazarlos daba fichas que no
+ * existen. Comprobado con scripts/enlaces.mjs.
+ */
+export function hayRegla(id) {
+  return existeRegla(id);
+}
+
+let _casos = null;
+function existeCaso(id) {
+  if (!_casos) _casos = new Set(galeria().map((c) => c.id));
+  return _casos.has(id);
+}
+
+function existeRegla(id) {
+  if (!_enunciados) _enunciados = new Map(reglas().map((r) => [r.id, r.enunciado]));
+  return _enunciados.has(id);
+}
+
 function enunciadoDe(id) {
   if (!_enunciados) {
     _enunciados = new Map(reglas().map((r) => [r.id, r.enunciado]));
@@ -400,8 +420,11 @@ export function enriquecerHtml(html, { sinEnlaceA } = {}) {
   // Lo mismo con las referencias: los documentos escriben `R-13` y `G-11`
   // entre comillas de codigo. Sin esto, el glosario enlazaba una sola.
   html = String(html)
+    // Solo se enlaza una regla que EXISTA hoy. Los documentos citan codigos
+    // de versiones anteriores —R-39 se elimino, y el 06/09/2026 se renumero
+    // todo— y enlazarlos daba fichas inexistentes.
     .replace(/<code>(R-\d{1,2})<\/code>/g, (m, id) =>
-      id === sinEnlaceA ? m
+      (id === sinEnlaceA || !existeRegla(id)) ? m
         : '<a class="ref" href="/reglas/' + id + '" title="' + enunciadoDe(id) + '">' + id + '</a>')
     .replace(/<code>(G-\d{1,2})<\/code>/g, (m, id) =>
       '<a class="ref" href="/galeria#' + id + '">' + id + '</a>');
@@ -426,10 +449,12 @@ export function enriquecerHtml(html, { sinEnlaceA } = {}) {
       });
     }
     s = s.replace(/(^|[^A-Za-z0-9-])(R-\d{1,2})\b/g, (m, pre, id) =>
-      id === sinEnlaceA ? m
+      (id === sinEnlaceA || !existeRegla(id)) ? m
         : pre + '<a class="ref" href="/reglas/' + id + '" title="' + enunciadoDe(id) + '">' + id + '</a>');
     s = s.replace(/(^|[^A-Za-z0-9-])(G-\d{1,2})\b/g, (m, pre, id) =>
-      pre + '<a class="ref" href="/galeria#' + id + '">' + id + '</a>');
+      existeCaso(id)
+        ? pre + '<a class="ref" href="/galeria#' + id + '">' + id + '</a>'
+        : m);
     return s;
   }).join('');
 }
@@ -458,35 +483,6 @@ export function backtesting() {
   };
 }
 
-// ─────────────────────────────────────────────── indice para el buscador
-/**
- * Todo lo consultable en una sola lista, para el buscador de la portada.
- * Se genera en la compilacion y se filtra en el cliente: sin servidor.
- */
-export function indiceBusqueda() {
-  const items = [];
-  for (const r of reglas()) {
-    items.push({
-      tipo: 'regla', id: r.id, url: '/reglas/' + r.id,
-      titulo: r.enunciado,
-      extra: r.categoria,
-      texto: [r.enunciado, r.accion, r.nota, r.categoria].filter(Boolean).join(' '),
-    });
-  }
-  for (const t of glosario()) {
-    items.push({ tipo: 'termino', id: t.termino, url: '/glosario', titulo: t.termino, extra: 'glosario', texto: t.termino + ' ' + t.cuerpo.slice(0, 400) });
-  }
-  for (const c of galeria()) {
-    items.push({ tipo: 'caso', id: c.id, url: '/galeria#' + c.id, titulo: c.titulo, extra: c.reglas.join(' '), texto: c.titulo + ' ' + c.cuerpo.slice(0, 300) });
-  }
-  for (const [nombre, p] of parametros()) {
-    items.push({ tipo: 'parametro', id: nombre, url: '/parametros', titulo: nombre, extra: p.valor, texto: nombre + ' ' + p.valor + ' ' + p.resto.join(' ') });
-  }
-  for (const p of pendientesAbiertos()) {
-    items.push({ tipo: 'pendiente', id: p.id, url: '/pendientes', titulo: p.titulo, extra: 'abierto', texto: p.titulo });
-  }
-  return items;
-}
 
 // ──────────────────────────────── la regla dentro del documento largo
 /** Mapa id -> { titulo, cuerpo } con la seccion que explica cada regla en
@@ -548,10 +544,12 @@ export function enriquecer(texto, { sinEnlaceA } = {}) {
   }
 
   html = html.replace(/(^|[^A-Za-z0-9-])(R-\d{1,2})\b/g, (m, pre, id) =>
-    id === sinEnlaceA ? m
+    (id === sinEnlaceA || !existeRegla(id)) ? m
       : pre + '<a class="ref" href="/reglas/' + id + '" title="' + enunciadoDe(id) + '">' + id + '</a>');
   html = html.replace(/(^|[^A-Za-z0-9-])(G-\d{1,2})\b/g, (m, pre, id) =>
-    pre + '<a class="ref" href="/galeria#' + id + '">' + id + '</a>');
+    existeCaso(id)
+      ? pre + '<a class="ref" href="/galeria#' + id + '">' + id + '</a>'
+      : m);
 
   return html;
 }
