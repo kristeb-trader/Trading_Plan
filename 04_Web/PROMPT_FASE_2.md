@@ -30,6 +30,7 @@ Construir el módulo web **"Trading Plan"**: una página **privada**, de solo le
 | `01_Plan\PENDIENTES.md` | lo que sigue abierto. **Tiene que verse en la web** |
 | `01_Plan\CONTEXTUALIZACION.md` | 10 elementos que **NO son reglas y no deben convertirse en reglas** |
 | `01_Plan\CIERRE_FASE_1.md` | **léelo primero.** Qué está probado y qué no |
+| `01_Plan\EQUIVALENCIA_NUMERACION.md` | las reglas se **renumeraron** el 06/09/2026 · tabla vieja→nueva |
 | `02_Assets\` | capturas anotadas, diagramas y gráficas de sesión |
 
 No edites nada de `01_Plan\` ni de `02_Assets\`. Si necesitas un cambio ahí, pídemelo.
@@ -46,7 +47,7 @@ La web **no reinterpreta ni resume el plan: renderiza lo que dicen los documento
 
 ## 🚨 EL PLAN NO ESTÁ PROBADO — Y LA WEB TIENE QUE DECIRLO
 
-El plan está en **v2.3**, con 38 reglas, cerrado el 01/09/2026 y contrastado contra 11 sesiones reales al tick. **No está congelado y no está validado.** Se cerró con **cuatro huecos declarados**, y los cuatro **deben verse en la web, no esconderse**:
+El plan está en **v3.0**, con 38 reglas, cerrado el 01/09/2026 y contrastado contra 11 sesiones reales al tick. **No está congelado y no está validado.** Se cerró con **cuatro huecos declarados**, y los cuatro **deben verse en la web, no esconderse**:
 
 1. **El test ciego nunca se ejecutó.** No hay ninguna medida de si el documento se sostiene solo, sin el operador corrigiendo al lado.
 2. **No hay regla de parada.** El plan no dice cuándo se deja de operar en la semana o el mes. Cada operación arriesga el 5,3 % de la cuenta objetivo.
@@ -63,7 +64,7 @@ El plan está en **v2.3**, con 38 reglas, cerrado el 01/09/2026 y contrastado co
    - ⚠️ **Son doce, no once.** `F1.12` (estructura y marcado) contiene **cinco reglas** y es la más reciente. Un rango que pare en `F1.11` se la deja fuera sin avisar.
    - `F1.11` (test de operabilidad) **no tiene contenido que renderizar**: se muestra como **hueco declarado**, no como sección vacía.
    - En el documento maestro las sub-fases **no están en orden numérico**. Respeta el orden del documento, no el del número.
-2. **Buscador** que filtre por texto, por id de regla (`R-14`) y por categoría.
+2. **Buscador** que filtre por texto, por id de regla (`R-21`) y por categoría.
    Las categorías vienen de `reglas.json` y son **siete**, ya ordenadas en el archivo por `categoria_orden`:
 
    | # | `categoria` | `categoria_nombre` | Reglas |
@@ -78,10 +79,10 @@ El plan está en **v2.3**, con 38 reglas, cerrado el 01/09/2026 y contrastado co
 
    - **`zonas` lleva un segundo nivel** en el campo `subcategoria`: `marcado` (11) y `vigencia` (3). Muéstralo como **una sola categoría con dos apartados dentro**, no como dos categorías. Son 14 de 38 reglas: sin el segundo nivel el filtro devuelve más de un tercio del plan.
    - Cada regla trae además `categoria_nombre`, `categoria_descripcion` y `categoria_orden`. **Úsalos: no escribas los nombres a mano ni inventes el orden.**
-   - `R-13` (rompimiento y consecución) está en `zonas · vigencia` pero define también la entrada: **enlázala desde Setup y entrada**.
+   - `R-20` (rompimiento y consecución) está en `zonas · vigencia` pero define también la entrada: **enlázala desde Setup y entrada**.
    - **No inventes categorías nuevas ni las renombres.**
 3. **Ficha de regla:** enunciado, condiciones medibles, acción, excepciones, estado, fuente y nota.
-   - ⚠️ **`reglas.json` no tiene campo de imagen, y la mayoría de las reglas no tiene ninguna.** En todo el proyecto hay **9 diagramas** (`02_Assets\diagramas\`, nombrados por regla o por concepto — los dos de `apendice_*` ilustran `R-15`, `R-16` y `R-19`) y **un solo contraejemplo** (`02_Assets\invalidos\R-17_invalido_01.png`).
+   - ⚠️ **`reglas.json` no tiene campo de imagen, y la mayoría de las reglas no tiene ninguna.** En todo el proyecto hay **9 diagramas** (`02_Assets\diagramas\`, nombrados por regla o por concepto — los dos de `apendice_*` ilustran `R-10`, `R-11` y `R-14`) y **un solo contraejemplo** (`02_Assets\invalidos\R-12_invalido_01.png`).
    - Asocia imagen a regla **solo cuando el nombre del archivo lo diga**. Si una regla no tiene imagen, **la ficha simplemente no muestra imagen**: nada de placeholders, ni huecos, ni "imagen pendiente".
 4. **Diagramas Mermaid.** Hay exactamente **dos** en todo el plan. Que rendericen bien y sean legibles en móvil; el zoom es opcional.
 5. **Galería de casos**, con lightbox y filtro por regla. Fuente: `GALERIA.md`, **21 casos**.
@@ -91,7 +92,7 @@ El plan está en **v2.3**, con 38 reglas, cerrado el 01/09/2026 y contrastado co
 6. **Modo checklist:** vista imprimible del proceso operativo diario, desde `CHECKLIST_DIARIA.md` — **cuatro bloques**: antes de abrir NinjaTrader · premercado · ventana operativa · después del llenado.
 7. **Vista de pendientes:** los 8 puntos abiertos de `PENDIENTES.md` más los cuatro huecos declarados. ⚠️ **Ninguna de las 38 reglas está marcada como `PENDIENTE`** — todas están confirmadas. Lo pendiente vive en `PENDIENTES.md` y en `CIERRE_FASE_1.md`; no lo busques en el estado de las reglas.
 8. **Vista de contextualización**, claramente separada de las reglas y marcada como **"esto NO es regla"**.
-9. **Versión del plan y fecha de última actualización**, visibles. Hoy: **v2.3 · 2026-09-04**. Léelas del documento, no las escribas a mano.
+9. **Versión del plan y fecha de última actualización**, visibles. Hoy: **v3.0 · 2026-09-06**. Léelas del documento, no las escribas a mano.
 10. **Responsive:** tiene que leerse bien en iPhone durante la sesión.
 
 ---

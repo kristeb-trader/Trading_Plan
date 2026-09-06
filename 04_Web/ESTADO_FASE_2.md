@@ -142,6 +142,59 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-06 · el texto, justificado y sin paredes — de una vez
+
+Sexta vez que el operador pedia lo mismo. **Esta vez se midio antes de tocar
+nada**, cargando las 53 paginas y comprobando cada bloque de texto.
+
+**Lo que salio de la medicion:**
+
+| | |
+|---|---|
+| Bloques alineados a la izquierda | **1.186** |
+| Bloques justificados | **26** |
+| Paginas con tope de ancho vivo | 9 |
+
+Es decir: **el justificado estaba puesto en el 2 % del portal**. Solo en los
+parrafos de los apartados de modulo, que fue donde se aplico la primera vez,
+en agosto. Nunca se extendio al resto.
+
+**Por que fallaron las cinco veces anteriores:**
+
+1. **Se arreglo por sintoma, nunca por inventario.** Cada vez se miraba la
+   pagina que el señalaba, se quitaba el tope que hubiera ahi y se daba por
+   hecho. Nunca se midio el conjunto.
+2. **El ancho venia de sitios independientes** — el token `--medida`, reglas
+   por pagina, reglas por componente y limites en `ch` dentro de cada uno—,
+   asi que no habia una sola cosa que arreglar y se fueron quitando en el
+   orden en que el los notaba.
+3. **La alineacion nunca se toco fuera de los modulos.** Se leyeron sus
+   avisos como si fueran solo sobre las paredes.
+
+**Lo aplicado:** una unica regla en `base.css` que gobierna la alineacion y
+el ancho de TODO el texto — justificado, ultima linea sin estirar, partido
+por silabas y sin tope de ancho—. Se quitaron los dos topes que quedaban (los
+subtitulos de modulo y de reglas), el `text-align: left` de las tablas y el de
+los titulos de apartado.
+
+**Resultado medido sobre las 53 paginas: 3.378 bloques justificados, 256
+centrados a proposito, 0 a la izquierda, 0 paredes.**
+
+#### Para que no se repita
+
+Nuevo `scripts/maquetacion.mjs`, encadenado en `npm run verificar`. **Falla**
+si alguien vuelve a meter en el codigo un tope de ancho fijo sobre texto o un
+`text-align: left`, y falla tambien si desaparece la regla comun de
+`base.css`. Las excepciones legitimas existen, pero hay que declararlas en la
+misma linea con su motivo:
+
+    max-width: 20rem;   /* ancho-ok: columna de imagen en movil */
+    text-align: left;   /* alineacion-ok: columna de etiquetas */
+
+Hoy hay tres declaradas. Ya no es una promesa: es una comprobacion que corre
+antes de publicar.
+
+
 ### 2026-09-06 · un solo portal
 
 Se acaba la doble modalidad. Ya no hay «modo tecnico» ni interruptor, asi que

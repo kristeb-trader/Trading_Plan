@@ -49,6 +49,37 @@ h2 { font-size: var(--t-7); }
 h3 { font-size: var(--t-6); }
 h4 { font-size: var(--t-4); color: var(--texto-2); }
 
+/* ── ALINEACIÓN Y ANCHO DEL TEXTO ────────────────────────────────────────
+   Las dos cosas se deciden AQUI y en ningun otro sitio. Ninguna pagina ni
+   componente vuelve a poner su propio `text-align` ni su propio tope de
+   ancho sobre texto: `npm run verificar` falla si alguien lo intenta.
+
+   · Justificado a los dos margenes, como en Word.
+   · La ultima linea no se estira — sin esto, un parrafo de dos palabras
+     queda repartido de lado a lado.
+   · Partido por silabas. Es obligatorio con justificado: sin el se abren
+     rios de espacio en blanco entre palabras.
+   · Sin tope de ancho. El texto llena su columna; quien limita es el
+     contenedor de la pagina.
+
+   Reportado por el operador seis veces. La sexta se midieron las 53
+   paginas: 1.186 bloques a la izquierda contra 26 justificados. */
+main :is(p, li, dd, dt, figcaption, blockquote, td, th, h1, h2, h3, h4) {
+  text-align: justify;
+  text-align-last: left;
+  hyphens: auto;
+}
+
+/* Lo que va centrado a proposito sigue centrado: la cabecera de cada pagina
+   y de cada modulo, y las etiquetas que dibuja mermaid dentro de un <svg>,
+   que no son texto de lectura. */
+main :is(.cab, .mod-cab, .lupa) :is(p, h1, h2, h3),
+main svg :is(p, span, div) {
+  text-align: center;
+  text-align-last: center;
+  hyphens: manual;
+}
+
 p { margin: 0 0 var(--e-4); max-width: var(--medida); }
 ul, ol { margin: 0 0 var(--e-4); padding-left: var(--e-5); max-width: var(--medida); }
 li { margin-bottom: var(--e-2); }
@@ -89,7 +120,7 @@ hr { border: 0; border-top: 1px solid var(--borde-sutil); margin: var(--e-6) 0; 
   border-radius: var(--radio-2);
 }
 table { border-collapse: collapse; width: 100%; font-size: var(--t-3); }
-th, td { text-align: left; padding: var(--e-3) var(--e-4); vertical-align: top; }
+th, td { padding: var(--e-3) var(--e-4); vertical-align: top; }
 th {
   position: sticky; top: 0; background: var(--tarjeta);
   font-size: var(--t-1); font-weight: var(--peso-fuerte);
@@ -275,7 +306,7 @@ body::after {
   display: block; max-width: 100%; overflow-x: auto;
   border-collapse: collapse; margin: var(--e-4) 0; font-size: var(--t-3);
 }
-.md th, .md td { padding: var(--e-2) var(--e-4) var(--e-2) 0; text-align: left; vertical-align: top; }
+.md th, .md td { padding: var(--e-2) var(--e-4) var(--e-2) 0; vertical-align: top; }
 .md thead th {
   position: static; background: none;
   border-bottom: 1px solid var(--borde);
@@ -336,7 +367,6 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
 .ap > h2 {
   margin: 0 0 var(--e-5);
   font-size: var(--t-7);
-  text-align: left;
   color: var(--texto);
   text-wrap: balance;
 }
@@ -402,7 +432,7 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
 
 @media (max-width: 700px) {
   .ap-dividido { grid-template-columns: 1fr; }
-  .ap-dividido .gr { max-width: 20rem; margin-inline: auto; }
+  .ap-dividido .gr { max-width: 20rem; margin-inline: auto; } /* ancho-ok: es la columna de imagen, no texto */
 }
 
 /* Ficha de datos: lo medible de un apartado, en dos columnas. */

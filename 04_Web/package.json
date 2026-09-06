@@ -12,7 +12,8 @@
     "fuentes": "node scripts/contar-fuentes.mjs",
     "diagramas": "node scripts/diagramas.mjs",
     "enlaces": "node scripts/enlaces.mjs",
-    "verificar": "npm run build && npm run enlaces"
+    "verificar": "npm run build && npm run enlaces && npm run maquetacion",
+    "maquetacion": "node scripts/maquetacion.mjs"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^11.16.0",
