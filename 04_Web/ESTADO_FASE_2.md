@@ -1089,13 +1089,27 @@ Para este proyecto, que es casi todo `.astro`, VS Code va mejor.)*
 
 ---
 
-### Publicar un cambio
+### Cerrar un cambio — los tres pasos, siempre los tres
 
 ```
 cd 04_Web
-npx astro build
+npm run verificar                                          # compila y comprueba
 npx wrangler pages deploy dist --project-name=plan-operativo-nq
+git push origin main                                       # 🔴 no se olvida
 ```
+
+`npm run verificar` compila y pasa las tres comprobaciones: enlaces rotos,
+maquetación y referencias de regla movidas. **Si alguna falla, no se publica.**
+
+> 🔴 **El `git push` va SIEMPRE, decidido por el operador el 07/09/2026.**
+> Publicar y enviar a GitHub son cosas distintas y se hacían por separado:
+> `wrangler` sube la web compilada a Cloudflare, `git push` sube el código y
+> el historial. Durante once commits se publicó el portal sin enviar nada, y
+> en GitHub se quedó todo parado en el 03/09. No vuelve a pasar: los tres
+> pasos van juntos.
+
+Los envíos se ven en
+<https://github.com/kristeb-trader/Trading_Plan/commits/main>.
 
 Detalle completo en `DESPLIEGUE.md`.
 
