@@ -1,6 +1,6 @@
 # Proyecto Chaumer — instrucciones para Claude Code
 
-**Qué es esto:** la metodología de trading de Alfredo Chaumer para NQ/MNQ en NinjaTrader 8, extraída durante la fase 1 a un plan mecánico de **38 reglas medibles**.
+**Qué es esto:** la metodología de trading de Alfredo Chaumer para **MNQ** en NinjaTrader 8, extraída durante la fase 1 a un plan mecánico de **38 reglas medibles**.
 
 **Fase actual:** 🚧 **FASE 2 — construir el portal web** en `04_Web\` (hoy vacía).
 **Fase 1:** 🏁 cerrada el 2026-09-01. Ver `01_Plan\CIERRE_FASE_1.md`.
@@ -24,15 +24,17 @@
 | Archivo | Qué es |
 |---|---|
 | `01_Plan\reglas.json` | **la fuente de verdad legible por máquina.** 38 reglas, **ordenadas por grupo**. Cada una trae `categoria`, `categoria_nombre`, `categoria_descripcion`, `categoria_orden` y —solo en `zonas`— `subcategoria` (`marcado` / `vigencia`). Siete grupos: perímetro (4) · estructura (4) · **zonas (14)** · setup y entrada (5) · riesgo y gestión (7) · filtros (3) · proceso (1). **El portal se construye contra este archivo, y usa esos campos: no escribas nombres de categoría a mano.** |
-| `01_Plan\TRADING_PLAN_CHAUMER.md` | el texto largo: razonamiento, casos reales y por qué cada regla dice lo que dice |
+| `01_Plan\TRADING_PLAN_CHAUMER.md` | el texto largo. **Reorganizado el 06/09/2026 por categorías**, en el mismo orden que `reglas.json`: primero `📕 LAS 38 REGLAS, POR CATEGORÍA` (7 grupos, Zonas partida en *marcado* y *vigencia*), después `📎 ANEXOS Y NOTAS DE CONSTRUCCIÓN` con la narrativa de las sub-fases, los diagramas y las correcciones del auditor. **Las 38 reglas tienen todas sección propia** |
 | `01_Plan\PARAMETROS.md` | los números que pueden cambiar, en un solo sitio. Las reglas citan el **nombre** del parámetro, no el valor |
-| `01_Plan\GLOSARIO.md` | 24 términos con definición medible |
+| `01_Plan\GLOSARIO.md` | 23 términos con sección y definición medible |
 | `01_Plan\CHECKLIST_DIARIA.md` | la secuencia real del día en 4 bloques |
 | `01_Plan\GALERIA.md` | 21 casos reales etiquetados |
 | `01_Plan\PENDIENTES.md` | lo que sigue abierto |
 | `01_Plan\CONTEXTUALIZACION.md` | 10 elementos que **NO son reglas y no deben convertirse en reglas** |
-| `01_Plan\ESTADO.md` | registro cronológico de toda la fase 1 |
+| `01_Plan\ESTADO.md` | **archivo de arranque.** Cabecera con las 38 reglas en una línea cada una, agrupadas por categoría, y el registro cronológico completo de la fase 1 debajo |
 | `01_Plan\CIERRE_FASE_1.md` | **léelo primero.** Qué está probado y qué no |
+| `01_Plan\EQUIVALENCIA_NUMERACION.md` | las reglas se **renumeraron** el 06/09/2026. Si ves un código que no cuadra, tradúcelo aquí |
+| `01_Plan\PROPUESTA_LIMPIEZA_REGLAS.md` | 🟡 **decisión pendiente del operador:** cuatro fusiones que llevarían el plan de **38 a 33 reglas**. **No las apliques ni las anticipes en el portal** — hoy son 38 |
 
 Si `reglas.json` y un `.md` se contradicen, **para y pregunta**. No elijas tú.
 
@@ -73,7 +75,7 @@ Viene de las gráficas de backtesting que él validó una por una.
 
 ## Cómo hablarle al operador
 
-- **Nunca uses los códigos de regla** (`R-08`, `P-22`, `G-12`…) en conversación. Son para los documentos. Al hablar, lenguaje de usuario, claro y no técnico.
+- **Nunca uses los códigos de regla** (`R-31`, `P-22`, `G-12`…) en conversación. Son para los documentos. Al hablar, lenguaje de usuario, claro y no técnico.
 - Máximo **2 preguntas por turno**.
 - Él corrige vela a vela. **Nada se da por bueno sin su visto bueno explícito.**
 - Tiene contacto directo con Alfredo Chaumer y le consulta cuando algo se traba.
@@ -92,6 +94,7 @@ Definiciones completas y medibles en `01_Plan\GLOSARIO.md`.
 
 - Datos: `05_Backtesting\datos\NQ 09-26.Last.txt` — formato `yyyyMMdd HHmmss;o;h;l;c;v`, **en UTC**.
 - **Horario:** el gráfico del operador es hora Colombia (UTC−5). Ventana operativa **08:31–10:30 Col = 13:31–15:30 UTC**.
+- ⚠️ **El plan opera solo MNQ desde el 06/09/2026** — un gráfico, sin NQ. Pero **los datos de backtesting son de NQ** y así se quedan, por decisión del operador. No intentes 'arreglar' esa diferencia. Ver `P-32`.
 - `05_Backtesting\lector.py` — el motor que reproduce el marcado de zonas y detecta los setups.
 - `05_Backtesting\dia.py` — genera la gráfica estándar de una jornada.
 

@@ -2,7 +2,7 @@
 
 Cada término con su definición medible.
 
-> Actualizado: 2026-08-26 · Sub-fase **F1.1 ✅ CERRADA** · **26 términos definidos** · 8 descartados · 4 en contextualización
+> Actualizado: 2026-09-06 · Sub-fase **F1.1 ✅ CERRADA** · **23 términos con sección propia** · 8 descartados · 4 movidos a contextualización
 
 ---
 
@@ -23,7 +23,7 @@ Ningún término entra a este archivo con adjetivos. *"Fuerte"*, *"claro"*, *"bu
 
 Todo el plan habla de velas **alcistas** y **bajistas**, nunca de verdes y rojas. Confirmado por el operador el 24/08/2026.
 
-> 📌 **Recordatorio de `R-10` y `R-11`:** el color es **irrelevante** para definir corrida y retroceso — solo cuenta la relación entre máximos y mínimos. El color sí decide en `R-12` (qué borde del cuerpo es el límite) y en `R-20` (soporte o resistencia).
+> 📌 **Recordatorio de `R-05` y `R-06`:** el color es **irrelevante** para definir corrida y retroceso — solo cuenta la relación entre máximos y mínimos. El color sí decide en `R-09` (qué borde del cuerpo es el límite) y en `R-15` (soporte o resistencia).
 
 ---
 
@@ -64,8 +64,8 @@ Todo el plan habla de velas **alcistas** y **bajistas**, nunca de verdes y rojas
 
 La corrida **nace mirando máximos** y **muere mirando mínimos**. Son dos criterios distintos y es intencionado.
 
-**Diagrama:** `../02_Assets/diagramas/R-10_corrida.png`
-**Regla asociada:** `R-10` en `reglas.json`
+**Diagrama:** `../02_Assets/diagramas/R-05_corrida.png`
+**Regla asociada:** `R-05` en `reglas.json`
 **Estado:** ✅ Confirmada 21/08/2026
 
 ---
@@ -78,19 +78,19 @@ La corrida **nace mirando máximos** y **muere mirando mínimos**. Son dos crite
 
 | Momento | Condición medible |
 |---|---|
-| **Empieza** | primera vela con `mínimo[n] ≤ mínimo[n−1] − 0,25 pts (1 tick)` — la que mata la corrida (`R-10`) |
-| **Termina** | primera vela con `máximo[n] > máximo[n−1]` — nace la siguiente corrida (`R-10`) |
+| **Empieza** | primera vela con `mínimo[n] ≤ mínimo[n−1] − 0,25 pts (1 tick)` — la que mata la corrida (`R-05`) |
+| **Termina** | primera vela con `máximo[n] > máximo[n−1]` — nace la siguiente corrida (`R-05`) |
 | **Nº de velas** | sin mínimo ni máximo · **irrelevante** |
 | **Tamaño mínimo** | **ninguno** |
-| **Tamaño máximo** | `entrada − mínimo del retroceso ≤ 320 ticks` (`R-08`) |
+| **Tamaño máximo** | `entrada − mínimo del retroceso ≤ 320 ticks` (`R-31`) |
 
 ### 🎯 "El mínimo del retroceso"
 
 > **Es el mínimo MÁS BAJO de todas las velas del retroceso.** No el de la primera vela, no el de la última.
 
 Este nivel es el que usan:
-- **`R-08`** — dónde se arrastra el stop, y el filtro de los 320 ticks
-- **`R-04`** — dónde se produce la invalidación total
+- **`R-31`** — dónde se arrastra el stop, y el filtro de los 320 ticks
+- **`R-29`** — dónde se produce la invalidación total
 
 ### Retroceso tras corrida BAJISTA — espejo exacto
 
@@ -105,8 +105,8 @@ Este nivel es el que usan:
 - ❌ **El color de la vela es irrelevante.** Una vela **alcista** dentro de un retroceso bajista **no lo termina**, siempre que no haga un máximo más alto. Es el espejo exacto de la vela bajista dentro de una corrida.
 - ❌ **El número de velas es irrelevante.** Solo cuenta la distancia en puntos.
 
-**Diagrama:** `../02_Assets/diagramas/R-11_retroceso.png`
-**Regla asociada:** `R-11` en `reglas.json`
+**Diagrama:** `../02_Assets/diagramas/R-06_retroceso.png`
+**Regla asociada:** `R-06` en `reglas.json`
 **Estado:** ✅ Confirmada 21/08/2026
 
 ---
@@ -123,14 +123,14 @@ Este nivel es el que usan:
 |---|---|---|---|
 | **Zona normal** tras corrida alcista | La de **máximo más alto**, incluida la vela del retroceso | Superior | **Resistencia** |
 | **Zona normal** tras corrida bajista | La de **mínimo más bajo**, incluida la vela del retroceso | Inferior | **Soporte** |
-| **Zona apéndice** | La **vela de rompimiento** | La del lado por el que rompió | Ver `R-16` |
+| **Zona apéndice** | La **vela de rompimiento** | La del lado por el que rompió | Ver `R-11` |
 
 ### Marcado de la zona normal · corrida ALCISTA
 
 | Elemento | Condición medible |
 |---|---|
 | **Vela designada** | la vela de **máximo más alto** desde el origen de la corrida **hasta la vela que dispara el retroceso, incluida** |
-| **Cuándo se marca** | al aparecer el retroceso (`R-11`). Antes no: hasta entonces la corrida sigue viva y la vela más alta puede cambiar |
+| **Cuándo se marca** | al aparecer el retroceso (`R-06`). Antes no: hasta entonces la corrida sigue viva y la vela más alta puede cambiar |
 | **Límite inferior** | borde superior del **cuerpo** — el **cierre** si la vela es alcista, la **apertura** si es bajista |
 | **Límite superior** | el **máximo** de la vela (extremo de la mecha) |
 | **Color de la vela** | **irrelevante** |
@@ -151,7 +151,7 @@ Este nivel es el que usan:
 | **Corrida bajista** | SOPORTE en su vela más baja |
 | **Su retroceso** | **RESISTENCIA** en la vela más alta del retroceso |
 
-🔴 **Sujeto a `R-17`.** Si hay zona arriba y zona abajo y el movimiento que genera la candidata **cruza el 50 %** entre bordes internos, **no se marca**. **Frontera exacta (26/08/2026):** llegar **justo al 50 %** todavía marca; hace falta **superarlo por ≥1 tick** para anularla.
+🔴 **Sujeto a `R-12`.** Si hay zona arriba y zona abajo y el movimiento que genera la candidata **cruza el 50 %** entre bordes internos, **no se marca**. **Frontera exacta (26/08/2026):** llegar **justo al 50 %** todavía marca; hace falta **superarlo por ≥1 tick** para anularla.
 
 **Caso real verificado — 10/07/2026:**
 
@@ -162,7 +162,7 @@ Zona abajo  (premercado)        borde interno   29.878,75
 El retroceso baja hasta 29.880,50  →  CRUZA  →  NO se marca soporte
 ```
 
-El operador decidió no marcarlo. `R-17` da la misma respuesta sobre datos exactos.
+El operador decidió no marcarlo. `R-12` da la misma respuesta sobre datos exactos.
 
 ### ⚠️ CORREGIDA el 26/08/2026 — qué velas entran en la búsqueda
 
@@ -194,14 +194,14 @@ El operador decidió no marcarlo. `R-17` da la misma respuesta sobre datos exact
 
 
 
-**Diagrama:** `../02_Assets/diagramas/R-12_zona.png`
-**Regla asociada:** `R-12` · **Estado:** ✅ Confirmada 24/08/2026
+**Diagrama:** `../02_Assets/diagramas/R-09_zona.png`
+**Regla asociada:** `R-09` · **Estado:** ✅ Confirmada 24/08/2026
 
 ---
 
 ## ROMPIMIENTO Y CONSECUCIÓN  *(el motor)*
 
-Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la vez:** matar una zona y entrar al mercado. La consecución al alza **es** la entrada de `R-07`.
+Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la vez:** matar una zona y entrar al mercado. La consecución al alza **es** la entrada de `R-24`.
 
 | Término | Condición medible |
 |---|---|
@@ -211,11 +211,11 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 | **Rompimiento con MECHA** | el cierre **no** queda más allá; solo la mecha superó el borde |
 | **Consecución** | el precio supera por **≥1 tick** el **máximo** (al alza) o el **mínimo** (a la baja) **de la vela de rompimiento** |
 | **Vela de consecución** | la vela en la que ocurre la consecución |
-| **Plazo de las 5 velas** | la consecución debe darse dentro de las **5 velas** contadas desde la vela **siguiente** a la de rompimiento — 🔴 **pero solo para la GEOMETRÍA de la zona (`R-15`/`R-16`) y para la vida de la ORDEN (`R-04`)** |
+| **Plazo de las 5 velas** | la consecución debe darse dentro de las **5 velas** contadas desde la vela **siguiente** a la de rompimiento — 🔴 **pero solo para la GEOMETRÍA de la zona (`R-10`/`R-11`) y para la vida de la ORDEN (`R-29`)** |
 | 🔴 **Consecución que traspasa la zona** | **NO tiene plazo.** El rompimiento queda pendiente indefinidamente y, cuando llegue la consecución —aunque sea 25 velas después— la zona queda traspasada en ese sentido. Las dos cosas ocurren sobre el **mismo** rompimiento: primero nace la apéndice o se estira, y más tarde el traspaso se confirma igual *(27/08/2026)* |
-| 🔴 **La vela que confirma** | no abre a la vez el rompimiento del lado contrario: ese se busca desde la vela **siguiente** (`R-37`) |
+| 🔴 **La vela que confirma** | no abre a la vez el rompimiento del lado contrario: ese se busca desde la vela **siguiente** (`R-22`) |
 
-**Reglas asociadas:** `R-13`, `R-37` · **Estado:** ✅ Confirmada 24/08/2026 · **ampliada 27/08/2026**
+**Reglas asociadas:** `R-20`, `R-22` · **Estado:** ✅ Confirmada 24/08/2026 · **ampliada 27/08/2026**
 
 ---
 
@@ -234,8 +234,8 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 **Tratamiento visual de la zona inválida:** se **conserva** en el gráfico con tonalidad muy tenue, contraste mínimo. Es solo un recuerdo visual de que allí hubo una zona válida — **no tiene ningún efecto operativo**.
 
-**Diagrama:** `../02_Assets/diagramas/R-13_vigencia.png`
-**Regla asociada:** `R-14` · **Estado:** ✅ Confirmada 24/08/2026
+**Diagrama:** `../02_Assets/diagramas/R-20_vigencia.png`
+**Regla asociada:** `R-21` · **Estado:** ✅ Confirmada 24/08/2026
 
 ---
 
@@ -250,8 +250,8 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 > 🔴 **El rompimiento NO se cae al vencer el plazo** *(27/08/2026)*. Vencido el plazo se resuelve la **geometría** (aquí, el estiramiento), pero el rompimiento **sigue esperando su consecución**: si algún día llega, la zona queda traspasada igual.
 
-**Diagrama:** `../02_Assets/diagramas/R-15_extension_apendice.png`
-**Regla asociada:** `R-15` · **Estado:** ✅ Confirmada 24/08/2026 · **precisada 27/08/2026**
+**Diagrama:** `../02_Assets/diagramas/R-10_extension_apendice.png`
+**Regla asociada:** `R-10` · **Estado:** ✅ Confirmada 24/08/2026 · **precisada 27/08/2026**
 
 ---
 
@@ -259,7 +259,7 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 | Elemento | Condición medible |
 |---|---|
-| **Disparador** | rompimiento **con cuerpo** + **el plazo resuelto**: o pasan **5 velas sin consecución**, o antes de eso el mercado **arma una estructura completa en sentido contrario** *(`R-19`, precisada 01/09/2026)* |
+| **Disparador** | rompimiento **con cuerpo** + **el plazo resuelto**: o pasan **5 velas sin consecución**, o antes de eso el mercado **arma una estructura completa en sentido contrario** *(`R-14`, precisada 01/09/2026)* |
 | **Acción** | se marca una **zona nueva**, llamada **zona apéndice** |
 | **Zona original** | **no se toca** |
 | **Límites de la apéndice** | del **borde del cuerpo** de la vela de rompimiento al **extremo de su mecha** — es decir, **solo esa mecha** |
@@ -291,8 +291,8 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 **Cómo se dibuja:** la apéndice es **del mismo gris que cualquier otra zona** y se dibuja **desde la vela de rompimiento**, que es su vela origen — aunque no esté marcada hasta que el plazo se resuelve.
 
-**Diagramas:** `../02_Assets/diagramas/apendice_caso1_plazo.png` (por plazo) y `../02_Assets/diagramas/apendice_caso2_estructura.png` (por estructura contraria) · también `R-15_extension_apendice.png`
-**Reglas asociadas:** `R-16` y `R-19` · **Estado:** ✅ Confirmada 24/08/2026 · precisada 27/08/2026 · **ampliada 01/09/2026**
+**Diagramas:** `../02_Assets/diagramas/apendice_caso1_plazo.png` (por plazo) y `../02_Assets/diagramas/apendice_caso2_estructura.png` (por estructura contraria) · también `R-10_extension_apendice.png`
+**Reglas asociadas:** `R-11` y `R-14` · **Estado:** ✅ Confirmada 24/08/2026 · precisada 27/08/2026 · **ampliada 01/09/2026**
 
 ---
 
@@ -318,7 +318,7 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 >
 > **Caso real 14/07/2026 — la banda con un borde de premercado:** abajo el soporte de la vela 8:36 (29.685,00–29.693,00), arriba la resistencia de premercado de las 19:31 (29.901,25–29.908,25). Banda de 208,25 pts, mitad en **29.797,13**. El primer retroceso dentro es el de la vela **8:39**, que sube a **29.798,00** y se pasa de la mitad por **3½ ticks** → no se marca, la banda se cierra, y de las 8:41 a las 9:10 no se marca nada en toda esa franja.
 >
-> **Regla asociada:** `R-35`
+> **Regla asociada:** `R-17`
 
 **Cuándo aplica:** existe una zona **por arriba** y otra **por abajo**, y entre ellas el precio genera un movimiento que produciría una zona nueva.
 
@@ -337,7 +337,7 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 ### Por qué no basta mirar el rectángulo
 
-Contraejemplo real del operador (`../02_Assets/invalidos/R-17_invalido_01.png`), anotado por él como **"Error, no se debe marcar"**:
+Contraejemplo real del operador (`../02_Assets/invalidos/R-12_invalido_01.png`), anotado por él como **"Error, no se debe marcar"**:
 
 | | Precio aprox. |
 |---|---|
@@ -356,9 +356,9 @@ Cada zona intermedia que sí llega a marcarse **parte el hueco en dos**. El sigu
 
 > ⚠️ **Desviación `D-06`.** El curso dice *"luego de marcar una zona que no supera el 50%, ya no seguimos marcando zonas"*, y Chaumer en vivo cierra el marcado *"en toda esta área, en toda la sesión"*. El operador mantiene: sin límite de cantidad.
 
-**Diagrama:** `../02_Assets/diagramas/R-17_zonas_entre_zonas.png`
-**Contraejemplo real:** `../02_Assets/invalidos/R-17_invalido_01.png`
-**Regla asociada:** `R-17` · **Estado:** ✅ Confirmada 24/08/2026
+**Diagrama:** `../02_Assets/diagramas/R-12_zonas_entre_zonas.png`
+**Contraejemplo real:** `../02_Assets/invalidos/R-12_invalido_01.png`
+**Regla asociada:** `R-12` · **Estado:** ✅ Confirmada 24/08/2026
 
 ---
 
@@ -370,12 +370,12 @@ Cada zona intermedia que sí llega a marcarse **parte el hueco en dos**. El sigu
 |---|---|
 | **Disparador** | el rectángulo de la zona candidata **toca en cualquier punto** el de una zona ya marcada — **el contacto de bordes cuenta**, no hace falta que se pisen |
 | **Acción** | **no se crea zona nueva.** La zona existente se extiende hasta el **extremo más lejano** de la candidata |
-| **Resultado** | **una sola zona**, más grande, que **conserva su historial** de rompimientos y consecuciones para `R-14` |
+| **Resultado** | **una sola zona**, más grande, que **conserva su historial** de rompimientos y consecuciones para `R-21` |
 | **Caso límite** | si la candidata queda **entera dentro** de la existente, no hay nada que extender: **la zona se queda igual** |
 
 > ⚠️ **Desviación `D-08`.** El curso dice *"zona b se construye solo con la parte que no se superpone, quedando así una zona más pequeña"* → dos zonas, una entera y otra recortada. El operador une en una sola. No es un matiz de dibujo: cambia **cuántos contadores de vigencia** hay en el gráfico.
 
-**Regla asociada:** `R-18` · **Estado:** ✅ Confirmada 24/08/2026
+**Regla asociada:** `R-13` · **Estado:** ✅ Confirmada 24/08/2026
 
 ---
 
@@ -386,16 +386,16 @@ Cada zona intermedia que sí llega a marcarse **parte el hueco en dos**. El sigu
 | Lo que llega primero | Qué se hace |
 |---|---|
 | **Una nueva estructura** — es decir, un **nuevo retroceso** | Se marca zona **ya**, sin esperar |
-| **5 velas sin consecución** | `R-15` si rompió con mecha · `R-16` si rompió con cuerpo |
+| **5 velas sin consecución** | `R-10` si rompió con mecha · `R-11` si rompió con cuerpo |
 
 ### Por qué el curso y el operador dicen cosas distintas y significan lo mismo
 
 > **El curso:** *"Extensión de zona sin que pasen las 5 velas. **Extendemos** la zona debido a un nuevo retroceso…"*
 > **El operador:** *"Si se da una nueva estructura, **se crea una nueva zona**, así no hayan pasado 5 velas."*
 
-Si esa zona nueva **toca** a la existente, `R-18` la convierte automáticamente en una **extensión**. Mismo resultado, descrito desde los dos extremos.
+Si esa zona nueva **toca** a la existente, `R-13` la convierte automáticamente en una **extensión**. Mismo resultado, descrito desde los dos extremos.
 
-**Regla asociada:** `R-19` · **Estado:** ✅ Confirmada 24/08/2026
+**Regla asociada:** `R-14` · **Estado:** ✅ Confirmada 24/08/2026
 
 ---
 
@@ -407,10 +407,10 @@ Es la **segunda forma** —y única— en que puede nacer una zona sin que haya 
 |---|---|
 | **Inicio del ESCANEO** | **19:00 hora Colombia** — apertura de Tokio (09:00 JST) |
 | **Fin de la ventana** | **apertura del mercado americano** (= inicio de `R-02`) |
-| **Umbral** | **NQ > 2.000 contratos** · **MNQ > 6.000 contratos** · Volume Up Down, vela de 1 minuto |
+| **Umbral** | **MNQ > 6.000 contratos** · Volume Up Down, vela de 1 minuto · *el umbral de NQ (>2.000) se retiró el 06/09/2026 junto con el NQ; la equivalencia entre ambos **no está verificada** — ver `P-32`* |
 | **Cuántas se marcan** | **todas** las velas que superen el umbral, sin seleccionar |
 | **Dirección** | vela **alcista** → **RESISTENCIA** en la mecha **superior** · vela **bajista** → **SOPORTE** en la mecha **inferior** |
-| **Límites** | del borde del cuerpo al extremo de la mecha — igual que `R-12` |
+| **Límites** | del borde del cuerpo al extremo de la mecha — igual que `R-09` |
 | **Comportamiento posterior** | **idéntico al de cualquier otra zona** — incluido **hacer de borde de banda** para la regla de una-sola-zona-por-banda *(confirmado 01/09/2026)* |
 
 ### ⚠️ Dos ventanas distintas — no confundirlas
@@ -420,7 +420,7 @@ En el NT8 del operador conviven dos cosas que **no son lo mismo**:
 | | Qué es | Desde | Para qué |
 |---|---|---|---|
 | **Sombreado gris** *(indicador `Premercado.1`)* | marca visual · TimeRegion gris al 10 % | **15:00 Col del día anterior** | **solo ver** dónde acaba la sesión anterior y dónde empieza la operativa |
-| **Escaneo de `R-20`** | búsqueda de velas > umbral | **19:00 Col (Tokio)** | **marcar zonas** |
+| **Escaneo de `R-15`** | búsqueda de velas > umbral | **19:00 Col (Tokio)** | **marcar zonas** |
 
 > 🔴 **El sombreado NO define dónde se buscan zonas.** Empieza 4 horas antes, a propósito.
 >
@@ -443,12 +443,12 @@ Como el inicio es fijo y el fin se mueve, **la ventana cambia de duración dos v
 
 **El umbral de volumen solo existe en premercado.** Confirmado por el operador el 24/08/2026.
 
-| Momento | Vela de 3.000 contratos en NQ |
+| Momento | Vela por encima del umbral de volumen |
 |---|---|
-| **Antes** de la apertura americana | → **marca zona** por `R-20` |
-| **Después** de la apertura americana | → **no marca nada.** Dentro de sesión solo se marcan zonas por estructura (`R-12`) |
+| **Antes** de la apertura americana | → **marca zona** por `R-15` |
+| **Después** de la apertura americana | → **no marca nada.** Dentro de sesión solo se marcan zonas por estructura (`R-09`) |
 
-> 📌 **Por qué el corte no es arbitrario.** El mismo número significa cosas distintas a cada lado de la apertura: en premercado 2.000 contratos en una vela de 1 minuto del NQ es un evento raro; en sesión es volumen corriente. Sin el corte, el gráfico se llenaría de zonas.
+> 📌 **Por qué el corte no es arbitrario.** El mismo número significa cosas distintas a cada lado de la apertura: en premercado ese volumen en una vela de 1 minuto es un evento raro; en sesión es volumen corriente. Sin el corte, el gráfico se llenaría de zonas.
 
 ### Una vez marcada, es una zona normal
 
@@ -456,14 +456,14 @@ Se le aplican **todas** las reglas sin excepción:
 
 | | |
 |---|---|
-| `R-14` Vigencia | ✅ se invalida al ser traspasada por ambos lados |
-| `R-15` Extensión | ✅ |
-| `R-16` Zona apéndice | ✅ |
-| `R-17` Zonas entre zonas | ✅ |
-| `R-18` Superposición | ✅ |
-| `R-19` Nueva estructura | ✅ |
+| `R-21` Vigencia | ✅ se invalida al ser traspasada por ambos lados |
+| `R-10` Extensión | ✅ |
+| `R-11` Zona apéndice | ✅ |
+| `R-12` Zonas entre zonas | ✅ |
+| `R-13` Superposición | ✅ |
+| `R-14` Nueva estructura | ✅ |
 
-> ⚠️ **El color manda aquí, y en `R-12` no.** En la zona por estructura el color de la vela es **irrelevante** — decide la estructura. En la zona de premercado el color **decide si es soporte o resistencia**. Dos criterios distintos conviviendo; conviene no mezclarlos.
+> ⚠️ **El color manda aquí, y en `R-09` no.** En la zona por estructura el color de la vela es **irrelevante** — decide la estructura. En la zona de premercado el color **decide si es soporte o resistencia**. Dos criterios distintos conviviendo; conviene no mezclarlos.
 
 ### Marcado múltiple — y por qué no satura el gráfico
 
@@ -471,9 +471,9 @@ Se marcan **todas** las velas que superen el umbral. No se elige la mayor del gr
 
 > ⚠️ **Desviación `D-09`.** `Parámetros Chaumer.pdf` dice *"solo marcamos los extremos"*. El operador marca todas.
 
-**`R-18` amortigua la desviación por sí solo.** Velas consecutivas de alto volumen suelen tener mechas que se tocan, y la superposición **no apila zonas: estira una sola**. Cada vela sobre el umbral genera una *candidata*; `R-18` decide después cuántas sobreviven como zonas separadas.
+**`R-13` amortigua la desviación por sí solo.** Velas consecutivas de alto volumen suelen tener mechas que se tocan, y la superposición **no apila zonas: estira una sola**. Cada vela sobre el umbral genera una *candidata*; `R-13` decide después cuántas sobreviven como zonas separadas.
 
-**Regla asociada:** `R-20` · **Estado:** ✅ Confirmada 24/08/2026 · Ventana y marcado múltiple confirmados 24/08/2026
+**Regla asociada:** `R-15` · **Estado:** ✅ Confirmada 24/08/2026 · Ventana y marcado múltiple confirmados 24/08/2026
 
 ---
 
@@ -483,22 +483,22 @@ Se marcan **todas** las velas que superen el umbral. No se elige la mayor del gr
 
 | Elemento | Condición medible |
 |---|---|
-| **Disparador** | un **retroceso nuevo** (`R-11`) |
-| **Requisito** | que ese retroceso **genere zona** (`R-12`) |
-| **Uso** | es el disparador de `R-19`: con estructura nueva se marca zona **ya**, sin agotar las 5 velas |
+| **Disparador** | un **retroceso nuevo** (`R-06`) |
+| **Requisito** | que ese retroceso **genere zona** (`R-09`) |
+| **Uso** | es el disparador de `R-14`: con estructura nueva se marca zona **ya**, sin agotar las 5 velas |
 
 ### El único retroceso que NO genera zona
 
-**Es el caso de `R-17`**, y no hay ningún otro. No existe filtro adicional oculto.
+**Es el caso de `R-12`**, y no hay ningún otro. No existe filtro adicional oculto.
 
 | Situación del retroceso | ¿Genera zona? | ¿Hay estructura nueva? |
 |---|---|---|
 | Con **espacio libre** | ✅ sí | ✅ sí |
-| **Entre** una zona de soporte y una de resistencia, **cruzando el 50 %** | ❌ no (`R-17`) | ❌ **no** |
+| **Entre** una zona de soporte y una de resistencia, **cruzando el 50 %** | ❌ no (`R-12`) | ❌ **no** |
 
-> 🔗 **Consecuencia encadenada en `R-19`.** Si el retroceso nuevo cae en el caso bloqueado por `R-17`, **no hay estructura nueva**: `R-19` no dispara, el reloj de las 5 velas **sigue corriendo**, y el desenlace vuelve a `R-15` (rompió con mecha) o `R-16` (rompió con cuerpo). Es el único punto del plan donde `R-17` decide indirectamente sobre el reloj de `R-13`.
+> 🔗 **Consecuencia encadenada en `R-14`.** Si el retroceso nuevo cae en el caso bloqueado por `R-12`, **no hay estructura nueva**: `R-14` no dispara, el reloj de las 5 velas **sigue corriendo**, y el desenlace vuelve a `R-10` (rompió con mecha) o `R-11` (rompió con cuerpo). Es el único punto del plan donde `R-12` decide indirectamente sobre el reloj de `R-20`.
 
-**Regla asociada:** `R-19` · **Estado:** ✅ Confirmada 24/08/2026 · Cierra `P-18`
+**Regla asociada:** `R-14` · **Estado:** ✅ Confirmada 24/08/2026 · Cierra `P-18`
 
 ---
 
@@ -519,13 +519,13 @@ Se marcan **todas** las velas que superen el umbral. No se elige la mayor del gr
 
 **Se cancela** al entrar la ventana T−5. No se deja correr.
 
-Por `R-04`, una orden cancelada **no consume el cupo** de `R-03`.
+Por `R-29`, una orden cancelada **no consume el cupo** de `R-28`.
 
 **Pasado T+5**, si el setup sigue vivo, **se vuelve a colocar la orden**.
 
-> 🚨 **`P-19` abierto.** Esa reentrada choca con el reloj de 5 velas de `R-13`. Ver `PENDIENTES.md`.
+> 🚨 **`P-19` abierto.** Esa reentrada choca con el reloj de 5 velas de `R-20`. Ver `PENDIENTES.md`.
 
-**Regla asociada:** `R-21` · **Estado:** ✅ Confirmada 24/08/2026
+**Regla asociada:** `R-35` · **Estado:** ✅ Confirmada 24/08/2026
 
 ---
 
@@ -538,7 +538,7 @@ Por `R-04`, una orden cancelada **no consume el cupo** de `R-03`.
 | **Qué es** | la **zona vigente** | el **extremo del retroceso** que originó esa zona |
 | **Forma** | un rectángulo | una **línea** |
 | **Dónde se cerró** | `P-13`, 24/08/2026 | aquí, 24/08/2026 |
-| **Dónde actúa** | filtro de target de **todo** el plan (`R-14`) | filtro de target **solo del Reingreso** (`R-23`) |
+| **Dónde actúa** | filtro de target de **todo** el plan (`R-21`) | filtro de target **solo del Reingreso** (`R-26`) |
 
 > ⚠️ **Los nombres se parecen y las cosas no.** Dos términos distintos, dos figuras distintas, dos alcances distintos.
 
@@ -551,7 +551,7 @@ Por `R-04`, una orden cancelada **no consume el cupo** de `R-03`.
 
 **Por qué existe**, en palabras del operador: *"pueden defender ese nivel y el trade le quita probabilidad, por lo tanto para un reingreso debe tener camino libre para el target"*.
 
-**Regla asociada:** `R-23` · **Diagrama:** `../02_Assets/diagramas/R-23_reingreso.png` · **Estado:** ✅ Confirmada 24/08/2026
+**Regla asociada:** `R-26` · **Diagrama:** `../02_Assets/diagramas/R-26_reingreso.png` · **Estado:** ✅ Confirmada 24/08/2026
 
 ---
 
@@ -561,13 +561,13 @@ Uno de los **dos únicos setups** del plan. **Opera el rompimiento que funciona.
 
 Es **autocontenido**: el propio setup crea la zona que después rompe.
 
-`R-10` corrida → `R-11` retroceso → `R-12` zona → `R-13` rompimiento → **consecución = entrada**
+`R-05` corrida → `R-06` retroceso → `R-09` zona → `R-20` rompimiento → **consecución = entrada**
 
 **Plazo:** 5 velas. Lo habitual es la 1ª o la 2ª.
 
 > El operador observa que una consecución en la vela 3 o 4 *"significa que el precio no tiene fuerza"*. **No es regla** — no hay número que ejecutar y la orden ya está en reposo. Va a `CONTEXTUALIZACION.md`.
 
-**Regla asociada:** `R-22` · **Estado:** ✅ Confirmada 24/08/2026
+**Regla asociada:** `R-25` · **Estado:** ✅ Confirmada 24/08/2026
 
 ---
 
@@ -592,9 +592,9 @@ El otro setup. **Opera el rompimiento que falló.**
 | **6/07/2026** · zona `R` 29.926,50–29.939,25 | rompe la 8:46; la **8:47** da la consecución subiendo a 29.967,25 y **esa misma vela** se desploma a 29.908,75 | ✅ **SÍ** — `G-12` |
 | **13/07/2026** · zona `R` 29.652,25–29.666,75 | rompe la 9:25 (máx 29.677,25), consecución la **9:27** (máx 29.681,00) y el precio **sigue subiendo** hasta 29.724,00 | ❌ **NO** — lo de la 9:41 llega 14 velas tarde |
 
-La orden, una vez enviada, muere por `R-04`.
+La orden, una vez enviada, muere por `R-29`.
 
-**Regla asociada:** `R-23` · **Diagrama:** `../02_Assets/diagramas/R-23_reingreso.png` · **Estado:** ✅ Confirmada 24/08/2026 · **plazo añadido 27/08/2026**
+**Regla asociada:** `R-26` · **Diagrama:** `../02_Assets/diagramas/R-26_reingreso.png` · **Estado:** ✅ Confirmada 24/08/2026 · **plazo añadido 27/08/2026**
 
 ---
 
@@ -607,13 +607,13 @@ La orden, una vez enviada, muere por `R-04`.
 | **Resistencia** superada **hacia arriba** | el precio queda por encima | pasa a actuar como **soporte** |
 | **Soporte** superado **hacia abajo** | el precio queda por debajo | pasa a actuar como **resistencia** |
 
-> 🔑 **No es una regla nueva: es `R-14` dicha con otras palabras.** `R-14` establece que una zona superada en un sentido *"sigue vigente para el otro sentido"*. El operador lo formula desde el otro lado — *"se convierte en soporte al ser superada"* — y significa exactamente lo mismo.
+> 🔑 **No es una regla nueva: es `R-21` dicha con otras palabras.** `R-21` establece que una zona superada en un sentido *"sigue vigente para el otro sentido"*. El operador lo formula desde el otro lado — *"se convierte en soporte al ser superada"* — y significa exactamente lo mismo.
 
-**Lo que NO cambia:** los límites del rectángulo, su historial, ni su estado. Sigue siendo **la misma zona**. Si después es superada también en el sentido contrario, queda **inactiva** por `R-14`.
+**Lo que NO cambia:** los límites del rectángulo, su historial, ni su estado. Sigue siendo **la misma zona**. Si después es superada también en el sentido contrario, queda **inactiva** por `R-21`.
 
 **Casos reales:** `GALERIA.md` → `G-03` (resistencia → soporte) y `G-04` (soporte → resistencia).
 
-**Regla asociada:** `R-14` · **Estado:** ✅ Confirmada 24/08/2026
+**Regla asociada:** `R-21` · **Estado:** ✅ Confirmada 24/08/2026
 
 ---
 
@@ -626,7 +626,7 @@ No se compara con ninguna anterior — la 08:30 es premercado y no sirve como `n
 
 La corrida se mide **desde su extremo**: el mínimo si es alcista, el máximo si es bajista. Y **puede sostener zona** como cualquier otra vela.
 
-**Regla asociada:** `R-31` · **Estado:** ✅ Confirmada 2026-08-26
+**Regla asociada:** `R-07` · **Estado:** ✅ Confirmada 2026-08-26
 
 ## VELA QUE HACE MÁXIMO MAYOR Y MÍNIMO MENOR
 
@@ -638,12 +638,12 @@ Tiene dos comportamientos según el estado, y esa distinción es lo que la hace 
 
 | Estado | Qué pasa | Quién manda |
 |---|---|---|
-| **Con corrida viva** | El mínimo menor **mata la corrida**. Es ya la primera vela del retroceso. Sin ambigüedad | `R-10` |
-| **Sin corrida viva** | **No declara dirección.** Pasa a ser la nueva vela origen y decide la siguiente. Si esa también es envolvente, se repite | `R-32` |
+| **Con corrida viva** | El mínimo menor **mata la corrida**. Es ya la primera vela del retroceso. Sin ambigüedad | `R-05` |
+| **Sin corrida viva** | **No declara dirección.** Pasa a ser la nueva vela origen y decide la siguiente. Si esa también es envolvente, se repite | `R-08` |
 
 **Medido en 39 sesiones:** 763 casos en ventana operativa — 384 con corrida viva, **379 sin corrida viva** (~10 por sesión).
 
-**Regla asociada:** `R-32` · **Estado:** ⚠️ **En revisión** — ver `P-24`
+**Regla asociada:** `R-08` · **Estado:** ⚠️ **En revisión** — ver `P-24`
 
 ## LÍNEA PROVISIONAL
 
@@ -651,11 +651,11 @@ Marca de nivel, **no zona**, que se dibuja en el mínimo (o máximo) más bajo a
 
 **No opera:** no admite rompimiento, ni consecución, ni reingreso. Solo dice *"aquí hay un nivel"*.
 
-Se convierte en **zona** cuando el retroceso queda confirmado — al aparecer una vela con máximo mayor (tras corrida alcista) — y siempre que `R-17` no la bloquee.
+Se convierte en **zona** cuando el retroceso queda confirmado — al aparecer una vela con máximo mayor (tras corrida alcista) — y siempre que `R-12` no la bloquee.
 
 > ⚠️ **Asimetría deliberada.** La zona de la **corrida** nace al **aparecer** el retroceso, en vivo. La zona del **retroceso** nace cuando el retroceso **termina**. Y la orden pendiente muere en el primer momento, no en el segundo.
 
-**Regla asociada:** `R-33` · **Estado:** ✅ Confirmada 2026-08-26
+**Regla asociada:** `R-16` · **Estado:** ✅ Confirmada 2026-08-26
 
 ---
 
@@ -671,11 +671,11 @@ La que hace **máximo menor Y mínimo mayor** que la anterior: cabe entera dentr
 |---|---|
 | **No declara dirección** | ni arriba ni abajo |
 | **No mueve el nivel vivo** | si la corrida es alcista, el máximo a batir sigue siendo el de la vela alta anterior. Una vela posterior que supere a la "que no hace nada" pero **no** al nivel vivo, **tampoco hace nada por arriba** |
-| **PERO no se salta** | la corrida sigue muriendo comparando el mínimo contra la vela **inmediatamente anterior**, sea cual sea. Esto vale también con corrida viva (`R-10`, *"la vela interior no corta"*) |
+| **PERO no se salta** | la corrida sigue muriendo comparando el mínimo contra la vela **inmediatamente anterior**, sea cual sea. Esto vale también con corrida viva (`R-05`, *"la vela interior no corta"*) |
 
 **Caso real:** 07/07/2026. La 8:32 no hace nada. La 8:33 supera el máximo de la 8:32 pero no el nivel vivo de la 8:31, así que por arriba no cuenta — y su mínimo **sí** es menor que el de la 8:32, así que **hace retroceso**. El auditor se saltó las dos velas y lo detectó el operador.
 
-**Regla asociada:** `R-10`, `R-31` · **Estado:** ✅ Confirmada 2026-08-26
+**Regla asociada:** `R-05`, `R-07` · **Estado:** ✅ Confirmada 2026-08-26
 
 ---
 
@@ -687,9 +687,9 @@ La que hace **máximo menor Y mínimo mayor** que la anterior: cabe entera dentr
 | ~~Impulso~~ | ✅ Retirado — sinónimo de corrida |
 | Corrida | ✅ **Definida** |
 | Retroceso | ✅ **Definido** |
-| ~~Punto de reacción~~ | ✅ **= zona vigente** — no es un término aparte · `R-14` |
+| ~~Punto de reacción~~ | ✅ **= zona vigente** — no es un término aparte · `R-21` |
 
-| Estructura | ✅ **Definida** — retroceso nuevo que genera zona (todos salvo el bloqueado por `R-17`) |
+| Estructura | ✅ **Definida** — retroceso nuevo que genera zona (todos salvo el bloqueado por `R-12`) |
 | Estructura pequeña / chica | PENDIENTE |
 | Fluidez · movimiento fluido | PENDIENTE |
 | ~~Sobreextendido~~ | 🔵 **No es un término del glosario** — es contextualización · `C-01` |
@@ -722,29 +722,29 @@ La que hace **máximo menor Y mínimo mayor** que la anterior: cabe entera dentr
 | Ingreso | PENDIENTE |
 | Reingreso | PENDIENTE |
 | Entrada tendencial | PENDIENTE |
-| Invalidación total | Parcial — usada en `R-04`, falta ficha propia |
+| Invalidación total | Parcial — usada en `R-29`, falta ficha propia |
 | Plazo de las 5 velas | ✅ **Definido** — desde la vela siguiente al rompimiento |
 
 ### Volumen
 | Término | Estado |
 |---|---|
-| Volumen relevante (>2.000 NQ · >6.000 MNQ) | ✅ **Definido** — `R-20`, **solo premercado** |
+| Volumen relevante (**> 6.000 MNQ**) | ✅ **Definido** — `R-15`, **solo premercado** |
 | ~~Máximo volumen de sesión~~ | 🔵 **Fuera de reglas** — contextualización `C-08` |
 | ~~Volumen climático~~ | 🔵 **Fuera de reglas** — contextualización `C-08` |
 | ~~Volumen de parada~~ | 🔵 **Fuera de reglas** — contextualización `C-08` |
 | ~~POC (punto de control)~~ | ❌ **Descartado** — ver `D-03` |
 
-> 🔴 **El bloque de volumen queda cerrado.** Existe **una sola regla de volumen en todo el plan** —`R-20`— y **se apaga en la apertura americana**. Dentro de la ventana operativa el volumen es contextualización, nunca parámetro (`C-08`). Por eso los tres términos de arriba salen de la agenda de F1.1: no van a recibir número.
+> 🔴 **El bloque de volumen queda cerrado.** Existe **una sola regla de volumen en todo el plan** —`R-15`— y **se apaga en la apertura americana**. Dentro de la ventana operativa el volumen es contextualización, nunca parámetro (`C-08`). Por eso los tres términos de arriba salen de la agenda de F1.1: no van a recibir número.
 
 ### Sesiones y contexto
 | Término | Estado |
 |---|---|
-| Premercado | ✅ **Definido** — `R-20`: 19:00 Col del día anterior → apertura americana |
+| Premercado | ✅ **Definido** — `R-15`: 19:00 Col del día anterior → apertura americana |
 | ~~Sesión europea / Londres~~ | ❌ **Descartada** — no se mira · `D-12` |
 | Apertura americana | ✅ Definida en **R-02** — 09:30:00 ET |
-| Noticia roja | ✅ **Definida** — `R-21`: Forex Factory, solo rojas, ±5 min |
-| ~~Noticia naranja~~ | ❌ **No bloquea** — `R-21` |
-| Día Fed / FOMC / Powell | 🔵 Cubierto por `R-21` si figura en rojo en Forex Factory |
+| Noticia roja | ✅ **Definida** — `R-35`: Forex Factory, solo rojas, ±5 min |
+| ~~Noticia naranja~~ | ❌ **No bloquea** — `R-35` |
+| Día Fed / FOMC / Powell | 🔵 Cubierto por `R-35` si figura en rojo en Forex Factory |
 
 ---
 
@@ -771,13 +771,13 @@ La que hace **máximo menor Y mínimo mayor** que la anterior: cabe entera dentr
 
 **Caso real 7/07/2026:** la vela **8:52** rompe la apéndice de la 8:39 y la **8:54** hace la consecución **dentro** del plazo — rompimiento exitoso, así que en la 8:53 **no se marca soporte** pese a que hubo retroceso.
 
-**Regla asociada:** `R-36` · **Estado:** ✅ Confirmada 27/08/2026
+**Regla asociada:** `R-18` · **Estado:** ✅ Confirmada 27/08/2026
 
 ---
 
 ## SESGO DE LA APERTURA  *(lo que NO es)*
 
-**Definición:** la dirección de la vela de las 08:31 (`R-31`) dice **por dónde empieza** el día. **No es un sesgo**: no obliga a operar en ese sentido durante toda la sesión.
+**Definición:** la dirección de la vela de las 08:31 (`R-07`) dice **por dónde empieza** el día. **No es un sesgo**: no obliga a operar en ese sentido durante toda la sesión.
 
 | | |
 |---|---|
@@ -791,7 +791,7 @@ La que hace **máximo menor Y mínimo mayor** que la anterior: cabe entera dentr
 
 **🟠 Pendiente para contextualización:** cuánto pesa esa *"mayor favorabilidad"*.
 
-**Regla asociada:** `R-34` · **Estado:** ✅ Confirmada 27/08/2026
+**Regla asociada:** `R-27` · **Estado:** ✅ Confirmada 27/08/2026
 
 ---
 
@@ -799,11 +799,11 @@ La que hace **máximo menor Y mínimo mayor** que la anterior: cabe entera dentr
 
 El propio material del curso deja estas sin resolver. Entran a F1.1 como preguntas directas al operador:
 
-1. **Vela de ruptura:** el curso responde en diapositiva — *"vela de ruptura sin intención"* (rompe con mecha) frente a *"vela de ruptura **con intención (con cuerpo)**"*; la tímida *"no deja de ser válida"*. Ya recogido en `R-13`. Falta si el operador exige intención para entrar.
+1. **Vela de ruptura:** el curso responde en diapositiva — *"vela de ruptura sin intención"* (rompe con mecha) frente a *"vela de ruptura **con intención (con cuerpo)**"*; la tímida *"no deja de ser válida"*. Ya recogido en `R-20`. Falta si el operador exige intención para entrar.
 2. **Vela de confirmación / continuación:** ¿cuál es el ideal?
 3. **Preoperatoria:** cómo se marcan los volúmenes en americana vs europea, y por qué el umbral cambia de instrumento entre una y otra.
 4. **Zonas entre zonas:** ¿cuál es la distancia? → El curso responde en diapositiva: *"El límite para marcar una zona entre zonas es el **50%**, mas no."* Pendiente de auditar con el operador.
 5. ~~**POC:** por qué es importante marcarlo y cómo se marca.~~ → ❌ Descartado por el operador, `D-03`.
-6. **Colocación de la orden:** un tick arriba o abajo del nivel de rompimiento. → ✅ Resuelto en `R-01` y `R-07`.
+6. **Colocación de la orden:** un tick arriba o abajo del nivel de rompimiento. → ✅ Resuelto en `R-01` y `R-24`.
 7. **Extensión de zona:** si una zona se marca inicialmente como resistencia, ¿solo puede extenderse en ese sentido, o si una mecha la rompe como soporte también se extiende hacia abajo?
 8. **Marcado en tendencia:** cuando hay tendencia y se dan múltiples entradas, ¿cuáles zonas se marcan y cuáles no?

@@ -1,8 +1,8 @@
 # CIERRE DE LA FASE 1
 
-**Fecha:** 2026-09-01 · *actualizado el mismo día con `R-39`*
+**Fecha:** 2026-09-01 · *revisado el 06/09/2026: sale el NQ, se renumeran las reglas y el documento maestro se reorganiza por categorías. Ninguna regla cambia.*
 **Decisión:** del operador (Christian), explícita.
-**Estado del plan al cerrar:** `TRADING_PLAN_CHAUMER.md` **v2.2** · **38 reglas** · **12 sub-fases**
+**Estado del plan hoy:** `TRADING_PLAN_CHAUMER.md` **v3.1** · **38 reglas** · **12 sub-fases** · **7 categorías**
 
 ---
 
@@ -16,7 +16,7 @@ Ese objetivo está cumplido en lo que se refiere a **escribir** las reglas.
 |---|---|
 | Sub-fases cerradas | **12 de 12** |
 | Reglas confirmadas | **38** |
-| Términos con definición medible | 24 |
+| Términos con definición medible | 23 |
 | Sesiones reales reconstruidas al tick y validadas por el operador | **11** — 6, 7, 8, 9, 10, 13, 14, 15, 16, 17 y 20 de julio de 2026 |
 | Casos documentados en la galería | **21** |
 | Elementos apartados a contextualización | 10 |
@@ -97,7 +97,7 @@ Diez elementos quedaron fuera del plan mecánico a propósito, porque el operado
 
 ## 🔧 Una regla llegó después del cierre… y era un duplicado
 
-El mismo 01/09/2026, ya cerrada la fase, el operador precisó al dibujar los diagramas de la zona apéndice que **el plazo de 5 velas es un tope, no una espera obligatoria**: si antes el mercado arma una estructura completa en sentido contrario, la geometría se resuelve ahí. Se escribió como `R-39` — y el **04/09/2026 se descubrió que `R-19`, confirmada el 24/08, ya decía exactamente eso**. `R-39` se eliminó y su definición medible se fusionó dentro de `R-19`. El plan vuelve a **38 reglas**.
+El mismo 01/09/2026, ya cerrada la fase, el operador precisó al dibujar los diagramas de la zona apéndice que **el plazo de 5 velas es un tope, no una espera obligatoria**: si antes el mercado arma una estructura completa en sentido contrario, la geometría se resuelve ahí. Se escribió como `R-39` — y el **04/09/2026 se descubrió que `R-14`, confirmada el 24/08, ya decía exactamente eso**. `R-39` se eliminó y su definición medible se fusionó dentro de `R-14`. El plan vuelve a **38 reglas**.
 
 **Vale la pena registrar lo que esto significa**, sin dramatizarlo y sin taparlo: el plan estaba en cero reglas movidas durante dos días, y aun así una conversación de dibujo destapó una precisión que no estaba escrita. No invalida el cierre — la regla no contradice ninguna otra, las amplía — pero **es exactamente el tipo de hallazgo que un test ciego habría buscado a propósito**.
 

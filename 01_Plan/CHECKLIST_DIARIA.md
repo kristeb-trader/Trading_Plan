@@ -3,7 +3,7 @@
 > **Se ejecuta de arriba abajo. No se decide nada que no esté aquí.**
 > Cada línea cita su regla. Si una respuesta es **NO** donde dice parar, **se para** — no se evalúa, no se matiza.
 
-**Versión del plan:** 1.8-F1.9 · 2026-08-24
+**Versión del plan:** 3.1 · 2026-09-06 · 38 reglas
 
 ---
 
@@ -11,10 +11,10 @@
 
 | ☐ | Comprobación | Regla | Si falla |
 |---|---|---|---|
-| ☐ | **¿Estoy bien, física y mentalmente?** | `R-28` | **NO → no se opera hoy.** Se cierra aquí |
-| ☐ | Forex Factory: **¿hay evento de la Fed en rojo hoy?** | `R-27` | **SÍ → hoy solo Reingreso. IRI prohibido todo el día** |
-| ☐ | Forex Factory: anotar la **hora de cada noticia roja** | `R-21` | — |
-| ☐ | Calcular las ventanas **T−5 → T+5** y marcar las que caigan dentro de la ventana operativa | `R-21` | — |
+| ☐ | **¿Estoy bien, física y mentalmente?** | `R-37` | **NO → no se opera hoy.** Se cierra aquí |
+| ☐ | Forex Factory: **¿hay evento de la Fed en rojo hoy?** | `R-36` | **SÍ → hoy solo Reingreso. IRI prohibido todo el día** |
+| ☐ | Forex Factory: anotar la **hora de cada noticia roja** | `R-35` | — |
+| ☐ | Calcular las ventanas **T−5 → T+5** y marcar las que caigan dentro de la ventana operativa | `R-35` | — |
 
 > Este bloque se contesta **antes** de abrir la plataforma. Con el gráfico delante ya no es la misma pregunta.
 
@@ -24,13 +24,13 @@
 
 | ☐ | Acción | Regla |
 |---|---|---|
-| ☐ | Gráfico abierto: **MNQ, 1 minuto**, único indicador **Volume Up Down** | `R-09`, `R-01` |
-| ☐ | Escanear desde **19:00 Col** (apertura de Tokio) hasta la apertura americana | `R-20` |
-| ☐ | Toda vela con **MNQ > 6.000** o **NQ > 2.000 contratos** → marcar zona. **Alcista → resistencia · Bajista → soporte** | `R-20` |
-| ☐ | Se marcan **todas** las que superen el umbral, no solo los extremos | `R-20`, `D-09` |
-| ☐ | Límites de cada zona: **del borde del cuerpo a la punta de la mecha** | `R-12` |
-| ☐ | Si una zona candidata **toca** otra existente → **estirar la existente**, no crear una nueva | `R-18` |
-| ☐ | Zona entre dos zonas: solo si el **movimiento no cruza el 50 %** entre bordes internos | `R-17` |
+| ☐ | Gráfico abierto: **MNQ, 1 minuto**, único indicador **Volume Up Down** | `R-03`, `R-01` |
+| ☐ | Escanear desde **19:00 Col** (apertura de Tokio) hasta la apertura americana | `R-15` |
+| ☐ | Toda vela con **más de 6.000 contratos en MNQ** → marcar zona. **Alcista → resistencia · Bajista → soporte** | `R-15` |
+| ☐ | Se marcan **todas** las que superen el umbral, no solo los extremos | `R-15`, `D-09` |
+| ☐ | Límites de cada zona: **del borde del cuerpo a la punta de la mecha** | `R-09` |
+| ☐ | Si una zona candidata **toca** otra existente → **estirar la existente**, no crear una nueva | `R-13` |
+| ☐ | Zona entre dos zonas: solo si el **movimiento no cruza el 50 %** entre bordes internos | `R-12` |
 
 > 🔴 **La regla del volumen se apaga en la apertura americana.** A partir de ahí solo se marcan zonas por estructura.
 
@@ -42,53 +42,53 @@
 
 | ☐ | Acción | Regla |
 |---|---|---|
-| ☐ | **Primer setup válido.** No se compara con posibles setups posteriores ni se espera uno mejor | `R-05` |
-| ☐ | ¿Es **IRI** o **Reingreso**? | `R-22` / `R-23` |
+| ☐ | **Primer setup válido.** No se compara con posibles setups posteriores ni se espera uno mejor | `R-23` |
+| ☐ | ¿Es **IRI** o **Reingreso**? | `R-25` / `R-26` |
 
 ### Medir · anclar la regla en el nivel de entrada
 
 | ☐ | Setup | Dónde va el stop | Regla |
 |---|---|---|---|
-| ☐ | **IRI** | extremo del **retroceso** | `R-24` |
-| ☐ | **Reingreso** | extremo de la **corrida fallida** | `R-24` |
-| ☐ | **Target** = misma distancia, al otro lado. **1:1** | | `R-24` |
+| ☐ | **IRI** | extremo del **retroceso** | `R-32` |
+| ☐ | **Reingreso** | extremo de la **corrida fallida** | `R-32` |
+| ☐ | **Target** = misma distancia, al otro lado. **1:1** | | `R-32` |
 
 ### Los cuatro filtros · basta que falle uno
 
 | ☐ | Filtro | Regla | Si falla |
 |---|---|---|---|
-| ☐ | Stop ≤ **80 puntos** (`STOP_MAX`) | `R-08` | **NO SE OPERA** |
-| ☐ | Target 1:1 **libre de zonas vigentes** | `R-24`, `R-14` | **NO SE OPERA** |
-| ☐ | *(solo Reingreso)* Target dentro del **punto de referencia** | `R-23` | **NO SE OPERA** |
-| ☐ | ¿Es día de FOMC y el setup es un IRI? | `R-27` | **NO SE OPERA** |
+| ☐ | Stop ≤ **80 puntos** (`STOP_MAX`) | `R-31` | **NO SE OPERA** |
+| ☐ | Target 1:1 **libre de zonas vigentes** | `R-32`, `R-21` | **NO SE OPERA** |
+| ☐ | *(solo Reingreso)* Target dentro del **punto de referencia** | `R-26` | **NO SE OPERA** |
+| ☐ | ¿Es día de FOMC y el setup es un IRI? | `R-36` | **NO SE OPERA** |
 
 > 🔴 **El target nunca se acorta para que quepa.** No existe media entrada ni ratio reducido.
 
-> 🟠 **Si un setup se descarta, la zona NO queda vacía.** Tras rechazar un **IRI** por cualquiera de los cuatro filtros, **seguir mirando esa misma zona**: si el rompimiento falla y el precio la atraviesa entera hasta salir por el borde contrario, ahí hay un **Reingreso** (`R-23`) — y puede llegar en la **misma vela**. Caso real: `G-12`, 06/07/2026, IRI descartado y Reingreso operado con un minuto de diferencia.
+> 🟠 **Si un setup se descarta, la zona NO queda vacía.** Tras rechazar un **IRI** por cualquiera de los cuatro filtros, **seguir mirando esa misma zona**: si el rompimiento falla y el precio la atraviesa entera hasta salir por el borde contrario, ahí hay un **Reingreso** (`R-26`) — y puede llegar en la **misma vela**. Caso real: `G-12`, 06/07/2026, IRI descartado y Reingreso operado con un minuto de diferencia.
 
 ### Enviar
 
 | ☐ | Acción | Regla |
 |---|---|---|
-| ☐ | ¿Estoy dentro de una ventana de noticia **T−5 → T+5**? → **no colocar**. Si ya hay orden puesta, **cancelarla** | `R-21` |
-| ☐ | **Stop Market** al cierre de la vela de rompimiento o de reingreso, **1 tick más allá de su extremo** | `R-07` |
-| ☐ | La orden se envía sobre el gráfico de **MNQ**, leyendo el nivel real de MNQ | `R-01`, `R-07` |
-| ☐ | **No se persigue el precio a mano.** Orden a mercado y orden límite: prohibidas | `R-07` |
+| ☐ | ¿Estoy dentro de una ventana de noticia **T−5 → T+5**? → **no colocar**. Si ya hay orden puesta, **cancelarla** | `R-35` |
+| ☐ | **Stop Market** al cierre de la vela de rompimiento o de reingreso, **1 tick más allá de su extremo** | `R-24` |
+| ☐ | La orden se envía sobre el gráfico de **MNQ** — el único que hay | `R-01`, `R-24` |
+| ☐ | **No se persigue el precio a mano.** Orden a mercado y orden límite: prohibidas | `R-24` |
 
 ### Vigilar la orden pendiente · cancelar con lo primero que llegue
 
 | ☐ | Causa de cancelación | Regla |
 |---|---|---|
-| ☐ | **Pasan 5 velas desde el rompimiento sin consecución** (el precio no llega al nivel de la orden) | `R-04` |
-| ☐ | El precio **vuelve al punto del stop** — el extremo alcanzado desde que nació la zona (`R-24`) | `R-04` |
-| ☐ | Son las **11:29 ET** | `R-04` |
-| ☐ | ⚠️ **Un retroceso nuevo NO cancela.** La orden sigue viva | `R-04` |
-| ☐ | Entra una **ventana de noticia roja** | `R-21` |
+| ☐ | **Pasan 5 velas desde el rompimiento sin consecución** (el precio no llega al nivel de la orden) | `R-29` |
+| ☐ | El precio **vuelve al punto del stop** — el extremo alcanzado desde que nació la zona (`R-32`) | `R-29` |
+| ☐ | Son las **11:29 ET** | `R-29` |
+| ☐ | ⚠️ **Un retroceso nuevo NO cancela.** La orden sigue viva | `R-29` |
+| ☐ | Entra una **ventana de noticia roja** | `R-35` |
 
 > 🔴 **CORREGIDO 27/08/2026 — antes decía lo contrario.** El paso de 5 velas **SÍ cancela la orden**, y un retroceso nuevo **NO**.
 > La caducidad se comprueba **antes** del llenado: pasado el plazo la orden ya no existe y no puede llenarse aunque el precio toque el nivel en esa misma vela.
 > Caso real 9/07/2026: orden puesta en la 8:43, cancelada por error en la 8:45; con la regla correcta sigue viva y se llena en la **8:46**.
-> Una orden cancelada **no consume el cupo** de `R-03`: se puede esperar otro setup.
+> Una orden cancelada **no consume el cupo** de `R-28`: se puede esperar otro setup.
 
 ---
 
@@ -96,12 +96,12 @@
 
 | ☐ | Acción | Regla |
 |---|---|---|
-| ☐ | **1º** mover el **stop** a su nivel estructural | `R-08` |
-| ☐ | **2º** mover el **target** a distancia 1:1 | `R-08`, `R-24` |
-| ☐ | 🛑 **NO SE TOCA NADA MÁS. JAMÁS.** Ni breakeven, ni cierre manual, ni parcial, ni añadir | `R-25` |
-| ☐ | Solo hay dos salidas: **stop o target** | `R-25` |
-| ☐ | Cupo consumido. **No más órdenes hoy**, aunque aparezcan setups válidos | `R-03` |
-| ☐ | El fin de ventana **no obliga a cerrar** una posición abierta | `R-06` |
+| ☐ | **1º** mover el **stop** a su nivel estructural | `R-31` |
+| ☐ | **2º** mover el **target** a distancia 1:1 | `R-31`, `R-32` |
+| ☐ | 🛑 **NO SE TOCA NADA MÁS. JAMÁS.** Ni breakeven, ni cierre manual, ni parcial, ni añadir | `R-33` |
+| ☐ | Solo hay dos salidas: **stop o target** | `R-33` |
+| ☐ | Cupo consumido. **No más órdenes hoy**, aunque aparezcan setups válidos | `R-28` |
+| ☐ | El fin de ventana **no obliga a cerrar** una posición abierta | `R-30` |
 
 ---
 
@@ -139,18 +139,18 @@ entrada · salida · niveles · hora · resultado
 
 | ☐ | Comprobación | Regla |
 |---|---|---|
-| ☐ | ¿La zona candidata cae dentro de una **banda ya gastada** hoy? → **no se marca** | `R-35` |
-| ☐ | ¿Hay una zona viva con **rompimiento esperando consecución** entre el precio y la zona candidata? → **no se marca** | `R-36` |
-| ☐ | El rompimiento se lee por la **mecha**, no por el cierre | `R-38` |
-| ☐ | Una zona **no queda inválida** hasta que llega la **consecución** — y esa consecución **no tiene plazo** | `R-13`, `R-14` |
-| ☐ | La vela que confirma un traspaso **no abre** el rompimiento contrario: se busca desde la siguiente | `R-37` |
-| ☐ | Vencido el plazo sin consecución: **mecha → se estira** · **cuerpo → nace apéndice** | `R-15`, `R-16` |
-| ☐ | El rectángulo se dibuja **desde la vela origen** | `R-38` |
+| ☐ | ¿La zona candidata cae dentro de una **banda ya gastada** hoy? → **no se marca** | `R-17` |
+| ☐ | ¿Hay una zona viva con **rompimiento esperando consecución** entre el precio y la zona candidata? → **no se marca** | `R-18` |
+| ☐ | El rompimiento se lee por la **mecha**, no por el cierre | `R-19` |
+| ☐ | Una zona **no queda inválida** hasta que llega la **consecución** — y esa consecución **no tiene plazo** | `R-20`, `R-21` |
+| ☐ | La vela que confirma un traspaso **no abre** el rompimiento contrario: se busca desde la siguiente | `R-22` |
+| ☐ | Vencido el plazo sin consecución: **mecha → se estira** · **cuerpo → nace apéndice** | `R-10`, `R-11` |
+| ☐ | El rectángulo se dibuja **desde la vela origen** | `R-19` |
 
 ## 🔴 Añadido 27/08/2026 · antes de enviar la orden
 
 | ☐ | Comprobación | Regla |
 |---|---|---|
-| ☐ | El **stop** es el extremo alcanzado **desde que nació la zona** hasta el rompimiento — no solo el del retroceso que la originó | `R-24` |
-| ☐ | Si es **Reingreso**: ¿el precio ya superó el extremo de la vela de consecución? → **no hay reingreso** | `R-23` |
-| ☐ | Se buscan entradas en **los dos sentidos**; la vela de apertura no sesga el día | `R-34` |
+| ☐ | El **stop** es el extremo alcanzado **desde que nació la zona** hasta el rompimiento — no solo el del retroceso que la originó | `R-32` |
+| ☐ | Si es **Reingreso**: ¿el precio ya superó el extremo de la vela de consecución? → **no hay reingreso** | `R-26` |
+| ☐ | Se buscan entradas en **los dos sentidos**; la vela de apertura no sesga el día | `R-27` |

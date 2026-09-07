@@ -1,7 +1,8 @@
 # ELEMENTOS DE CONTEXTUALIZACIÓN
 
-> **Creado:** 2026-08-24
-> **Estado:** 🔵 **Registro abierto — fase posterior, sin auditar**
+> **Creado:** 2026-08-24 · **actualizado:** 2026-09-06
+> **Estado:** 🔵 **Registro abierto — fase posterior, sin auditar** · **10 elementos**
+> 🚨 **Ninguno de estos elementos es una regla, y ninguno debe convertirse en una.** Es el tercero de los cuatro huecos declarados del cierre de la fase 1.
 > **Origen:** taxonomía del propio Alfredo Chaumer, nota de voz del 24/08/2026.
 
 ---
@@ -42,7 +43,7 @@ La capa está separada y con nombre precisamente para eso: **para que el operado
 > *"Yo no tengo un parámetro que diga 'si el movimiento es muy extendido, no planteo la entrada', no. Eso para mí forma parte del contexto, porque **depende de la volatilidad del momento, del desarrollo operativo, por ejemplo de la proporción de la vela**."* — Chaumer, 24/08/2026
 
 - **De qué depende, según él:** volatilidad del momento · desarrollo operativo de la sesión · proporción de la vela.
-- **Decisión del operador (24/08/2026):** se saca de las reglas. **No hay tope de velas en `R-10`.**
+- **Decisión del operador (24/08/2026):** se saca de las reglas. **No hay tope de velas en `R-05`.**
 - **Historial:** la guía v4 del operador tenía el filtro *"impulso de más de 5 velas → sobreextendido"*. Era una simplificación propia, no del método. Eliminado.
 
 #### Dos parámetros que Chaumer menciona y el operador DESCARTÓ
@@ -68,9 +69,9 @@ Citado por Chaumer como elemento de contextualización. Sin desarrollar. **Caso 
 
 | | |
 |---|---|
-| **Reglas de volumen en el plan** | **Una sola: `R-20`** — y solo vive en premercado |
+| **Reglas de volumen en el plan** | **Una sola: `R-15`** — y solo vive en premercado |
 | **Reglas de volumen dentro de la sesión** | **Ninguna** |
-| **Alcance real de `R-09`** | El indicador Volume Up Down está en pantalla toda la sesión, pero **alimenta una única regla, que termina antes de que abra el mercado** |
+| **Alcance real de `R-03`** | El indicador Volume Up Down está en pantalla toda la sesión, pero **alimenta una única regla, que termina antes de que abra el mercado** |
 | **Términos que ya no recibirán número** | máximo volumen de sesión · volumen climático · volumen de parada |
 
 > 🔴 **Lo que esto significa para `F1.3` y `F1.4`.** Toda decisión de entrada dentro de la ventana operativa será **estructura de precio pura**: corrida, retroceso, zona, rompimiento, consecución. El volumen no entra en el gatillo. Si al llegar a `F1.3` aparece una condición de entrada que menciona volumen, **contradice esto** y hay que resolver la contradicción antes de escribirla.
@@ -106,9 +107,9 @@ El propio material se contradice a continuación, describiendo un impulso largo 
 **No es regla y no puede serlo**, por dos motivos:
 
 1. **No hay número que ejecutar.** "Fluido", "sin fuerza" son adjetivos.
-2. **Operativamente llega tarde.** La orden ya está en reposo desde el cierre de la vela de rompimiento (`R-07`) y se llena sola. Cuando el operador ve que va por la 4ª vela, o cancela a mano o ya entró.
+2. **Operativamente llega tarde.** La orden ya está en reposo desde el cierre de la vela de rompimiento (`R-24`) y se llena sola. Cuando el operador ve que va por la 4ª vela, o cancela a mano o ya entró.
 
-`R-22` mantiene el plazo de **5 velas** de `R-13`. Esta observación de calidad queda registrada aquí y **no altera la regla**.
+`R-25` mantiene el plazo de **5 velas** de `R-20`. Esta observación de calidad queda registrada aquí y **no altera la regla**.
 
 ### C-07 · Tamaño de la estructura
 
@@ -120,7 +121,7 @@ El propio material se contradice a continuación, describiendo un impulso largo 
 
 | Elemento | Resolución |
 |---|---|
-| **Punto de reacción** (`P-13`) | **Es la zona vigente.** Así la llama Chaumer en sus sesiones. Parámetro operativo puro, ya cubierto por `R-12` y `R-14`. Cerrado 24/08/2026 |
+| **Punto de reacción** (`P-13`) | **Es la zona vigente.** Así la llama Chaumer en sus sesiones. Parámetro operativo puro, ya cubierto por `R-09` y `R-21`. Cerrado 24/08/2026 |
 | **Antigüedad de la zona** (`P-16`) | **Descartada.** El operador no la usa: las zonas son binarias, activa o inactiva. Ver `D-07`. Cerrado 24/08/2026 |
 
 ### C-10 · Corrida "sana y fluida" — requisito para entrar en continuación
@@ -145,7 +146,7 @@ El propio material se contradice a continuación, describiendo un impulso largo 
 
 ## 🆕 C-08 · La favorabilidad del sentido de la apertura — añadido 27/08/2026
 
-**Qué es:** la dirección de la vela de las 08:31 (`R-31`) **no es un sesgo** —se opera en los dos sentidos, `R-34`— pero según el operador **sí da mayor grado de favorabilidad** a una entrada de continuación en ese sentido, sobre todo en la apertura.
+**Qué es:** la dirección de la vela de las 08:31 (`R-07`) **no es un sesgo** —se opera en los dos sentidos, `R-27`— pero según el operador **sí da mayor grado de favorabilidad** a una entrada de continuación en ese sentido, sobre todo en la apertura.
 
 **Palabras del operador (27/08/2026):** *"solo da el mayor grado de favorabilidad a un trade IRI en la apertura, pero no quiere decir que se sesgue y no pueda operar un trade IRI en dirección contraria. Esa parte lo debemos ampliar mejor en la fase de contextualización."*
 
@@ -161,7 +162,7 @@ El propio material se contradice a continuación, describiendo un impulso largo 
 
 ## 🆕 C-09 · La lateralidad puede que ya esté cubierta — observación del 27/08/2026
 
-**Hallazgo del backtesting del 8/07/2026:** en el tramo **8:51–9:12** el motor no marcó **ninguna zona** — ocho candidatas seguidas bloqueadas por la regla del 50 % (`R-17`/`R-35`). El operador lo dio por bueno: es exactamente lo que él hace en un lateral.
+**Hallazgo del backtesting del 8/07/2026:** en el tramo **8:51–9:12** el motor no marcó **ninguna zona** — ocho candidatas seguidas bloqueadas por la regla del 50 % (`R-12`/`R-17`). El operador lo dio por bueno: es exactamente lo que él hace en un lateral.
 
 **La hipótesis, sin confirmar:** puede que **no haga falta una regla de lateralidad** aparte. La regla del 50 % entre zonas ya deja de marcar sola cuando el precio se mete en un rango estrecho, que es lo que define un lateral.
 

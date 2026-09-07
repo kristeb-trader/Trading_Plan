@@ -29,7 +29,7 @@ def dibujar(dia, salida):
     # ---- el corte: la vela donde la operacion da resultado, o el fin de ventana
     corte = t['i_out'] if (t and t.get('i_out') is not None) else fin
     # Al LLENARSE la orden termina el analisis del dia: no se marcan mas zonas.
-    # (R-30, confirmado por el operador el 01/09/2026 sobre el 17 de julio)
+    # (R-34, confirmado por el operador el 01/09/2026 sobre el 17 de julio)
     corte_z = t['i_fill'] if (t and t.get('i_fill') is not None) else corte
     S=list(range(b,corte+1)); off=b; N=len(S); W=N+9.0
 

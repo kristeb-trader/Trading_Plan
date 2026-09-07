@@ -2,7 +2,9 @@
 
 Reglas sin cerrar y decisiones aplazadas.
 
-> Actualizado: 2026-08-24 · **F1.0 a F1.5 cerradas** — 21 términos · **24 reglas** · 13 desviaciones
+> Actualizado: 2026-09-06 · 🏁 **fase 1 cerrada** — **38 reglas** · 23 términos · 13 desviaciones · **32 pendientes abiertos o cerrados**
+>
+> 🚨 **Los cuatro huecos declarados del cierre:** `P-29` test ciego no ejecutado · `P-21` sin regla de parada · falta la capa de contextualización · `P-27` las cifras del backtesting no miden la estrategia.
 
 ---
 
@@ -23,9 +25,9 @@ Reglas sin cerrar y decisiones aplazadas.
 - **Lo esencial:** **ninguna regla del plan se rompe en esa tabla.** Cada día fue un setup válido, con su stop correcto, ejecutado como está escrito. El plan permite ese recorrido sin emitir una sola señal de alarma.
 - **Frecuencia esperada:** con win rate 50 % y una operación al día, una racha de **6 pérdidas seguidas aparece en ~5 meses de operativa con probabilidad cercana al 50 %**. No es un caso extremo: es lo normal.
 - **Tres factores que lo agravan en este plan concreto:**
-  1. `R-03` — **una operación al día**: la recuperación es lenta por diseño.
+  1. `R-28` — **una operación al día**: la recuperación es lenta por diseño.
   2. `RATIO_TARGET` **1:1** — hace falta >50 % de aciertos solo para no perder (`P-12`).
-  3. `R-26` + `STOP_MAX` fijo — **el riesgo porcentual CRECE cuando la cuenta cae.** Con $1.400 restantes, $160 dejan de ser el 5 % y pasan a ser el **11 %**.
+  3. `R-04` + `STOP_MAX` fijo — **el riesgo porcentual CRECE cuando la cuenta cae.** Con $1.400 restantes, $160 dejan de ser el 5 % y pasan a ser el **11 %**.
 - **Moldes ofrecidos y no adoptados** *(el auditor no propuso cifras)*: parada por rachas (*N días perdedores seguidos → parar*) o por capital (*caída de X % desde máximo → parar y revisar*).
 - **Acción pendiente:** decidir con datos reales del registro.
 - **Sub-fase:** F1.10, o antes si el operador quiere cerrarlo.
@@ -53,7 +55,7 @@ Reglas sin cerrar y decisiones aplazadas.
 - **Sub-fase:** F1.7
 
 ### P-07 · Sesión sin hora de cierre garantizada
-- **Situación:** R-06 permite que una posición abierta a las 11:29 ET corra sin límite horario hasta stop o target.
+- **Situación:** R-30 permite que una posición abierta a las 11:29 ET corra sin límite horario hasta stop o target.
 - **Acción pendiente:** confirmar compatibilidad con la disponibilidad real del operador frente a la pantalla. Si no lo es, definir un corte por tiempo.
 - **Nota:** interactúa con `P-03` — algunas prop firms fuerzan el cierre de posiciones a una hora determinada.
 - **Sub-fase:** F1.6
@@ -67,7 +69,7 @@ Reglas sin cerrar y decisiones aplazadas.
   |---|---|
   | Riesgo por operación | **$160** |
   | Porcentaje del capital | **5,3 %** |
-  | Pérdida máxima diaria (`R-03`: 1 operación) | **5,3 %** |
+  | Pérdida máxima diaria (`R-28`: 1 operación) | **5,3 %** |
   | Cuatro sesiones perdedoras seguidas | **−21 %** |
 
 - **Estado:** **aceptado explícitamente por el operador el 24/08/2026**, con el número delante.
@@ -88,7 +90,7 @@ Reglas sin cerrar y decisiones aplazadas.
 - **Sub-fase:** F1.0 (rellenar cuando el operador lo tenga a mano)
 
 ### P-12 · El retroceso se queda sin tamaño mínimo — coste no cuantificado
-- **Decisión del operador (21/08/2026):** el retroceso **no tiene tamaño mínimo**. Esto anula el suelo del rango `$40–$120` de `Guia_Sesion_Chaumer_NQ_v4.pdf`; solo sobrevive el techo `STOP_MAX` = **80 puntos = 320 ticks = $160** (`R-08`, `PARAMETROS.md`).
+- **Decisión del operador (21/08/2026):** el retroceso **no tiene tamaño mínimo**. Esto anula el suelo del rango `$40–$120` de `Guia_Sesion_Chaumer_NQ_v4.pdf`; solo sobrevive el techo `STOP_MAX` = **80 puntos = 320 ticks = $160** (`R-31`, `PARAMETROS.md`).
 - **Consecuencia aritmética:** con R:R 1:1 la comisión es un coste fijo y la ganancia no. Cuanto menor el retroceso, mayor el peaje proporcional. Win rate necesario **solo para no perder dinero**, asumiendo ~$1,50 ida y vuelta por MNQ y **sin slippage**:
 
   | Retroceso | Ticks | Riesgo | Win rate de equilibrio |
@@ -102,7 +104,7 @@ Reglas sin cerrar y decisiones aplazadas.
 
   Fórmula: `win_rate_equilibrio = 0,5 + comisión / (2 × riesgo)`
 - **Observación:** el `$40` de la guía v4 cae justo donde el peaje baja del 52 %. Puede que no fuera un número arbitrario.
-- **Riesgo añadido:** la entrada es **Stop Market** (`R-07`). 1 tick de slippage = $0,50, otro 5 % sobre un target de $10.
+- **Riesgo añadido:** la entrada es **Stop Market** (`R-24`). 1 tick de slippage = $0,50, otro 5 % sobre un target de $10.
 - **Suelo porcentual descartado:** el curso propone 23,60% de Fibonacci como mínimo y 76,40% como máximo. El operador lo omite → `D-01`.
 - **Acción pendiente:** el operador debe aportar su **comisión real ida y vuelta por contrato MNQ**. Con esa cifra se recalcula la tabla.
 - **Sub-fase:** F1.5 / F1.7
@@ -116,13 +118,13 @@ Reglas sin cerrar y decisiones aplazadas.
 ### D-01 · Retroceso medido con Fibonacci — DESCARTADO
 - **El curso dice**, en cuatro diapositivas (Reingreso, Giro, Patrón de apertura): *"El retroceso mínimo debe ser del **23,60% de Fibonacci**"* y *"si el retroceso sobrepasa el **76,40%** de Fibonacci, la entrada se anula"*.
 - **El operador:** no usa Fibonacci, por lo tanto no lo tiene en cuenta. Instrucción expresa de omitirlo.
-- **Consecuencia:** el retroceso no tiene tamaño mínimo ni máximo porcentual. Solo el techo absoluto de 320 ticks (`R-08`). Ver `R-11` y `P-12`.
-- **Efecto colateral:** `R-09` (gráfico limpio, solo Volume Up Down) se mantiene sin cambios — no hace falta la herramienta Fibonacci.
+- **Consecuencia:** el retroceso no tiene tamaño mínimo ni máximo porcentual. Solo el techo absoluto de 320 ticks (`R-31`). Ver `R-06` y `P-12`.
+- **Efecto colateral:** `R-03` (gráfico limpio, solo Volume Up Down) se mantiene sin cambios — no hace falta la herramienta Fibonacci.
 
 ### D-03 · Punto de control (POC) como filtro de target — DESCARTADO
 - **El curso dice**, en Giro y Reingreso: *"Nuestro target no debe sobrepasar un punto de control"*.
 - **El operador:** no usa POC.
-- **Consecuencia:** el filtro de target queda con **zona vigente** (`R-14`) y, solo en Reingreso, **punto de referencia** (`R-23`).
+- **Consecuencia:** el filtro de target queda con **zona vigente** (`R-21`) y, solo en Reingreso, **punto de referencia** (`R-26`).
 
 ### D-04 · Zona crítica — DESCARTADA
 - **El curso dice**, diapositiva "Apertura / Inicio de sesión": *"Cuando el precio comienza con la primera vela genera un mínimo o máximo que… marcamos como una **zona crítica** con una línea. Por lo tanto la contemplamos y **no entramos en esa zona si el target necesita superarla**."* Añade el **inicio del impulso** y los **máximos/mínimos de la sesión europea** como zonas críticas equivalentes.
@@ -140,7 +142,7 @@ Reglas sin cerrar y decisiones aplazadas.
 - **El curso la usa** para marcar zonas críticas en sus máximos y mínimos (`D-04`).
 - **El operador (24/08/2026):** *"borrar"*. No la mira para nada.
 - **Coherente con `D-04`:** las zonas críticas ya estaban descartadas; su fuente europea cae con ellas.
-- **Consecuencia operativa:** el plan solo mira **premercado** (`R-20`, desde Tokio) y **ventana americana** (`R-02`). Ninguna sesión intermedia genera nada.
+- **Consecuencia operativa:** el plan solo mira **premercado** (`R-15`, desde Tokio) y **ventana americana** (`R-02`). Ninguna sesión intermedia genera nada.
 
 ### D-11 · Fractal y manipulación — TÉRMINOS DESCARTADOS
 - **El curso los usa.** El operador (24/08/2026): *"no uso esos términos"*.
@@ -159,7 +161,7 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 | Filtro de target | Origen | Estado |
 |---|---|---|
-| El target penetra o toca una **zona vigente** | Guía v4 + curso | ✅ **Único superviviente** — `R-14` |
+| El target penetra o toca una **zona vigente** | Guía v4 + curso | ✅ **Único superviviente** — `R-21` |
 | El target supera el **mín/máx del premercado** | Guía v4, filtro #5 (nacido del Error 2 del 27/04) | ❌ `P-01` |
 | El target sobrepasa un **punto de control (POC)** | Curso, Giro y Reingreso | ❌ `D-03` |
 | El target necesita superar la **zona crítica** | Curso, Apertura | ❌ `D-04` |
@@ -172,16 +174,16 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 **Sin auditar todavía:** el curso añade en Reingreso *"buscamos que el target llegue al 50%, 60% máximo"* y *"nunca la entrada debe igualar el último high o el último low si va en sentido contrario, que llegue al 70% como máximo"*. → F1.5.
 
 ### D-06 · Zonas entre zonas — sin límite de cantidad
-> *(El criterio del 50 % quedó fijado el 24/08 sobre el **movimiento**, no sobre el rectángulo, gracias a un contraejemplo real del operador: `02_Assets\invalidos\R-17_invalido_01.png`.)*
+> *(El criterio del 50 % quedó fijado el 24/08 sobre el **movimiento**, no sobre el rectángulo, gracias a un contraejemplo real del operador: `02_Assets\invalidos\R-12_invalido_01.png`.)*
 - **El curso dice**, diapositiva: *"Luego de marcar una zona que no supera el 50%, **ya no seguimos marcando zonas**."*
 - **Y Chaumer en vivo es aún más restrictivo** — 18/08 [00:46]: *"…ya creo que lo accede, así que **ya no marcaría zonas entre zonas en toda esta área, en toda la sesión**."* Repetido el 17/08 y el 20/08.
 - **El operador:** se pueden marcar **todas** las zonas intermedias que aparezcan, siempre que cada una respete su propio 50 % recalculado contra sus vecinas inmediatas.
 - **Atenuante geométrico:** cada zona intermedia parte el hueco en dos, así que el siguiente candidato se mide contra un hueco la mitad de grande. La regla se estrangula sola; no produce el gráfico saturado que se temía.
-- **Recogido en:** `R-17`.
+- **Recogido en:** `R-12`.
 
 ### P-15 · Vela sin cuerpo (apertura = cierre)
 - **Origen:** 21/08 [00:23] — *"…**esta vela no tiene cuerpo** porque la apertura y el cierre fue en el mismo sitio… **yo lo voy a marcar en función de la vela anterior**… otras personas deciden marcar en función de toda la vela, **es válido**."*
-- **Situación:** `R-12` resuelve el caso inverso (vela **sin mecha** → línea). El caso "vela sin cuerpo" **no está cubierto**: la zona iría del cuerpo a la mecha, pero el cuerpo no existe.
+- **Situación:** `R-09` resuelve el caso inverso (vela **sin mecha** → línea). El caso "vela sin cuerpo" **no está cubierto**: la zona iría del cuerpo a la mecha, pero el cuerpo no existe.
 - **Dos tratamientos posibles:** anclar en la **vela anterior** (lo que hace Chaumer) o usar **toda la vela** (que él reconoce como igualmente válido).
 - **Sub-fase:** F1.1
 
@@ -189,22 +191,22 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 - **Chaumer dice**, 18/08 [04:59]: *"a medida que el punto de reacción es **más reciente, es más importante aún**; cuando ya pasa mucho rato de los puntos de reacción, bueno yo **le resto un poco de importancia**."* Una escala **gradual** de importancia.
 - **El operador:** *"Cuando se crea una zona, esta queda en estado **activa** y se tiene en cuenta para la operativa. Cuando es traspasada por ambos lados, ya no se tiene en cuenta, queda como **inactiva**, pero visualmente se deja marcada con un contraste menor para saber que hubo una zona. Esa ya no afecta nada en la operativa."*
 - **Resultado: dos estados y nada más.** Sin escala, sin antigüedad, sin importancia parcial.
-- **Nota:** esta es una desviación que **mejora la mecanicidad del plan**. Una escala gradual de importancia no es programable sin un número; el operador la elimina de raíz. `R-14` queda completamente binaria.
+- **Nota:** esta es una desviación que **mejora la mecanicidad del plan**. Una escala gradual de importancia no es programable sin un número; el operador la elimina de raíz. `R-21` queda completamente binaria.
 - **Cierra `P-16`.**
 
 ### D-08 · Superposición de zonas — se unen, no se recortan
 - **El curso dice:** *"zona b se superpone a zona a → zona b se construye solo con la parte que no se superpone, quedando así una zona más pequeña."* Resultado: **dos zonas**, una entera y otra recortada.
 - **El operador:** *"yo no creo una zona nueva si es encima, simplemente la alargo o estiro."* Resultado: **una sola zona**, más grande.
-- **Por qué no es un matiz de dibujo:** cada zona lleva su propia cuenta de rompimientos y consecuciones para `R-14`. Con dos zonas hay **dos contadores de vigencia**; con una, **uno**. La zona unida puede quedar invalidada por un traspaso que, con el criterio del curso, solo habría invalidado una de las dos.
-- **Recogido en:** `R-18`.
+- **Por qué no es un matiz de dibujo:** cada zona lleva su propia cuenta de rompimientos y consecuciones para `R-21`. Con dos zonas hay **dos contadores de vigencia**; con una, **uno**. La zona unida puede quedar invalidada por un traspaso que, con el criterio del curso, solo habría invalidado una de las dos.
+- **Recogido en:** `R-13`.
 
 ### D-09 · Volumen de premercado — se marcan todas las velas, no solo los extremos
 - **El curso dice:** *"estructura abc con más de dos velas de +2.000 → solo marcamos los extremos"* (`Parámetros Chaumer.pdf`).
 - **El operador (24/08/2026):** *"se marcan todas"*.
-- **Por qué no muerde tanto como parece:** `R-18` fusiona automáticamente las candidatas que se tocan, y velas consecutivas de alto volumen suelen tener mechas solapadas. Cada vela sobre el umbral genera una *candidata*; `R-18` decide cuántas sobreviven como zonas separadas.
-- **Riesgo residual real:** velas de alto volumen **no consecutivas y separadas en precio** sí generan zonas independientes que el criterio del curso habría descartado. Más zonas vigentes = más filtros de target `R-14` = menos operaciones. **No cuantificado.**
+- **Por qué no muerde tanto como parece:** `R-13` fusiona automáticamente las candidatas que se tocan, y velas consecutivas de alto volumen suelen tener mechas solapadas. Cada vela sobre el umbral genera una *candidata*; `R-13` decide cuántas sobreviven como zonas separadas.
+- **Riesgo residual real:** velas de alto volumen **no consecutivas y separadas en precio** sí generan zonas independientes que el criterio del curso habría descartado. Más zonas vigentes = más filtros de target `R-21` = menos operaciones. **No cuantificado.**
 - **Acción pendiente:** medir en `F1.10` cuántas zonas de premercado sobreviven por sesión.
-- **Recogido en:** `R-20`.
+- **Recogido en:** `R-15`.
 
 ### D-10 · Zona de desequilibrio — término descartado
 - **El curso lo usa.** El operador (24/08/2026): *"no uso ese término"*.
@@ -217,7 +219,7 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 ### ⚠️ P-19 · Dos relojes sobre la orden pendiente — **REABIERTO Y VUELTO A CERRAR AL REVÉS · 27/08/2026**
 
-> 🔴 **La conclusión de 24/08 era EXACTAMENTE LA CONTRARIA de la correcta.** Se cerró diciendo que un **retroceso nuevo** cancelaba la orden y que **el paso de 5 velas no**. Es al revés: **cancelan las 5 velas sin consecución** y la vuelta al punto del stop; **un retroceso nuevo no toca la orden**. Ver `R-04` reescrita. Caso que lo demuestra: 9/07/2026, orden puesta en la vela 8:43, cancelada por error en la 8:45, que con la regla correcta sigue viva y **se llena en la 8:46**. Además, la caducidad se comprueba **antes** del llenado.
+> 🔴 **La conclusión de 24/08 era EXACTAMENTE LA CONTRARIA de la correcta.** Se cerró diciendo que un **retroceso nuevo** cancelaba la orden y que **el paso de 5 velas no**. Es al revés: **cancelan las 5 velas sin consecución** y la vuelta al punto del stop; **un retroceso nuevo no toca la orden**. Ver `R-29` reescrita. Caso que lo demuestra: 9/07/2026, orden puesta en la vela 8:43, cancelada por error en la 8:45, que con la regla correcta sigue viva y **se llena en la 8:46**. Además, la caducidad se comprueba **antes** del llenado.
 
 *(Texto original de 24/08 conservado abajo como registro de lo que se creía entonces.)*
 
@@ -226,54 +228,54 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 | Reloj | Qué gobierna |
 |---|---|
-| `R-13` — 5 velas | el destino de la **ZONA** (`R-15` extensión / `R-16` apéndice) |
-| `R-04` — retroceso nuevo · invalidación · 11:29 ET | la vida de la **ORDEN** |
+| `R-20` — 5 velas | el destino de la **ZONA** (`R-10` extensión / `R-11` apéndice) |
+| `R-29` — retroceso nuevo · invalidación · 11:29 ET | la vida de la **ORDEN** |
 
 **El paso de 5 velas NO cancela la orden.** La orden muere cuando aparece un **retroceso nuevo**, cuando el precio invalida, o a las 11:29 — lo primero que llegue.
 
-**Hallazgo estructural:** el retroceso nuevo es **el mismo evento** que dispara `R-19`. Marca zona nueva **y** mata la orden pendiente. Un evento, dos consecuencias — el plan gana coherencia en vez de perderla.
+**Hallazgo estructural:** el retroceso nuevo es **el mismo evento** que dispara `R-14`. Marca zona nueva **y** mata la orden pendiente. Un evento, dos consecuencias — el plan gana coherencia en vez de perderla.
 
-**Efecto sobre `R-21`:** la reentrada tras T+5 queda válida. Si en la ventana de noticia no apareció retroceso nuevo, el setup sigue vivo aunque hayan pasado 11 velas.
+**Efecto sobre `R-35`:** la reentrada tras T+5 queda válida. Si en la ventana de noticia no apareció retroceso nuevo, el setup sigue vivo aunque hayan pasado 11 velas.
 
-**⚠️ Residual sin resolver (F1.4):** si a la vela 6 la zona se extendió por `R-15` hasta cubrir el nivel de la orden, un llenado posterior entraría **dentro** de la zona extendida. No se ha preguntado si eso ocurre en la práctica ni si importa.
+**⚠️ Residual sin resolver (F1.4):** si a la vela 6 la zona se extendió por `R-10` hasta cubrir el nivel de la orden, un llenado posterior entraría **dentro** de la zona extendida. No se ha preguntado si eso ocurre en la práctica ni si importa.
 
 ### ✅ P-17 · Orden pendiente ante noticia roja — CERRADO 24/08/2026
-**Se cancela** al entrar la ventana T−5. Recogido en `R-21`. Por `R-04` la cancelación **no consume el cupo** de `R-03`.
+**Se cancela** al entrar la ventana T−5. Recogido en `R-35`. Por `R-29` la cancelación **no consume el cupo** de `R-28`.
 
 ### ✅ P-18 · ¿Todo retroceso genera zona? — CERRADO 24/08/2026
-**No hay filtro oculto.** El único retroceso que no genera zona es el bloqueado por `R-17` (entre soporte y resistencia, cruzando el 50 %). Con espacio libre, todo retroceso genera zona.
-**Consecuencia encadenada:** en ese caso **no hay estructura nueva** → `R-19` no dispara → el reloj de 5 velas sigue hacia `R-15`/`R-16`.
+**No hay filtro oculto.** El único retroceso que no genera zona es el bloqueado por `R-12` (entre soporte y resistencia, cruzando el 50 %). Con espacio libre, todo retroceso genera zona.
+**Consecuencia encadenada:** en ese caso **no hay estructura nueva** → `R-14` no dispara → el reloj de 5 velas sigue hacia `R-10`/`R-11`.
 
 ### ✅ P-06 · Umbral de volumen — CERRADO 24/08/2026
 
-**Resuelto en `R-20`:** en premercado, toda vela con **NQ > 2.000** o **MNQ > 6.000** contratos genera zona. **Vela alcista → resistencia** (mecha superior); **vela bajista → soporte** (mecha inferior). Una vez marcada, se comporta **exactamente igual** que cualquier otra zona: `R-14` a `R-19` aplican sin excepción.
+**Resuelto en `R-15`:** en premercado, toda vela con **MNQ > 6.000** contratos genera zona *(hasta el 06/09/2026 el umbral se leía en NQ, > 2.000 — ver `P-32`)*. **Vela alcista → resistencia** (mecha superior); **vela bajista → soporte** (mecha inferior). Una vez marcada, se comporta **exactamente igual** que cualquier otra zona: `R-21` a `R-14` aplican sin excepción.
 
 **Corregida la errata de la guía v4:** decía *"≥2.000 en MNQ ó ≥6.000 en NQ"* — los números estaban **invertidos**. Confirmado por Chaumer en vivo (18/08): *"ninguno llega a los 2000 contratos, por eso yo no identifico ningún tipo de zona"*, hablando del gráfico de NQ.
 
-**Discrepancia menor que se deja anotada sin resolver:** `Parámetros Chaumer.pdf` dice que *"2000 en nq son aprox 3200 en mnq"*, mientras que el operador usa **6.000** para MNQ — casi el doble, luego los dos umbrales **no son equivalentes**. En la práctica no muerde: `R-09` fija que el volumen se lee en el gráfico de **NQ**, así que el número de MNQ solo actuaría si algún día cambiara de gráfico.
+**Discrepancia menor que se deja anotada sin resolver:** `Parámetros Chaumer.pdf` dice que *"2000 en nq son aprox 3200 en mnq"*, mientras que el operador usa **6.000** para MNQ — casi el doble, luego los dos umbrales **no son equivalentes**. 🔴 **Desde el 06/09/2026 esto sí muerde:** el NQ salió del plan y el único umbral que queda es el de MNQ, así que la discrepancia dejó de ser teórica. Reabierto como **`P-32`**.
 
 **Los dos flecos que quedaban se cerraron el 24/08/2026:**
 
 1. **Hora de inicio del escaneo** → **19:00 hora Colombia del día anterior** (apertura de Tokio, 09:00 JST). Fija todo el año.
 2. **Velas múltiples sobre el umbral** → **se marcan todas**. Contradice a `Parámetros` (*"solo marcamos los extremos"*) → registrado como **`D-09`**.
 
-**Además se cerró un vacío que no estaba inventariado:** la regla del volumen **se apaga en la apertura americana**. Dentro de sesión solo se marcan zonas por estructura (`R-12`), sin importar el volumen. Sin ese corte la regla habría sido inaplicable: 2.000 contratos en una vela de 1 min del NQ es un evento raro en premercado y volumen corriente en sesión.
+**Además se cerró un vacío que no estaba inventariado:** la regla del volumen **se apaga en la apertura americana**. Dentro de sesión solo se marcan zonas por estructura (`R-09`), sin importar el volumen. Sin ese corte la regla habría sido inaplicable: 2.000 contratos en una vela de 1 min del NQ es un evento raro en premercado y volumen corriente en sesión.
 
 **`P-06` queda completamente cerrado.**
 
 
 ### ✅ P-14 y P-15 — CERRADOS 24/08/2026
 
-**`P-14` · Extensión sin esperar las 5 velas.** Resuelto en `R-19`: el plazo de 5 velas es un **tope, no una espera obligatoria**. Si aparece una nueva estructura —un nuevo retroceso— se marca zona de inmediato. El curso lo llama *"extender la zona"* y el operador *"crear una zona nueva"*; con `R-18` (superposición) es el mismo resultado descrito desde los dos extremos. No hubo que definir "estructura fallida": **nueva estructura = nuevo retroceso**, que ya está definido en `R-11`.
+**`P-14` · Extensión sin esperar las 5 velas.** Resuelto en `R-14`: el plazo de 5 velas es un **tope, no una espera obligatoria**. Si aparece una nueva estructura —un nuevo retroceso— se marca zona de inmediato. El curso lo llama *"extender la zona"* y el operador *"crear una zona nueva"*; con `R-13` (superposición) es el mismo resultado descrito desde los dos extremos. No hubo que definir "estructura fallida": **nueva estructura = nuevo retroceso**, que ya está definido en `R-06`.
 
-**`P-15` · Vela sin cuerpo.** Resuelto sin escribir nada nuevo: si apertura = cierre, el cuerpo **mide cero** pero sigue existiendo como línea de precio, así que `R-12` funciona tal cual — la zona va de ese precio a la punta de la mecha. `R-12` cubre ahora la anatomía completa: vela normal, vela **sin mecha** (→ línea) y vela **sin cuerpo**.
+**`P-15` · Vela sin cuerpo.** Resuelto sin escribir nada nuevo: si apertura = cierre, el cuerpo **mide cero** pero sigue existiendo como línea de precio, así que `R-09` funciona tal cual — la zona va de ese precio a la punta de la mecha. `R-09` cubre ahora la anatomía completa: vela normal, vela **sin mecha** (→ línea) y vela **sin cuerpo**.
 
 
 ### ✅ P-13 · "Punto de reacción" — CERRADO 24/08/2026 · no era un término nuevo
 
 **Resolución del operador:** *"El punto de reacción **es la zona**, las zonas grises activas que se marcan. Esos son los puntos de reacción. No se mira nada más."*
 
-**Consecuencia:** no hay término que añadir al glosario ni filtro que añadir al plan. "Punto de reacción" es simplemente **como Chaumer nombra a la zona vigente** — ya cubierto por `R-12` (marcado) y `R-14` (vigencia).
+**Consecuencia:** no hay término que añadir al glosario ni filtro que añadir al plan. "Punto de reacción" es simplemente **como Chaumer nombra a la zona vigente** — ya cubierto por `R-09` (marcado) y `R-21` (vigencia).
 
 **Efecto sobre la alarma del filtro único de target:** se atenúa. El plan tiene un solo filtro de target, pero ese filtro —*el target no penetra una zona vigente*— **es exactamente el que Chaumer aplica a diario**, y es la razón por la que no operó 2 de las 4 sesiones grabadas. Las eliminaciones de `P-01`, `D-03`, `D-04` y `D-05` siguen sin apoyarse en datos, pero lo que queda no es un resto: es el filtro principal de la metodología.
 
@@ -288,7 +290,7 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 **Consecuencias aplicadas:**
 - El filtro *"impulso de más de 5 velas → sobreextendido"* de la guía v4 era una **simplificación propia del operador**, no del método. Eliminado.
-- El tope provisional de **10 velas** sale de `R-10`. **La corrida no tiene tamaño máximo.**
+- El tope provisional de **10 velas** sale de `R-05`. **La corrida no tiene tamaño máximo.**
 - `D-02` deja de ser una desviación: no había regla de la que desviarse.
 - Nace la capa **`CONTEXTUALIZACION.md`** con la taxonomía de Chaumer. La sobreextensión queda allí como `C-01`.
 
@@ -304,17 +306,17 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 ### ✅ P-04 · Tipo de orden en NT8 — cerrado 21/08/2026
 - **Sospecha inicial:** el operador creía usar *Buy Limit por encima del precio*, que en NT8 es marketable y se ejecuta al instante. Habría implicado entrar antes de cumplirse la condición de consecución.
-- **Resultado de la verificación:** **descartado.** El operador usa **Buy Stop Market** (long) y **Sell Stop Market** (short), que es la orden correcta. Queda formalizado en **R-07**.
+- **Resultado de la verificación:** **descartado.** El operador usa **Buy Stop Market** (long) y **Sell Stop Market** (short), que es la orden correcta. Queda formalizado en **R-24**.
 
 ### ✅ P-05 · Plantilla y herramientas de NT8 — cerrado 21/08/2026
-- **Resultado:** único indicador **Volume Up Down** sobre el gráfico de NQ. Sin medias, osciladores, VWAP ni perfil de volumen. ATM `K1`, 1 contrato, sin BE ni trailing. Formalizado en **R-08** y **R-09**.
+- **Resultado:** único indicador **Volume Up Down** sobre el gráfico de NQ. Sin medias, osciladores, VWAP ni perfil de volumen. ATM `K1`, 1 contrato, sin BE ni trailing. Formalizado en **R-31** y **R-03**.
 - **Resto:** solo queda el nombre del feed → `P-10`.
 
 ---
 
 ## `P-22` · ¿Qué retroceso fija el stop? — ABIERTO 2026-08-26
 
-`R-08` dice *"nivel de entrada ↔ mínimo/máximo **del retroceso**"*. **No dice cuál**, y cuando entre la zona y la entrada ha pasado más de un retroceso, hay dos candidatos distintos:
+`R-31` dice *"nivel de entrada ↔ mínimo/máximo **del retroceso**"*. **No dice cuál**, y cuando entre la zona y la entrada ha pasado más de un retroceso, hay dos candidatos distintos:
 
 | Candidato | Argumento |
 |---|---|
@@ -328,7 +330,7 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 **59,75 puntos de diferencia.** Ese día no mordió porque **los dos superaban `STOP_MAX`** y el setup se descartó igual. El 10/07/2026 tampoco mordió porque coincidían.
 
-**Riesgo si no se cierra:** el stop, el target (ratio 1:1) y el propio filtro de `R-08` dependen de este número. Es el mismo tipo de hueco que `P-12` cerró para el "mínimo del retroceso" dentro de un solo retroceso.
+**Riesgo si no se cierra:** el stop, el target (ratio 1:1) y el propio filtro de `R-31` dependen de este número. Es el mismo tipo de hueco que `P-12` cerró para el "mínimo del retroceso" dentro de un solo retroceso.
 
 **Estado:** ⏳ pendiente de respuesta del operador.
 
@@ -336,7 +338,7 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 ## `P-23` · Vela de apertura sin cuerpo — ABIERTO 2026-08-26
 
-`R-31` declara la dirección del día por el cuerpo de la **08:31**: cierre por encima de la apertura → alcista; por debajo → bajista. **No cubre el empate**: cierre exactamente igual a la apertura.
+`R-07` declara la dirección del día por el cuerpo de la **08:31**: cierre por encima de la apertura → alcista; por debajo → bajista. **No cubre el empate**: cierre exactamente igual a la apertura.
 
 **Frecuencia:** por medir sobre las 39 sesiones. Probablemente muy raro en la vela de apertura, que suele tener cuerpo grande.
 
@@ -344,20 +346,20 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 ---
 
-## `P-24` · ¿Sobra `R-32`? — ABIERTO 2026-08-26
+## `P-24` · ¿Sobra `R-08`? — ABIERTO 2026-08-26
 
-`R-32` se escribió para *"vela que hace máximo mayor y mínimo menor **cuando no hay corrida viva**"*, y decía que no declara dirección: la da la siguiente vela.
+`R-08` se escribió para *"vela que hace máximo mayor y mínimo menor **cuando no hay corrida viva**"*, y decía que no declara dirección: la da la siguiente vela.
 
 **Dos cosas la dejan en el aire el mismo día en que se escribió:**
 
-1. **`R-31` reescrita** hace que en la apertura **siempre haya corrida viva desde la 08:31**. Y a partir de ahí el mercado está siempre o en corrida o en retroceso — nunca en un hueco. Si eso es cierto, **el supuesto de `R-32` no ocurre nunca**.
+1. **`R-07` reescrita** hace que en la apertura **siempre haya corrida viva desde la 08:31**. Y a partir de ahí el mercado está siempre o en corrida o en retroceso — nunca en un hueco. Si eso es cierto, **el supuesto de `R-08` no ocurre nunca**.
 2. **El operador describió el caso al revés** el 26/08/2026: *"hace rompimiento tanto arriba como abajo, funcionaría como rompimiento y como retroceso"* — es decir, **hace las dos cosas**, no ninguna.
 
-**Lectura probable:** la frase del operador describe el caso **con corrida viva**, que `R-10` + `R-12` ya resuelven (mata la corrida, es la primera vela del retroceso, y si es la más alta marca la zona — la 8:36 del 10/07). En ese caso `R-32` no contradice nada: simplemente cubre un hueco vacío y **se borra**.
+**Lectura probable:** la frase del operador describe el caso **con corrida viva**, que `R-05` + `R-09` ya resuelven (mata la corrida, es la primera vela del retroceso, y si es la más alta marca la zona — la 8:36 del 10/07). En ese caso `R-08` no contradice nada: simplemente cubre un hueco vacío y **se borra**.
 
 **Riesgo si no se cierra:** una regla confirmada que describe un caso inexistente, o peor, que contradice al operador en el caso que sí existe.
 
-⚠️ **No tocar `R-32` sin respuesta del operador** (regla permanente 6 del proyecto).
+⚠️ **No tocar `R-08` sin respuesta del operador** (regla permanente 6 del proyecto).
 
 **Estado:** ⏳ pendiente.
 
@@ -372,7 +374,7 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 **Caso que lo cierra — 7/07/2026:** el soporte de la vela 9:27 se rompe con la vela 9:36. El retroceso que lo originó (9:28–9:30) tenía techo en 29.313,00; la vela 9:32 subió a **29.327,75**. Con la regla correcta el riesgo pasa de 71,50 a 86,25 pts y **la entrada se descarta por `STOP_MAX`**.
 
-**Recogido en:** `R-24` · `PARAMETROS.md` → `ORIGEN_DEL_STOP`.
+**Recogido en:** `R-32` · `PARAMETROS.md` → `ORIGEN_DEL_STOP`.
 
 ---
 
@@ -380,9 +382,9 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 ## `P-25` · ¿Sirve para entrar una zona ESTIRADA? — ABIERTO 2026-08-27
 
-**El hueco:** en el motor solo las zonas que **nacen nuevas** valen como zona de corrida para una entrada de continuación. Cuando una zona candidata se **estira** sobre una existente (`R-18`) en vez de nacer, esa zona no sirve para entrar.
+**El hueco:** en el motor solo las zonas que **nacen nuevas** valen como zona de corrida para una entrada de continuación. Cuando una zona candidata se **estira** sobre una existente (`R-13`) en vez de nacer, esa zona no sirve para entrar.
 
-**Por qué importa:** apareció en el 7 de julio y **cambió el resultado del día**. No se ha podido comprobar contra un caso limpio porque el caso concreto se resolvió por otra vía (`R-36`).
+**Por qué importa:** apareció en el 7 de julio y **cambió el resultado del día**. No se ha podido comprobar contra un caso limpio porque el caso concreto se resolvió por otra vía (`R-18`).
 
 **Lo que hay que preguntar:** cuando una corrida termina y su zona, en vez de nacer nueva, se pega a una que ya existía y la estira — ¿esa zona estirada sirve para entrar de continuación?
 
@@ -392,7 +394,7 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 ## `P-26` · ¿El FOMC bloquea toda la sesión o solo el anuncio? — ABIERTO 2026-08-27
 
-`R-27` dice **día entero**. No está verificado contra el criterio real del operador ni contra su bitácora. Y falta saber **si hubo FOMC en agosto de 2026** — julio está confirmado (8 y 29).
+`R-36` dice **día entero**. No está verificado contra el criterio real del operador ni contra su bitácora. Y falta saber **si hubo FOMC en agosto de 2026** — julio está confirmado (8 y 29).
 
 **Estado:** ⏳ pendiente.
 
@@ -400,7 +402,7 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 ## `P-27` · Calendario de noticias rojas — ABIERTO 2026-08-27
 
-El motor de backtesting **no tiene filtro de noticias rojas** (`R-21`). Todos los resultados del backtesting día por día están calculados **sin** ese filtro. Hace falta el calendario, o al menos las fechas y horas de la bitácora del operador.
+El motor de backtesting **no tiene filtro de noticias rojas** (`R-35`). Todos los resultados del backtesting día por día están calculados **sin** ese filtro. Hace falta el calendario, o al menos las fechas y horas de la bitácora del operador.
 
 **Estado:** ⏳ pendiente. **Bloquea la validez de cualquier cifra agregada del backtesting.**
 
@@ -408,7 +410,7 @@ El motor de backtesting **no tiene filtro de noticias rojas** (`R-21`). Todos lo
 
 ## `P-28` · Separación mínima entre zonas del mismo tipo — ABIERTO 2026-08-27
 
-Cuando dos zonas del mismo tipo quedan **cerca pero sin tocarse**, `R-18` no dice nada: no se estira una sobre otra, quedan dos. Caso observado: 8/07/2026, zonas de las velas 9:16 y 9:21, separadas 1,25 puntos.
+Cuando dos zonas del mismo tipo quedan **cerca pero sin tocarse**, `R-13` no dice nada: no se estira una sobre otra, quedan dos. Caso observado: 8/07/2026, zonas de las velas 9:16 y 9:21, separadas 1,25 puntos.
 
 **Estado:** ⏳ pendiente.
 
@@ -438,7 +440,7 @@ La fase 1 se cierra **sin ejecutar `F1.11`**, por decisión explícita del opera
 
 ## `P-30` · ¿La resolución anticipada aplica también al ESTIRAMIENTO? — ABIERTO 2026-09-01
 
-La regla del plazo como tope (`R-19`) se precisó sobre el caso de la **zona apéndice** (rompimiento con cuerpo). El operador dijo *"en el caso 1… en el caso 2, es lo mismo"*, refiriéndose a los dos diagramas de la apéndice.
+La regla del plazo como tope (`R-14`) se precisó sobre el caso de la **zona apéndice** (rompimiento con cuerpo). El operador dijo *"en el caso 1… en el caso 2, es lo mismo"*, refiriéndose a los dos diagramas de la apéndice.
 
 **Falta confirmar** si el otro camino —rompimiento **con mecha**, que estira la zona en vez de crear una apéndice— también se resuelve de forma anticipada cuando se arma la estructura contraria, o si ése sí espera siempre a la quinta vela.
 
@@ -457,3 +459,28 @@ Escrito como si aplicara a los dos, por simetría. **Es una extrapolación del a
 **Qué NO cambia:** ninguna de las 9 operaciones validadas depende de la fecha de nacimiento de esas zonas. Pero conviene comprobarlo antes de dar los gráficos por definitivos.
 
 **Estado:** ⏳ pendiente.
+
+---
+
+# 🟠 Abierto al salir el NQ del plan · 06/09/2026
+
+## `P-32` · El umbral de volumen de premercado cambió de instrumento, y la equivalencia no está verificada
+
+Con el NQ fuera del plan, el umbral de premercado pasa a ser **> 6.000 contratos en MNQ**. Antes se leía sobre NQ, **> 2.000**.
+
+**Lo que no sabemos:** si las dos cifras marcan **las mismas velas**. Nunca se comprobó con datos.
+
+**Por qué importa:** la zona de premercado es la única que nace del volumen, y hace de **borde de banda** (`R-17`). Si el umbral nuevo marca velas distintas, cambian las bandas y con ellas qué zonas se marcan dentro. El 14 de julio, sin ir más lejos, la jornada entera se decidió por una banda cuyo borde superior era una zona de premercado.
+
+**El desajuste que queda declarado:**
+
+| | |
+|---|---|
+| Las 11 sesiones validadas | se marcaron con **NQ > 2.000**, sobre datos de NQ |
+| Lo que dice el plan desde hoy | **MNQ > 6.000** |
+| Datos de MNQ para comprobarlo | **no los tenemos** |
+| El motor de backtesting | sigue leyendo NQ, porque es el dato que hay — y así se queda |
+
+**Cómo se cierra:** exportar de NinjaTrader el premercado de MNQ de esos mismos 11 días y comprobar si las velas que superan 6.000 en MNQ son las mismas que superaban 2.000 en NQ. Si no coinciden, hay que decidir el umbral bueno **antes** del backtesting de un año.
+
+**Estado:** ⏳ pendiente. **No bloquea operar**, pero sí bloquea dar por buena cualquier cifra agregada de premercado.

@@ -3,13 +3,15 @@
 > **Capturas reales del NT8 del operador.** Cada caso etiquetado con las reglas que lo explican.
 > **Imágenes:** `02_Assets\galeria\`
 
-**Abierta:** 2026-08-24 · **11 casos documentados** · gráficos NQ y MNQ 09-26, 1 minuto
+**Abierta:** 2026-08-24 · **cerrada:** 2026-09-01 · **21 casos documentados** · velas de 1 minuto
+
+> ⚠️ Las capturas y las reconstrucciones son **anteriores al 06/09/2026**, cuando el plan analizaba en NQ y ejecutaba en MNQ. **Los puntos son los mismos en los dos instrumentos**; lo que cambia es el valor del punto. No se rehacen, por decisión del operador — ver `P-32`.
 
 ---
 
 ## Cómo leer los importes de estas capturas
 
-Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El operador ejecuta en **MNQ** ($2 por punto). Para comparar contra `STOP_MAX` = **80 puntos**, hay que convertir:
+⚠️ *Estas capturas son anteriores al 06/09/2026, cuando el plan analizaba en NQ y ejecutaba en MNQ. Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto); el operador ejecutaba —y sigue ejecutando— en **MNQ** ($2 por punto). **Los puntos son los mismos en los dos instrumentos**, así que las cifras de la columna «Puntos» siguen siendo válidas tal cual contra `STOP_MAX`.* Para comparar contra `STOP_MAX` = **80 puntos**, hay que convertir:
 
 `puntos = $NQ ÷ 20` · `riesgo real MNQ = puntos × $2`
 
@@ -30,15 +32,15 @@ Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El opera
 
 ## G-01 · IRI ALCISTA
 
-**Archivo:** `G-01_IRI_alcista.png` · **Reglas:** `R-22`, `R-12`, `R-13`, `R-24`
+**Archivo:** `G-01_IRI_alcista.png` · **Reglas:** `R-25`, `R-09`, `R-20`, `R-32`
 
 | Elemento en la captura | Regla |
 |---|---|
-| Zona **Resistencia** marcada arriba de la corrida | `R-12` |
-| **Vela de rompimiento** — supera la resistencia | `R-13` |
-| **Vela de consecución** — 1 tick por encima ← **entrada** | `R-13`, `R-07` |
-| **Stop** en el nivel del **Soporte** = mínimo del retroceso | `R-24` |
-| **Target** a la misma distancia, arriba | `R-24` |
+| Zona **Resistencia** marcada arriba de la corrida | `R-09` |
+| **Vela de rompimiento** — supera la resistencia | `R-20` |
+| **Vela de consecución** — 1 tick por encima ← **entrada** | `R-20`, `R-24` |
+| **Stop** en el nivel del **Soporte** = mínimo del retroceso | `R-32` |
+| **Target** a la misma distancia, arriba | `R-32` |
 
 ✅ **Caso limpio de libro.** La consecución llega en la vela inmediatamente siguiente al rompimiento — el caso normal descrito en `C-09`.
 
@@ -46,16 +48,16 @@ Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El opera
 
 ## G-02 · IRI APERTURA BAJISTA 🔴 *el caso al límite*
 
-**Archivo:** `G-02_IRI_apertura_bajista.png` · **Reglas:** `R-22`, `R-24`, `R-08`, `P-20`
+**Archivo:** `G-02_IRI_apertura_bajista.png` · **Reglas:** `R-25`, `R-32`, `R-31`, `P-20`
 
 | Elemento | Regla |
 |---|---|
-| Zona **Soporte** rota hacia abajo | `R-12`, `R-13` |
-| Vela de rompimiento y vela de consecución ← **entrada** | `R-13` |
-| **Nivel de Stop** en la **Resistencia** = máximo del retroceso | `R-24` |
-| Target 1:1 abajo | `R-24` |
+| Zona **Soporte** rota hacia abajo | `R-09`, `R-20` |
+| Vela de rompimiento y vela de consecución ← **entrada** | `R-20` |
+| **Nivel de Stop** en la **Resistencia** = máximo del retroceso | `R-32` |
+| Target 1:1 abajo | `R-32` |
 
-> 🔴 **Este es el caso que hay que tener presente.** El stop mide **76,75 puntos**: el **96 %** de `STOP_MAX`. Le sobraron **3,25 puntos**. Un movimiento un poco más amplio y este setup se descarta por `R-08`.
+> 🔴 **Este es el caso que hay que tener presente.** El stop mide **76,75 puntos**: el **96 %** de `STOP_MAX`. Le sobraron **3,25 puntos**. Un movimiento un poco más amplio y este setup se descarta por `R-31`.
 >
 > **Lección para la checklist:** el filtro de los 80 puntos **no es teórico**. Este trade real pasó por poco.
 
@@ -65,16 +67,16 @@ Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El opera
 
 ## G-03 · IRI ALCISTA · la zona superada cambia de papel
 
-**Archivo:** `G-03_IRI_alcista_zona_invertida.png` · **Reglas:** `R-22`, `R-14`, `R-24`
+**Archivo:** `G-03_IRI_alcista_zona_invertida.png` · **Reglas:** `R-25`, `R-21`, `R-32`
 
 | Elemento | Regla |
 |---|---|
-| Dos zonas previas: **Resistencia** arriba, **Soporte** abajo | `R-12` |
-| Anotación del operador: *"Se convierte en Soporte al ser superada"* | `R-14` |
-| Rompimiento de la resistencia superior y consecución ← **entrada** | `R-13` |
-| Stop en la zona que acaba de convertirse en soporte | `R-24` |
+| Dos zonas previas: **Resistencia** arriba, **Soporte** abajo | `R-09` |
+| Anotación del operador: *"Se convierte en Soporte al ser superada"* | `R-21` |
+| Rompimiento de la resistencia superior y consecución ← **entrada** | `R-20` |
+| Stop en la zona que acaba de convertirse en soporte | `R-32` |
 
-> 🔑 **Vocabulario que el plan no tenía y ahora sí.** `R-14` dice que una zona superada en un sentido *"sigue vigente para el otro sentido"*. El operador lo dice más corto: **se convierte en soporte**. **Es lo mismo**, descrito desde el otro lado.
+> 🔑 **Vocabulario que el plan no tenía y ahora sí.** `R-21` dice que una zona superada en un sentido *"sigue vigente para el otro sentido"*. El operador lo dice más corto: **se convierte en soporte**. **Es lo mismo**, descrito desde el otro lado.
 >
 > Añadido al glosario como **INVERSIÓN DE PAPEL**.
 
@@ -82,13 +84,13 @@ Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El opera
 
 ## G-04 · IRI BAJISTA · zona invertida, y el stop más pequeño
 
-**Archivo:** `G-04_IRI_bajista_zona_invertida.png` · **Reglas:** `R-22`, `R-14`, `R-24`, `P-12`
+**Archivo:** `G-04_IRI_bajista_zona_invertida.png` · **Reglas:** `R-25`, `R-21`, `R-32`, `P-12`
 
 | Elemento | Regla |
 |---|---|
-| Anotación: *"Soporte → Se vuelve Resistencia"* | `R-14` — espejo de `G-03` |
-| Rompimiento y consecución hacia abajo ← **entrada** | `R-13` |
-| Stop en la zona invertida · Target 1:1 abajo | `R-24` |
+| Anotación: *"Soporte → Se vuelve Resistencia"* | `R-21` — espejo de `G-03` |
+| Rompimiento y consecución hacia abajo ← **entrada** | `R-20` |
+| Stop en la zona invertida · Target 1:1 abajo | `R-32` |
 
 > ⚠️ **El stop más pequeño de los seis: 20 puntos = $40 en MNQ.** Y ahí muerde `P-12`:
 >
@@ -103,33 +105,33 @@ Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El opera
 
 ## G-05 · REINGRESO ALCISTA
 
-**Archivo:** `G-05_Reingreso_alcista.png` · **Reglas:** `R-23`, `R-24`
+**Archivo:** `G-05_Reingreso_alcista.png` · **Reglas:** `R-26`, `R-32`
 
 | # | Elemento en la captura | Regla |
 |---|---|---|
-| 1 | **Rompimiento** de la zona hacia abajo | `R-13` |
-| 2 | **Consecución** bajista → la zona queda superada hacia abajo | `R-13`, `R-14` |
-| 3 | El precio **no continúa** y **reingresa** | `R-23` |
-| 4 | **Consecución del reingreso** ← **entrada larga** | `R-23` |
-| 5 | **Stop = "Nivel más bajo"** — el extremo de la corrida fallida | `R-24` |
-| 6 | Target 1:1 arriba, **por debajo de la zona gris superior** | `R-23`, `R-24` |
+| 1 | **Rompimiento** de la zona hacia abajo | `R-20` |
+| 2 | **Consecución** bajista → la zona queda superada hacia abajo | `R-20`, `R-21` |
+| 3 | El precio **no continúa** y **reingresa** | `R-26` |
+| 4 | **Consecución del reingreso** ← **entrada larga** | `R-26` |
+| 5 | **Stop = "Nivel más bajo"** — el extremo de la corrida fallida | `R-32` |
+| 6 | Target 1:1 arriba, **por debajo de la zona gris superior** | `R-26`, `R-32` |
 
-✅ **Confirma `R-24` para Reingreso:** el stop mide contra la corrida fallida, no contra el retroceso. El operador lo etiqueta literalmente *"Nivel mas bajo"*.
+✅ **Confirma `R-32` para Reingreso:** el stop mide contra la corrida fallida, no contra el retroceso. El operador lo etiqueta literalmente *"Nivel mas bajo"*.
 
 ---
 
 ## G-06 · REINGRESO BAJISTA
 
-**Archivo:** `G-06_Reingreso_bajista.png` · **Reglas:** `R-23`, `R-24`
+**Archivo:** `G-06_Reingreso_bajista.png` · **Reglas:** `R-26`, `R-32`
 
 | # | Elemento | Regla |
 |---|---|---|
-| 1 | **Rompimiento** de la zona hacia arriba | `R-13` |
-| 2 | **Consecución** alcista | `R-13` |
-| 3 | **Stop = "Nivel más alto"** — extremo de la corrida fallida | `R-24` |
-| 4 | **Vela de reingreso** — atraviesa la zona de vuelta | `R-23` |
-| 5 | **Consecución de reingreso** ← **entrada corta** | `R-23` |
-| 6 | Target 1:1 abajo | `R-24` |
+| 1 | **Rompimiento** de la zona hacia arriba | `R-20` |
+| 2 | **Consecución** alcista | `R-20` |
+| 3 | **Stop = "Nivel más alto"** — extremo de la corrida fallida | `R-32` |
+| 4 | **Vela de reingreso** — atraviesa la zona de vuelta | `R-26` |
+| 5 | **Consecución de reingreso** ← **entrada corta** | `R-26` |
+| 6 | Target 1:1 abajo | `R-32` |
 
 ✅ **Espejo exacto de `G-05`.** Los dos reingresos usan la misma etiqueta para el stop —*"nivel más alto/más bajo"*— y confirman que el plan lo recogió bien.
 
@@ -137,7 +139,7 @@ Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El opera
 
 ## G-07 · 🔴 DESCARTE POR `STOP_MAX` — el filtro en acción
 
-**Archivo:** `G-07_descarte_STOP_MAX.png` · **Reglas:** `R-08`, `R-24`, `PARAMETROS.md`
+**Archivo:** `G-07_descarte_STOP_MAX.png` · **Reglas:** `R-31`, `R-32`, `PARAMETROS.md`
 
 > Anotación del operador: **"Stop, sobrepasa los 80 Puntos — Se descarta Setup"**
 
@@ -149,7 +151,7 @@ Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El opera
 | Exceso | **+31,75 puntos** — un **40 % por encima** del tope |
 | **Decisión** | 🔴 **NO SE OPERA** |
 
-> 🔑 **Este es el caso más importante de la galería.** El setup **existe**: hay zona, rompimiento y consecución. `R-22` se cumple entero. **Y aun así no se opera**, porque `R-24` filtro 1 lo veta.
+> 🔑 **Este es el caso más importante de la galería.** El setup **existe**: hay zona, rompimiento y consecución. `R-25` se cumple entero. **Y aun así no se opera**, porque `R-32` filtro 1 lo veta.
 >
 > **Es la prueba de que los filtros son independientes del setup.** Un IRI perfecto con el stop demasiado grande **no es una operación**.
 
@@ -159,7 +161,7 @@ Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El opera
 
 ## G-08 · 🔴 DESCARTE POR PUNTO DE REFERENCIA — el filtro exclusivo del Reingreso
 
-**Archivo:** `G-08_descarte_punto_referencia.png` · **Reglas:** `R-23`, `R-24`
+**Archivo:** `G-08_descarte_punto_referencia.png` · **Reglas:** `R-26`, `R-32`
 
 > Anotación del operador: **"Target Sobrepasa punto de referencia"**
 
@@ -173,9 +175,9 @@ Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El opera
 
 > 🔑 **El caso que demuestra que los filtros no se pueden mezclar.** El riesgo era pequeño — 30,50 puntos, de los más cómodos de toda la galería. **Y el trade se descarta igual**, porque el target no tiene camino libre.
 >
-> **Un stop pequeño no compensa un target bloqueado.** Los tres filtros de `R-24` son condiciones **independientes**: basta que falle una.
+> **Un stop pequeño no compensa un target bloqueado.** Los tres filtros de `R-32` son condiciones **independientes**: basta que falle una.
 
-📌 Es también el **primer caso real del punto de referencia**, el término que nació el 24/08/2026. Confirma `R-23` sobre gráfico: la línea naranja discontinua marca el nivel y el target verde queda más allá.
+📌 Es también el **primer caso real del punto de referencia**, el término que nació el 24/08/2026. Confirma `R-26` sobre gráfico: la línea naranja discontinua marca el nivel y el target verde queda más allá.
 
 ---
 
@@ -192,7 +194,7 @@ Sesión completa marcada con zonas y un punto de referencia (flecha naranja). **
 | Lo que dijo | Qué capa es | ¿El plan lo cubre? |
 |---|---|---|
 | *"el mercado estuvo muy lateral"* | 🔵 **Contextualización** — `C-03` | ❌ **No.** No tiene número y no debe tenerlo |
-| *"nada que cumpliera las reglas"* | ⚙️ **Parámetro operativo** — `R-22`, `R-23`, `R-24` | ✅ **Sí, entero** |
+| *"nada que cumpliera las reglas"* | ⚙️ **Parámetro operativo** — `R-25`, `R-26`, `R-32` | ✅ **Sí, entero** |
 
 **Por qué importa la distinción, y mucho:**
 
@@ -201,7 +203,7 @@ Sesión completa marcada con zonas y un punto de referencia (flecha naranja). **
 
 📌 **Los dos motivos suelen coincidir**: un mercado lateral produce pocas corridas limpias, así que la falta de setups es *consecuencia* de la lateralidad. Pero **no son lo mismo**, y conviene anotarlos por separado en el journal. *"No hubo setup"* es un hecho verificable; *"estuvo lateral"* es una lectura.
 
-> 💡 **Sugerencia para el registro (`R-29`):** en los días sin operar, separar dos campos — **"¿se formó algún setup?"** (sí/no) y, si sí, **"¿qué filtro lo descartó?"**. Con eso, los días sin operar dejan de ser una nota y pasan a ser datos.
+> 💡 **Sugerencia para el registro (`R-38`):** en los días sin operar, separar dos campos — **"¿se formó algún setup?"** (sí/no) y, si sí, **"¿qué filtro lo descartó?"**. Con eso, los días sin operar dejan de ser una nota y pasan a ser datos.
 
 ---
 
@@ -209,7 +211,7 @@ Sesión completa marcada con zonas y un punto de referencia (flecha naranja). **
 
 **Archivo:** `G-10_operacion_13ago.png` · **Fecha:** jueves 13 de agosto de 2026 · **MNQ 09-26**
 
-Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-24`) y muy dentro de `STOP_MAX` (54 %).
+Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-32`) y muy dentro de `STOP_MAX` (54 %).
 
 > ⚠️ **El P&L de esta captura NO es válido.** El operador confirma que era una **operación de prueba**. La cifra que aparece en pantalla se ignora por completo y **no cuenta como caso con pérdida**.
 
@@ -229,16 +231,16 @@ Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-24`) y 
 
 | Hora Col | Qué pasó | Regla |
 |---|---|---|
-| **7:14** | vela de premercado, vol **2.290** > 2.000, alcista → **RESISTENCIA 29.872,00–29.878,75** | `R-20` |
+| **7:14** | vela de premercado, vol **2.290** > 2.000, alcista → **RESISTENCIA 29.872,00–29.878,75** | `R-15` |
 | **8:30** | apertura · empieza el marcado de estructura | `R-02` |
-| 8:31–8:33 | corrida alcista, tres velas | `R-10` |
-| **8:34** | **bajista de color pero la corrida sigue** — su mínimo (29.893,50) es mayor que el anterior | `R-10` |
-| 8:35 | máximo menor, pero mínimo aún mayor → corrida viva | `R-10` |
-| **8:36** | **máximo mayor (29.926,00) Y mínimo menor (29.896,75)** → muere la corrida, nace el retroceso. Y es **la vela más alta** → **RESISTENCIA 29.903,50–29.926,00** | `R-11`, `R-12` |
-| **8:37** | mín 29.880,50 profundiza el retroceso → **nivel de stop**. Máx 29.933,75 **rompe la zona** → **vela de rompimiento**. No se marca soporte: el movimiento cruza el 50 % | `R-13`, `R-17` |
-| **8:38** | máx 29.936,75 supera la vela de rompimiento por **12 ticks** → **CONSECUCIÓN, orden llenada** | `R-13`, `R-07` |
-| — | se ajustan stop y target · **termina el análisis del día** | `R-08`, `R-30` |
-| **8:40** | mínimo 29.856,75 → **STOP** | `R-25` |
+| 8:31–8:33 | corrida alcista, tres velas | `R-05` |
+| **8:34** | **bajista de color pero la corrida sigue** — su mínimo (29.893,50) es mayor que el anterior | `R-05` |
+| 8:35 | máximo menor, pero mínimo aún mayor → corrida viva | `R-05` |
+| **8:36** | **máximo mayor (29.926,00) Y mínimo menor (29.896,75)** → muere la corrida, nace el retroceso. Y es **la vela más alta** → **RESISTENCIA 29.903,50–29.926,00** | `R-06`, `R-09` |
+| **8:37** | mín 29.880,50 profundiza el retroceso → **nivel de stop**. Máx 29.933,75 **rompe la zona** → **vela de rompimiento**. No se marca soporte: el movimiento cruza el 50 % | `R-20`, `R-12` |
+| **8:38** | máx 29.936,75 supera la vela de rompimiento por **12 ticks** → **CONSECUCIÓN, orden llenada** | `R-20`, `R-24` |
+| — | se ajustan stop y target · **termina el análisis del día** | `R-31`, `R-34` |
+| **8:40** | mínimo 29.856,75 → **STOP** | `R-33` |
 
 ### Los números
 
@@ -255,17 +257,17 @@ Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-24`) y 
 >
 > El setup era **válido**. Los cuatro filtros **pasaban**. La ejecución fue **correcta**. **Y perdió.**
 >
-> Eso es exactamente lo que `R-25` protege: entró, no tocó nada, el mercado decidió. Una pérdida ejecutada bien **no es un error** — es el coste normal de un plan con ratio 1:1. El error sería haberla gestionado.
+> Eso es exactamente lo que `R-33` protege: entró, no tocó nada, el mercado decidió. Una pérdida ejecutada bien **no es un error** — es el coste normal de un plan con ratio 1:1. El error sería haberla gestionado.
 
 ### Lo que este caso aportó al plan
 
 | Hallazgo | Efecto |
 |---|---|
-| La vela que dispara el retroceso **puede ser la más alta** | 🔧 **`R-12` corregida** |
-| El **retroceso también marca zona** | 🔧 `R-12` ampliada |
-| `R-17` acertó sobre datos exactos | ✅ la regla más difícil, **validada** |
-| Tras el llenado **se acaba el análisis** | 🆕 **`R-30`** |
-| Sombreado de premercado ≠ ventana de escaneo | 🔧 **`R-20` corregida** |
+| La vela que dispara el retroceso **puede ser la más alta** | 🔧 **`R-09` corregida** |
+| El **retroceso también marca zona** | 🔧 `R-09` ampliada |
+| `R-12` acertó sobre datos exactos | ✅ la regla más difícil, **validada** |
+| Tras el llenado **se acaba el análisis** | 🆕 **`R-34`** |
+| Sombreado de premercado ≠ ventana de escaneo | 🔧 **`R-15` corregida** |
 
 ---
 
@@ -273,13 +275,13 @@ Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-24`) y 
 
 | | |
 |---|---|
-| `R-13` rompimiento + consecución | ✅ los **6 casos** |
-| `R-22` IRI | ✅ 4 casos, 2 alcistas y 2 bajistas |
-| `R-23` Reingreso | ✅ 2 casos, uno de cada dirección |
-| `R-24` stop y target 1:1 | ✅ los **6 casos**, con las dos referencias distintas |
-| `R-14` vigencia y cambio de papel | ✅ `G-03` y `G-04` |
-| `R-08` `STOP_MAX` | ✅ `G-01` a `G-06` pasan · `G-02` al **96 %** · 🔴 `G-07` **descartado a 111,75 pts** |
-| `R-24` filtro 3 · punto de referencia | 🔴 `G-08` **descartado** — primer caso real |
+| `R-20` rompimiento + consecución | ✅ los **6 casos** |
+| `R-25` IRI | ✅ 4 casos, 2 alcistas y 2 bajistas |
+| `R-26` Reingreso | ✅ 2 casos, uno de cada dirección |
+| `R-32` stop y target 1:1 | ✅ los **6 casos**, con las dos referencias distintas |
+| `R-21` vigencia y cambio de papel | ✅ `G-03` y `G-04` |
+| `R-31` `STOP_MAX` | ✅ `G-01` a `G-06` pasan · `G-02` al **96 %** · 🔴 `G-07` **descartado a 111,75 pts** |
+| `R-32` filtro 3 · punto de referencia | 🔴 `G-08` **descartado** — primer caso real |
 | **Independencia de los filtros** | ✅ `G-07` y `G-08`: **el setup se cumple y aun así no se opera** |
 
 # LO QUE ESTA GALERÍA NO TIENE TODAVÍA
@@ -288,9 +290,9 @@ Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-24`) y 
 |---|---|
 | ✅ ~~Setup descartado por `STOP_MAX`~~ | **`G-07`** |
 | ✅ ~~Reingreso anulado por punto de referencia~~ | **`G-08`** |
-| ❌ **Un target bloqueado por zona vigente** | `R-14`, el filtro principal — el único de los tres sin caso real |
-| ❌ **Una zona de premercado por volumen** | `R-20` no aparece en ninguna captura |
-| ❌ **Un IRI en día de FOMC** *(descartado por `R-27`)* | la prohibición más reciente |
+| ❌ **Un target bloqueado por zona vigente** | `R-21`, el filtro principal — el único de los tres sin caso real |
+| ❌ **Una zona de premercado por volumen** | `R-15` no aparece en ninguna captura |
+| ❌ **Un IRI en día de FOMC** *(descartado por `R-36`)* | la prohibición más reciente |
 | ✅ ~~Día sin operar con su motivo~~ | **`G-09`** — y destapó que el motivo mezclaba dos capas |
 | ✅ ~~Un caso con pérdida real~~ | **`G-11`** — 10/07/2026, −53,50 pts |
 
@@ -302,13 +304,13 @@ Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-24`) y 
 
 | | |
 |---|---|
-| `02_Assets\invalidos\R-17_invalido_01.png` | Zona entre zonas marcada por error. Anotada por el propio operador: *"Error, no se debe marcar"*. Resolvió `R-17` |
+| `02_Assets\invalidos\R-12_invalido_01.png` | Zona entre zonas marcada por error. Anotada por el propio operador: *"Error, no se debe marcar"*. Resolvió `R-12` |
 
 ---
 
 ## G-12 · 🔴 LA SESIÓN COMPLETA · 6 JULIO 2026 · un IRI rechazado y un Reingreso operado sobre la MISMA zona
 
-**Archivo:** `../05_Backtesting/L6_sesion_completa.png` · **Reglas:** `R-20`, `R-31`, `R-32`, `R-10`, `R-11`, `R-12`, `R-33`, `R-17`, `R-13`, `R-08`, `R-23`, `R-24`, `R-30`
+**Archivo:** `../05_Backtesting/L6_sesion_completa.png` · **Reglas:** `R-15`, `R-07`, `R-08`, `R-05`, `R-06`, `R-09`, `R-16`, `R-12`, `R-20`, `R-31`, `R-26`, `R-32`, `R-34`
 
 > **Segunda sesión reconstruida al tick desde datos exactos de NinjaTrader**, vela a vela con el operador. Es el caso que la galería no tenía: **dos setups sobre la misma zona en un intervalo de un minuto — uno se descarta, el otro se opera.**
 
@@ -316,19 +318,19 @@ Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-24`) y 
 
 | Hora Col | Qué pasó | Regla |
 |---|---|---|
-| — | premercado desde las 19:00: **0 velas por encima de 2.000** (máx 750) → **sin zonas de premercado** | `R-20` |
-| **8:31** | **vela base.** No se compara con la 8:30. Es la vela origen de la primera corrida | `R-31` |
-| 8:32 | máximo mayor → **nace corrida alcista**, medida desde el mínimo de la 8:31 (**29.776,25**) | `R-10`, `R-31` |
-| 8:34 | **vela interior** — máximo menor pero mínimo mayor → **no corta** | `R-10` |
-| **8:36** | mínimo menor → muere la corrida. Vela más alta = la 8:35 → **RESISTENCIA 29.926,50 – 29.939,25** | `R-11`, `R-12` |
-| 8:36 → 8:39 | **el retroceso dura 4 velas.** Línea provisional que baja hasta **29.786,00** (vela 8:37) | `R-11`, `R-33` |
-| **8:40** | máximo mayor → retroceso confirmado → se dibuja el **SOPORTE 29.786,00 – 29.827,50** | `R-33`, `R-12` |
-| 8:40 → 8:44 | segunda estructura completa. **Sus dos zonas candidatas se bloquean**: los dos movimientos cruzan el 50 % entre bordes internos (29.877,00) | `R-17` |
-| **8:46** | rompe la resistencia **con cuerpo** (máx 29.959,50 · cierre 29.953,75) | `R-13` |
-| **8:47** | **consecución del IRI** (29.967,25) → pero el stop estructural queda a **114 pts**. `STOP_MAX` = 80 → **la orden NO se envía** | `R-08` |
-| **8:47** | **la misma vela se da la vuelta**: baja a 29.908,75, atraviesa la resistencia entera y sale por el borde inferior → **VELA DE REINGRESO** | `R-23` |
-| **8:48** | mínimo 29.896,00 → **consecución, se llena el corto** · **termina el análisis del día** | `R-23`, `R-30` |
-| **8:51** | máximo 29.984,00 → **STOP** | `R-25` |
+| — | premercado desde las 19:00: **0 velas por encima de 2.000** (máx 750) → **sin zonas de premercado** | `R-15` |
+| **8:31** | **vela base.** No se compara con la 8:30. Es la vela origen de la primera corrida | `R-07` |
+| 8:32 | máximo mayor → **nace corrida alcista**, medida desde el mínimo de la 8:31 (**29.776,25**) | `R-05`, `R-07` |
+| 8:34 | **vela interior** — máximo menor pero mínimo mayor → **no corta** | `R-05` |
+| **8:36** | mínimo menor → muere la corrida. Vela más alta = la 8:35 → **RESISTENCIA 29.926,50 – 29.939,25** | `R-06`, `R-09` |
+| 8:36 → 8:39 | **el retroceso dura 4 velas.** Línea provisional que baja hasta **29.786,00** (vela 8:37) | `R-06`, `R-16` |
+| **8:40** | máximo mayor → retroceso confirmado → se dibuja el **SOPORTE 29.786,00 – 29.827,50** | `R-16`, `R-09` |
+| 8:40 → 8:44 | segunda estructura completa. **Sus dos zonas candidatas se bloquean**: los dos movimientos cruzan el 50 % entre bordes internos (29.877,00) | `R-12` |
+| **8:46** | rompe la resistencia **con cuerpo** (máx 29.959,50 · cierre 29.953,75) | `R-20` |
+| **8:47** | **consecución del IRI** (29.967,25) → pero el stop estructural queda a **114 pts**. `STOP_MAX` = 80 → **la orden NO se envía** | `R-31` |
+| **8:47** | **la misma vela se da la vuelta**: baja a 29.908,75, atraviesa la resistencia entera y sale por el borde inferior → **VELA DE REINGRESO** | `R-26` |
+| **8:48** | mínimo 29.896,00 → **consecución, se llena el corto** · **termina el análisis del día** | `R-26`, `R-34` |
+| **8:51** | máximo 29.984,00 → **STOP** | `R-33` |
 
 ### Los números
 
@@ -340,7 +342,7 @@ Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-24`) y 
 | Riesgo | **58,75 pts** · **73 %** de `STOP_MAX` ✅ |
 | Resultado | **−58,75 pts = −$117,50** con 1 MNQ |
 
-### Los tres filtros de `R-24`, uno por uno
+### Los tres filtros de `R-32`, uno por uno
 
 | Filtro | Comprobación | |
 |---|---|---|
@@ -351,9 +353,9 @@ Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-24`) y 
 > 🔑 **Lo que este caso aporta y `G-11` no tenía.**
 >
 > 1. **`STOP_MAX` no mata la sesión, la redirige.** El IRI se cae por 34 puntos de exceso y **un minuto después** la misma zona entrega un Reingreso que sí cabe. El filtro que rechaza un setup puede estar preparando el siguiente.
-> 2. **El stop del Reingreso salió MENOR que el del IRI** — 58,75 contra 114 — pese a la advertencia de `R-24` de que el Reingreso *"tiende a ser mayor"*. Aquí no lo fue, porque el IRI arrastraba un retroceso muy profundo y el Reingreso mide contra una corrida corta.
-> 3. **Una vela puede cerrar un setup y abrir el contrario.** La 8:47 da la consecución del IRI y es la vela de reingreso. Ver la ampliación de `R-23`.
-> 4. **Primer caso documentado de `R-17` bloqueando zonas** con datos exactos: 2 candidatas descartadas en la segunda estructura.
+> 2. **El stop del Reingreso salió MENOR que el del IRI** — 58,75 contra 114 — pese a la advertencia de `R-32` de que el Reingreso *"tiende a ser mayor"*. Aquí no lo fue, porque el IRI arrastraba un retroceso muy profundo y el Reingreso mide contra una corrida corta.
+> 3. **Una vela puede cerrar un setup y abrir el contrario.** La 8:47 da la consecución del IRI y es la vela de reingreso. Ver la ampliación de `R-26`.
+> 4. **Primer caso documentado de `R-12` bloqueando zonas** con datos exactos: 2 candidatas descartadas en la segunda estructura.
 
 > ⚠️ **`P-22` nació aquí.** El plan no dice **cuál** retroceso fija el stop del IRI cuando ha pasado más de uno. Los dos candidatos daban 114,00 y 173,75 pts — **59,75 de diferencia**. Ese día no mordió porque los dos superaban `STOP_MAX`.
 
@@ -362,9 +364,9 @@ Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-24`) y 
 
 ## G-13 · 🔴 SESIÓN COMPLETA · 8 JULIO 2026 · el día que reescribió el marcado de zonas
 
-**FOMC.** Solo se permiten Reingresos (`R-27`) y no hubo ninguno válido → **NO OPERA**.
+**FOMC.** Solo se permiten Reingresos (`R-36`) y no hubo ninguno válido → **NO OPERA**.
 
-El valor de este día no está en la operativa sino en el marcado. El operador corrigió al auditor **seis veces**, vela por vela, y de ahí salió `R-38` entera y buena parte de `R-36`.
+El valor de este día no está en la operativa sino en el marcado. El operador corrigió al auditor **seis veces**, vela por vela, y de ahí salió `R-19` entera y buena parte de `R-18`.
 
 | Vela | Lo que el auditor hacía mal | Lo correcto |
 |---|---|---|
@@ -377,7 +379,7 @@ El valor de este día no está en la operativa sino en el marcado. El operador c
 
 > 🔑 **El hallazgo estructural del día.** El tramo 8:51–9:12 se queda **sin ninguna zona marcada** — ocho candidatas seguidas bloqueadas por la regla del 50 %. El operador lo dio por bueno: es exactamente lo que él hace en un lateral, **sin necesidad de ninguna regla de lateralidad**.
 
-**Reglas que nacieron o se corrigieron aquí:** `R-35`, `R-36`, `R-38`, `R-13`, `R-18`.
+**Reglas que nacieron o se corrigieron aquí:** `R-17`, `R-18`, `R-19`, `R-20`, `R-13`.
 
 ---
 
@@ -395,7 +397,7 @@ El valor de este día no está en la operativa sino en el marcado. El operador c
 | **Consecución** | vela **8:46**, máximo 29.885,50 → **llena la orden**, todavía dentro del plazo |
 | **Salida** | vela 8:50, stop |
 
-> 🔑 **Dos reglas salieron de aquí.** `R-34`: la vela de apertura **no sesga** la jornada — con el sesgo puesto el motor solo buscaba cortos y este largo no existía, y el operador **sí lo tomó**. Y `R-04` **reescrita**: un retroceso nuevo no cancela; solo cancelan las 5 velas sin consecución o la vuelta al punto del stop.
+> 🔑 **Dos reglas salieron de aquí.** `R-27`: la vela de apertura **no sesga** la jornada — con el sesgo puesto el motor solo buscaba cortos y este largo no existía, y el operador **sí lo tomó**. Y `R-29` **reescrita**: un retroceso nuevo no cancela; solo cancelan las 5 velas sin consecución o la vuelta al punto del stop.
 
 ---
 
@@ -405,11 +407,11 @@ El valor de este día no está en la operativa sino en el marcado. El operador c
 
 **Dos casos de manual en el mismo día:**
 
-**1 · La zona apéndice (`R-16`).** La vela **8:39** rompe **con cuerpo** el soporte de la 8:36 —cierra en 29.502,75, bajo el piso 29.503,75— y ninguna de las 5 velas siguientes baja de 29.491,25. Al vencer el plazo, en la vela de las **8:44**, nace la apéndice **29.491,25 – 29.502,75**. La original no se toca.
+**1 · La zona apéndice (`R-11`).** La vela **8:39** rompe **con cuerpo** el soporte de la 8:36 —cierra en 29.502,75, bajo el piso 29.503,75— y ninguna de las 5 velas siguientes baja de 29.491,25. Al vencer el plazo, en la vela de las **8:44**, nace la apéndice **29.491,25 – 29.502,75**. La original no se toca.
 
-**2 · El stop que mata la entrada (`R-24`).** El soporte de la vela 9:27 se rompe con la vela **9:36**. El retroceso que lo originó (9:28–9:30) tenía su techo en **29.313,00**, y con esa medida el riesgo era 71,50 pts → entrada válida. Pero la vela **9:32** había subido hasta **29.327,75**. Con el stop bien medido —el extremo alcanzado **desde que nació la zona**— el riesgo sube a **86,25 pts** y **la entrada queda descartada por `STOP_MAX`**.
+**2 · El stop que mata la entrada (`R-32`).** El soporte de la vela 9:27 se rompe con la vela **9:36**. El retroceso que lo originó (9:28–9:30) tenía su techo en **29.313,00**, y con esa medida el riesgo era 71,50 pts → entrada válida. Pero la vela **9:32** había subido hasta **29.327,75**. Con el stop bien medido —el extremo alcanzado **desde que nació la zona**— el riesgo sube a **86,25 pts** y **la entrada queda descartada por `STOP_MAX`**.
 
-> 🔑 También aquí se fija `R-36` en su versión fina: la vela **8:52** rompe la apéndice y la **8:54** hace la consecución **dentro** del plazo → rompimiento exitoso, así que en la 8:53 **no se marca soporte** pese a que hubo retroceso.
+> 🔑 También aquí se fija `R-18` en su versión fina: la vela **8:52** rompe la apéndice y la **8:54** hace la consecución **dentro** del plazo → rompimiento exitoso, así que en la 8:53 **no se marca soporte** pese a que hubo retroceso.
 
 ---
 
@@ -419,9 +421,9 @@ El valor de este día no está en la operativa sino en el marcado. El operador c
 
 **El reingreso bueno.** La resistencia **29.725,75 – 29.737,25** (vela 8:33) se rompe con la vela **10:01**, la **10:02** hace la consecución y la **10:03** se da la vuelta **enseguida** y cruza la zona hacia abajo. Consecución fallida en el acto → reingreso. Riesgo de solo 28,50 pts.
 
-**El que no lo era.** Sobre la zona **29.652,25 – 29.666,75** (vela 8:39): rompe la vela 9:25 (máx 29.677,25), consecución la vela **9:27** (máx 29.681,00), y el precio **sigue subiendo** hasta 29.724,00. La vuelta de la vela 9:41, catorce velas más tarde, **no es un reingreso**. De aquí sale el plazo de `R-23`.
+**El que no lo era.** Sobre la zona **29.652,25 – 29.666,75** (vela 8:39): rompe la vela 9:25 (máx 29.677,25), consecución la vela **9:27** (máx 29.681,00), y el precio **sigue subiendo** hasta 29.724,00. La vuelta de la vela 9:41, catorce velas más tarde, **no es un reingreso**. De aquí sale el plazo de `R-26`.
 
-**La vida completa de tres zonas, al tick** — el caso que fija `R-13` sin plazo y `R-37`:
+**La vida completa de tres zonas, al tick** — el caso que fija `R-20` sin plazo y `R-22`:
 
 | Zona | Rompe | Consecución | Rompe al revés | Consecución | Inválida |
 |---|---|---|---|---|---|
@@ -448,7 +450,7 @@ El valor de este día no está en la operativa sino en el marcado. El operador c
 | corto 9:06 | **157,75 pts** | pasa `STOP_MAX` (80) en un 97 % |
 | corto 9:16 | **84,00 pts** | pasa `STOP_MAX` por 4 pts |
 
-> 🔑 **Lo que confirma este día:** la **zona de premercado hace de borde de banda** igual que cualquier otra zona (`R-35`, punto 7). Y confirma que la regla de una-sola-zona-por-banda **puede dejar media hora del gráfico completamente en blanco** — no es un efecto raro de borde, es el funcionamiento normal.
+> 🔑 **Lo que confirma este día:** la **zona de premercado hace de borde de banda** igual que cualquier otra zona (`R-17`, punto 7). Y confirma que la regla de una-sola-zona-por-banda **puede dejar media hora del gráfico completamente en blanco** — no es un efecto raro de borde, es el funcionamiento normal.
 
 **Validación:** el operador confirma el marcado — *"la marcación está bien, yo la tengo idéntica"* (01/09/2026).
 

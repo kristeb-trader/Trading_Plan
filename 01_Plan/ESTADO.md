@@ -2,76 +2,114 @@
 
 > **Archivo de arranque.** Léelo primero cada sesión. Detalle completo en `TRADING_PLAN_CHAUMER.md` y `GLOSARIO.md`.
 
-**v1.15** · 2026-08-26 · **33 reglas** · **22 términos** · **F1.0 a F1.9 CERRADAS · F1.10 abierta** (F1.7 con hueco declarado)
+**v3.1** · 2026-09-06 · **38 reglas** · **24 términos** · 🏁 **FASE 1 CERRADA** (12/12 sub-fases, con 4 huecos declarados) · 🚧 **FASE 2 en curso: portal web en `04_Web\`**
 
-## Reglas confirmadas
+> ⚠️ El plan está **escrito y contrastado, no probado**: el test ciego nunca se ejecutó. Ver `CIERRE_FASE_1.md`.
+> 🔢 Numeración nueva desde el 06/09/2026 — traducción en `EQUIVALENCIA_NUMERACION.md`.
 
-| ID | Cat | En una línea |
-|---|---|---|
-| `R-01` | CTX | Analiza NQ, ejecuta MNQ, velas 1 min |
-| `R-02` | CTX | Ventana 09:30–11:30 ET (gráfico en hora Colombia) |
-| `R-03` | RSK | Máx 1 operación llenada por sesión |
-| `R-04` | ENT | Orden caduca por retroceso nuevo, invalidación o 11:29 ET (NO por 5 velas) |
-| `R-05` | SET | Primer setup válido, sin comparar |
-| `R-06` | GES | Fin de ventana prohíbe abrir, no obliga a cerrar |
-| `R-07` | ENT | Stop Market a 1 tick de la vela de rompimiento, al cierre de esa vela |
-| `R-08` | GES | ATM K1, 1 contrato, `ATM_DEFECTO`=320 ticks; filtro previo: stop ≤ `STOP_MAX`=80 pts |
-| `R-09` | CTX | Gráfico limpio: solo Volume Up Down sobre NQ |
-| `R-10` | CTX | Corrida = 2+ velas superando la anterior |
-| `R-11` | CTX | Retroceso = movimiento contrario; sin tamaño mínimo; se mide en puntos |
-| `R-12` | CTX | Zona = mecha de la vela extrema, del cuerpo a la punta |
-| `R-13` | ENT | Rompimiento ≥1 tick; consecución ≥1 tick en 5 velas |
-| `R-14` | FIL | Vigencia binaria: activa / inactiva (traspasada por ambos lados) |
-| `R-15` | CTX | Rompe con mecha + 5 velas sin consecución → se extiende la zona |
-| `R-16` | CTX | Rompe con cuerpo + 5 velas sin consecución → zona apéndice |
-| `R-17` | CTX | Zona entre zonas solo si el movimiento no cruza el 50% (bordes internos) |
-| `R-18` | CTX | Zonas que se tocan → se estira una, no se crean dos |
-| `R-19` | CTX | 5 velas es tope: estructura nueva (retroceso que genera zona) marca zona ya |
-| `R-20` | CTX | Premercado (19:00 Col → apertura): NQ>2.000 marca zona. Se apaga al abrir |
-| `R-22` | SET | **IRI**: corrida→retroceso→zona→rompimiento→consecución=entrada · plazo 5 velas · filtro solo zona vigente |
-| `R-30` | PRO | Al llenarse la orden **termina el análisis del día**. No más zonas, no más setups. Bitácora y cerrar NT8 |
-| `R-31` | EST | La **08:31 declara la dirección del día con su propio cuerpo** · es la vela origen · puede sostener zona |
-| `R-32` | EST | **Vela envolvente** (máx mayor + mín menor) **sin corrida viva** → no declara dirección, la da la siguiente |
-| `R-33` | ZON | Corrida → zona al **aparecer** el retroceso · retroceso → **línea provisional** y zona solo al **confirmarse** |
-| `R-29` | PRO | **Checklist diaria** (`CHECKLIST_DIARIA.md`) + registro de TODAS las sesiones, se opere o no |
-| `R-27` | FIL | **Día FOMC** (Forex Factory en rojo): IRI prohibido todo el día, solo Reingreso |
-| `R-28` | FIL | Enfermo o mentalmente mal → no operar · **criterio libre, sin número** |
-| `R-26` | RSK | **1 contrato MNQ siempre**. No escala con el capital. Revisión anual |
-| `R-25` | GES | **NO se gestiona, jamás.** Ni breakeven, ni cierre manual, ni parcial. Solo stop o target |
-| `R-24` | GES | **Stop y target**: regla anclada en la entrada · IRI mide contra el retroceso, Reingreso contra la corrida fallida · target 1:1 · 3 filtros, y si falla uno NO se opera |
-| `R-23` | SET | **Reingreso**: rompimiento falla→precio atraviesa la zona entera→consecución=entrada · sin plazo · filtro extra: punto de referencia |
-| `R-21` | FIL | Noticia roja Forex Factory: no operar ±5 min; orden pendiente se cancela |
+## Las 38 reglas confirmadas, por categoría
 
+### 1 · Perímetro operativo (4)
+
+| ID | En una línea |
+|---|---|
+| `R-01` | Analiza, marca y ejecuta **todo en MNQ**. Un solo gráfico de 1 minuto |
+| `R-02` | Ventana 08:31–10:30 hora Colombia (120 min desde la apertura americana) |
+| `R-03` | Gráfico limpio: velas de 1 min y **Volume Up Down**. Nada más |
+| `R-04` | **1 contrato MNQ siempre.** No escala con el capital. Revisión anual |
+
+### 2 · Estructura del precio (4)
+
+| ID | En una línea |
+|---|---|
+| `R-05` | Corrida = 2+ velas superando cada una el extremo de la anterior |
+| `R-06` | Retroceso = movimiento contrario; sin tamaño mínimo; se mide en puntos |
+| `R-07` | La **08:31 declara la dirección del día con su propio cuerpo** · es la vela origen · puede sostener zona |
+| `R-08` | **Vela envolvente** (máx mayor + mín menor) **sin corrida viva** → no declara dirección, la da la siguiente |
+
+### 3 · Zonas (14)
+
+| ID | En una línea |
+|---|---|
+| | **── MARCADO ──** |
+| `R-09` | Zona = la mecha de la vela extrema, del borde del cuerpo a la punta |
+| `R-10` | Rompe con **mecha** + plazo resuelto sin consecución → **se extiende** la zona |
+| `R-11` | Rompe con **cuerpo** + plazo resuelto sin consecución → nace **zona apéndice** |
+| `R-12` | Zona entre zonas solo si el movimiento no cruza el **50 %** (bordes internos) |
+| `R-13` | Zonas del mismo tipo que se tocan → **se estira una**, no se crean dos |
+| `R-14` | Las **5 velas son un tope, no una espera**: una estructura completa al contrario resuelve antes |
+| `R-15` | Premercado (19:00 Col → apertura): **MNQ > 6.000** marca zona. Se apaga al abrir |
+| `R-16` | Corrida → zona al **aparecer** el retroceso · retroceso → línea provisional, zona al **confirmarse** |
+| `R-17` | **Una sola zona por banda y por jornada**: la del primer retroceso |
+| `R-18` | Salir de una zona o de una banda es **rompimiento + consecución**, no geometría |
+| `R-19` | Seis precisiones de dibujo — la propia es **no solapar zonas de tipo distinto** |
+| | **── VIGENCIA ──** |
+| `R-20` | Rompimiento ≥1 tick **por mecha** · consecución = pasar el extremo de la vela que rompió, **sin plazo** |
+| `R-21` | Vigencia binaria: activa / inactiva (traspasada). **Las zonas no envejecen** |
+| `R-22` | La vela que confirma un traspaso **no abre a la vez** el rompimiento del lado contrario |
+
+### 4 · Setup y entrada (5)
+
+| ID | En una línea |
+|---|---|
+| `R-23` | **Primer setup válido**, sin comparar |
+| `R-24` | Stop Market a 1 tick de la vela de rompimiento, al cierre de esa vela |
+| `R-25` | **IRI**: corrida→retroceso→zona→rompimiento→consecución = entrada · plazo 5 velas · filtro: zona vigente |
+| `R-26` | **Reingreso**: rompimiento falla→precio atraviesa la zona entera→consecución = entrada · **inmediato o no es** |
+| `R-27` | La vela de apertura **no sesga la jornada**: se opera en los dos sentidos |
+
+### 5 · Riesgo, orden y gestión (7)
+
+| ID | En una línea |
+|---|---|
+| `R-28` | Máx **1 operación llenada** por sesión |
+| `R-29` | La orden caduca por retroceso nuevo, invalidación, **volver al punto del stop** o fin de ventana |
+| `R-30` | Fin de ventana **prohíbe abrir, no obliga a cerrar** |
+| `R-31` | ATM `K1`, 1 contrato, `ATM_DEFECTO` = 320 ticks · filtro previo: stop ≤ `STOP_MAX` = 80 pts |
+| `R-32` | **Stop y target**: el stop es el extremo alcanzado **desde que nació la zona** · target 1:1 · 3 filtros, y si falla uno NO se opera |
+| `R-33` | **NO se gestiona, jamás.** Ni breakeven, ni cierre manual, ni parcial. Solo stop o target |
+| `R-34` | Al llenarse la orden **termina el análisis del día**. No más zonas, no más setups. Bitácora y cerrar NT8 |
+
+### 6 · Filtros de no-operar (3)
+
+| ID | En una línea |
+|---|---|
+| `R-35` | Noticia roja Forex Factory: no operar ±5 min; la orden pendiente se cancela |
+| `R-36` | **Día FOMC** (Forex Factory en rojo): IRI prohibido todo el día, solo Reingreso |
+| `R-37` | Enfermo o mentalmente mal → no operar · **criterio libre, sin número** |
+
+### 7 · Proceso diario (1)
+
+| ID | En una línea |
+|---|---|
+| `R-38` | **Checklist diaria** + registro de TODAS las sesiones, se opere o no |
 ## Fuera de las reglas
 
-- **Checklist** (`CHECKLIST_DIARIA.md`): la secuencia del día
-- **Galería** (`GALERIA.md`): **10 casos** — 6 operados, 2 descartes, 1 día sin operar, 1 prueba · imágenes en `02_Assets\galeria\`
-- **Parámetros** (`PARAMETROS.md`): `STOP_MAX`=80 pts · `ATM_DEFECTO`=320 ticks · `RATIO_TARGET`=1:1 · umbrales de volumen y horarios
-- **Contextualización** (`CONTEXTUALIZACION.md`): C-01 sobreextensión · C-02 volumen en extendido · C-03 lateralización · C-04 alejamiento · C-05 fluidez · C-06 recorrido · C-07 tamaño de estructura · C-08 volumen en sesión · C-09 vela de la consecución (C-03 = rango = congestión) · **C-08 volumen en sesión**
+- **Checklist** (`CHECKLIST_DIARIA.md`): la secuencia del día en 4 bloques
+- **Galería** (`GALERIA.md`): **21 casos** etiquetados, incluidas las **11 sesiones completas al tick** (6 → 20 de julio de 2026) · imágenes en `02_Assets\galeria\`
+- **Parámetros** (`PARAMETROS.md`): `STOP_MAX`=80 pts · `ATM_DEFECTO`=320 ticks · `RATIO_TARGET`=1:1 · `CONTRATOS`=1 MNQ · `PLAZO_CONSECUCION`=5 velas · `UMBRAL_VOL`>6.000 MNQ
+- **Contextualización** (`CONTEXTUALIZACION.md`): 10 elementos que **NO son reglas y no deben convertirse en reglas** — C-01 sobreextensión · C-02 volumen en extendido · C-03 lateralización · C-04 alejamiento · C-05 fluidez · C-06 recorrido · C-07 tamaño de estructura · C-08 volumen en sesión · C-09 vela de la consecución
 - **Desviaciones** (`PENDIENTES.md`): D-01 a D-13. Descartados del curso: Fibonacci, POC, zona crítica, alto/bajo de sesión, zona de desequilibrio, fractal, manipulación, sesión europea, Giro
+- **Equivalencia de numeración** (`EQUIVALENCIA_NUMERACION.md`): traducción vieja → nueva
+- **Limpieza de reglas** (`PROPUESTA_LIMPIEZA_REGLAS.md`): cuatro fusiones propuestas y **sin decidir** — llevarían el plan de 38 a 33
 
 ## Pendientes abiertos
 
-`P-01` mín/máx premercado sin datos · `P-03` reglas Apex · `P-07` sin fin garantizado de sesión · `P-08` riesgo 4% sin tope semanal · `P-09` ventana de exposición manual (aceptado) · `P-10` nombre del data feed · `P-12` comisión real MNQ · 🚨 **`P-21` NO hay regla de parada — hueco declarado**
+**Los cuatro huecos declarados del cierre:** 🚨 `P-29` el **test ciego nunca se ejecutó** · 🚨 `P-21` **no hay regla de parada** · 🚨 falta toda la **capa de contextualización** · 🚨 `P-27` las cifras del backtesting **no miden la estrategia**.
+
+**Dudas de método abiertas:** `P-23` vela de apertura sin cuerpo · `P-24` ¿sobra `R-08`? · `P-25` ¿sirve para entrar una zona estirada? · `P-26` ¿el FOMC bloquea toda la sesión? · `P-27` calendario de noticias rojas · `P-28` separación mínima entre zonas del mismo tipo · `P-30` ¿la resolución anticipada aplica también al estiramiento? · `P-31` el motor de auditoría todavía no aplica la resolución anticipada · 🟠 **`P-32` el umbral de premercado cambió de NQ a MNQ y la equivalencia no está verificada** — cerrarlo **antes** del backtesting de un año.
+
+**Menores, sin bloquear:** `P-01` mín/máx premercado sin datos · `P-03` reglas Apex · `P-07` sin fin garantizado de sesión · `P-08` riesgo sin tope semanal · `P-09` ventana de exposición manual (aceptado) · `P-10` nombre del data feed · `P-12` comisión real MNQ.
 
 ## Siguiente
 
-**F1.3 ✅ CERRADA.** 2 setups: **IRI** (`R-22`) y **Reingreso** (`R-23`). `IRI Apertura` = `IRI Continuación` en mecánica. Giro descartado (`D-13`).
+🏁 **Fase 1 cerrada el 01/09/2026.** Las 12 sub-fases están cerradas; el detalle de cada una vive en los anexos de `TRADING_PLAN_CHAUMER.md` y el acta en `CIERRE_FASE_1.md`.
 
-**F1.4 cerrada sin reglas nuevas** (ya estaba en `R-07`, `R-13`, `R-22`, `R-23`, `R-04`).
-**F1.5 cerrada:** `R-24` + `R-08` corregida + nuevo **`PARAMETROS.md`**.
+🚧 **Fase 2 en curso — el portal web**, en `04_Web\`, construido desde Claude Code contra `reglas.json`. Instrucciones de traspaso en `CLAUDE.md` (raíz) y `04_Web\BRIEF_PORTAL.md`.
 
-**F1.6 cerrada:** `R-25` — no se gestiona nunca.
+**Aplazado, con fecha por decidir:** la capa de contextualización · el backtesting de un año · el bot de NinjaTrader · el test ciego, que puede ejecutarse **contra el portal**.
 
-**F1.7 cerrada con hueco declarado:** `R-26` escrita; **sin regla de parada** (`P-21`, decisión consciente).
-
-**F1.9 cerrada:** `R-29` + **`CHECKLIST_DIARIA.md`** (4 bloques: antes de NT8 · premercado · ventana · tras el llenado).
-
-**F1.10 operativa:** 10 casos. `G-07` y `G-08` documentan los **descartes**; `G-09` un **día sin operar**. Sigue faltando: **caso con pérdida real**, target bloqueado por zona vigente, zona de premercado (`R-20`) y día de FOMC.
-
-**F1.11 (test ciego, 9/10)** pendiente. Necesita capturas que el auditor no haya visto etiquetadas.
-
-F1.2 cerrada sin reglas: no hay sesgo direccional ni criterio previo de operar/no operar. Aviso inventariado: **`F1.3` tiene 4 tipos de entrada**, no uno — Continuación/Ingreso · Reingreso · Giro (4 velas entre break a favor y en contra; el giro es la 5ª) · Patrón de Apertura.
+**Decisión sobre la mesa:** las cuatro fusiones de `PROPUESTA_LIMPIEZA_REGLAS.md` (38 → 33 reglas).
 
 ## Reglas permanentes del proyecto
 
@@ -380,8 +418,8 @@ Ya está volcado a los documentos de trabajo. Resumen de lo que cambió en cada 
 
 | Documento | Qué se hizo |
 |---|---|
-| **TRADING_PLAN_CHAUMER.md** | v1.12 → **v1.16**. Nueva sub-fase **F1.12** con `R-34` a `R-38`. Corregidas `R-04` (reescrita al revés), `R-13`, `R-14`, `R-17`, `R-18`, `R-23`, `R-24` y la nota de `R-33` sobre `R-04`. Historial ampliado. **38 reglas** |
-| **reglas.json** | 30 → **38 reglas**. Añadidas `R-31`, `R-32`, `R-33` (faltaban desde el 26) y `R-34` a `R-38`. Actualizadas `R-04`, `R-13`, `R-14`, `R-18`, `R-23`, `R-24` |
+| **TRADING_PLAN_CHAUMER.md** | v1.12 → **v1.16**. Nueva sub-fase **F1.12** con `R-27` a `R-19`. Corregidas `R-29` (reescrita al revés), `R-20`, `R-21`, `R-12`, `R-13`, `R-26`, `R-32` y la nota de `R-16` sobre `R-29`. Historial ampliado. **38 reglas** |
+| **reglas.json** | 30 → **38 reglas**. Añadidas `R-07`, `R-08`, `R-16` (faltaban desde el 26) y `R-27` a `R-19`. Actualizadas `R-29`, `R-20`, `R-21`, `R-13`, `R-26`, `R-32` |
 | **GLOSARIO.md** | Corregidos ROMPIMIENTO Y CONSECUCIÓN, VIGENCIA, EXTENSIÓN, ZONA APÉNDICE, REINGRESO y ZONAS ENTRE ZONAS. Tres entradas nuevas: **SALIDA DE UNA ZONA**, **SESGO DE LA APERTURA** y el bloque de una-sola-zona-por-banda |
 | **PARAMETROS.md** | `PLAZO_CONSECUCION` precisado; nuevos **`VENTANA_REINGRESO`** y **`ORIGEN_DEL_STOP`** |
 | **CHECKLIST_DIARIA.md** | Corregido el bloque de cancelación de la orden (decía lo contrario). Dos bloques nuevos: comprobaciones de marcado y comprobaciones antes de enviar |
@@ -391,8 +429,8 @@ Ya está volcado a los documentos de trabajo. Resumen de lo que cambió en cada 
 
 ### La contradicción que había que matar
 El plan decía que una orden pendiente **se cancela por un retroceso nuevo** y que **no se cancela**
-por pasar 5 velas sin consecución. Es exactamente al revés. Estaba en `R-04`, en la
-`CHECKLIST_DIARIA`, en `reglas.json`, en la nota de `R-33` y en el cierre de `P-19`.
+por pasar 5 velas sin consecución. Es exactamente al revés. Estaba en `R-29`, en la
+`CHECKLIST_DIARIA`, en `reglas.json`, en la nota de `R-16` y en el cierre de `P-19`.
 **Corregido en los cinco sitios**, con la entrada vieja del historial marcada como superada.
 
 
@@ -413,8 +451,8 @@ Escrito en:
 
 | Documento | Qué se escribió |
 |---|---|
-| **TRADING_PLAN_CHAUMER.md** | `R-35` gana el punto 7 de su tabla y el caso real del 14/07. `R-20` remata su fila con la referencia cruzada |
-| **reglas.json** | `R-35` gana la condición `bordes_de_la_banda` y su nota con el caso; `R-20` amplía `comportamiento_posterior` |
+| **TRADING_PLAN_CHAUMER.md** | `R-17` gana el punto 7 de su tabla y el caso real del 14/07. `R-15` remata su fila con la referencia cruzada |
+| **reglas.json** | `R-17` gana la condición `bordes_de_la_banda` y su nota con el caso; `R-15` amplía `comportamiento_posterior` |
 | **GLOSARIO.md** | Punto 7 en el bloque de una-sola-zona-por-banda, el caso del 14/07, y la fila de comportamiento posterior de ZONA DE PREMERCADO |
 | **GALERIA.md** | Nuevo caso **G-17** y el 14 jul en la tabla resumen |
 
@@ -697,14 +735,14 @@ actualizados a 39 reglas.
 
 # 🔧 04/09/2026 — REVISIÓN COMPLETA DE LAS REGLAS
 
-## Lo aplicado: se elimina `R-39`, era `R-19` otra vez
-El auditor escribió `R-39` el 01/09 sin buscar antes. **`R-19`, confirmada el 24/08, ya decía
+## Lo aplicado: se elimina `R-39`, era `R-14` otra vez
+El auditor escribió `R-39` el 01/09 sin buscar antes. **`R-14`, confirmada el 24/08, ya decía
 lo mismo con esas palabras:** *"el plazo de 5 velas es un tope, no una espera"*.
 
 - `R-39` eliminada de `reglas.json` y de todos los documentos.
 - Su aportación real —la **definición medible de las tres velas** de la estructura contraria—
-  vive ahora dentro de `R-19`.
-- `R-19` gana **sección propia** en el plan. Hasta hoy existía solo como una fila de tabla,
+  vive ahora dentro de `R-14`.
+- `R-14` gana **sección propia** en el plan. Hasta hoy existía solo como una fila de tabla,
   **y ésa es la causa de raíz por la que se pudo duplicar**.
 - Plan **v2.2 · 38 reglas**.
 
@@ -713,19 +751,19 @@ lo mismo con esas palabras:** *"el plazo de 5 velas es un tope, no una espera"*.
 ### 🔴 Cinco contradicciones vivas (más graves que el duplicado)
 Reglas confirmadas que siguen diciendo lo que decían **antes** de que el operador las corrigiera:
 
-1. **El stop, en CUATRO sitios con la definición vieja** — `R-24` en `reglas.json`, `R-11`,
-   `R-08` y `R-04` siguen diciendo *"el extremo del retroceso"* en vez de *"el extremo desde
+1. **El stop, en CUATRO sitios con la definición vieja** — `R-32` en `reglas.json`, `R-06`,
+   `R-31` y `R-29` siguen diciendo *"el extremo del retroceso"* en vez de *"el extremo desde
    que nació la zona"*, corregido el 27/08.
    ⚠️ **La de `reglas.json` es la peligrosa: el portal se construye contra ese archivo**, así
    que hoy el portal mostraría la definición vieja del stop.
-2. **`R-13`** sigue diciendo que la consecución es *"dentro de las 5 velas siguientes"*, cuando
+2. **`R-20`** sigue diciendo que la consecución es *"dentro de las 5 velas siguientes"*, cuando
    el 27/08 se confirmó que **la consecución que traspasa una zona no tiene plazo**.
 
 ### 🟡 Cuatro fusiones propuestas — 38 → 33
-- `R-03` + `R-05` + `R-30` → *"una operación por sesión, la primera que se llene, y ahí termina el día"*
-- `R-06` + `R-25` → *"solo hay dos salidas: stop o target"*
-- `R-31` + `R-34` → *"la vela de apertura: origen sí, sesgo no"*
-- `R-38` disuelta: cinco de sus seis precisiones ya viven en otra regla; solo la de no solapar
+- `R-28` + `R-23` + `R-34` → *"una operación por sesión, la primera que se llene, y ahí termina el día"*
+- `R-30` + `R-33` → *"solo hay dos salidas: stop o target"*
+- `R-07` + `R-27` → *"la vela de apertura: origen sí, sesgo no"*
+- `R-19` disuelta: cinco de sus seis precisiones ya viven en otra regla; solo la de no solapar
   zonas de tipo distinto es propia.
 
 ### 🟢 Ocho grupos propuestos, verificados
@@ -747,19 +785,19 @@ Todo lo de arriba salvo la eliminación del duplicado **es propuesta y espera vi
 
 ## Las cinco definiciones superadas, corregidas
 La corrección del stop del **27/08** —*el extremo alcanzado desde que nació la zona*, no solo el
-del retroceso— se escribió en el texto de `R-24` y **nunca se propagó**. Seguía la versión vieja en:
+del retroceso— se escribió en el texto de `R-32` y **nunca se propagó**. Seguía la versión vieja en:
 
 | Dónde | Ya corregido |
 |---|---|
-| `R-24` en `reglas.json` | ⚠️ **la peligrosa** — es el archivo contra el que se construye el portal |
-| `R-11` | decía que el stop iba en el extremo del retroceso |
-| `R-08` | el filtro del tope medía contra el extremo del retroceso |
-| `R-04` | la cancelación se medía contra el extremo del retroceso |
-| `R-13` | el enunciado decía que la consecución es *"dentro de las 5 velas siguientes"* |
+| `R-32` en `reglas.json` | ⚠️ **la peligrosa** — es el archivo contra el que se construye el portal |
+| `R-06` | decía que el stop iba en el extremo del retroceso |
+| `R-31` | el filtro del tope medía contra el extremo del retroceso |
+| `R-29` | la cancelación se medía contra el extremo del retroceso |
+| `R-20` | el enunciado decía que la consecución es *"dentro de las 5 velas siguientes"* |
 
-**Sobre `R-04`, una precisión que no es menor.** Las palabras del operador el 27/08 fueron
+**Sobre `R-29`, una precisión que no es menor.** Las palabras del operador el 27/08 fueron
 *"llega al mismo punto del retroceso, que sería el mismo punto del stop"*. Entonces coincidían.
-Desde que `R-24` se corrigió **pueden no coincidir**, y manda **el punto del stop**.
+Desde que `R-32` se corrigió **pueden no coincidir**, y manda **el punto del stop**.
 No es interpretación del auditor: se comprobó en `lector.py` que es exactamente lo que hizo el
 motor en las **11 sesiones validadas**.
 
@@ -772,9 +810,103 @@ riesgo, orden y gestión 7 · filtros de no-operar 3 · proceso 1`
 `reglas.json` gana cuatro campos —`categoria_nombre`, `categoria_descripcion`, `categoria_orden`
 y `subcategoria`— y **queda ordenado por grupo**, para que el portal no tenga que inventar nada.
 
-`R-13` queda en zonas · vigencia, pero define también la entrada: **debe enlazarse desde Setup y
+`R-20` queda en zonas · vigencia, pero define también la entrada: **debe enlazarse desde Setup y
 entrada**.
 
 ## Estado
 Plan **v2.3 · 38 reglas · cero contradicciones vivas**.
 Pendiente: **las cuatro fusiones** de `PROPUESTA_LIMPIEZA_REGLAS.md` — llevarían el plan a 33.
+
+---
+
+# 🔵 06/09/2026 — SALE EL NQ, Y SE RENUMERAN LAS 38 REGLAS
+
+## 1 · El NQ sale del plan
+Decisión del operador: **todo se analiza, se marca y se ejecuta en MNQ, con un solo gráfico**.
+
+| Antes | Desde hoy |
+|---|---|
+| dos gráficos: análisis y volumen en NQ, ejecución en MNQ | **un gráfico: MNQ** |
+| desfase NQ↔MNQ de hasta 3 ticks | **desaparece** |
+| umbral de premercado: NQ > 2.000 · MNQ > 6.000 | **solo MNQ > 6.000** |
+
+**El backtesting histórico NO se rehace.** Se hizo con datos de NQ, el operador lo acepta
+explícitamente, y las reglas son las mismas.
+
+### 🟠 Lo que esto abre — `P-32`
+La equivalencia entre **NQ > 2.000** y **MNQ > 6.000** **nunca se verificó con datos**, y no
+tenemos datos de MNQ para hacerlo. Las 11 sesiones validadas se marcaron con el umbral de NQ.
+Importa porque la zona de premercado hace de **borde de banda**: el 14 de julio la jornada
+entera se decidió por una banda cuyo borde superior era una zona de premercado.
+
+## 2 · Las 38 reglas, renumeradas
+Ahora corren seguidas dentro del orden de las siete categorías. Antes los números venían del
+orden en que se fueron descubriendo — por eso *Estructura del precio* saltaba de la 11 a la 31.
+
+**1.127 referencias cruzadas remapeadas en 18 archivos**, incluidos el historial de versiones,
+este registro cronológico y los nombres de los diagramas. **No conviven dos numeraciones.**
+
+Nuevo documento: **`EQUIVALENCIA_NUMERACION.md`**, con la tabla vieja→nueva.
+Nuevo en el plan: **índice de las 38 reglas por categoría**.
+
+Los diagramas de `02_Assets\diagramas\` se copiaron con los nombres nuevos; **las copias
+viejas siguen ahí y se pueden borrar** (están listadas en el documento de equivalencia).
+
+### ✅ El desajuste que quedaba, resuelto el mismo día
+Quedó declarado que `TRADING_PLAN_CHAUMER.md` seguía organizado **por sub-fases** y que con
+la numeración nueva sus secciones ya no iban en orden: `R-01`, `R-02`, `R-28`, `R-29`…
+El operador decidió reorganizarlo — *"no importa que en el portal queden mal, eso lo hago
+en Claude Code"*. Ver la entrada siguiente.
+
+## Estado
+Plan **v3.0 · 38 reglas**.
+
+---
+
+# 📕 06/09/2026 (b) — EL DOCUMENTO MAESTRO SE REORGANIZA POR CATEGORÍAS
+
+## Qué se hizo
+`TRADING_PLAN_CHAUMER.md` pasa de **v3.0 a v3.1**. Hasta hoy seguía el orden en que se
+construyó el plan —las sub-fases `F1.x`—, así que para leer las cuatro reglas de perímetro
+había que saltar entre cinco sitios del documento.
+
+Ahora el cuerpo son **las siete categorías en su orden de uso durante el día**, y dentro de
+cada una las reglas por número. **Zonas** va partida en `── MARCADO ──` y `── VIGENCIA ──`,
+igual que en `reglas.json`.
+
+Todo el material de construcción **se conserva íntegro**: la narrativa de cada sub-fase, los
+diagramas, las 13 desviaciones respecto al curso y las correcciones del auditor se movieron
+a **`📎 ANEXOS Y NOTAS DE CONSTRUCCIÓN`**, al final, en su orden original.
+
+## Siete reglas ganan sección propia
+`R-12`, `R-13`, `R-15`, `R-20`, `R-21`, `R-34` y `R-35` vivían **solo como fila de tabla**.
+Cada una tiene ahora su sección, generada desde `reglas.json`. **Ése es exactamente el hueco
+que permitió el duplicado del 01/09** (`R-39` repitiendo a `R-14` sin que nadie lo viera).
+Ya no queda ninguna regla sin sección: **38 de 38**.
+
+## Ninguna regla cambia
+Se reordenó y se completó el documento. **Cero reglas nuevas, cero reglas modificadas.**
+
+## Barrido de documentación del mismo día
+- Sale el `NQ` de todo lo que se leía como regla vigente: cabecera del plan, ficha de la zona
+  de premercado, `GLOSARIO.md`, `PARAMETROS.md`, `PENDIENTES.md`, `GALERIA.md` y el archivo
+  de sub-fase `F1.0_Perimetro.md`, cuyo bloque de `R-01` estaba a medio corregir. Lo que
+  queda con NQ es **historia fechada**, marcada como tal, más el nombre del PDF original y el
+  archivo de datos del backtesting.
+- Cabeceras que llevaban meses desfasadas, puestas al día: `ESTADO.md` decía *v1.15 · 33
+  reglas · F1.10 abierta*; `CHECKLIST_DIARIA.md`, *v1.8-F1.9*; `PENDIENTES.md`, *24 reglas*;
+  `GALERIA.md`, *11 casos* cuando son 21.
+- El recuento de términos del glosario no cuadraba —26 en su cabecera, 24 en el acta de
+  cierre—. **Contados uno a uno: 23 con sección propia.** Corregido en los tres sitios.
+- `ESTADO.md` estrena cabecera: **las 38 reglas en una línea cada una, agrupadas por
+  categoría**. Es el archivo de arranque, y ahora arranca con el plan entero a la vista.
+- Los dos archivos de `01_Plan\subfases\` llevan aviso de **archivo de construcción**: no son
+  fuente de verdad y pueden traer códigos de la numeración vieja.
+
+## Lo que sigue abierto
+🟡 Las **cuatro fusiones** de `PROPUESTA_LIMPIEZA_REGLAS.md` (38 → 33 reglas) siguen **sin
+decidir**. Hasta que el operador diga, el plan tiene 38.
+
+## Estado
+Plan **v3.1 · 38 reglas · 7 categorías**. Siguiente paso: que Claude Code reorganice el
+portal contra `reglas.json`.
