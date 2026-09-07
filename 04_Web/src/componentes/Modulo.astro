@@ -277,7 +277,10 @@ const destinoFinal = siguiente
   }
   .ruta-l {
     list-style: none; margin: 0; padding: 0; max-width: none;
-    display: flex; align-items: flex-start;
+    /* `stretch`, no `flex-start`: todas las paradas miden lo que la mas alta,
+       asi el pie de la ruta es una linea recta aunque un titulo ocupe dos
+       renglones y su vecino uno. Con `flex-start` la fila salia dentada. */
+    display: flex; align-items: stretch;
   }
   .ruta-l::-webkit-scrollbar { display: none; }
   .ruta-i { flex: 1 1 0; min-width: 0; margin: 0; position: relative; }
@@ -296,7 +299,8 @@ const destinoFinal = siguiente
 
   .ruta-i > a {
     position: relative; z-index: 1;
-    display: grid; justify-items: center; gap: var(--e-2);
+    display: grid; justify-items: center; align-content: start; gap: var(--e-2);
+    height: 100%;
     padding: 0 var(--e-2);
     color: var(--texto-3);
     text-align: center;
@@ -319,6 +323,11 @@ const destinoFinal = siguiente
   .ri-t {
     font-size: var(--t-2);
     line-height: 1.3;
+    /* Dos renglones reservados SIEMPRE. El operador lo vio en zonas: «Rompimiento
+       y consecucion» ocupaba dos lineas y sus vecinos una, y la fila quedaba
+       corrida. Ahora todos ocupan lo mismo y los titulos arrancan a la misma
+       altura. */
+    min-height: 2.6em;
     /* Tres lineas como maximo: con ocho paradas la columna es estrecha y a
        dos lineas se cortaban titulos enteros. */
     display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
