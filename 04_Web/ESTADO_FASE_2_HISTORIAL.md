@@ -8,6 +8,39 @@ por palabra y se abre solo el trozo que haga falta.
 
 ## Historial
 
+### 2026-09-07 · el titular de la portada y las paradas descuadradas
+
+Dos arreglos pequeños pedidos por el operador.
+
+**La portada.** El titular va ahora centrado, y «Alfredo Chaumer» se pinta
+aparte en el azul claro del portal (`--acento-vivo`, `#6AA0FF`), lo justo
+para que resalte sin salirse de la paleta. `BannerTerminal` acepta una
+propiedad `destacado` ademas del `titulo`; la cinta y la fila de cuatro
+datos no se tocan.
+
+**Las paradas de los modulos.** En la ruta de apartados, un titulo de dos
+renglones salia con el primero centrado y el segundo corrido a la
+izquierda. El operador lo vio en zonas, en «Rompimiento y consecucion» y
+«Cuando quitar una zona», que son los dos que mas parten.
+
+No era el ancho de la columna ni el recorte a tres lineas, que ya se
+habian tocado antes por este mismo sintoma. La parada es un `<li>`, y la
+regla comun de justificado de `base.css` le deja `text-align-last: left`.
+**Esa propiedad se hereda, y el `text-align: center` de la parada no la
+toca:** manda solo sobre las lineas que no son la ultima. Se anade
+`text-align-last: center` junto al centrado que ya estaba.
+
+Medido palabra a palabra en las siete paradas a 1280px: antes, la ultima
+linea se iba entre 16 y 36px a la izquierda; despues, 0 en las siete.
+Afecta a los ocho modulos, no solo a zonas.
+
+**Lo que ningun vigilante vio.** `npm run verificar` pasaba limpio antes y
+despues: el de maquetacion solo mira `text-align` en el codigo, y el de
+vista no compara la alineacion de las lineas de un mismo bloque. Es el
+segundo defecto de tipografia que encuentra el operador y no la revision
+automatica.
+
+
 ### 2026-09-07 · la foto del escritorio en premercado
 
 El operador paso una foto ancha del puesto de trabajo —seis pantallas, el
