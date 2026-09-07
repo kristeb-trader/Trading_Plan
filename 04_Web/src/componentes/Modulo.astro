@@ -297,6 +297,13 @@ const destinoFinal = siguiente
   }
   .ruta-i.hecho::before, .ruta-i.aqui::before { background: var(--acento); }
 
+  /* `text-align-last` ADEMAS de `text-align`: la parada es un <li>, y la
+     regla comun de justificado de base.css le deja la ultima linea a la
+     izquierda. Como esa propiedad se hereda, el titulo de la parada salia
+     con la primera linea centrada y la segunda corrida hacia la izquierda
+     —hasta 36px—; el operador lo vio en zonas, en «Rompimiento y
+     consecucion» y «Cuando quitar una zona», que son los dos titulos que
+     mas parten. Centrar solo con `text-align` no basta. */
   .ruta-i > a {
     position: relative; z-index: 1;
     display: grid; justify-items: center; align-content: start; gap: var(--e-2);
@@ -304,6 +311,7 @@ const destinoFinal = siguiente
     padding: 0 var(--e-2);
     color: var(--texto-3);
     text-align: center;
+    text-align-last: center;
   }
 
   /* La parada: circulo con su numero. Grande a proposito — es el control
