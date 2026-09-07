@@ -26,7 +26,7 @@ import * as P from '../lib/parsers.mjs';
 import Refs from '../componentes/Refs.astro';
 
 const par = P.parametros();
-const v = (n, alt) => par.get(n)?.valor ?? alt;
+const v = (n: string, alt: string) => par.get(n)?.valor ?? alt;
 
 const SECCIONES = [
   { id: 'movimiento', t: 'Corrida y retroceso' },
