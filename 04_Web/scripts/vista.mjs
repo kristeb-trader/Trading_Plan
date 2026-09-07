@@ -8,13 +8,19 @@
  * los titulos sin ser un tope de ancho, y una fila de pasos quedaba dentada
  * sin que ninguna regla estuviera mal escrita.
  *
- * Esto mide el resultado, no la intencion. Cuatro cosas, en cada pagina:
+ * Esto mide el resultado, no la intencion. Cinco cosas, en cada pagina:
  *
  *   1. TEXTO CORTADO   un elemento que esconde parte de su contenido.
  *   2. TITULO CORTO    un titular de dos o mas lineas cuya linea mas larga no
  *                      llega al 80 % del ancho disponible = la pared invisible.
  *   3. FILA DENTADA    paradas de la ruta de un modulo con alturas distintas.
  *   4. DESBORDE        la pagina se va por el lado derecho.
+ *   5. CENTRADO ROTO   un texto centrado con algun renglon fuera del eje. Lo
+ *                      encontro el operador el 07/09/2026 en la ruta de zonas:
+ *                      `text-align-last: left` se hereda de la regla comun de
+ *                      justificado y descuelga la ULTIMA linea, que es la que
+ *                      `text-align: center` no gobierna. Ninguno de los otros
+ *                      cuatro lo veia.
  *
  * Usa el navegador que ya trae mermaid-cli: no instala nada nuevo.
  *
@@ -72,6 +78,31 @@ function medir() {
   const fallos = [];
   const visible = (el) => el.getClientRects().length > 0;
 
+  // Los renglones que ocupa de verdad el contenido de un elemento.
+  //
+  // Las cajas hay que agrupar POR RENGLON, y por SOLAPAMIENTO vertical, no
+  // por su coordenada: un codigo de regla en linea se dibuja dos pixeles mas
+  // abajo que el texto que lo rodea, y agrupando por coordenada cada titulo
+  // con codigos parecia partido en dos. Estan en el mismo renglon si sus
+  // alturas se pisan mas de la mitad.
+  const renglones = (el) => {
+    const r = new Range();
+    r.selectNodeContents(el);
+    const cajas = [...r.getClientRects()].filter((x) => x.width > 1)
+      .sort((a, b) => a.top - b.top);
+    const lin = [];
+    for (const c of cajas) {
+      const ult = lin[lin.length - 1];
+      const pisa = ult && Math.min(ult.ab, c.bottom) - Math.max(ult.ar, c.top)
+        > Math.min(ult.ab - ult.ar, c.height) / 2;
+      if (pisa) {
+        ult.i = Math.min(ult.i, c.left); ult.d = Math.max(ult.d, c.right);
+        ult.ar = Math.min(ult.ar, c.top); ult.ab = Math.max(ult.ab, c.bottom);
+      } else lin.push({ i: c.left, d: c.right, ar: c.top, ab: c.bottom });
+    }
+    return lin;
+  };
+
   // 1 · texto escondido dentro de su propia caja
   for (const el of document.querySelectorAll('main *')) {
     if (!visible(el) || el.children.length > 0) continue;
@@ -88,26 +119,7 @@ function medir() {
   // 2 · titular de varias lineas que no llena el ancho: la pared invisible
   for (const h of document.querySelectorAll('main :is(h1, h2, h3)')) {
     if (!visible(h) || !h.firstChild) continue;
-    const r = new Range();
-    r.selectNodeContents(h);
-    // Las cajas hay que agrupar POR RENGLON, y por SOLAPAMIENTO vertical, no
-    // por su coordenada: un codigo de regla en linea se dibuja dos pixeles mas
-    // abajo que el texto que lo rodea, y agrupando por coordenada cada titulo
-    // con codigos parecia partido en dos. Estan en el mismo renglon si sus
-    // alturas se pisan mas de la mitad.
-    const cajas = [...r.getClientRects()].filter((x) => x.width > 1)
-      .sort((a, b) => a.top - b.top);
-    const renglones = [];
-    for (const c of cajas) {
-      const ult = renglones[renglones.length - 1];
-      const pisa = ult && Math.min(ult.ab, c.bottom) - Math.max(ult.ar, c.top)
-        > Math.min(ult.ab - ult.ar, c.height) / 2;
-      if (pisa) {
-        ult.i = Math.min(ult.i, c.left); ult.d = Math.max(ult.d, c.right);
-        ult.ar = Math.min(ult.ar, c.top); ult.ab = Math.max(ult.ab, c.bottom);
-      } else renglones.push({ i: c.left, d: c.right, ar: c.top, ab: c.bottom });
-    }
-    const lineas = renglones.map((l) => l.d - l.i);
+    const lineas = renglones(h).map((l) => l.d - l.i);
     if (lineas.length < 2) continue;                      // una sola linea: nada que juzgar
     const disponible = h.getBoundingClientRect().width;
     const masLarga = Math.max(...lineas);
@@ -132,6 +144,42 @@ function medir() {
     fallos.push(['la pagina desborda a lo ancho',
       document.documentElement.scrollWidth + ' > ' + window.innerWidth + ' px', '']);
   }
+
+  // 5 · un texto centrado con algun renglon fuera del eje
+  //
+  // `text-align: center` NO gobierna la ultima linea: eso lo decide
+  // `text-align-last`, que se hereda. La regla comun de justificado de
+  // base.css la deja en `left` sobre p, li, dd, dt... y cualquier
+  // descendiente centrado la arrastra sin que nada este mal escrito. Asi
+  // salieron descolgados los titulos de la ruta de zonas, hasta 36 px.
+  //
+  // Se mide el resultado: donde cae cada renglon respecto al eje de su caja.
+  // Tres pixeles de margen porque un espacio al final de linea desplaza uno o
+  // dos, y eso no lo ve nadie.
+  const soloEnLinea = (el) => [...el.children]
+    .every((h) => getComputedStyle(h).display.startsWith('inline'));
+
+  for (const el of document.querySelectorAll('main *')) {
+    if (!visible(el) || !el.firstChild) continue;
+    if (el.closest('svg')) continue;                  // etiquetas de mermaid
+    if (!soloEnLinea(el)) continue;                   // solo cajas de texto
+    if (getComputedStyle(el).textAlign !== 'center') continue;
+
+    const caja = el.getBoundingClientRect();
+    if (caja.width < 40) continue;
+    const lin = renglones(el);
+    if (lin.length < 2) continue;                     // una linea: nada que juzgar
+
+    const eje = (caja.left + caja.right) / 2;
+    let peor = 0;
+    for (const l of lin) peor = Math.max(peor, Math.abs((l.i + l.d) / 2 - eje));
+    if (peor > 3) {
+      fallos.push(['centrado roto (mira text-align-last)',
+        Math.round(peor) + ' px fuera del eje',
+        (el.textContent || '').trim().slice(0, 60)]);
+    }
+  }
+
   return fallos;
 }
 

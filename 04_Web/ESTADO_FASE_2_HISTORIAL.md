@@ -36,9 +36,20 @@ Afecta a los ocho modulos, no solo a zonas.
 
 **Lo que ningun vigilante vio.** `npm run verificar` pasaba limpio antes y
 despues: el de maquetacion solo mira `text-align` en el codigo, y el de
-vista no compara la alineacion de las lineas de un mismo bloque. Es el
-segundo defecto de tipografia que encuentra el operador y no la revision
+vista no comparaba la alineacion de las lineas de un mismo bloque. Era el
+segundo defecto de tipografia que encontraba el operador y no la revision
 automatica.
+
+**Asi que el vigilante aprendio a verlo.** `scripts/vista.mjs` pasa de
+cuatro comprobaciones a cinco: **centrado roto**. En cada pagina recorre
+las cajas de texto centradas, mide donde cae cada renglon respecto al eje
+de su caja y falla si alguno se desvia mas de 3px —el margen que deja un
+espacio al final de linea—. Se probo al reves, que es la unica prueba que
+vale para un vigilante: revertido el arreglo, canta las dos paradas de
+zonas, «Rompimiento y consecucion» a 28px del eje y «Cuando quitar una
+zona» a 51px; restaurado, las 53 paginas pasan limpias. De paso, la logica
+de agrupar renglones por solapamiento vertical, que ya usaba la
+comprobacion de la pared invisible, queda en una sola funcion compartida.
 
 
 ### 2026-09-07 · la foto del escritorio en premercado
