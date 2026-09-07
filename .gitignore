@@ -39,8 +39,9 @@ __pycache__/
 .agents/
 .agent/
 
-# diagramas dibujados en la compilacion, se regeneran solos
-04_Web/.diagramas/
+# Los diagramas dibujados SI se guardan: dibujarlos necesita un navegador sin
+# ventana, y la publicacion automatica de GitHub no deberia depender de eso.
+# Se regeneran solos en local cuando cambia el mermaid de origen.
 
 # informes de auditoria de diseno: se regeneran ejecutando la revision
 .impeccable/

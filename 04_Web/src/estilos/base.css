@@ -42,7 +42,13 @@ h1, h2, h3, h4 {
   letter-spacing: var(--track-titulo);
   font-weight: var(--peso-fuerte);
   margin: var(--e-6) 0 var(--e-3);
-  text-wrap: balance;
+  /* `pretty`, NUNCA `balance`. `balance` reparte el titular en lineas de
+     igual longitud: corta antes del borde y deja una franja vacia a la
+     derecha. Es la «pared invisible» que el operador reporto ocho veces, y
+     no la veia el verificador porque no es un max-width. `pretty` llena la
+     linea y solo evita que la ultima quede con una palabra suelta.
+     `npm run verificar` ahora falla si alguien vuelve a poner `balance`. */
+  text-wrap: pretty;
 }
 h1 { font-size: var(--t-8); margin-top: 0; }
 h2 { font-size: var(--t-7); }
@@ -376,7 +382,7 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
   margin: 0 0 var(--e-5);
   font-size: var(--t-7);
   color: var(--texto);
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 .ap > h2 .ref-cod { letter-spacing: 0; }
 .ap > h3 { margin: var(--e-6) 0 var(--e-3); font-size: var(--t-6); }

@@ -111,14 +111,20 @@ const CINTA = [
 
   .texto { position: relative; padding: var(--e-7); }
   .texto h1 {
-    margin: 0; text-wrap: balance;
+    margin: 0; text-wrap: pretty;
     font-size: clamp(var(--t-7), 4.2vw, 3rem); line-height: 1.08;
     color: var(--texto);
   }
-  .sub { margin: var(--e-4) 0 0; max-width: 44rem; font-size: var(--t-5); color: var(--texto-2); } /* ancho-ok: entradilla del banner */
+  /* Sin tope de ancho: la entradilla llega hasta el borde como el resto
+     del portal. Antes eran 44rem y dejaba media franja vacia. */
+  .sub { margin: var(--e-4) 0 0; font-size: var(--t-5); color: var(--texto-2); }
 
+  /* Rejilla, no flex: en flex cada dato medía lo que mide su texto y la
+     fila moria a media pantalla. Ahora los cuatro se reparten el ancho
+     completo y llegan hasta el borde. */
   .reloj {
-    display: flex; flex-wrap: wrap; gap: var(--e-3);
+    display: grid; gap: var(--e-3);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
     margin: var(--e-6) 0 0;
   }
   .reloj > div {
@@ -126,7 +132,6 @@ const CINTA = [
     border-radius: var(--radio-2);
     border: 1px solid var(--vidrio-borde);
     background: rgba(255, 255, 255, 0.03);
-    min-width: 8.5rem;
   }
   .reloj dt {
     margin: 0; font-size: var(--t-1); color: var(--texto-3);
@@ -144,6 +149,5 @@ const CINTA = [
   }
   @media (max-width: 46rem) {
     .texto { padding: var(--e-6) var(--e-5); }
-    .reloj > div { min-width: 7rem; }
   }
 </style>

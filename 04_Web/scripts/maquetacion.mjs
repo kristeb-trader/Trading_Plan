@@ -7,6 +7,16 @@
  *
  *   1. Un tope de ancho fijo sobre texto  →  la pared invisible.
  *   2. Un `text-align: left` o `start`    →  se pierde el justificado.
+ *   3. `text-wrap: balance` en un titulo  →  la pared invisible otra vez,
+ *      esta sin max-width: reparte el titular en lineas de igual longitud,
+ *      asi que corta antes del borde. El operador lo reporto ocho veces; las
+ *      siete primeras arregle sintomas porque el vigilante solo miraba los
+ *      topes de ancho y esto no lo es.
+ *
+ * Y la portada NO TIENE ESCAPE. Ni `ancho-ok` ni `balance-ok` valen ahi: la
+ * pared volvio justamente por una excepcion `ancho-ok` que escribi yo en la
+ * entradilla del banner. En esos tres archivos el texto llega al borde y
+ * punto.
  *
  * Las dos tienen escape, pero hay que declararlo en la misma línea y con su
  * motivo, para que sea una decisión y no un descuido:
@@ -41,6 +51,14 @@ function fuentes(dir) {
 // son los que limitan el contenedor, no el texto: esos se dejan pasar.
 const TOPE_FIJO = /max-width:\s*(?!none|100%|auto|var\()[^;]*\b\d+(\.\d+)?(ch|rem|em|px)\b/;
 const IZQUIERDA = /text-align(-last)?:\s*(left|start)\b/;
+const BALANCE = /text-wrap:\s*balance\b/;
+
+// Archivos donde ninguna excepcion es valida: son los que ve Alfredo al abrir.
+const SIN_ESCAPE = [
+  'src/pages/index.astro',
+  'src/componentes/BannerTerminal.astro',
+  'src/componentes/TarjetasInicio.astro',
+];
 
 const fallos = [];
 let revisados = 0;
@@ -52,8 +70,15 @@ for (const archivo of fuentes(SRC)) {
     revisados++;
     // `@media (max-width: 900px)` es una condición, no una declaración.
     if (linea.trim().startsWith('@media')) return;
-    if (TOPE_FIJO.test(linea) && !linea.includes('ancho-ok')) {
-      fallos.push([rel, i + 1, linea.trim(), 'tope de ancho fijo sobre texto', 'ancho-ok']);
+    const portada = SIN_ESCAPE.includes(rel);
+    if (TOPE_FIJO.test(linea) && (portada || !linea.includes('ancho-ok'))) {
+      fallos.push([rel, i + 1, linea.trim(), 'tope de ancho fijo sobre texto',
+        portada ? '' : 'ancho-ok']);
+    }
+    if (BALANCE.test(linea) && (portada || !linea.includes('balance-ok'))) {
+      fallos.push([rel, i + 1, linea.trim(),
+        'text-wrap: balance corta el titular antes del borde — usa `pretty`',
+        portada ? '' : 'balance-ok']);
     }
     if (IZQUIERDA.test(linea) && !linea.includes('alineacion-ok') && !linea.includes('text-align-last: left')) {
       fallos.push([rel, i + 1, linea.trim(), 'rompe el justificado', 'alineacion-ok']);
