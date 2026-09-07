@@ -323,15 +323,15 @@ const SECCIONES = [
     <h2>Zonas entre zonas <Refs cods="R-12 · R-17 · R-18" /></h2>
     <p>
       A lo largo de la mañana el precio deja muchas zonas candidatas. Si se marcaran todas,
-      el gráfico acabaría siendo una reja de rectángulos y se operaría con demasiad ruido. 
+      el gráfico acabaría siendo una reja de rectángulos y se operaría con demasiado ruido. 
       Dos reglas lo impiden, y las dos se aplican en el mismo momento.
     </p>
 
-    <h3>Entre dos zonas, solo si no cruza la mitad</h3>
+    <h3>Solo una zona entre zonas</h3>
     <p>
       Cuando hay una zona por arriba y otra por abajo, se calcula el punto medio
       entre sus bordes internos. Solo se marca zona nueva si el movimiento que la
-      genera <strong>se queda entero de un lado</strong> de esa mitad.
+      genera <strong>no supera el 50%</strong> entre esas dos zonas.
     </p>
 
     <figure class="gr">
