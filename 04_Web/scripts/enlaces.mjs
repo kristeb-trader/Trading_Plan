@@ -1,8 +1,12 @@
 /**
  * enlaces.mjs — comprueba que ningun enlace del portal apunte a la nada.
  *
- * Recorre dist/ y, por cada href interno, verifica que exista la pagina, el
- * archivo o el ancla al que apunta. Se ejecuta ANTES de publicar.
+ * Recorre dist/ y, por cada href y cada src interno, verifica que exista la
+ * pagina, el archivo o el ancla al que apunta. Se ejecuta ANTES de publicar.
+ *
+ * El `src` se anadio el 07/09/2026: hasta entonces solo se miraban los
+ * enlaces, asi que una imagen rota pasaba el control sin que nadie lo viera.
+ * Salio al borrar ocho diagramas de golpe.
  *
  *   node scripts/enlaces.mjs
  *
@@ -50,7 +54,7 @@ let total = 0;
 
 for (const p of html) {
   const texto = fs.readFileSync(p.archivo, 'utf8');
-  for (const m of texto.matchAll(/\shref="([^"]+)"/g)) {
+  for (const m of texto.matchAll(/\s(?:href|src)="([^"]+)"/g)) {
     const href = m[1];
     // fuera: externos, correo, telefono, anclas vacias
     if (/^(https?:|mailto:|tel:|data:|#$)/.test(href)) continue;
@@ -91,9 +95,9 @@ for (const p of html) {
   }
 }
 
-console.log('enlaces');
+console.log('enlaces e imagenes');
 console.log('  paginas       ' + html.length);
-console.log('  enlaces       ' + total);
+console.log('  comprobados   ' + total);
 
 if (rotos.length) {
   console.log('  ROTOS         ' + rotos.length + '\n');
