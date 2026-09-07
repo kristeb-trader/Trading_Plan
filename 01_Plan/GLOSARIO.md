@@ -2,7 +2,7 @@
 
 Cada término con su definición medible.
 
-> Actualizado: 2026-09-06 · Sub-fase **F1.1 ✅ CERRADA** · **23 términos con sección propia** · 8 descartados · 4 movidos a contextualización
+> Actualizado: 2026-09-07 · Sub-fase **F1.1 ✅ CERRADA** · **23 términos con sección propia** · 8 descartados · 4 movidos a contextualización
 
 ---
 
@@ -243,15 +243,15 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 | Elemento | Condición medible |
 |---|---|
-| **Disparador** | rompimiento **con mecha** + **5 velas sin consecución** |
+| **Disparador** | rompimiento **con mecha** + **el plazo resuelto**: o pasan **5 velas sin consecución**, o antes de eso el mercado **arma una estructura completa en sentido contrario** *(`R-14`; que aplique también aquí lo confirmó el operador el 07/09/2026 — cierra `P-30`)* |
 | **Acción** | la zona original **crece** hasta la **punta de la mecha** de la vela de rompimiento |
 | **Borde opuesto** | **no se mueve** |
 | **Resultado** | **una sola zona**, más grande. No nace ninguna zona nueva |
 
 > 🔴 **El rompimiento NO se cae al vencer el plazo** *(27/08/2026)*. Vencido el plazo se resuelve la **geometría** (aquí, el estiramiento), pero el rompimiento **sigue esperando su consecución**: si algún día llega, la zona queda traspasada igual.
 
-**Diagrama:** `../02_Assets/diagramas/R-10_extension_apendice.png`
-**Regla asociada:** `R-10` · **Estado:** ✅ Confirmada 24/08/2026 · **precisada 27/08/2026**
+**Diagramas:** `../02_Assets/diagramas/R-10_extension_apendice.png` · `../04_Web/public/conceptos/24-estructura-antes.png` *(la resolución anticipada)*
+**Regla asociada:** `R-10` · **Estado:** ✅ Confirmada 24/08/2026 · **precisada 27/08/2026** · **disparador precisado 07/09/2026**
 
 ---
 
@@ -395,7 +395,9 @@ Cada zona intermedia que sí llega a marcarse **parte el hueco en dos**. El sigu
 
 Si esa zona nueva **toca** a la existente, `R-13` la convierte automáticamente en una **extensión**. Mismo resultado, descrito desde los dos extremos.
 
-**Regla asociada:** `R-14` · **Estado:** ✅ Confirmada 24/08/2026
+> ✅ **Vale para los dos caminos, sin excepción** *(confirmado 07/09/2026)*. Hasta entonces se había precisado solo sobre la **zona apéndice**; que valiera también para el **estiramiento** estaba escrito por simetría y quedaba anotado como duda abierta. Ya no lo está.
+
+**Regla asociada:** `R-14` · **Estado:** ✅ Confirmada 24/08/2026 · **alcance confirmado a los dos caminos el 07/09/2026**
 
 ---
 

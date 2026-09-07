@@ -438,21 +438,41 @@ La fase 1 se cierra **sin ejecutar `F1.11`**, por decisión explícita del opera
 
 # 🔵 Abiertos con la precisión del plazo · 01/09/2026
 
-## `P-30` · ¿La resolución anticipada aplica también al ESTIRAMIENTO? — ABIERTO 2026-09-01
+## ✅ `P-30` · ¿La resolución anticipada aplica también al ESTIRAMIENTO? — **CERRADO 07/09/2026**
 
-La regla del plazo como tope (`R-14`) se precisó sobre el caso de la **zona apéndice** (rompimiento con cuerpo). El operador dijo *"en el caso 1… en el caso 2, es lo mismo"*, refiriéndose a los dos diagramas de la apéndice.
+**Sí aplica igual.** Confirmado por el operador el 07/09/2026, con estas palabras: *"Si aplica igual"*.
 
-**Falta confirmar** si el otro camino —rompimiento **con mecha**, que estira la zona en vez de crear una apéndice— también se resuelve de forma anticipada cuando se arma la estructura contraria, o si ése sí espera siempre a la quinta vela.
+### Qué se preguntaba
+La regla del plazo como tope (`R-14`) se precisó el 01/09/2026 sobre el caso de la **zona apéndice** —rompimiento **con cuerpo**—. Quedó sin confirmar si el otro camino —rompimiento **con mecha**, que **estira** la zona en vez de crear una apéndice— también se resuelve de forma anticipada al armarse la estructura contraria, o si ése esperaba siempre a la quinta vela.
 
-Escrito como si aplicara a los dos, por simetría. **Es una extrapolación del auditor, no una confirmación del operador.**
+Se había escrito como si aplicara a los dos, **por simetría**, y quedó marcado como extrapolación del auditor para no darlo por bueno sin preguntar.
 
-**Estado:** ⏳ pendiente. **Preguntar antes de darlo por bueno.**
+### Qué queda escrito
+`R-14` gobierna **los dos caminos, sin excepción**:
+
+| Cómo rompe | Qué pasa cuando el plazo se resuelve |
+|---|---|
+| con **mecha** | la zona **se estira** hasta la punta de esa mecha (`R-10`) |
+| con **cuerpo** | nace una **zona apéndice** (`R-11`) |
+
+En ambos, **el plazo de 5 velas es un tope, no una espera**: si antes se arma una estructura completa en sentido contrario, la geometría se resuelve en ese momento. **Actúa lo que llegue primero.**
+
+La condición medible es la misma en los dos, leída en el sentido que corresponda: la vela del retroceso tiene que superar el extremo de la vela anterior **sin pasar del extremo de la vela de rompimiento** — si lo pasa, eso es **consecución** y no hay ni estiramiento ni apéndice: la zona queda superada.
+
+### Por qué importa
+Cambia **cuándo** nace el borde nuevo, y de ahí cuelga dónde va el stop. Con la resolución anticipada, en el diagrama de la lámina del portal la zona se estira en la vela 11; sin ella, habría que esperar a la 13.
+
+**Consecuencia abierta:** el motor de auditoría sigue sin implementarlo — ver `P-31`, que ahora cubre **los dos casos**.
+
+**Estado:** ✅ **cerrado.** Lámina `04_Web\public\conceptos\24-estructura-antes.png` rehecha el 07/09/2026 con este caso.
 
 ---
 
 ## `P-31` · El motor todavía no aplica la resolución anticipada — ABIERTO 2026-09-01
 
 `05_Backtesting\lector.py` resuelve el plazo **solo por vencimiento de las 5 velas**. No detecta la estructura contraria.
+
+> 🔴 **Ampliado el 07/09/2026:** con `P-30` cerrado, esto afecta a **los dos caminos** —estiramiento y apéndice—, no solo a la apéndice.
 
 **Qué hay que hacer:** implementarlo y volver a pasar las 11 sesiones validadas, para ver si alguna zona cambia su fecha de nacimiento. Días con eventos de plazo vencido: **7, 13, 16, 17 y 20 de julio**.
 

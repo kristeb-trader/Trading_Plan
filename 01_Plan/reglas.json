@@ -514,12 +514,12 @@
   {
     "id": "R-10",
     "categoria": "zonas",
-    "enunciado": "Si el rompimiento fue con mecha y pasan 5 velas sin consecucion, extiende la zona original hasta la punta de esa mecha.",
+    "enunciado": "Si el rompimiento fue con mecha y el plazo se resuelve sin consecucion, extiende la zona original hasta la punta de esa mecha.",
     "condiciones": [
       {
         "variable": "disparador",
         "operador": "=",
-        "valor": "rompimiento con mecha + 5 velas sin consecucion",
+        "valor": "rompimiento con mecha + plazo resuelto sin consecucion: o pasan 5 velas, o antes se arma una estructura completa al contrario (R-14). Actua lo que llegue primero",
         "timeframe": "1m"
       },
       {
@@ -544,21 +544,22 @@
     "accion": "Estirar la zona existente. No se crea ninguna zona nueva.",
     "excepciones": [],
     "prioridad": 2,
-    "estado": "confirmada",
+    "estado": "confirmada · disparador precisado 07/09/2026 (cierre de P-30)",
     "categoria_nombre": "Zonas",
     "categoria_descripcion": "todo lo que tiene que ver con una zona",
     "categoria_orden": 3,
-    "subcategoria": "marcado"
+    "subcategoria": "marcado",
+    "nota": "07/09/2026: el enunciado decia 'pasan 5 velas'. El operador confirmo que la resolucion anticipada de R-14 aplica IGUAL a este caso que al de la zona apendice, asi que el disparador es el plazo RESUELTO, no el plazo VENCIDO. Cierra P-30. | Diagrama: 04_Web/public/conceptos/24-estructura-antes.png"
   },
   {
     "id": "R-11",
     "categoria": "zonas",
-    "enunciado": "Si el rompimiento fue con cuerpo y pasan 5 velas sin consecucion, marca una zona apendice sobre la mecha de la vela de rompimiento.",
+    "enunciado": "Si el rompimiento fue con cuerpo y el plazo se resuelve sin consecucion, marca una zona apendice sobre la mecha de la vela de rompimiento.",
     "condiciones": [
       {
         "variable": "disparador",
         "operador": "=",
-        "valor": "rompimiento con cuerpo + 5 velas sin consecucion",
+        "valor": "rompimiento con cuerpo + plazo resuelto sin consecucion: o pasan 5 velas, o antes se arma una estructura completa al contrario (R-14). Actua lo que llegue primero",
         "timeframe": "1m"
       },
       {
@@ -590,7 +591,7 @@
     "excepciones": [],
     "prioridad": 2,
     "estado": "confirmada",
-    "nota": "Reglas de entrada asociadas PENDIENTES para F1.3: 'la zona apendice alta solo sirve para largo' y 'no se puede entrar entre zonas apendices'.",
+    "nota": "Reglas de entrada asociadas PENDIENTES para F1.3: 'la zona apendice alta solo sirve para largo' y 'no se puede entrar entre zonas apendices'. | 07/09/2026: el disparador es el plazo RESUELTO, no el plazo VENCIDO — ver R-14. Diagramas: 02_Assets/diagramas/apendice_caso1_plazo.png y apendice_caso2_estructura.png",
     "categoria_nombre": "Zonas",
     "categoria_descripcion": "todo lo que tiene que ver con una zona",
     "categoria_orden": 3,
@@ -762,7 +763,7 @@
       {
         "variable": "que_se_marca",
         "operador": "=",
-        "valor": "lo mismo que al vencer el plazo: rompimiento con mecha estira la zona (R-10); rompimiento con cuerpo hace nacer la zona apendice (R-11). Solo cambia el momento",
+        "valor": "lo mismo que al vencer el plazo: rompimiento con mecha ESTIRA la zona (R-10); rompimiento con cuerpo hace nacer la ZONA APENDICE (R-11). Solo cambia el momento. CONFIRMADO 07/09/2026: aplica IGUAL a los dos caminos, sin excepcion",
         "timeframe": "1m"
       },
       {
@@ -795,8 +796,8 @@
       "Si el precio simplemente se va en sentido contrario SIN hacer retroceso en el medio, no hay estructura: se espera al plazo. Contraejemplo real 20/07/2026, velas 8:42 a 8:45."
     ],
     "prioridad": 2,
-    "estado": "Confirmada 24/08/2026 · definicion medible anadida 01/09/2026 (absorbe la antigua R-39)",
-    "nota": "FUSIONADA 04/09/2026: la antigua R-39 decia exactamente lo mismo que esta regla y se elimino; su definicion medible de las tres velas vive ahora aqui. | ESTRUCTURA = retroceso nuevo que SI genera zona. El unico retroceso que no genera zona es el bloqueado por R-12. | Diagramas: 02_Assets/diagramas/apendice_caso1_plazo.png y apendice_caso2_estructura.png",
+    "estado": "Confirmada 24/08/2026 · definicion medible anadida 01/09/2026 (absorbe la antigua R-39) · alcance confirmado a los dos caminos el 07/09/2026",
+    "nota": "FUSIONADA 04/09/2026: la antigua R-39 decia exactamente lo mismo que esta regla y se elimino; su definicion medible de las tres velas vive ahora aqui. | ESTRUCTURA = retroceso nuevo que SI genera zona. El unico retroceso que no genera zona es el bloqueado por R-12. | Diagramas: 02_Assets/diagramas/apendice_caso1_plazo.png y apendice_caso2_estructura.png | 07/09/2026 CIERRA P-30: quedaba sin confirmar si la resolucion anticipada aplicaba tambien al ESTIRAMIENTO (rompimiento con mecha) o solo a la zona apendice (rompimiento con cuerpo). Estaba escrito por simetria, como extrapolacion del auditor. El operador confirmo: 'Si aplica igual'. Gobierna los dos caminos. | Diagrama del caso con mecha: 04_Web/public/conceptos/24-estructura-antes.png",
     "fuente": "operador",
     "categoria_nombre": "Zonas",
     "categoria_descripcion": "todo lo que tiene que ver con una zona",

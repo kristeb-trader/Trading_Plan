@@ -2,7 +2,7 @@
 
 > **Archivo de arranque.** Léelo primero cada sesión. Detalle completo en `TRADING_PLAN_CHAUMER.md` y `GLOSARIO.md`.
 
-**v3.1** · 2026-09-06 · **38 reglas** · **24 términos** · 🏁 **FASE 1 CERRADA** (12/12 sub-fases, con 4 huecos declarados) · 🚧 **FASE 2 en curso: portal web en `04_Web\`**
+**v3.2** · 2026-09-07 · **38 reglas** · **24 términos** · 🏁 **FASE 1 CERRADA** (12/12 sub-fases, con 4 huecos declarados) · 🚧 **FASE 2 en curso: portal web en `04_Web\`**
 
 > ⚠️ El plan está **escrito y contrastado, no probado**: el test ciego nunca se ejecutó. Ver `CIERRE_FASE_1.md`.
 > 🔢 Numeración nueva desde el 06/09/2026 — traducción en `EQUIVALENCIA_NUMERACION.md`.
@@ -37,7 +37,7 @@
 | `R-11` | Rompe con **cuerpo** + plazo resuelto sin consecución → nace **zona apéndice** |
 | `R-12` | Zona entre zonas solo si el movimiento no cruza el **50 %** (bordes internos) |
 | `R-13` | Zonas del mismo tipo que se tocan → **se estira una**, no se crean dos |
-| `R-14` | Las **5 velas son un tope, no una espera**: una estructura completa al contrario resuelve antes |
+| `R-14` | Las **5 velas son un tope, no una espera**: una estructura completa al contrario resuelve antes · **vale para el estiramiento y para la apéndice** |
 | `R-15` | Premercado (19:00 Col → apertura): **MNQ > 6.000** marca zona. Se apaga al abrir |
 | `R-16` | Corrida → zona al **aparecer** el retroceso · retroceso → línea provisional, zona al **confirmarse** |
 | `R-17` | **Una sola zona por banda y por jornada**: la del primer retroceso |
@@ -97,7 +97,7 @@
 
 **Los cuatro huecos declarados del cierre:** 🚨 `P-29` el **test ciego nunca se ejecutó** · 🚨 `P-21` **no hay regla de parada** · 🚨 falta toda la **capa de contextualización** · 🚨 `P-27` las cifras del backtesting **no miden la estrategia**.
 
-**Dudas de método abiertas:** `P-23` vela de apertura sin cuerpo · `P-24` ¿sobra `R-08`? · `P-25` ¿sirve para entrar una zona estirada? · `P-26` ¿el FOMC bloquea toda la sesión? · `P-27` calendario de noticias rojas · `P-28` separación mínima entre zonas del mismo tipo · `P-30` ¿la resolución anticipada aplica también al estiramiento? · `P-31` el motor de auditoría todavía no aplica la resolución anticipada · 🟠 **`P-32` el umbral de premercado cambió de NQ a MNQ y la equivalencia no está verificada** — cerrarlo **antes** del backtesting de un año.
+**Dudas de método abiertas:** `P-23` vela de apertura sin cuerpo · `P-24` ¿sobra `R-08`? · `P-25` ¿sirve para entrar una zona estirada? · `P-26` ¿el FOMC bloquea toda la sesión? · `P-27` calendario de noticias rojas · `P-28` separación mínima entre zonas del mismo tipo · `P-31` el motor de auditoría todavía no aplica la resolución anticipada, ni en el estiramiento ni en la apéndice · 🟠 **`P-32` el umbral de premercado cambió de NQ a MNQ y la equivalencia no está verificada** — cerrarlo **antes** del backtesting de un año.
 
 **Menores, sin bloquear:** `P-01` mín/máx premercado sin datos · `P-03` reglas Apex · `P-07` sin fin garantizado de sesión · `P-08` riesgo sin tope semanal · `P-09` ventana de exposición manual (aceptado) · `P-10` nombre del data feed · `P-12` comisión real MNQ.
 
@@ -910,3 +910,42 @@ decidir**. Hasta que el operador diga, el plan tiene 38.
 ## Estado
 Plan **v3.1 · 38 reglas · 7 categorías**. Siguiente paso: que Claude Code reorganice el
 portal contra `reglas.json`.
+
+---
+
+# ✅ 07/09/2026 — `P-30` CERRADO: LA RESOLUCIÓN ANTICIPADA VALE PARA LOS DOS CAMINOS
+
+## La duda que estaba abierta
+La regla del plazo como tope —si antes de la quinta vela el mercado arma una estructura
+completa al contrario, la geometría se resuelve ahí— se precisó el 01/09 hablando **solo de
+la zona apéndice**, es decir del rompimiento **con cuerpo**.
+
+Que valiera también para el otro camino —rompimiento **con mecha**, que **estira** la zona—
+estaba escrito **por simetría**: una extrapolación del auditor, marcada como `P-30`
+precisamente para no darla por buena sin preguntar.
+
+## Lo confirmado
+El operador: **"Si aplica igual"**. `R-14` gobierna los dos caminos, sin excepción.
+
+| Cómo rompe | Qué pasa cuando el plazo se resuelve |
+|---|---|
+| con **mecha** | la zona **se estira** hasta la punta de esa mecha (`R-10`) |
+| con **cuerpo** | nace la **zona apéndice** (`R-11`) |
+
+**Actúa lo que llegue primero:** las 5 velas, o la estructura contraria completa.
+
+## Por qué importa
+Cambia **cuándo** nace el borde nuevo, y de ahí cuelga dónde va el stop.
+
+## Qué se tocó
+- `reglas.json`: los disparadores de `R-10` y `R-11` decían *"pasan 5 velas sin consecución"*.
+  Ahora dicen **plazo resuelto**, no plazo vencido. `R-14` registra el alcance confirmado.
+- `TRADING_PLAN_CHAUMER.md` → **v3.2**, con la confirmación escrita en la sección de `R-14`.
+- `PENDIENTES.md`: `P-30` cerrado. **`P-31` ampliado**: el motor de auditoría sigue resolviendo
+  el plazo solo por vencimiento, y eso ahora afecta a **los dos caminos**.
+- Nueva lámina del portal: `04_Web\public\conceptos\24-estructura-antes.png`, *"Sin Consecución,
+  Nueva Estructura"*, con el caso del rompimiento con mecha.
+
+## Estado
+Plan **v3.2 · 38 reglas · 7 categorías**. **Ninguna regla nueva, ninguna modificada** — se cerró
+una duda de alcance que llevaba abierta desde el cierre de la fase 1.
