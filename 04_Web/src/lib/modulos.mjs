@@ -98,7 +98,7 @@ const COLORES = [
   '#8B5CF6',  // 3 setups        · violeta
   '#38BDF8',  // 4 jornada       · celeste
   '#14B8A6',  // 5 entrada       · verde azulado
-  '#F472B6',  // 6 filtros       · rosa, lo que frena
+  '#ac1616',  // 6 filtros       · rojo, lo que frena
   '#6366F1',  // 7 dentro        · indigo
   '#4ADE80',  // 8 riesgo        · verde
 ];

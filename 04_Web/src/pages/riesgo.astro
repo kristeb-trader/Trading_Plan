@@ -17,7 +17,6 @@ const SECCIONES = [
   { id: 'cuanto', t: 'Cuánto se arriesga' },
   { id: 'cuantas', t: 'Cuántas veces' },
   { id: 'tamano', t: 'Con cuántos contratos' },
-  { id: 'parada', t: 'No hay regla de parada' },
 ];
 
 // La tabla sale de la aritmetica declarada en el propio plan, no de un
@@ -111,71 +110,6 @@ const RACHAS = [
     </p>
   </section>
 
-  <section class="ap" id="parada">
-    <h2>No hay regla de parada</h2>
-    <p>
-      Este es un hueco declarado del método, y se enseña aquí porque es el único
-      que se nota desde dentro de la operativa.
-    </p>
-
-    <div class="veto">
-      <p><strong>El plan no dice cuándo se deja de operar.</strong></p>
-      <p>
-        No hay límite de pérdida semanal. No hay límite mensual. No hay corte
-        tras una racha de pérdidas. No hay reducción de tamaño cuando la cuenta
-        cae.
-      </p>
-    </div>
-
-    <p>
-      La consecuencia se ve mejor con números. Cada una de estas filas es una
-      racha de días perdedores seguidos, todos con su setup válido y su stop
-      correcto:
-    </p>
-
-    <div class="tabla-env">
-      <table class="rachas">
-        <thead>
-          <tr>
-            <th>Días malos seguidos</th>
-            <th>Pérdida</th>
-            <th>Capital</th>
-            <th>Caída</th>
-            <th>Para recuperarlo</th>
-          </tr>
-        </thead>
-        <tbody>
-          {RACHAS.map((r) => (
-            <tr class:list={{ duro: r.duro }}>
-              <td class="num">{r.dias}</td>
-              <td class="num">{r.perdida}</td>
-              <td class="num">{r.capital}</td>
-              <td class="num neg">{r.caida}</td>
-              <td class="num">{r.recuperar}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-
-    <div class="duro">
-      <p>
-        <strong>Ninguna regla del método se rompe en esa tabla.</strong> Cada día
-        fue un setup válido, ejecutado exactamente como está escrito. El plan
-        permite ese recorrido entero sin emitir una sola señal de alarma.
-      </p>
-      <p>
-        Y una racha de seis pérdidas seguidas, acertando la mitad de las veces,
-        aparece en unos cinco meses de operativa con una probabilidad cercana a
-        la mitad. No es un caso extremo: es lo normal.
-      </p>
-    </div>
-
-    <p>
-      El operador dejó esta decisión abierta a propósito, para tomarla con datos
-      reales del registro en vez de con un número inventado.
-    </p>
-  </section>
 </Modulo>
 
 <style>

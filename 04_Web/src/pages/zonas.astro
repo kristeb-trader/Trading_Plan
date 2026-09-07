@@ -35,7 +35,7 @@ const SECCIONES = [
   { id: 'estira', t: 'Sin consecución' },
   { id: 'apendice', t: 'La zona apéndice' },
   { id: 'convivencia', t: 'Zonas entre zonas' },
-  { id: 'caduca', t: 'Cuándo deja de contar' },
+  { id: 'caduca', t: 'Cuándo quitar una zona' },
 ];
 ---
 
@@ -103,7 +103,7 @@ const SECCIONES = [
     </p>
 
     <ol class="secuencia">
-      <li><strong>Se busca la vela de la zona</strong>: la del máximo más alto si la corrida fue alcista, la del mínimo más bajo si fue bajista. Se busca desde el origen de la corrida hasta la vela que disparó el retroceso.</li>
+      <li><strong>Se Identifica fin de corrida</strong>: Se busca la vela del máximo más alto si la corrida fue alcista, la del mínimo más bajo si fue bajista.</li>
       <li><strong>Se dibuja una zona del borde del cuerpo a la punta de la mecha</strong> de esa vela. Ese es todo el criterio.</li>
       <li><strong>Se extiende hacia la derecha</strong>, a lo largo del gráfico.</li>
     </ol>
@@ -162,8 +162,8 @@ const SECCIONES = [
   <section class="ap" id="consecucion">
     <h2>Rompimiento y consecución <Refs cods="R-20 · R-22 · R-19" /></h2>
     <p>
-      Superar una zona son dos cosas, no una. Primero el rompimiento, después la
-      consecución. Y el mismo mecanismo que supera una zona es el que más tarde
+      Superar una zona son dos cosas, no una. Primero el <strong>rompimiento</strong>, después la
+      <strong>consecución</strong>. Y el mismo mecanismo que supera una zona es el que más tarde
       dispara la entrada.
     </p>
 
@@ -181,17 +181,19 @@ const SECCIONES = [
         <p>Recién ahí la zona quedó traspasada.</p>
       </div>
     </div>
+    <br />
 
     <figure class="gr">
       <img src="/conceptos/14-traspaso.png" alt="La vela que pasa el borde de la zona y la que después pasa de su extremo" loading="eager" />
       <figcaption class="meta">Las dos velas del traspaso sobre una sesión real: la que rompe, y la consecución que pasa de su extremo.</figcaption>
     </figure>
 
+    <br />
+
     <h3>Dos maneras de romper</h3>
     <p>
-      El cierre no decide si hay rompimiento, pero sí deja un rastro distinto.
-      Esa diferencia no se nota hoy: se nota en los dos apartados siguientes, si
-      la consecución no llega.
+      Hay dos tipos de vela de rompimiento: Vela de rompimiento con mecha y vela de rompimiento con cuerpo. 
+      La diferencia es que la primera pasa el borde pero cierra dentro de la zona, y la segunda pasa el borde y cierra fuera de la zona.
     </p>
 
     <figure class="gr">
@@ -220,7 +222,7 @@ const SECCIONES = [
   <section class="ap" id="estira">
     <h2>Cuando no llega la consecución <Refs cods="R-10 · R-14" /></h2>
     <p>
-      Si el precio rompe una zona y pasan {v('PLAZO_CONSECUCION', '5 velas')} sin
+      Si el precio rompe una zona y pasan <strong>5 velas</strong> sin
       que llegue la consecución, la zona cambia de forma, es decir, se extiende
       la zona original hasta la punta de esa mecha.
     </p>
@@ -237,14 +239,15 @@ const SECCIONES = [
       <figcaption class="meta">El caso más común: la vela cruza la zona, pero ninguna de las siguientes pasa de su extremo. No hubo traspaso y la zona sigue viva.</figcaption>
     </figure>
 
+    <br />
     <p>
-      O si aparece una nueva estructura —un retroceso nuevo— antes de las
-      {v('PLAZO_CONSECUCION', '5 velas')}, también se estira la zona.
+      O si aparece una <strong>nueva estructura</strong> —un retroceso nuevo— antes de las
+      5 velas, también se estira la zona.
     </p>
 
     <div class="duro">
       <p>
-        <strong>Las {v('PLAZO_CONSECUCION', '5 velas')} son un tope, no una espera obligatoria.</strong>
+        <strong>Las 5 velas son un tope, no una espera obligatoria.</strong>
         Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en
         ese momento y no se espera más.
       </p>
@@ -262,7 +265,7 @@ const SECCIONES = [
     <h2>La zona apéndice <Refs cods="R-11" /></h2>
     <p>
       Si el rompimiento <strong>fue con cuerpo</strong> y pasan
-      {v('PLAZO_CONSECUCION', '5 velas')} sin consecución, no se estira esa zona:
+      5 velas sin consecución, no se estira esa zona:
       <strong>nace una zona nueva</strong>, pegada a la anterior. Se llama
       <strong>zona apéndice</strong> y se marca desde el cuerpo de la vela que
       hizo rompimiento hasta la punta de la mecha.
@@ -275,7 +278,7 @@ const SECCIONES = [
 
     <dl class="datos">
       <dt>Qué lo dispara</dt>
-      <dd>Rompimiento con cuerpo <strong>+ {v('PLAZO_CONSECUCION', '5 velas')}</strong> sin consecución</dd>
+      <dd>Rompimiento con cuerpo <strong>+ 5 velas</strong> sin consecución</dd>
       <dt>La zona original</dt>
       <dd>No se modifica</dd>
       <dt>Un borde de la apéndice</dt>
@@ -293,15 +296,16 @@ const SECCIONES = [
         quedó sin consecución.
       </p>
     </div>
-
+    
+    <br />
     <p>
-      O si aparece una nueva estructura —un retroceso nuevo— antes de las
-      {v('PLAZO_CONSECUCION', '5 velas')}, también se genera la zona apéndice.
+      O si aparece una <strong> nueva estructura</strong> —un retroceso nuevo— antes de las
+      5 velas, también se genera la zona apéndice.
     </p>
 
     <div class="duro">
       <p>
-        <strong>Las {v('PLAZO_CONSECUCION', '5 velas')} son un tope, no una espera obligatoria.</strong>
+        <strong>Las 5 velas son un tope, no una espera obligatoria.</strong>
         Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en
         ese momento y no se espera más.
       </p>
@@ -363,16 +367,16 @@ const SECCIONES = [
 
     <div class="veto">
       <p>
-        <strong>Salir de una zona es rompimiento y consecución, no geometría.</strong>
-        Mientras un rompimiento espera su consecución, no se marca zona al otro
-        lado de esa zona.
+        <strong>Salir de una zona es rompimiento y tambien consecución</strong>
+        No solo rompimiento. Mientras un rompimiento espera su consecución, no se marca zona al otro
+        lado de esa zona, a menos que pasen las 5 velas sin consecución o aparezca un retroceso nuevo. En ese caso sí se marca zona, aunque no haya habido consecución.
       </p>
     </div>
   </section>
 
   <!-- 7 ─────────────────────────────────────────────────────────────── -->
   <section class="ap" id="caduca">
-    <h2>Cuándo deja de contar <Refs cods="R-21" /></h2>
+    <h2>Cuándo quitar una zona<Refs cods="R-21" /></h2>
     <p>
       Una zona muere cuando ha sido superada <strong>en las dos direcciones</strong>:
       rompimiento y consecución hacia un lado, y rompimiento y consecución hacia
@@ -399,6 +403,10 @@ const SECCIONES = [
       Esa distinción importa más de lo que parece: una zona que sigue viva puede
       impedir una entrada perfectamente válida, porque se cruza en el camino del
       objetivo.
+    </p>
+
+    <p>
+      Cuando una zona <strong>no es válida visualmente</strong>, se baja el contraste de color de esa zona, para que no confunda. Pero sigue viva en la memoria del plan hasta que se cierre la jornada.
     </p>
   </section>
 </Modulo>

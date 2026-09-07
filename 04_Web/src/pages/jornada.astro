@@ -14,9 +14,8 @@ const par = P.parametros();
 const v = (n, alt) => par.get(n)?.valor ?? alt;
 
 const SECCIONES = [
-  { id: 'ventana', t: 'Las dos horas' },
+  { id: 'ventana', t: 'Ventana Operativa' },
   { id: 'primera', t: 'La primera vela' },
-  { id: 'direccion', t: 'Por dónde empieza el día' },
   { id: 'transcurso', t: 'Cómo avanza la sesión' },
   { id: 'registro', t: 'El registro' },
 ];
@@ -24,9 +23,9 @@ const SECCIONES = [
 
 <Modulo slug="jornada" secciones={SECCIONES}>
   <section class="ap" id="ventana">
-    <h2>Las dos horas <Refs cods="R-02" /></h2>
+    <h2>Ventana Operativa <Refs cods="R-02" /></h2>
     <p>
-      Se opera durante los <strong>120 minutos siguientes a la apertura del
+      Se opera durante las <strong> primeras 2 horas del
       mercado americano</strong>. Fuera de esa ventana no se coloca ninguna
       orden, pase lo que pase en el gráfico.
     </p>
@@ -80,27 +79,12 @@ const SECCIONES = [
       <dd>Sí</dd>
     </dl>
 
-    <h3>La vela que abarca a la anterior <Refs cods="R-08" /></h3>
-    <p>
-      Hay un caso que rompe la cuenta: una vela que hace a la vez máximo más
-      alto y mínimo más bajo que la anterior, sin que haya un movimiento vivo. Esa
-      vela <strong>no declara dirección</strong>: pasa a ser la nueva vela
-      origen, y la dirección la da la siguiente.
-    </p>
-    <p>
-      Si la siguiente vuelve a hacer lo mismo, se repite el mismo criterio, sin
-      límite. Con un movimiento ya vivo esto no aplica: manda el movimiento.
-    </p>
-  </section>
-
-  <section class="ap" id="direccion">
-    <h2>Por dónde empieza el día <Refs cods="R-27" /></h2>
+    <h3>Por dónde empieza el día <Refs cods="R-27" /></h3>
     <p>
       Que la primera vela declare una dirección no significa que haya que
       operar en ese sentido toda la mañana.
     </p>
-
-    <div class="duro">
+       <div class="duro">
       <p>
         <strong>Marca por dónde empieza el día, no en qué sentido se opera.</strong>
         Se buscan entradas de continuación en los dos sentidos.
