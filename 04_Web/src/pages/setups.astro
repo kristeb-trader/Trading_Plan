@@ -35,15 +35,21 @@ const SECCIONES = [
         <span class="tarj-n">IRI</span>
         <h3>Continuación</h3>
         <p>El precio rompe una zona y sigue. Se opera <strong>a favor</strong> del rompimiento.</p>
-        <img class="tarj-lamina" src="/conceptos/27-setup-iri.png" alt="Lámina del setup IRI: un impulso deja la zona, el precio retrocede y el segundo impulso la rompe; la entrada va en la vela que confirma" loading="eager" />
       </div>
       <div class="tarj">
         <span class="tarj-n">Reingreso</span>
         <h3>Rompimiento fallido</h3>
         <p>El precio rompe una zona, no sigue y se da la vuelta. Se opera <strong>en contra</strong> del rompimiento.</p>
-        <img class="tarj-lamina" src="/conceptos/28-setup-reingreso.png" alt="Lámina del setup Reingreso: el precio rompe la zona y confirma, falla, y vuelve a atravesarla entera hasta salir por el borde contrario, donde está la entrada" loading="eager" />
       </div>
     </div>
+
+    <figure class="gr">
+      <img src="/conceptos/27-setup-iri.png" alt="Lámina del setup IRI: un impulso deja la zona, el precio retrocede y el segundo impulso la rompe; la entrada va en la vela que confirma" loading="eager" />
+    </figure>
+
+    <figure class="gr">
+      <img src="/conceptos/28-setup-reingreso.png" alt="Lámina del setup Reingreso: el precio rompe la zona y confirma, falla, y vuelve a atravesarla entera hasta salir por el borde contrario, donde está la entrada" loading="eager" />
+    </figure>
 
     <div class="duro">
       <p>
@@ -219,18 +225,6 @@ const SECCIONES = [
 </Modulo>
 
 <style>
-
-  /* La lamina de cada setup, dentro de su caja de «Solo hay dos». Va al
-     ancho completo de la caja: la imagen mide 1760x880 y en media columna
-     ya se lee justa. */
-  .tarj-lamina {
-    display: block;
-    width: 100%;
-    height: auto;
-    margin-top: var(--e-4);
-    border-radius: var(--radio-2);
-    border: 1px solid var(--vidrio-borde);
-  }
 
   .flujo-iri {
     display: flex;
