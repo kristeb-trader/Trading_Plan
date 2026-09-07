@@ -142,6 +142,26 @@ entero de una vez es demasiado.
 
 ## Historial
 
+### 2026-09-07 · la foto del escritorio en premercado
+
+El operador paso una foto ancha del puesto de trabajo —seis pantallas, el
+teclado y la libreta, todo apagado— y pidio que ocupe media pagina en
+«Como estoy hoy», con el texto en la otra mitad.
+
+La imagen no llegaba como archivo, solo en el chat; estaba en sus descargas
+como `Pre.jfif`. Convertida a JPEG progresivo y guardada en
+`public/screenshots/premercado/escritorio.jpg` (1440x720, 185 KB).
+
+**El reparto.** `.ap-dividido` tenia la columna derecha en **14rem fijos** —
+cabia una captura vertical y poco mas—. Ahora es
+`repeat(auto-fit, minmax(22rem, 1fr))`: dos mitades de verdad cuando cada una
+respira, y una sola columna cuando no. Con un punto de ruptura fijo, entre
+700 y 1000px salian dos columnas de cuatro palabras por linea.
+
+La captura anterior de la nota manuscrita (`como-estoy-hoy.jpg`) se queda en
+el repositorio, sin usar, por si se quiere recuperar.
+
+
 ### 2026-09-06 · portada nueva, menu con color y las reglas en lista
 
 El operador puso de referencia **krea.ai**: menu con iconos de color, banner

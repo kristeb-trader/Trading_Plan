@@ -429,19 +429,21 @@ body:not(.tecnico) .ref:hover { color: var(--acento); }
    la derecha — una captura real de la plataforma, no un gráfico de mercado.
    Se usa cuando el apartado necesita enseñar una pantalla (la ATM, el
    calendario) sin cortar la lectura con una figura a todo el ancho. */
+/* Dos mitades de verdad: el texto a la izquierda y la imagen a la derecha,
+   al 50 %. Antes la columna de la derecha eran 14rem fijos —cabia una captura
+   vertical y poco mas—; el operador pidio el 06/09/2026 que la imagen ocupe
+   media pagina. */
 .ap-dividido {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 14rem;
-  gap: var(--e-6);
-  align-items: start;
+  /* Dos mitades SOLO si cada una respira: por debajo de 22rem por columna se
+     apilan solas. Con un punto de ruptura fijo, entre 700 y 1000px salian dos
+     columnas de cuatro palabras por linea. */
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: var(--e-7);
+  align-items: center;
 }
 .ap-dividido .ap-texto { min-width: 0; }
 .ap-dividido .gr { margin-top: 0; }
-
-@media (max-width: 700px) {
-  .ap-dividido { grid-template-columns: 1fr; }
-  .ap-dividido .gr { max-width: 20rem; margin-inline: auto; } /* ancho-ok: es la columna de imagen, no texto */
-}
 
 /* Ficha de datos: lo medible de un apartado, en dos columnas. */
 .datos {

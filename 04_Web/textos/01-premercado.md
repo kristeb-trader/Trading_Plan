@@ -24,7 +24,7 @@ La primera pregunta del día no es sobre el mercado. Es sobre uno mismo: ¿estoy
 
 Esta pregunta se contesta **antes de abrir NinjaTrader**.
 
-> 🖼 **Gráfico.** Texto alternativo: Anotación del operador sobre su estado antes de abrir la plataforma
+> 🖼 **Gráfico.** Texto alternativo: El puesto de trabajo con las pantallas apagadas, antes de empezar la sesión
 
 ---
 
