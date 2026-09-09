@@ -20,3 +20,11 @@ database_id = "86e396a1-4b29-4f88-99c4-3872fb418a8d"
 #   npx wrangler pages secret put CLAVE_OPERADOR
 # Sin ella, la API solo permite leer y escribir observaciones; responder,
 # marcar, exportar y borrar quedan cerrados.
+
+# Los graficos de la bitacora de backtesting. Bucket PRIVADO: no tiene
+# direccion publica ni dominio propio, las imagenes salen solo por
+# /api/backtesting/imagen/. Se crea una vez con
+#   npx wrangler r2 bucket create chaumer-bitacora
+[[r2_buckets]]
+binding = "IMAGENES"
+bucket_name = "chaumer-bitacora"

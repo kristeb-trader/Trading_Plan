@@ -4,7 +4,9 @@
 00_Guias/
 
 # --- trabajo interno ---
-99_Archivo/
+# _Historia/ guarda lo cerrado: historiales, prompts caducados y cuadernos
+# de trabajo. Se conserva en disco, no en el repositorio.
+_Historia/
 03_Materia_Prima/transcripciones/
 
 # --- datos de mercado exportados de NinjaTrader ---
@@ -38,6 +40,7 @@ __pycache__/
 .claude/skills/
 .agents/
 .agent/
+skills-lock.json
 
 # Los diagramas dibujados SI se guardan: dibujarlos necesita un navegador sin
 # ventana, y la publicacion automatica de GitHub no deberia depender de eso.
@@ -52,3 +55,10 @@ __pycache__/
 04_Web/textos/*.jpg
 04_Web/textos/*.jpeg
 04_Web/textos/*.png
+
+# --- Cloudflare en local ---
+# .dev.vars lleva CLAVE_OPERADOR para probar en el equipo; el secreto de
+# verdad se pone con `wrangler pages secret put`. .wrangler/ es la base y el
+# almacen simulados en local.
+04_Web/.dev.vars
+04_Web/.wrangler/

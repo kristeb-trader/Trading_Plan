@@ -71,6 +71,39 @@ Pega la clave del paso 4. **No va al repositorio ni al navegador.**
 
 ---
 
+## Una sola vez, para la bitácora de backtesting
+
+Los datos van a la **misma base D1** que las observaciones; solo hacen falta
+las tablas nuevas. Las imágenes van a **R2**, que sí es nuevo.
+
+### 1 · Crear las tablas
+
+```
+npx wrangler d1 execute trading-plan-observaciones --remote --file=./d1/0002_backtesting.sql
+```
+
+### 2 · Crear el almacén de las imágenes
+
+```
+npx wrangler r2 bucket create chaumer-bitacora
+```
+
+El bucket queda **privado**: no tiene dirección pública ni dominio propio. Las
+imágenes salen solo por `/api/backtesting/imagen/`, que las sirve el portal.
+No hay nada más que configurar — el binding ya está en `wrangler.toml`.
+
+### 3 · Rellenar los datos de inicio
+
+Con tu enlace de operador abierto, el lápiz de la tarjeta **Valor inicial**
+abre la ventanita de datos de inicio: valor inicial, contratos e instrumento.
+Se rellena una vez.
+
+> **La copia de seguridad.** La bitácora vive en la base, no en git: si se
+> borra una fila no hay historial que lo cuente. El botón **Exportar** baja
+> todo en JSON. Conviene guardarlo en el repositorio de vez en cuando.
+
+---
+
 ## Los dos enlaces
 
 **El de Alfredo**, con su nombre dentro para que sus observaciones queden
@@ -89,8 +122,13 @@ marcar, exportar y borrar:
 https://plan-operativo-nq.pages.dev/observaciones?k=TU_CLAVE
 ```
 
-También se recuerda. **No lo compartas**: quien lo tenga puede responder y
-borrar en tu nombre.
+También se recuerda, y es la misma clave que deja **registrar, corregir y
+borrar jornadas** en la bitácora de backtesting: una vez abierto ese enlace,
+en `/backtesting` aparecen el botón de registrar y el lápiz de los datos de
+inicio. Leer la bitácora y ver sus gráficos no pide nada.
+
+**No lo compartas**: quien lo tenga puede responder, borrar y tocar tu
+bitácora en tu nombre.
 
 ---
 

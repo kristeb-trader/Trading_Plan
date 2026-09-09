@@ -49,6 +49,28 @@ export function reglas() {
 }
 
 /**
+ * El valor del punto, en dolares, tal como lo declara el plan.
+ *
+ * Lo usa la bitacora de backtesting para calcular el P&L, y es la razon de que
+ * ese numero NO este escrito a mano en ninguna pagina. Si el plan dejara de
+ * declararlo, esto revienta la compilacion a proposito: mejor que se caiga a
+ * que el portal se invente un 2,00 que nadie ha confirmado.
+ */
+export function valorPunto() {
+  for (const r of reglas()) {
+    for (const c of r.condiciones ?? []) {
+      if (c.variable !== 'valor_punto_MNQ') continue;
+      const n = Number(String(c.valor).replace(',', '.').match(/[\d.]+/)?.[0]);
+      if (Number.isFinite(n) && n > 0) return { valor: n, regla: r.id };
+    }
+  }
+  throw new Error(
+    'reglas.json ya no declara valor_punto_MNQ. La bitacora de backtesting ' +
+    'saca de ahi el valor del punto y no lo puede inventar.',
+  );
+}
+
+/**
  * Las siete categorias del plan, en el orden que declara el propio archivo.
  *
  * No se cuentan a ojo ni se renombran aqui: cada regla trae `categoria_nombre`,

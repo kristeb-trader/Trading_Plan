@@ -45,6 +45,37 @@ anota para que las dos reglas digan lo mismo.
 
 ---
 
+### 2 · «IRI» en el plan, «Continuación» en la pantalla
+
+**Encontrado:** 2026-09-09, al construir la bitácora de backtesting.
+**Dónde:** `01_Planeglas.json` y `01_Plan\GLOSARIO.md`, en todo lo que
+nombra el setup de continuación.
+
+El operador pidió el 09/09/2026 que en el portal el setup deje de llamarse
+**IRI** y pase a llamarse **Continuación**, y dijo que de ahí en adelante se
+hable así. La bitácora ya lo escribe y lo guarda así (`continuacion`).
+
+**El plan NO se ha tocado:** sigue diciendo IRI en las reglas, en el glosario y
+en el vocabulario del proyecto. Ahora mismo conviven las dos palabras — una en
+los documentos, otra en la pantalla.
+
+**Por qué no es un invento:** el vocabulario del proyecto ya define IRI como
+*continuación*. No se está renombrando un concepto, se está eligiendo cuál de
+sus dos nombres se enseña.
+
+**Propuesta:** que el operador decida entre las dos salidas.
+
+1. **Renombrar en el plan.** IRI pasa a Continuación en `reglas.json`, en el
+   glosario y en el vocabulario, dejando IRI escrito como nombre anterior para
+   que los documentos viejos sigan entendiéndose.
+2. **Dejarlo como está.** IRI es el nombre del plan y Continuación es cómo se
+   enseña. Entonces conviene que el glosario lo diga con esas palabras, para
+   que nadie crea que son dos cosas.
+
+Mientras no lo decida, **el que manda es el plan**: IRI.
+
+---
+
 ## Resueltas
 
 *(vacío)*
