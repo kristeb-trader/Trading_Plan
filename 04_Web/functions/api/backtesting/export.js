@@ -11,18 +11,18 @@
 export async function onRequestGet({ env }) {
   try {
     const cabecera = await env.DB
-      .prepare('SELECT valor_inicial, contratos, instrumento FROM bt_cabecera WHERE id = 1')
+      .prepare('SELECT valor_inicial, contratos, instrumento, comision FROM bt_cabecera WHERE id = 1')
       .first();
 
     const { results: jornadas } = await env.DB
-      .prepare(`SELECT id, fecha, instrumento, contratos, valor_punto, imagen, notas,
-                       creada_en, actualizada_en
+      .prepare(`SELECT id, fecha, instrumento, contratos, valor_punto, comision,
+                       imagen, notas, creada_en, actualizada_en
                 FROM bt_jornadas ORDER BY fecha`)
       .all();
 
     const { results: operaciones } = await env.DB
       .prepare(`SELECT jornada_id, orden, hora, direccion, setup,
-                       puntos, resultado, pnl, observaciones
+                       puntos, resultado, comision, pnl, observaciones
                 FROM bt_operaciones ORDER BY jornada_id, orden`)
       .all();
 

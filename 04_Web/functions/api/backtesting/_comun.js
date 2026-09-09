@@ -67,6 +67,12 @@ export function normalizarJornada(cuerpo, cabecera) {
     return { error: 'Falta el valor del punto, que sale de las reglas del plan' };
   }
 
+  // La comision del broker, congelada en esta jornada igual que los contratos.
+  const comision = Number(cuerpo?.comision ?? cabecera.comision ?? 0);
+  if (!Number.isFinite(comision) || comision < 0) {
+    return { error: 'La comisión tiene que ser un número de 0 en adelante' };
+  }
+
   const instrumento = recorta(cuerpo?.instrumento, 20) || cabecera.instrumento;
 
   const entrantes = Array.isArray(cuerpo?.operaciones) ? cuerpo.operaciones : [];
@@ -92,9 +98,13 @@ export function normalizarJornada(cuerpo, cabecera) {
       return { error: `Los puntos de la operación ${i + 1} van siempre en positivo` };
     }
 
-    // Aqui, y solo aqui, se calcula el P&L. Se guarda ya resuelto.
+    // Aqui, y solo aqui, se calcula el P&L. Se guarda ya resuelto, y NETO:
+    // lo que de verdad entra o sale de la cuenta. La comision se cobra por
+    // contrato, que es como cobra un broker, y se resta gane o pierda.
     const signo = resultado === 'stop' ? -1 : 1;
-    const pnl = Math.round(signo * puntos * valorPunto * contratos * 100) / 100;
+    const bruto = signo * puntos * valorPunto * contratos;
+    const comisionOp = Math.round(comision * contratos * 100) / 100;
+    const pnl = Math.round((bruto - comisionOp) * 100) / 100;
 
     operaciones.push({
       orden: i,
@@ -103,6 +113,7 @@ export function normalizarJornada(cuerpo, cabecera) {
       setup,
       puntos,
       resultado,
+      comision: comisionOp,
       pnl,
       observaciones: recorta(o.observaciones, 2000),
     });
@@ -114,6 +125,7 @@ export function normalizarJornada(cuerpo, cabecera) {
       instrumento,
       contratos,
       valor_punto: valorPunto,
+      comision,
       imagen: recorta(cuerpo?.imagen, 120),
       notas: recorta(cuerpo?.notas, 2000),
     },
@@ -124,15 +136,15 @@ export function normalizarJornada(cuerpo, cabecera) {
 /** La fila de cabecera, creandola la primera vez si no existe. */
 export async function leerCabecera(env) {
   const fila = await env.DB
-    .prepare('SELECT valor_inicial, contratos, instrumento FROM bt_cabecera WHERE id = 1')
+    .prepare('SELECT valor_inicial, contratos, instrumento, comision FROM bt_cabecera WHERE id = 1')
     .first();
   if (fila) return fila;
 
-  const inicial = { valor_inicial: 0, contratos: 1, instrumento: 'MNQ' };
+  const inicial = { valor_inicial: 0, contratos: 1, instrumento: 'MNQ', comision: 0 };
   await env.DB
-    .prepare(`INSERT INTO bt_cabecera (id, valor_inicial, contratos, instrumento, actualizada_en)
-              VALUES (1, ?, ?, ?, ?)`)
-    .bind(inicial.valor_inicial, inicial.contratos, inicial.instrumento, ahora())
+    .prepare(`INSERT INTO bt_cabecera (id, valor_inicial, contratos, instrumento, comision, actualizada_en)
+              VALUES (1, ?, ?, ?, ?, ?)`)
+    .bind(inicial.valor_inicial, inicial.contratos, inicial.instrumento, inicial.comision, ahora())
     .run();
   return inicial;
 }
@@ -140,10 +152,11 @@ export async function leerCabecera(env) {
 /** Las operaciones de una jornada, listas para insertar. */
 export function sentenciasDeOperaciones(env, jornadaId, operaciones) {
   const sql = `INSERT INTO bt_operaciones
-                 (jornada_id, orden, hora, direccion, setup, puntos, resultado, pnl, observaciones)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                 (jornada_id, orden, hora, direccion, setup, puntos, resultado,
+                  comision, pnl, observaciones)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   return operaciones.map((o) => env.DB.prepare(sql).bind(
     jornadaId, o.orden, o.hora, o.direccion, o.setup,
-    o.puntos, o.resultado, o.pnl, o.observaciones,
+    o.puntos, o.resultado, o.comision, o.pnl, o.observaciones,
   ));
 }

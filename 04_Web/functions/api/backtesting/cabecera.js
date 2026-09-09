@@ -29,16 +29,23 @@ export async function onRequestPut({ request, env }) {
   const instrumento = recorta(cuerpo?.instrumento, 20);
   if (!instrumento) return json({ error: 'Falta el instrumento' }, 400);
 
+  // La comision del broker, por contrato y por operacion.
+  const comision = Number(cuerpo?.comision ?? 0);
+  if (!Number.isFinite(comision) || comision < 0) {
+    return json({ error: 'La comisión tiene que ser un número de 0 en adelante' }, 400);
+  }
+
   try {
     await leerCabecera(env); // crea la fila la primera vez
     await env.DB
       .prepare(`UPDATE bt_cabecera
-                SET valor_inicial = ?, contratos = ?, instrumento = ?, actualizada_en = ?
+                SET valor_inicial = ?, contratos = ?, instrumento = ?,
+                    comision = ?, actualizada_en = ?
                 WHERE id = 1`)
-      .bind(valorInicial, contratos, instrumento, ahora())
+      .bind(valorInicial, contratos, instrumento, comision, ahora())
       .run();
 
-    return json({ valor_inicial: valorInicial, contratos, instrumento });
+    return json({ valor_inicial: valorInicial, contratos, instrumento, comision });
   } catch (e) {
     return json({ error: 'No se pudieron guardar los datos de inicio', detalle: String(e) }, 500);
   }

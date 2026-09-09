@@ -48,12 +48,13 @@ Se decidió empezar en D1 dejando la puerta abierta. Lo que la mantiene abierta:
 | `valor_inicial` | capital con el que arranca el backtesting |
 | `contratos` | propuesta para la siguiente jornada |
 | `instrumento` | propuesta para la siguiente jornada |
+| `comision` | lo que cobra el bróker **por contrato y operación** |
 
 **`bt_jornadas`** — un día. `fecha` es única.
 
 | campo | |
 |---|---|
-| `instrumento`, `contratos`, `valor_punto` | **congelados** al guardar |
+| `instrumento`, `contratos`, `valor_punto`, `comision` | **congelados** al guardar |
 | `imagen` | clave en R2, o vacío |
 | `notas` | el día en general |
 
@@ -66,7 +67,8 @@ Se decidió empezar en D1 dejando la puerta abierta. Lo que la mantiene abierta:
 | `setup` | `continuacion` · `reingreso` |
 | `puntos` | **siempre en positivo**; el signo lo pone el resultado |
 | `resultado` | `target` · `stop` |
-| `pnl` | **calculado al guardar**, no al mostrar |
+| `comision` | lo cobrado: tarifa × contratos |
+| `pnl` | **neto**, calculado al guardar y no al mostrar |
 | `observaciones` | |
 
 ### Las tres decisiones que no son cosmética
@@ -88,8 +90,17 @@ se anotan los días con entrada, la bitácora miente sobre la frecuencia.
 ## Aritmética
 
 ```
-pnl = puntos × valor_punto × contratos      (negativo si el resultado es stop)
+bruto = puntos × valor_punto × contratos     (negativo si el resultado es stop)
+pnl   = bruto − comision × contratos
 ```
+
+El P&L guardado es **neto**: lo que de verdad entra o sale de la cuenta. La
+comisión se resta se gane o se pierda, así que **empeora las pérdidas**. Un
+día sin operación no paga comisión, porque no hubo operación.
+
+**La comisión se multiplica por los contratos** — 1,02 con dos contratos son
+2,04 — que es como cobra un bróker. Confirmado con el operador el 09/09/2026,
+que lo enunció como «por trade» con un solo contrato en juego.
 
 `valor_punto` sale de `reglas.json` (`valor_punto_MNQ`, en `R-01`) al compilar
 la página, y se congela en cada jornada al guardarla. **No se escribe a mano

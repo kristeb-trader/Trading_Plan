@@ -82,6 +82,12 @@ las tablas nuevas. Las imágenes van a **R2**, que sí es nuevo.
 npx wrangler d1 execute trading-plan-observaciones --remote --file=./d1/0002_backtesting.sql
 ```
 
+### 1 bis · La comisión  ✅ HECHA en produccion el 09/09/2026
+
+```
+npx wrangler d1 execute trading-plan-observaciones --remote --file=./d1/0003_backtesting_comision.sql
+```
+
 ### 2 · Crear el almacén de las imágenes  ✅ HECHO el 09/09/2026
 
 ```

@@ -41,10 +41,10 @@ export async function onRequestPut({ request, env, params }) {
     await env.DB
       .prepare(`UPDATE bt_jornadas
                 SET fecha = ?, instrumento = ?, contratos = ?, valor_punto = ?,
-                    imagen = ?, notas = ?, actualizada_en = ?
+                    comision = ?, imagen = ?, notas = ?, actualizada_en = ?
                 WHERE id = ?`)
       .bind(jornada.fecha, jornada.instrumento, jornada.contratos, jornada.valor_punto,
-            jornada.imagen, jornada.notas, ahora(), id)
+            jornada.comision, jornada.imagen, jornada.notas, ahora(), id)
       .run();
 
     // Fuera las viejas y dentro las nuevas: el P&L se recalcula entero.

@@ -15,13 +15,14 @@ export async function onRequestGet({ env }) {
     const cabecera = await leerCabecera(env);
 
     const { results: jornadas } = await env.DB
-      .prepare(`SELECT id, fecha, instrumento, contratos, valor_punto, imagen, notas
+      .prepare(`SELECT id, fecha, instrumento, contratos, valor_punto, comision,
+                       imagen, notas
                 FROM bt_jornadas ORDER BY fecha DESC`)
       .all();
 
     const { results: operaciones } = await env.DB
       .prepare(`SELECT id, jornada_id, orden, hora, direccion, setup,
-                       puntos, resultado, pnl, observaciones
+                       puntos, resultado, comision, pnl, observaciones
                 FROM bt_operaciones ORDER BY jornada_id, orden`)
       .all();
 
@@ -57,11 +58,12 @@ export async function onRequestPost({ request, env }) {
     const t = ahora();
     const fila = await env.DB
       .prepare(`INSERT INTO bt_jornadas
-                  (fecha, instrumento, contratos, valor_punto, imagen, notas, creada_en, actualizada_en)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                  (fecha, instrumento, contratos, valor_punto, comision,
+                   imagen, notas, creada_en, actualizada_en)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 RETURNING id`)
       .bind(jornada.fecha, jornada.instrumento, jornada.contratos, jornada.valor_punto,
-            jornada.imagen, jornada.notas, t, t)
+            jornada.comision, jornada.imagen, jornada.notas, t, t)
       .first();
 
     if (operaciones.length) {
