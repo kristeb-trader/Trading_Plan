@@ -76,13 +76,13 @@ Pega la clave del paso 4. **No va al repositorio ni al navegador.**
 Los datos van a la **misma base D1** que las observaciones; solo hacen falta
 las tablas nuevas. Las imágenes van a **R2**, que sí es nuevo.
 
-### 1 · Crear las tablas
+### 1 · Crear las tablas  ✅ HECHA en produccion el 09/09/2026
 
 ```
 npx wrangler d1 execute trading-plan-observaciones --remote --file=./d1/0002_backtesting.sql
 ```
 
-### 2 · Crear el almacén de las imágenes
+### 2 · Crear el almacén de las imágenes  ✅ HECHO el 09/09/2026
 
 ```
 npx wrangler r2 bucket create chaumer-bitacora
@@ -92,7 +92,21 @@ El bucket queda **privado**: no tiene dirección pública ni dominio propio. Las
 imágenes salen solo por `/api/backtesting/imagen/`, que las sirve el portal.
 No hay nada más que configurar — el binding ya está en `wrangler.toml`.
 
-### 3 · Rellenar los datos de inicio
+### 3 · Poner la clave de operador  ⚠️ PENDIENTE
+
+Sin ella **la bitácora es de solo lectura**: no se puede registrar nada. El
+proyecto no tiene ningún secreto configurado todavía (comprobado el
+09/09/2026 con `wrangler pages secret list`), así que el paso 4 de arriba —
+inventar la clave— y este siguen sin hacer:
+
+```
+npx wrangler pages secret put CLAVE_OPERADOR --project-name=plan-operativo-nq
+```
+
+Pide pegar la clave y no la enseña. Es la misma que abre responder y borrar
+en las observaciones.
+
+### 4 · Rellenar los datos de inicio
 
 Con tu enlace de operador abierto, el lápiz de la tarjeta **Valor inicial**
 abre la ventanita de datos de inicio: valor inicial, contratos e instrumento.
