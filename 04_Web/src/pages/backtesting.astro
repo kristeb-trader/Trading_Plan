@@ -406,6 +406,23 @@ const punto = P.valorPunto();
     var VALOR_PUNTO = Number(raiz.dataset.punto);
 
     var CLAVE = 'chaumer.clave';
+
+    // La clave del operador llega en su enlace y se recuerda. Se limpia de la
+    // barra para que no viaje si copia la direccion.
+    //
+    // Esto estaba SOLO en la pagina de observaciones, y por eso el enlace con
+    // ?k= no encendia nada aqui: la bitacora leia una clave que nadie habia
+    // guardado todavia. Mismo criterio y mismo nombre que alli.
+    try {
+      var url = new URL(window.location.href);
+      var k = url.searchParams.get('k');
+      if (k) {
+        localStorage.setItem(CLAVE, k);
+        url.searchParams.delete('k');
+        history.replaceState({}, '', url.pathname + url.search + url.hash);
+      }
+    } catch (e) { /* sin almacenamiento */ }
+
     function clave() { try { return localStorage.getItem(CLAVE) || ''; } catch (e) { return ''; } }
     var operador = !!clave();
 
