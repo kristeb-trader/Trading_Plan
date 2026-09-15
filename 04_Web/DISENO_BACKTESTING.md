@@ -126,15 +126,24 @@ queda escrita en `PROPUESTAS_AL_PLAN.md` y la decide él.
 
 ## La pantalla
 
-- Cuatro cifras: valor inicial, saldo actual, puntos netos, caída máxima. En la
-  tarjeta de valor inicial, un lápiz abre **Datos de inicio**.
+- **Seis cifras en dos filas de tres.** Arriba el dinero: valor inicial (con
+  el lápiz de **Datos de inicio**), saldo actual y **rentabilidad** —en su
+  propia tarjeta, en grande y en color, 15/09/2026—. Abajo el método:
+  **efectividad** con los target en verde y los stop en rojo debajo, puntos
+  netos con lo pagado en comisiones, y caída máxima.
 - **Curva de capital** en el estándar visual del método: fondo oscuro, sin
-  cuadrícula, solo el eje horizontal y el vertical.
-- Filtros por setup y por resultado.
-- Tabla: fecha · hora · dirección · setup · puntos · P&L · resultado · saldo ·
-  observaciones · gráfico.
-  **El instrumento no es columna:** se repite idéntico en todas las filas y no
-  cabía; vive en la línea de datos bajo el título.
+  cuadrícula, solo el eje horizontal y el vertical. El vertical lleva
+  **unas cinco marcas en cifras redondas** (1, 2, 2,5 o 5 por potencia de
+  diez), a la misma distancia y recalculadas con los datos, para que no se
+  amontonen.
+- Filtros por setup, por resultado y **«Con observación»** (solo las
+  operaciones con algo escrito).
+- **La tabla, por meses.** Cada mes abre con su nombre y cierra con una fila
+  de totales: operaciones, puntos netos, P&L y targets/stops con porcentaje.
+  **Los totales son de lo que se ve**: con un filtro puesto, suman lo filtrado.
+- Columnas: fecha · hora · dirección · setup · puntos · P&L · resultado ·
+  observaciones · gráfico. **Sin saldo** —el operador no lo usa, 15/09/2026—
+  ni instrumento, que se repite idéntico y vive bajo el título.
 - **Sin texto explicativo.** El operador lo pidió tres veces: la pantalla
   enseña datos, no se explica a sí misma.
 

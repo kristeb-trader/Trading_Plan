@@ -42,6 +42,16 @@ const punto = P.valorPunto();
         <small data-sub-saldo></small>
       </div>
       <div class="cifra">
+        <span class="etiqueta">Rentabilidad</span>
+        <b data-rentabilidad>—</b>
+        <small data-sub-rentabilidad></small>
+      </div>
+      <div class="cifra">
+        <span class="etiqueta">Efectividad</span>
+        <b data-efectividad>—</b>
+        <small data-sub-efectividad></small>
+      </div>
+      <div class="cifra">
         <span class="etiqueta">Puntos netos</span>
         <b data-puntos>—</b>
         <small data-sub-puntos></small>
@@ -65,6 +75,7 @@ const punto = P.valorPunto();
         <button class="chip" type="button" data-filtro="setup:reingreso">Reingreso</button>
         <button class="chip" type="button" data-filtro="resultado:target">Target</button>
         <button class="chip" type="button" data-filtro="resultado:stop">Stop</button>
+        <button class="chip" type="button" data-filtro="obs">Con observación</button>
       </div>
       <div class="crece"></div>
       <a class="boton fantasma" href="/api/backtesting/export" data-exportar>
@@ -81,7 +92,7 @@ const punto = P.valorPunto();
           <tr>
             <th>Fecha</th><th>Hora</th><th>Dirección</th><th>Setup</th>
             <th class="n">Puntos</th><th class="n">P&amp;L</th><th>Resultado</th>
-            <th class="n">Saldo</th><th>Observaciones</th><th>Gráfico</th>
+            <th>Observaciones</th><th>Gráfico</th>
           </tr>
         </thead>
         <tbody data-filas></tbody>
@@ -191,8 +202,11 @@ const punto = P.valorPunto();
 
   .bt .apunte { margin: 0; color: var(--texto-3); font-size: var(--t-2); }
 
+  /* Seis tarjetas en dos filas de tres: arriba el dinero (valor inicial,
+     saldo, rentabilidad), abajo como va el metodo (efectividad, puntos,
+     caida). Seis en una fila no caben con cifras de cuatro digitos. */
   .bt .cifras {
-    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--e-3); margin: var(--e-6) 0 var(--e-5);
   }
   .bt .cifra {
@@ -293,6 +307,23 @@ const punto = P.valorPunto();
   .bt td.obs span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .bt tr.abierta td.obs span { white-space: normal; overflow: visible; }
   .bt tr.vacia td { color: var(--texto-3); font-style: italic; }
+
+  /* La fila que abre cada mes: una division, no un dato. */
+  .bt tr.mes td {
+    padding: var(--e-4) var(--e-3) var(--e-2);
+    font-size: var(--t-1); text-transform: uppercase; letter-spacing: var(--track-etiqueta);
+    font-weight: var(--peso-fuerte); color: var(--texto);
+    background: var(--superficie); border-bottom: 1px solid var(--borde);
+  }
+  .bt tbody tr.mes:hover td { background: var(--superficie); }
+  /* La que lo cierra: los totales, separados de las filas con un filete. */
+  .bt tr.total td {
+    font-weight: var(--peso-fuerte); color: var(--texto-2);
+    background: var(--elevado); border-top: 1px solid var(--borde);
+    border-bottom: 1px solid var(--borde);
+  }
+  .bt tbody tr.total:hover td { background: var(--elevado); }
+  .bt tr.total td.efec { font-family: var(--fuente-mono); white-space: nowrap; }
 
   .bt .pil {
     display: inline-flex; align-items: center; gap: 0.3rem;
@@ -439,6 +470,15 @@ const punto = P.valorPunto();
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
+    /** El paso de escala mas cercano a rango/(marcas-1) entre 1, 2, 2,5, 5 y
+     *  10 por una potencia de diez. */
+    function pasoRedondo(rango, marcas) {
+      var bruto = rango / Math.max(marcas - 1, 1);
+      var mag = Math.pow(10, Math.floor(Math.log10(bruto)));
+      var n = bruto / mag;
+      return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * mag;
+    }
+
     var MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
     function fechaCorta(iso) {
       var p = String(iso).split('-');
@@ -532,22 +572,35 @@ const punto = P.valorPunto();
         + (c.comision ? ' · ' + usd(c.comision) + ' de comisión' : '');
 
       var neto = saldo - inicial;
+      var tono = function (v) { return v > 0 ? 'pos' : v < 0 ? 'neg' : ''; };
+
       var saldoEl = $('[data-saldo]');
       saldoEl.textContent = usd(saldo);
-      saldoEl.className = neto > 0 ? 'pos' : neto < 0 ? 'neg' : '';
+      saldoEl.className = tono(neto);
       var subSaldo = $('[data-sub-saldo]');
-      subSaldo.textContent = inicial
-        ? firmado(neto) + ' · ' + firmado((neto / inicial) * 100) + ' %'
-        : firmado(neto);
-      subSaldo.className = neto > 0 ? 'pos' : neto < 0 ? 'neg' : '';
+      subSaldo.textContent = (neto > 0 ? '+' : '') + usd(neto);
+      subSaldo.className = tono(neto);
+
+      // La rentabilidad salio de la tarjeta del saldo a una propia, en grande
+      // y en color: es la cifra que el operador quiere leer de un vistazo.
+      var rent = inicial ? (neto / inicial) * 100 : 0;
+      var rentEl = $('[data-rentabilidad]');
+      rentEl.textContent = inicial ? firmado(rent) + ' %' : '—';
+      rentEl.className = tono(rent);
+
+      // Efectividad: targets sobre operaciones. Debajo, cuantos de cada uno,
+      // cada uno en su color.
+      var stops = ops.length - ganadas;
+      $('[data-efectividad]').textContent = ops.length
+        ? dinero.format((ganadas / ops.length) * 100) + ' %' : '—';
+      $('[data-sub-efectividad]').innerHTML =
+        '<span class="pos">' + ganadas + ' target</span> · <span class="neg">' + stops + ' stop</span>';
 
       var puntosEl = $('[data-puntos]');
       puntosEl.textContent = firmado(puntos);
-      puntosEl.className = puntos > 0 ? 'pos' : puntos < 0 ? 'neg' : '';
+      puntosEl.className = tono(puntos);
       var comisiones = ops.reduce(function (t, o) { return t + (Number(o.comision) || 0); }, 0);
-      $('[data-sub-puntos]').textContent =
-        ganadas + ' ganadas · ' + (ops.length - ganadas) + ' perdidas'
-        + (comisiones ? ' · ' + usd(comisiones) + ' en comisiones' : '');
+      $('[data-sub-puntos]').textContent = comisiones ? usd(comisiones) + ' en comisiones' : '';
 
       var caidaEl = $('[data-caida]');
       caidaEl.textContent = caida ? '−' + dinero.format(caida) : usd(0);
@@ -565,10 +618,22 @@ const punto = P.valorPunto();
       var inicial = Number(estado.cabecera.valor_inicial) || 0;
       var serie = [inicial].concat(pasos.map(function (p) { return p.saldo; }));
       var min = Math.min.apply(null, serie), max = Math.max.apply(null, serie);
-      var margen = (max - min) * 0.18 || Math.max(Math.abs(max) * 0.02, 1);
-      var lo = min - margen, hi = max + margen;
 
-      var X0 = 60, X1 = 860, ARRIBA = 20, ABAJO = 200;
+      // La escala del eje vertical sale de un paso «redondo» (1, 2, 2,5 o 5
+      // por una potencia de diez) para que las marcas caigan en cifras que se
+      // leen solas y a distancias iguales. Se buscan unas cinco: con mas se
+      // amontonan, con menos no se ve la escala.
+      var rango = max - min || Math.max(Math.abs(max) * 0.02, 1);
+      var paso = pasoRedondo(rango, 5);
+      var lo = Math.floor(min / paso) * paso;
+      var hi = Math.ceil(max / paso) * paso;
+      if (hi === lo) hi = lo + paso;
+      // Aire arriba y abajo: si la curva toca el borde, la etiqueta del ultimo
+      // punto se sale del dibujo.
+      if ((hi - max) / (hi - lo) < 0.1) hi += paso;
+      if ((min - lo) / (hi - lo) < 0.1) lo -= paso;
+
+      var EJE = 76, X0 = 92, X1 = 860, ARRIBA = 24, ABAJO = 200;
       var y = function (v) { return ABAJO - ((v - lo) / (hi - lo)) * (ABAJO - ARRIBA); };
       var x = function (i) { return serie.length === 1 ? X0 : X0 + (i * (X1 - X0)) / (serie.length - 1); };
 
@@ -584,6 +649,15 @@ const punto = P.valorPunto();
         return '<text x="' + x(i + 1).toFixed(1) + '" y="230">' + t[2] + ' ' + MESES[Number(t[1]) - 1] + '</text>';
       }).join('');
 
+      var decimales = paso < 1 ? 2 : 0;
+      var cifraEje = new Intl.NumberFormat('es-CO', { minimumFractionDigits: decimales, maximumFractionDigits: decimales });
+      var marcas = '';
+      for (var v = lo; v <= hi + paso / 2; v += paso) {
+        var yy = y(v).toFixed(1);
+        marcas += '<line x1="' + (EJE - 4) + '" y1="' + yy + '" x2="' + EJE + '" y2="' + yy + '" stroke="#3A4256"/>' +
+                  '<text x="' + (EJE - 8) + '" y="' + yy + '" dy="0.35em">' + cifraEje.format(v) + '</text>';
+      }
+
       caja.innerHTML =
         '<svg class="curva" viewBox="0 0 900 250" role="img" aria-label="Curva de capital: de ' +
           dinero.format(inicial) + ' a ' + dinero.format(ultimo) + ' dólares en ' + pasos.length + ' jornadas">' +
@@ -591,12 +665,13 @@ const punto = P.valorPunto();
             '<stop offset="0%" stop-color="#4C8DFF" stop-opacity=".28"/>' +
             '<stop offset="100%" stop-color="#4C8DFF" stop-opacity="0"/>' +
           '</linearGradient></defs>' +
-          '<line x1="48" y1="14" x2="48" y2="210" stroke="#3A4256"/>' +
-          '<line x1="48" y1="210" x2="880" y2="210" stroke="#3A4256"/>' +
-          '<line x1="48" y1="' + y(inicial).toFixed(1) + '" x2="880" y2="' + y(inicial).toFixed(1) +
+          '<line x1="' + EJE + '" y1="' + (ARRIBA - 8) + '" x2="' + EJE + '" y2="210" stroke="#3A4256"/>' +
+          '<line x1="' + EJE + '" y1="210" x2="880" y2="210" stroke="#3A4256"/>' +
+          '<g fill="#8790A1" font-size="11" font-family="Geist Mono, monospace" text-anchor="end">' +
+            marcas +
+          '</g>' +
+          '<line x1="' + EJE + '" y1="' + y(inicial).toFixed(1) + '" x2="880" y2="' + y(inicial).toFixed(1) +
             '" stroke="#8790A1" stroke-dasharray="3 5" opacity=".7"/>' +
-          '<text x="56" y="' + (y(inicial) - 6).toFixed(1) + '" fill="#8790A1" font-size="11" ' +
-            'font-family="Geist Mono, monospace">' + dinero.format(inicial) + '</text>' +
           '<path d="M' + puntos.join(' L') + ' L' + X1 + ',210 L' + X0 + ',210 Z" fill="url(#bt-relleno)"/>' +
           '<polyline points="' + puntos.join(' ') + '" fill="none" stroke="#4C8DFF" stroke-width="2.25" ' +
             'stroke-linejoin="round" stroke-linecap="round"/>' +
@@ -614,33 +689,82 @@ const punto = P.valorPunto();
     // ──────────────────────────────────────────────────────────── tabla
     function pasaElFiltro(op) {
       if (!filtro) return true;
+      if (filtro === 'obs') return !!(op && String(op.observaciones || '').trim());
       var partes = filtro.split(':');
       return op && op[partes[0]] === partes[1];
     }
 
+    var MESES_LARGOS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio',
+                        'Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    var COLUMNAS = 9;
+
+    /**
+     * Por meses, de nuevo a viejo. Cada mes abre con su nombre y cierra con
+     * una fila de totales.
+     *
+     * Los totales son de LO QUE SE VE: filtrando por «Stop», el total del mes
+     * es el de sus stops. Un mes sin nada que enseñar con ese filtro no sale.
+     */
     function pintarTabla(pasos) {
       var cuerpo = $('[data-filas]');
       var vacio = $('[data-vacio]');
-      var filas = [];
+      var meses = [];
+      var porClave = {};
 
-      // De nueva a vieja: lo ultimo que hizo es lo primero que quiere ver.
       pasos.slice().reverse().forEach(function (p) {
         var j = p.jornada;
         var ops = j.operaciones || [];
         var visibles = ops.filter(pasaElFiltro);
+        var clave = j.fecha.slice(0, 7);
+        var filas = [];
+
         // Un dia sin operaciones solo aparece si no hay filtro: filtrando por
         // «Stop» no pinta nada un dia en el que no se entro.
-        if (!ops.length && !filtro) {
-          filas.push(filaVacia(j, p));
-        } else {
-          visibles.forEach(function (o, i) { filas.push(filaOperacion(j, o, p, i === 0)); });
+        if (!ops.length && !filtro) filas.push(filaVacia(j));
+        else visibles.forEach(function (o, i) { filas.push(filaOperacion(j, o, i === 0)); });
+        if (!filas.length) return;
+
+        if (!porClave[clave]) {
+          porClave[clave] = { clave: clave, filas: [], ops: [] };
+          meses.push(porClave[clave]);
         }
+        porClave[clave].filas = porClave[clave].filas.concat(filas);
+        porClave[clave].ops = porClave[clave].ops.concat(visibles);
       });
 
-      cuerpo.innerHTML = filas.join('');
-      var hayJornadas = pasos.length > 0;
-      vacio.hidden = filas.length > 0;
-      vacio.textContent = hayJornadas ? 'Ninguna operación pasa ese filtro.' : 'Todavía no hay jornadas registradas.';
+      cuerpo.innerHTML = meses.map(function (m) {
+        return filaMes(m.clave) + m.filas.join('') + filaTotal(m.ops);
+      }).join('');
+
+      vacio.hidden = meses.length > 0;
+      vacio.textContent = pasos.length ? 'Ninguna operación pasa ese filtro.' : 'Todavía no hay jornadas registradas.';
+    }
+
+    function filaMes(clave) {
+      var t = clave.split('-');
+      return '<tr class="mes"><td colspan="' + COLUMNAS + '">' +
+        MESES_LARGOS[Number(t[1]) - 1] + ' ' + t[0] + '</td></tr>';
+    }
+
+    function filaTotal(ops) {
+      var puntos = 0, pnl = 0, target = 0;
+      ops.forEach(function (o) {
+        puntos += (o.resultado === 'stop' ? -1 : 1) * Number(o.puntos);
+        pnl += Number(o.pnl);
+        if (o.resultado === 'target') target++;
+      });
+      var stop = ops.length - target;
+      var tono = function (v) { return v > 0 ? 'pos' : v < 0 ? 'neg' : ''; };
+      return '<tr class="total">' +
+        '<td colspan="4">Total del mes · ' + ops.length + (ops.length === 1 ? ' operación' : ' operaciones') + '</td>' +
+        '<td class="n ' + tono(puntos) + '">' + firmado(puntos) + '</td>' +
+        '<td class="n ' + tono(pnl) + '">' + (pnl > 0 ? '+' : '') + usd(pnl) + '</td>' +
+        '<td class="efec">' + (ops.length
+          ? '<span class="pos">' + target + '</span> / <span class="neg">' + stop + '</span> · ' +
+            dinero.format((target / ops.length) * 100) + ' %'
+          : '—') + '</td>' +
+        '<td colspan="2"></td>' +
+        '</tr>';
     }
 
     function celdaFecha(j) {
@@ -657,16 +781,15 @@ const punto = P.valorPunto();
              '" alt="Gráfico del ' + escapa(fechaCorta(j.fecha)) + '" data-lupa-abrir="' + url + '"></td>';
     }
 
-    function filaVacia(j, p) {
+    function filaVacia(j) {
       return '<tr class="vacia">' + celdaFecha(j) +
         '<td>—</td><td>—</td><td>—</td><td class="n">—</td><td class="n">' + usd(0) + '</td>' +
         '<td><span class="pil neutra">Sin operación</span></td>' +
-        '<td class="n">' + usd(p.saldo) + '</td>' +
         '<td class="obs"><span>' + escapa(j.notas || '') + '</span></td>' +
         celdaGrafico(j) + '</tr>';
     }
 
-    function filaOperacion(j, o, p, primera) {
+    function filaOperacion(j, o, primera) {
       var pnl = Number(o.pnl);
       return '<tr>' +
         (primera ? celdaFecha(j) : '<td class="fecha"></td>') +
@@ -677,7 +800,6 @@ const punto = P.valorPunto();
         '<td class="n ' + (pnl > 0 ? 'pos' : pnl < 0 ? 'neg' : '') + '">' +
           (pnl > 0 ? '+' : '') + usd(pnl).replace('−$', '−$') + '</td>' +
         '<td><span class="pil ' + o.resultado + '">' + NOMBRE[o.resultado] + '</span></td>' +
-        '<td class="n">' + (primera ? usd(p.saldo) : '') + '</td>' +
         '<td class="obs"><span>' + escapa(o.observaciones || '') + '</span></td>' +
         (primera ? celdaGrafico(j) : '<td></td>') +
         '</tr>';
