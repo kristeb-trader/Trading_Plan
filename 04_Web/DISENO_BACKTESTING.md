@@ -138,8 +138,12 @@ queda escrita en `PROPUESTAS_AL_PLAN.md` y la decide él.
   amontonen.
 - Filtros por setup, por resultado y **«Con observación»** (solo las
   operaciones con algo escrito).
-- **La tabla, por meses.** Cada mes abre con su nombre y cierra con una fila
-  de totales: operaciones, puntos netos, P&L y targets/stops con porcentaje.
+- **La tabla, por meses.** Cada mes abre con **una sola fila** que lleva sus
+  totales, cada uno bajo su columna: nombre del mes, operaciones y
+  target/stop en color; puntos netos; P&L; y la **efectividad**, bajo
+  Resultado, en grande y en cian —ni verde ni rojo: destaca, no juzga—
+  (16/09/2026). La fila se distingue de los días por el fondo teñido de
+  acento, un filete arriba, más altura y cifras en negrita.
   **Los totales son de lo que se ve**: con un filtro puesto, suman lo filtrado.
 - Columnas: fecha · hora · dirección · setup · puntos · P&L · resultado ·
   observaciones · gráfico. **Sin saldo** —el operador no lo usa, 15/09/2026—

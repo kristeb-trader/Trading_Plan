@@ -308,22 +308,42 @@ const punto = P.valorPunto();
   .bt tr.abierta td.obs span { white-space: normal; overflow: visible; }
   .bt tr.vacia td { color: var(--texto-3); font-style: italic; }
 
-  /* La fila que abre cada mes: una division, no un dato. */
+  /* La fila que abre cada mes, con sus totales. Tiene que separarse a la
+     primera de las filas de los dias: fondo tenido de acento, filete arriba,
+     mas aire y cifras en negrita. */
   .bt tr.mes td {
-    padding: var(--e-4) var(--e-3) var(--e-2);
-    font-size: var(--t-1); text-transform: uppercase; letter-spacing: var(--track-etiqueta);
-    font-weight: var(--peso-fuerte); color: var(--texto);
-    background: var(--superficie); border-bottom: 1px solid var(--borde);
-  }
-  .bt tbody tr.mes:hover td { background: var(--superficie); }
-  /* La que lo cierra: los totales, separados de las filas con un filete. */
-  .bt tr.total td {
-    font-weight: var(--peso-fuerte); color: var(--texto-2);
-    background: var(--elevado); border-top: 1px solid var(--borde);
+    padding: var(--e-4) var(--e-3);
+    font-family: var(--fuente-mono); font-variant-numeric: tabular-nums;
+    font-size: var(--t-4); font-weight: var(--peso-fuerte); color: var(--texto);
+    background: color-mix(in srgb, var(--acento) 11%, var(--superficie));
+    border-top: 1px solid color-mix(in srgb, var(--acento) 40%, transparent);
     border-bottom: 1px solid var(--borde);
+    vertical-align: middle;
   }
-  .bt tbody tr.total:hover td { background: var(--elevado); }
-  .bt tr.total td.efec { font-family: var(--fuente-mono); white-space: nowrap; }
+  .bt tbody tr.mes:hover td { background: color-mix(in srgb, var(--acento) 11%, var(--superficie)); }
+  .bt tr.mes td.pos { color: var(--positivo); }
+  .bt tr.mes td.neg { color: var(--negativo); }
+  /* Nombre y cuenta en una sola linea (pedido del operador): la fila se lee
+     de corrido, como el resto de la tabla. */
+  .bt tr.mes td:first-child { white-space: nowrap; }
+  .bt .mes-nombre {
+    display: inline; font-family: var(--fuente);
+    font-size: var(--t-3); text-transform: uppercase; letter-spacing: var(--track-etiqueta);
+    font-weight: var(--peso-max); color: var(--texto);
+  }
+  .bt .mes-cuenta {
+    display: inline; margin-left: var(--e-3); font-family: var(--fuente);
+    font-size: var(--t-2); font-weight: var(--peso-medio); color: var(--texto-2);
+  }
+  /* La efectividad: la cifra que mas se mira. En su propio color, que no es
+     ni el verde ni el rojo de la fila: no juzga, destaca. */
+  .bt .mes-efec {
+    display: inline-block; padding: 0.15rem 0.6rem; border-radius: var(--radio-pill);
+    font-family: var(--fuente-mono); font-size: var(--t-5); font-weight: var(--peso-max);
+    color: var(--info); white-space: nowrap;
+    background: color-mix(in srgb, var(--info) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--info) 38%, transparent);
+  }
 
   .bt .pil {
     display: inline-flex; align-items: center; gap: 0.3rem;
@@ -733,20 +753,21 @@ const punto = P.valorPunto();
       });
 
       cuerpo.innerHTML = meses.map(function (m) {
-        return filaMes(m.clave) + m.filas.join('') + filaTotal(m.ops);
+        return filaMes(m.clave, m.ops) + m.filas.join('');
       }).join('');
 
       vacio.hidden = meses.length > 0;
       vacio.textContent = pasos.length ? 'Ninguna operación pasa ese filtro.' : 'Todavía no hay jornadas registradas.';
     }
 
-    function filaMes(clave) {
+    /**
+     * La fila que abre cada mes lleva sus totales (15/09/2026: antes iban en
+     * una fila aparte al final). Cada total cae bajo su columna: puntos bajo
+     * Puntos, P&L bajo P&L, y la efectividad —lo que el operador mas mira—
+     * bajo Resultado, en grande y en color.
+     */
+    function filaMes(clave, ops) {
       var t = clave.split('-');
-      return '<tr class="mes"><td colspan="' + COLUMNAS + '">' +
-        MESES_LARGOS[Number(t[1]) - 1] + ' ' + t[0] + '</td></tr>';
-    }
-
-    function filaTotal(ops) {
       var puntos = 0, pnl = 0, target = 0;
       ops.forEach(function (o) {
         puntos += (o.resultado === 'stop' ? -1 : 1) * Number(o.puntos);
@@ -755,13 +776,19 @@ const punto = P.valorPunto();
       });
       var stop = ops.length - target;
       var tono = function (v) { return v > 0 ? 'pos' : v < 0 ? 'neg' : ''; };
-      return '<tr class="total">' +
-        '<td colspan="4">Total del mes · ' + ops.length + (ops.length === 1 ? ' operación' : ' operaciones') + '</td>' +
-        '<td class="n ' + tono(puntos) + '">' + firmado(puntos) + '</td>' +
-        '<td class="n ' + tono(pnl) + '">' + (pnl > 0 ? '+' : '') + usd(pnl) + '</td>' +
-        '<td class="efec">' + (ops.length
-          ? '<span class="pos">' + target + '</span> / <span class="neg">' + stop + '</span> · ' +
-            dinero.format((target / ops.length) * 100) + ' %'
+      var hay = ops.length > 0;
+
+      return '<tr class="mes">' +
+        '<td colspan="4">' +
+          '<span class="mes-nombre">' + MESES_LARGOS[Number(t[1]) - 1] + ' ' + t[0] + '</span>' +
+          '<span class="mes-cuenta">' + ops.length + (ops.length === 1 ? ' operación' : ' operaciones') +
+            (hay ? ' · <span class="pos">' + target + ' target</span> · <span class="neg">' + stop + ' stop</span>' : '') +
+          '</span>' +
+        '</td>' +
+        '<td class="n ' + tono(puntos) + '">' + (hay ? firmado(puntos) : '—') + '</td>' +
+        '<td class="n ' + tono(pnl) + '">' + (hay ? (pnl > 0 ? '+' : '') + usd(pnl) : '—') + '</td>' +
+        '<td>' + (hay
+          ? '<span class="mes-efec">' + dinero.format((target / ops.length) * 100) + ' %</span>'
           : '—') + '</td>' +
         '<td colspan="2"></td>' +
         '</tr>';
