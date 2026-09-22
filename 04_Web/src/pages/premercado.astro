@@ -6,7 +6,17 @@
  * es casual: primero el estado del operador (si falla, el dia se cierra ahi),
  * despues el calendario, despues la plataforma y solo al final el grafico.
  *
- * Las cifras salen de PARAMETROS.md. Ni una escrita a mano.
+ * Las cifras salen de PARAMETROS.md, con DOS excepciones que el plan no
+ * parametriza: lo que vale un punto ($2,00) y lo que vale un tick ($0,50).
+ * No estan en PARAMETROS.md, asi que aqui van escritas. No se inventan
+ * dividiendo el tope de stop: si hacen falta, se piden al plan.
+ *
+ * OJO (08/09/2026): hasta hoy esta pagina pedia UMBRAL_VOL_MNQ y
+ * UMBRAL_VOL_NQ, que NO EXISTEN. El parametro real es UMBRAL_VOL, uno solo.
+ * Al no encontrarlos, el atajo `v` caia en su texto de reserva y la pagina
+ * pintaba los numeros a mano —incluido el umbral del NQ, retirado del plan
+ * el 06/09/2026— sin que nadie se enterase. Por eso aqui ya no hay reservas:
+ * si el parametro falta, que se note.
  */
 import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
@@ -105,7 +115,7 @@ const SECCIONES = [
       <dt>Qué vale un punto</dt>
       <dd><span class="cifra-en">$2,00</span></dd>
       <dt>Qué vale un tick</dt>
-      <dd><span class="cifra-en">0,25</span> puntos · <span class="cifra-en">$0,50</span></dd>
+      <dd><span class="cifra-en">{v('TICK')}</span> · <span class="cifra-en">$0,50</span></dd>
     </dl>
   </section>
 
@@ -153,8 +163,7 @@ const SECCIONES = [
     <h2>Zonas por volumen <Refs cods="R-15" /></h2>
     <p>
       Si en el premercado se forma una vela con un volumen por encima del
-      umbral (<strong>{v('UMBRAL_VOL_MNQ', '> 6.000 contratos')} en MNQ,{' '}
-      {v('UMBRAL_VOL_NQ', '> 2.000 contratos')} en NQ</strong>), se debe
+      umbral (<strong>{v('UMBRAL_VOL')}</strong>), se debe
       marcar una zona. Es la única manera de que nazca una zona sin que haya
       habido un movimiento y su descanso.
     </p>
@@ -165,19 +174,17 @@ const SECCIONES = [
     </figure>
 
     <ol class="secuencia">
-      <li><strong>Se escanea desde las 19:00 hora Colombia</strong> del día anterior, que es la apertura de Tokio, hasta la apertura americana.</li>
+      <li><strong>Se escanea desde las {v('PREMERCADO_INICIO')}</strong> del día anterior, hasta la apertura americana.</li>
       <li><strong>Toda vela que supere el umbral de volumen deja zona.</strong> Todas, no solo las más altas o las más bajas del grupo.</li>
       <li><strong>El color de la vela decide el tipo:</strong> vela alcista deja resistencia sobre su mecha superior; vela bajista deja soporte sobre su mecha inferior.</li>
       <li><strong>Los límites son los de siempre:</strong> del borde del cuerpo a la punta de la mecha.</li>
     </ol>
 
     <dl class="datos">
-      <dt>Umbral en MNQ</dt>
-      <dd><strong>{v('UMBRAL_VOL_MNQ', '> 6.000 contratos')}</strong> en una vela de un minuto</dd>
-      <dt>Umbral en NQ</dt>
-      <dd><strong>{v('UMBRAL_VOL_NQ', '> 2.000 contratos')}</strong> en una vela de un minuto</dd>
+      <dt>Umbral</dt>
+      <dd><strong>{v('UMBRAL_VOL')}</strong>, en una vela de un minuto</dd>
       <dt>Desde cuándo</dt>
-      <dd>{v('PREMERCADO_INICIO', '19:00 hora Colombia')}</dd>
+      <dd>{v('PREMERCADO_INICIO')}</dd>
       <dt>Hasta cuándo</dt>
       <dd>La apertura del mercado americano</dd>
     </dl>
