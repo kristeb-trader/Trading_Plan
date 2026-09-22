@@ -4,7 +4,9 @@
  * 01_Plan/  -> src/content/
  * 02_Assets/ -> public/assets/
  *
- * REGLA DURA: abre `01_Plan/` y `02_Assets/` en SOLO LECTURA y aborta si algun
+ * 05_Backtesting/test_ciego/Back_claude/ -> public/assets/test-ciego/
+ *
+ * REGLA DURA: abre `01_Plan/`, `02_Assets/` y el test ciego en SOLO LECTURA y aborta si algun
  * destino cae fuera de `04_Web/`. El plan no se toca nunca desde aqui.
  *
  * Lo copiado esta en .gitignore: es derivado. El original vive en el repositorio.
@@ -20,6 +22,8 @@ const PLAN = path.join(RAIZ, '01_Plan');
 const ASSETS = path.join(RAIZ, '02_Assets');
 const DEST_CONTENIDO = path.join(WEB, 'src', 'content');
 const DEST_ASSETS = path.join(WEB, 'public', 'assets');
+// Los graficos del test ciego diario. Los genera Cowork, uno por jornada.
+const TEST_CIEGO = path.join(RAIZ, '05_Backtesting', 'test_ciego', 'Back_claude');
 
 // Los documentos que el portal espera encontrar. Si falta uno, se avisa.
 const DOCUMENTOS = [
@@ -157,12 +161,34 @@ fs.writeFileSync(
   'utf8',
 );
 
+// --------------------------------------------------------------- test ciego
+// Solo lectura, como el plan. Se copia solo lo que se llama AAAA-MM-DD.png:
+// la fecha del nombre es lo unico que dice a que jornada pertenece. Lo demas
+// de la carpeta (el LEEME) no viaja.
+const jornadas = [];
+if (fs.existsSync(TEST_CIEGO)) {
+  for (const f of fs.readdirSync(TEST_CIEGO).sort()) {
+    const m = f.match(/^(\d{4}-\d{2}-\d{2})\.png$/i);
+    if (!m) continue;
+    copiar(path.join(TEST_CIEGO, f), path.join(DEST_ASSETS, 'test-ciego', f));
+    jornadas.push({ fecha: m[1], url: '/assets/test-ciego/' + f });
+  }
+} else {
+  aviso('no existe 05_Backtesting/test_ciego/Back_claude: la pagina del test ciego saldra vacia');
+}
+fs.writeFileSync(
+  path.join(DEST_CONTENIDO, 'test_ciego.json'),
+  JSON.stringify(jornadas, null, 2) + '\n',
+  'utf8',
+);
+
 // ------------------------------------------------------------------ informe
 console.log('sync');
 console.log('  documentos    ' + docsCopiados + '/' + DOCUMENTOS.length);
 console.log('  reglas.json   ' + reglas.length + ' reglas');
 console.log('  subfases      ' + subfases);
 console.log('  imagenes      ' + imagenes.length);
+console.log('  test ciego    ' + jornadas.length + ' jornadas');
 console.log('  manifiesto    ' + Object.keys(manifiesto.reglas).length + ' reglas con imagen · '
   + Object.keys(manifiesto.casos).length + ' casos con imagen · '
   + manifiesto.sueltas.length + ' sueltas');

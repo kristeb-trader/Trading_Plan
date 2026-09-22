@@ -54,6 +54,7 @@ for (const p of params) {
               </a>
             </header>
             <p class="p-v" set:html={P.enriquecerHtml(P.tituloAHtml(p.valor))} />
+            {p.anotacion && <p class="p-an meta">{p.anotacion}</p>}
             <dl class="p-d">
               {p.detalle.map((d) => (
                 <div class="p-fila">
@@ -124,6 +125,7 @@ for (const p of params) {
   .p-enlace { margin-left: auto; color: var(--texto-3); --i: 0.9rem; display: flex; opacity: 0; transition: opacity var(--normal); }
   .par:hover .p-enlace, .p-enlace:focus-visible { opacity: 1; }
 
+  .p-an { margin: calc(var(--e-2) * -1) 0 var(--e-3); }
   .p-v {
     margin: 0; font-size: var(--t-6); font-weight: var(--peso-fuerte);
     color: var(--texto); line-height: 1.25; max-width: none;

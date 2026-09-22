@@ -23,7 +23,10 @@ export function tituloAHtml(texto) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   return escapado
     .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    // La cursiva, despues de la negrita para no partir sus dobles asteriscos.
+    // El plan la usa en las celdas para las fechas: «*(27/08/2026)*».
+    .replace(/(^|[^*\w])\*([^*\s][^*]*?)\*(?![*\w])/g, '$1<em>$2</em>');
 }
 
 /** Quita la numeracion manual del principio de un titulo («3 · Falta…»)
@@ -195,7 +198,12 @@ export function galeria() {
     .map((b) => {
       const limpio = tituloLimpio(b.titulo);
       const id = limpio.match(/^(G-\d{1,2})/)[1].toUpperCase();
-      const img = manifiesto.casos[id] || null;
+      // Un caso del test ciego sin imagen propia lleva el grafico de su
+      // jornada: la fecha esta en su titulo y en el nombre del archivo, asi
+      // que sigue siendo una asociacion por nombre, no un suplente.
+      const fechaTest = /TEST CIEGO/i.test(limpio) ? fechaDeTitulo(limpio) : null;
+      const deTest = fechaTest ? jornadasTestCiego().find((j) => j.fecha === fechaTest) : null;
+      const img = manifiesto.casos[id] || (deTest ? { url: deTest.url, actual: true } : null);
       return {
         id,
         titulo: limpio.replace(/^G-\d{1,2}\s*[·-]?\s*/, ''),
@@ -205,6 +213,69 @@ export function galeria() {
         reglas: [...new Set(b.cuerpo.match(/R-\d{1,2}/g) || [])],
       };
     });
+}
+
+// ─────────────────────────────────────────────────────────────── test ciego
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
+  'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const dos = (n) => String(n).padStart(2, '0');
+
+/** «… JUEVES 10 SEPTIEMBRE 2026 …» -> «2026-09-10». Null si no lleva fecha. */
+function fechaDeTitulo(titulo) {
+  const m = titulo.match(/(\d{1,2})\s+(?:DE\s+)?([A-ZÁÉÍÓÚa-záéíóú]+)\s+(?:DE\s+)?(\d{4})/i);
+  if (!m) return null;
+  const mes = MESES.indexOf(m[2].toLowerCase());
+  return mes < 0 ? null : m[3] + '-' + dos(mes + 1) + '-' + dos(m[1]);
+}
+
+function jornadasTestCiego() {
+  try { return json('test_ciego.json'); } catch { return []; }
+}
+
+/**
+ * Las jornadas del test ciego: una por grafico de Back_claude, la mas nueva
+ * primero.
+ *
+ * El veredicto en texto sale SOLO del plan: de la tabla «Test ciego — dia por
+ * dia» de GALERIA.md y del caso de la galeria, si la jornada tiene uno. Si el
+ * plan todavia no la documenta, la jornada sale solo con su grafico —cuya
+ * cabecera ya dice si hubo operacion—. Aqui no se redacta ningun veredicto.
+ */
+export function testCiego() {
+  // La tabla del plan: «| **10 sep** | setup | resultado | puntos |»
+  const tabla = new Map();
+  const bloque = partirPorEncabezado(documento('GALERIA.md'), [2])
+    .find((b) => /^test ciego/i.test(tituloLimpio(b.titulo)));
+  if (bloque) {
+    // Solo la primera tabla: la de debajo es la de julio, que no es esto.
+    const primera = bloque.cuerpo.split(/\n\s*\n(?=\s*[^|\s])/)[0];
+    for (const linea of primera.split('\n')) {
+      if (!/^\s*\|/.test(linea) || /^\s*\|\s*-/.test(linea)) continue;
+      const c = linea.split('|').slice(1, -1).map((x) => x.replace(/\*\*/g, '').trim());
+      const m = (c[0] || '').match(/^(\d{1,2})\s+([a-záéíóú]{3})/i);
+      if (!m) continue;
+      const mes = MESES.findIndex((x) => x.startsWith(m[2].toLowerCase()));
+      if (mes < 0) continue;
+      tabla.set(dos(mes + 1) + '-' + dos(m[1]), { setup: c[1], resultado: c[2], puntos: c[3] });
+    }
+  }
+
+  const casos = galeria().filter((c) => /TEST CIEGO/i.test(c.titulo));
+  const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+
+  return jornadasTestCiego().map((j) => {
+    const [a, m, d] = j.fecha.split('-').map(Number);
+    const dia = dias[new Date(Date.UTC(a, m - 1, d)).getUTCDay()];
+    const caso = casos.find((c) => fechaDeTitulo(c.titulo) === j.fecha) || null;
+    const fila = tabla.get(dos(m) + '-' + dos(d)) || null;
+    return {
+      fecha: j.fecha,
+      titulo: dia[0].toUpperCase() + dia.slice(1) + ' ' + d + ' de ' + MESES[m - 1] + ' de ' + a,
+      imagen: j.url,
+      veredicto: fila,
+      caso: caso ? { id: caso.id, lema: caso.titulo.split(/\s+·\s+/).slice(-1)[0] } : null,
+    };
+  }).reverse();
 }
 
 // ─────────────────────────────────────────────────────────────── pendientes
@@ -348,9 +419,16 @@ export function parametros() {
       .map((c, i) => ({ etiqueta: columnas[i + 2] || '', valor: limpiar(c) }))
       .filter((d) => d.valor && !/^[—–-]+$/.test(d.valor));
 
+    // Una anotacion en cursiva al final del valor —«*(desde 14/09/2026)*»—
+    // no es el valor: si se deja pegada, cualquier pagina que cite el
+    // parametro la pinta con los asteriscos a la vista. Se separa.
+    const crudo = limpiar(celdas[1]);
+    const anot = crudo.match(/\s*\*\(([^)]*)\)\*\s*$/);
+
     mapa.set(nombre[1], {
       nombre: nombre[1],
-      valor: limpiar(celdas[1]),
+      valor: anot ? crudo.slice(0, anot.index).trim() : crudo,
+      anotacion: anot ? anot[1] : null,
       detalle,
       resto: detalle.map((d) => d.valor), // compatibilidad con el buscador
       seccion,

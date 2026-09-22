@@ -12,9 +12,10 @@
     "fuentes": "node scripts/contar-fuentes.mjs",
     "diagramas": "node scripts/diagramas.mjs",
     "enlaces": "node scripts/enlaces.mjs",
-    "verificar": "npm run build && npm run enlaces && npm run maquetacion && npm run referencias && npm run vista",
+    "verificar": "npm run build && npm run enlaces && npm run maquetacion && npm run cifras && npm run referencias && npm run vista",
     "maquetacion": "node scripts/maquetacion.mjs",
     "vista": "node scripts/vista.mjs",
+    "cifras": "node scripts/cifras.mjs",
     "referencias": "node scripts/referencias.mjs"
   },
   "devDependencies": {

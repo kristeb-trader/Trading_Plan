@@ -15,7 +15,7 @@ const v = (n, alt) => par.get(n)?.valor ?? alt;
 
 const SECCIONES = [
   { id: 'dia', t: 'No abrir el día' },
-  { id: 'cuatro', t: 'Los cuatro filtros' },
+  { id: 'cuatro', t: 'Los cinco filtros' },
   { id: 'noticias', t: 'Las noticias' },
   { id: 'cancelan', t: 'Lo que cancela la orden' },
   { id: 'despues', t: 'Descartado no es vacío' },
@@ -49,10 +49,10 @@ const SECCIONES = [
   </section>
 
   <section class="ap" id="cuatro">
-    <h2>Los cuatro filtros <Refs cods="R-31 · R-32 · R-26 · R-36" /></h2>
+    <h2>Los cinco filtros <Refs cods="R-31 · R-32 · R-41 · R-40 · R-36" /></h2>
     <p>
       Con el setup identificado y el stop y el objetivo ya medidos, se pasan
-      cuatro comprobaciones. <strong>Basta que falle una</strong> para que no
+      cinco comprobaciones. <strong>Basta que falle una</strong> para que no
       haya operación.
     </p>
 
@@ -67,8 +67,14 @@ const SECCIONES = [
         zona viva entre la entrada y el objetivo descarta la operación.
       </li>
       <li>
-        <strong>Solo en Reingreso:</strong> el objetivo cabe dentro del punto de
-        referencia.
+        <strong>Solo en Reingreso:</strong> el objetivo no pasa del punto de
+        referencia vivo más cercano que quede entre la entrada y el objetivo.
+        Solo lo rompe una vela que cierre más allá; la mecha no cuenta.
+      </li>
+      <li>
+        <strong>Solo en IRI:</strong> la corrida es fluida. Si no lo es, ese
+        rompimiento no se opera; la zona sigue viva y se espera otro IRI que
+        deje una zona nueva entera más allá.
       </li>
       <li>
         <strong>No es día de la Fed con un IRI delante.</strong>
@@ -178,7 +184,7 @@ const SECCIONES = [
   <section class="ap" id="despues">
     <h2>Descartado no es vacío</h2>
     <p>
-      Cuando un IRI se descarta por cualquiera de los cuatro filtros, la zona no
+      Cuando un IRI se descarta por cualquiera de los filtros, la zona no
       se abandona. <strong>Se sigue mirando</strong>.
     </p>
 

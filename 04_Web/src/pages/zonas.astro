@@ -219,19 +219,19 @@ const SECCIONES = [
   </section>
 
   <!-- 4 ─────────────────────────────────────────────────────────────── -->
+  <!-- Reescrita el 22/09/2026 con el texto que quedo en el plan el 14/09/2026
+       (PROPUESTAS_AL_PLAN.md). Las dos graficas ya estaban bien y no cambian. -->
   <section class="ap" id="estira">
     <h2>Cuando no llega la consecución <Refs cods="R-10 · R-14" /></h2>
     <p>
-      Si el precio rompe una zona y pasan <strong>5 velas</strong> sin
-      que llegue la consecución, la zona cambia de forma, es decir, se extiende
-      la zona original hasta la punta de esa mecha.
+      El precio rompe una zona <strong>con mecha</strong> —el cierre se queda
+      dentro— y la consecución no llega. Eso se puede acabar de dos maneras, y
+      vale <strong>la que llegue primero</strong>:
     </p>
 
     <p>
-      Cuando el rompimiento fue <strong>con la mecha</strong> —el cierre se quedó
-      dentro— la zona <strong>se estira</strong> hasta la punta de esa mecha. El
-      otro borde no se mueve. Sigue habiendo una sola zona, más grande, y
-      conserva su historial.
+      <strong>Una ·</strong> pasan <strong>5 velas</strong> desde la siguiente
+      a la del rompimiento, y la consecución no ha llegado.
     </p>
 
     <figure class="gr">
@@ -239,36 +239,73 @@ const SECCIONES = [
       <figcaption class="meta">El caso más común: la vela cruza la zona, pero ninguna de las siguientes pasa de su extremo. No hubo traspaso y la zona sigue viva.</figcaption>
     </figure>
 
-    <br />
     <p>
-      O si aparece una <strong>nueva estructura</strong> —un retroceso nuevo— antes de las
-      5 velas, también se estira la zona.
+      <strong>Otra ·</strong> antes de esas 5 velas, el mercado arma una
+      <strong>estructura completa en sentido contrario</strong>:
     </p>
+
+    <ol class="secuencia">
+      <li>Una vela que <strong>no da la consecución</strong> y se va en contra.</li>
+      <li>Otra que <strong>hace retroceso</strong>.</li>
+      <li>Una tercera que <strong>no sigue ese retroceso</strong> y vuelve en el sentido de la primera. <strong>La zona se estira en esa tercera vela</strong>, sin esperar más.</li>
+    </ol>
+
+    <figure class="gr">
+      <img src="/conceptos/24-estructura-antes.png" alt="Antes de las cinco velas el mercado arma una estructura en contra y la zona se estira en la tercera vela" loading="lazy" />
+      <figcaption class="meta">No hizo falta esperar: antes de las cinco velas el mercado armó la estructura en contra, y la zona se estiró en la tercera vela.</figcaption>
+    </figure>
+
+    <p>
+      En cualquiera de los dos casos, la zona <strong>se estira</strong> hasta
+      la punta de la mecha que la rompió. <strong>Si es una resistencia, se
+      estira solo por arriba; si es un soporte, solo por abajo.</strong> El
+      otro borde no se mueve. Sigue habiendo <strong>una sola zona</strong>,
+      más grande, y conserva su historial.
+    </p>
+
+    <div class="veto">
+      <p>
+        <strong>Un soporte nunca se estira hacia arriba, ni una resistencia
+        hacia abajo.</strong> Si el precio cruza la zona por el lado contrario,
+        no hay nada que estirar: ese cruce no la toca, solo la mata cuando
+        llegue su consecución.
+      </p>
+    </div>
 
     <div class="duro">
       <p>
         <strong>Las 5 velas son un tope, no una espera obligatoria.</strong>
-        Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en
-        ese momento y no se espera más.
+        Si antes de que se cumplan el mercado arma la estructura en contra,
+        todo se resuelve en ese momento y no se espera más.
       </p>
-      <p>Actúa lo que llegue primero.</p>
     </div>
-
-    <figure class="gr">
-      <img src="/conceptos/24-estructura-antes.png" alt="Un retroceso nuevo aparece antes de las cinco velas y la zona se estira ya" loading="lazy" />
-      <figcaption class="meta">No hizo falta esperar: apareció un retroceso nuevo antes de las cinco velas y la zona se estiró en ese momento.</figcaption>
-    </figure>
   </section>
 
   <!-- 5 ─────────────────────────────────────────────────────────────── -->
   <section class="ap" id="apendice">
     <h2>La zona apéndice <Refs cods="R-11" /></h2>
+    <!-- Cabecera reescrita el 22/09/2026 con el texto que quedo en el plan el
+         15/09/2026 (PROPUESTAS_AL_PLAN.md): los dos finales van juntos y con
+         el mismo rango, no uno en la ficha y el otro como nota al pie. -->
     <p>
-      Si el rompimiento <strong>fue con cuerpo</strong> y pasan
-      5 velas sin consecución, no se estira esa zona:
-      <strong>nace una zona nueva</strong>, pegada a la anterior. Se llama
-      <strong>zona apéndice</strong> y se marca desde el cuerpo de la vela que
-      hizo rompimiento hasta la punta de la mecha.
+      El precio rompe una zona <strong>con cuerpo</strong> —el cierre queda
+      fuera— y la consecución no llega. Se acaba igual que al estirar, de dos
+      maneras, y vale <strong>la que llegue primero</strong>: o pasan
+      <strong>5 velas</strong> desde la siguiente a la del rompimiento, o antes
+      el mercado arma la <strong>estructura completa en sentido
+      contrario</strong> —la misma de tres velas—, y entonces la apéndice nace
+      en la tercera, sin esperar más.
+    </p>
+    <p>
+      En cualquiera de los dos casos <strong>la zona original no se
+      toca</strong> y nace una <strong>segunda zona</strong> sobre la mecha de
+      la vela de rompimiento: la <strong>zona apéndice</strong>. Un borde es el
+      borde del cuerpo de esa vela; el otro, la punta de su mecha.
+    </p>
+    <p>
+      Con la mecha se estira la zona; con el cuerpo nace otra.
+      <strong>Lo único que cambia es dónde cierra la vela de
+      rompimiento.</strong>
     </p>
 
     <figure class="gr">
@@ -278,7 +315,7 @@ const SECCIONES = [
 
     <dl class="datos">
       <dt>Qué lo dispara</dt>
-      <dd>Rompimiento con cuerpo <strong>+ 5 velas</strong> sin consecución</dd>
+      <dd>Rompimiento con cuerpo sin consecución: o pasan <strong>5 velas</strong>, o antes el mercado arma la estructura en contra. Lo que llegue primero</dd>
       <dt>La zona original</dt>
       <dd>No se modifica</dd>
       <dt>Un borde de la apéndice</dt>
@@ -287,6 +324,8 @@ const SECCIONES = [
       <dd>El extremo de su mecha</dd>
       <dt>Zonas resultantes</dt>
       <dd><span class="cifra-en">2</span>: la original y su apéndice</dd>
+      <dt>Desde dónde se dibuja</dt>
+      <dd>Desde la vela que rompió, aunque no quede marcada hasta más tarde. Del mismo gris que cualquier otra zona</dd>
     </dl>
 
     <div class="duro">
@@ -297,20 +336,6 @@ const SECCIONES = [
       </p>
     </div>
     
-    <br />
-    <p>
-      O si aparece una <strong> nueva estructura</strong> —un retroceso nuevo— antes de las
-      5 velas, también se genera la zona apéndice.
-    </p>
-
-    <div class="duro">
-      <p>
-        <strong>Las 5 velas son un tope, no una espera obligatoria.</strong>
-        Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en
-        ese momento y no se espera más.
-      </p>
-      <p>Actúa lo que llegue primero.</p>
-    </div>
 
     <figure class="gr">
       <img src="/conceptos/10-zona-apendice-caso2.png" alt="Caso 2: antes de las cinco velas el mercado arma una estructura en sentido contrario" loading="lazy" />

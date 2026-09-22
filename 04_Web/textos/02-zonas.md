@@ -44,7 +44,7 @@ Del retroceso interesa un punto concreto: **su extremo** — el más bajo si la 
 
 Cuando una corrida termina, deja un rastro en el gráfico: una franja de precio que se llama **zona**. No se dibuja a ojo. Sale siempre de la misma vela y con los mismos límites.
 
-1. **Se busca la vela de la zona**: la del máximo más alto si la corrida fue alcista, la del mínimo más bajo si fue bajista. Se busca desde el origen de la corrida hasta la vela que disparó el retroceso.
+1. **Se Identifica fin de corrida**: Se busca la vela del máximo más alto si la corrida fue alcista, la del mínimo más bajo si fue bajista.
 2. **Se dibuja una zona del borde del cuerpo a la punta de la mecha** de esa vela. Ese es todo el criterio.
 3. **Se extiende hacia la derecha**, a lo largo del gráfico.
 
@@ -82,7 +82,7 @@ Las dos zonas de un movimiento no nacen a la vez, y confundirlo lleva a operar a
 
 ### Rompimiento y consecución R-20 · R-22 · R-19
 
-Superar una zona son dos cosas, no una. Primero el rompimiento, después la consecución. Y el mismo mecanismo que supera una zona es el que más tarde dispara la entrada.
+Superar una zona son dos cosas, no una. Primero el **rompimiento**, después la **consecución**. Y el mismo mecanismo que supera una zona es el que más tarde dispara la entrada.
 
 > **[FICHA]**
 > #### Rompimiento
@@ -99,7 +99,7 @@ Superar una zona son dos cosas, no una. Primero el rompimiento, después la cons
 
 #### Dos maneras de romper
 
-El cierre no decide si hay rompimiento, pero sí deja un rastro distinto. Esa diferencia no se nota hoy: se nota en los dos apartados siguientes, si la consecución no llega.
+Hay dos tipos de vela de rompimiento: Vela de rompimiento con mecha y vela de rompimiento con cuerpo. La diferencia es que la primera pasa el borde pero cierra dentro de la zona, y la segunda pasa el borde y cierra fuera de la zona.
 
 > 🖼 **Gráfico.** Texto alternativo: Una vela que pasa el borde con la mecha y cierra dentro de la zona
 > Pie: Rompimiento con mecha: la vela pasa el borde pero cierra dentro de la zona. Sigue siendo rompimiento.
@@ -117,21 +117,29 @@ El cierre no decide si hay rompimiento, pero sí deja un rastro distinto. Esa di
 
 ### Cuando no llega la consecución R-10 · R-14
 
-Si el precio rompe una zona y pasan 5 velas — es un TOPE, no una espera obligatoria *(`R-14`, precisada 01/09/2026)* sin que llegue la consecución, la zona cambia de forma, es decir, se extiende la zona original hasta la punta de esa mecha.
+El precio rompe una zona **con mecha** —el cierre se queda dentro— y la consecución no llega. Eso se puede acabar de dos maneras, y vale **la que llegue primero**:
 
-Cuando el rompimiento fue **con la mecha** —el cierre se quedó dentro— la zona **se estira** hasta la punta de esa mecha. El otro borde no se mueve. Sigue habiendo una sola zona, más grande, y conserva su historial.
+**Una ·** pasan **5 velas** desde la siguiente a la del rompimiento, y la consecución no ha llegado.
 
 > 🖼 **Gráfico.** Texto alternativo: Una vela cruza la zona y ninguna de las siguientes supera su extremo
 > Pie: El caso más común: la vela cruza la zona, pero ninguna de las siguientes pasa de su extremo. No hubo traspaso y la zona sigue viva.
 
-O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas — es un TOPE, no una espera obligatoria *(`R-14`, precisada 01/09/2026)*, también se estira la zona.
+**Otra ·** antes de esas 5 velas, el mercado arma una **estructura completa en sentido contrario**:
+
+1. Una vela que **no da la consecución** y se va en contra.
+2. Otra que **hace retroceso**.
+3. Una tercera que **no sigue ese retroceso** y vuelve en el sentido de la primera. **La zona se estira en esa tercera vela**, sin esperar más.
+
+> 🖼 **Gráfico.** Texto alternativo: Antes de las cinco velas el mercado arma una estructura en contra y la zona se estira en la tercera vela
+> Pie: No hizo falta esperar: antes de las cinco velas el mercado armó la estructura en contra, y la zona se estiró en la tercera vela.
+
+En cualquiera de los dos casos, la zona **se estira** hasta la punta de la mecha que la rompió. **Si es una resistencia, se estira solo por arriba; si es un soporte, solo por abajo.** El otro borde no se mueve. Sigue habiendo **una sola zona**, más grande, y conserva su historial.
+
+> **[NO SE HACE]**
+> **Un soporte nunca se estira hacia arriba, ni una resistencia hacia abajo.** Si el precio cruza la zona por el lado contrario, no hay nada que estirar: ese cruce no la toca, solo la mata cuando llegue su consecución.
 
 > **[REGLA DURA]**
-> **Las 5 velas — es un TOPE, no una espera obligatoria *(`R-14`, precisada 01/09/2026)* son un tope, no una espera obligatoria.** Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en ese momento y no se espera más.
-> Actúa lo que llegue primero.
-
-> 🖼 **Gráfico.** Texto alternativo: Un retroceso nuevo aparece antes de las cinco velas y la zona se estira ya
-> Pie: No hizo falta esperar: apareció un retroceso nuevo antes de las cinco velas y la zona se estiró en ese momento.
+> **Las 5 velas son un tope, no una espera obligatoria.** Si antes de que se cumplan el mercado arma la estructura en contra, todo se resuelve en ese momento y no se espera más.
 
 ---
 
@@ -139,25 +147,24 @@ O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas 
 
 ### La zona apéndice R-11
 
-Si el rompimiento **fue con cuerpo** y pasan 5 velas — es un TOPE, no una espera obligatoria *(`R-14`, precisada 01/09/2026)* sin consecución, no se estira esa zona: **nace una zona nueva**, pegada a la anterior. Se llama **zona apéndice** y se marca desde el cuerpo de la vela que hizo rompimiento hasta la punta de la mecha.
+El precio rompe una zona **con cuerpo** —el cierre queda fuera— y la consecución no llega. Se acaba igual que al estirar, de dos maneras, y vale **la que llegue primero**: o pasan **5 velas** desde la siguiente a la del rompimiento, o antes el mercado arma la **estructura completa en sentido contrario** —la misma de tres velas—, y entonces la apéndice nace en la tercera, sin esperar más.
+
+En cualquiera de los dos casos **la zona original no se toca** y nace una **segunda zona** sobre la mecha de la vela de rompimiento: la **zona apéndice**. Un borde es el borde del cuerpo de esa vela; el otro, la punta de su mecha.
+
+Con la mecha se estira la zona; con el cuerpo nace otra. **Lo único que cambia es dónde cierra la vela de rompimiento.**
 
 > 🖼 **Gráfico.** Texto alternativo: Caso 1: pasan las cinco velas sin consecución y ahí se marca la zona apéndice
 > Pie: Caso 1: ninguna de las cinco velas vuelve a pasar de la mecha. Al vencer el plazo se marca la apéndice, y la original se queda intacta.
 
-- **Qué lo dispara** — Rompimiento con cuerpo **+ 5 velas — es un TOPE, no una espera obligatoria *(`R-14`, precisada 01/09/2026)*** sin consecución
+- **Qué lo dispara** — Rompimiento con cuerpo sin consecución: o pasan **5 velas**, o antes el mercado arma la estructura en contra. Lo que llegue primero
 - **La zona original** — No se modifica
 - **Un borde de la apéndice** — El borde del cuerpo de la vela que rompió
 - **El otro borde** — El extremo de su mecha
 - **Zonas resultantes** — 2: la original y su apéndice
+- **Desde dónde se dibuja** — Desde la vela que rompió, aunque no quede marcada hasta más tarde. Del mismo gris que cualquier otra zona
 
 > **[REGLA DURA]**
 > **La apéndice no nace por acción del precio sobre ella.** No es una zona más que apareció: es el rastro de un rompimiento que se quedó sin consecución.
-
-O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas — es un TOPE, no una espera obligatoria *(`R-14`, precisada 01/09/2026)*, también se genera la zona apéndice.
-
-> **[REGLA DURA]**
-> **Las 5 velas — es un TOPE, no una espera obligatoria *(`R-14`, precisada 01/09/2026)* son un tope, no una espera obligatoria.** Si antes de que se cumplan aparece un retroceso nuevo, se marca zona en ese momento y no se espera más.
-> Actúa lo que llegue primero.
 
 > 🖼 **Gráfico.** Texto alternativo: Caso 2: antes de las cinco velas el mercado arma una estructura en sentido contrario
 > Pie: Caso 2: antes de que venza el plazo el mercado arma una estructura completa en sentido contrario. La apéndice se marca ahí.
@@ -168,11 +175,11 @@ O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas 
 
 ### Zonas entre zonas R-12 · R-17 · R-18
 
-En una jornada aparecen muchas zonas candidatas. Dos reglas evitan que el gráfico se llene de rectángulos y que se acabe operando ruido.
+A lo largo de la mañana el precio deja muchas zonas candidatas. Si se marcaran todas, el gráfico acabaría siendo una reja de rectángulos y se operaría con demasiado ruido. Dos reglas lo impiden, y las dos se aplican en el mismo momento.
 
-#### Entre dos zonas, solo si no cruza la mitad
+#### Solo una zona entre zonas
 
-Cuando hay una zona por arriba y otra por abajo, se calcula el punto medio entre sus bordes internos. Solo se marca zona nueva si el movimiento que la genera **se queda entero de un lado** de esa mitad.
+Cuando hay una zona por arriba y otra por abajo, se calcula el punto medio entre sus bordes internos. Solo se marca zona nueva si el movimiento que la genera **no supera el 50%** entre esas dos zonas.
 
 > 🖼 **Gráfico.** Texto alternativo: Una zona marcada entre otras dos: el movimiento se quedó de un lado de la mitad
 > Pie: El movimiento entero se queda del lado en el que empezó. Por eso esta zona sí se marca.
@@ -190,13 +197,13 @@ La franja entre dos zonas admite **una zona en todo el día**, y el turno lo res
 Cualquier zona viva sirve de borde de la franja, incluidas las que se marcaron de madrugada por volumen.
 
 > **[NO SE HACE]**
-> **Salir de una zona es rompimiento y consecución, no geometría.** Mientras un rompimiento espera su consecución, no se marca zona al otro lado de esa zona.
+> **Salir de una zona es rompimiento y tambien consecución** No solo rompimiento. Mientras un rompimiento espera su consecución, no se marca zona al otro lado de esa zona, a menos que pasen las 5 velas sin consecución o aparezca un retroceso nuevo. En ese caso sí se marca zona, aunque no haya habido consecución.
 
 ---
 
 <!-- id: caduca -->
 
-### Cuándo deja de contar R-21
+### Cuándo quitar una zona R-21
 
 Una zona muere cuando ha sido superada **en las dos direcciones**: rompimiento y consecución hacia un lado, y rompimiento y consecución hacia el otro.
 
@@ -209,3 +216,5 @@ Una zona muere cuando ha sido superada **en las dos direcciones**: rompimiento y
 - **En pantalla** — Se deja dibujada en tono muy tenue, solo como recuerdo
 
 Esa distinción importa más de lo que parece: una zona que sigue viva puede impedir una entrada perfectamente válida, porque se cruza en el camino del objetivo.
+
+Cuando una zona **no es válida visualmente**, se baja el contraste de color de esa zona, para que no confunda. Pero sigue viva en la memoria del plan hasta que se cierre la jornada.
