@@ -1,81 +1,130 @@
-# Propuestas al plan
+# PROPUESTAS AL PLAN — desde el portal
 
-`01_Plan\` es de **solo lectura** desde la fase 2. Lo que aparezca mal o
-incoherente al construir el portal se anota aquí y lo decide el operador.
-
-**Nada de este archivo se aplica solo.** Se aplica cuando él lo confirma, y
-entonces se marca como resuelto con la fecha.
+> El portal **no edita `01_Plan\`**. Cuando desde aquí se ve una contradicción o una imprecisión,
+> se anota en este archivo y se decide con el operador en la conversación del plan.
 
 ---
 
-## Abiertas
+## 14/09/2026 · Dos frases del portal que hay que corregir en la página del estiramiento
 
-### 1 · En la regla del retroceso quedó una medida con la definición vieja del stop
+Las dos salieron al reescribir la regla del estiramiento con el operador. **Las gráficas ya estaban
+bien** — `05-sin-confirmar.png` y `24-estructura-antes.png` no se tocan. Lo que falla es el texto.
 
-**Encontrado:** 2026-09-04, al releer el plan tras la limpieza a v2.3.
-**Dónde:** `01_Plan\reglas.json`, regla del retroceso (`R-11`), condición
-`tamano_maximo`.
+### 1 · Falta "con la mecha" en la primera frase
 
-Dice:
+**Dice hoy:**
 
-> `240 ticks entre entrada y nivel de referencia (R-08)`
+> Si el precio rompe una zona y pasan 5 velas sin que llegue la consecución, la zona cambia de forma,
+> es decir, se extiende la zona original hasta la punta de esa mecha.
 
-En esa misma regla, las dos condiciones de arriba ya llevan el aviso nuevo —
-*«esto define el RETROCESO, no el stop»*— y su `accion` remite a `R-24`. Pero
-`tamano_maximo` sigue midiendo el tope contra el **nivel de referencia del
-retroceso**, que es justo la definición que se corrigió.
+**El problema:** promete estirar para **cualquier** rompimiento, y luego habla de una mecha que no ha
+mencionado. Si el rompimiento fue con el **cuerpo** no se estira nada — nace una zona apéndice. La
+frase siguiente lo aclara, pero ésta ya prometió de más.
 
-La regla del filtro de riesgo (`R-08`), ya alineada el 04/09/2026, dice que la
-distancia se mide **entre la entrada y el stop estructural de `R-24`** — el
-extremo alcanzado desde que nació la zona hasta la vela de rompimiento.
+### 2 · "Un retroceso nuevo" se queda corto
 
-**Por qué importa:** con zonas que aguantan muchas velas los dos puntos no
-coinciden, y el caso real del 7/07/2026 que cita `R-24` es exactamente eso:
-71,50 pts con la medida vieja (la entrada pasaba) frente a 86,25 con la
-correcta (queda descartada por el tope). Medido contra el retroceso, el filtro
-deja pasar entradas que el plan quiere descartar.
+**Dice hoy:**
 
-**Propuesta:** que `tamano_maximo` diga lo mismo que `R-08` — *240 ticks entre
-la entrada y el stop estructural de `R-24`*.
+> O si aparece una nueva estructura —un retroceso nuevo— antes de las 5 velas, también se estira la zona.
 
-**Efecto en el portal:** ninguno hoy. El portal no muestra esa condición; se
-anota para que las dos reglas digan lo mismo.
-
-**Estado:** 🟡 pendiente de que lo decida el operador.
+**El problema:** la estructura completa al contrario son **tres velas**, y así está numerado en la
+propia gráfica `24-estructura-antes.png`: ① la vela que no da la consecución y se va en contra ·
+② la que hace retroceso · ③ la que no sigue ese retroceso y vuelve en el sentido de la primera. La
+flecha de *"aquí se estira"* apunta a la **tercera**. *"Un retroceso nuevo"* es solo el paso ②, así
+que con esa redacción se estiraría **una vela antes de tiempo**.
 
 ---
 
-### 2 · «IRI» en el plan, «Continuación» en la pantalla
+## Texto propuesto, el mismo que quedó en el plan el 14/09/2026
 
-**Encontrado:** 2026-09-09, al construir la bitácora de backtesting.
-**Dónde:** `01_Planeglas.json` y `01_Plan\GLOSARIO.md`, en todo lo que
-nombra el setup de continuación.
+> ### Estirar la zona · rompimiento con mecha sin consecución
+>
+> El precio rompe una zona **con mecha** —el cierre se queda dentro— y la consecución no llega. Eso
+> se puede acabar de dos maneras, y vale **la que llegue primero**:
+>
+> **Una ·** pasan **cinco velas** desde la siguiente a la del rompimiento, y la consecución no ha llegado.
+>
+> **Otra ·** antes de esas cinco velas, el mercado arma una **estructura completa en sentido contrario**:
+> una vela que no da la consecución y se va en contra, otra que hace retroceso, y una tercera que no
+> sigue ese retroceso y vuelve en el sentido de la primera. **La zona se estira en esa tercera vela**,
+> sin esperar más.
+>
+> En cualquiera de los dos casos, la zona se extiende hasta la punta de la mecha que la rompió.
+> **Si es una resistencia se estira solo por arriba; si es un soporte, solo por abajo.** El otro borde
+> no se mueve. Sigue habiendo **una sola zona**, más grande, y conserva su historial.
+>
+> Un soporte nunca se estira hacia arriba, ni una resistencia hacia abajo. Si el precio cruza la zona
+> por el lado contrario, **no hay nada que estirar**: ese cruce no la toca, solo la mata cuando llegue
+> su consecución.
 
-El operador pidió el 09/09/2026 que en el portal el setup deje de llamarse
-**IRI** y pase a llamarse **Continuación**, y dijo que de ahí en adelante se
-hable así. La bitácora ya lo escribe y lo guarda así (`continuacion`).
+Se quitó además la palabra **"plazo"** de todo el texto: no se entiende si no te sabes ya la regla.
 
-**El plan NO se ha tocado:** sigue diciendo IRI en las reglas, en el glosario y
-en el vocabulario del proyecto. Ahora mismo conviven las dos palabras — una en
-los documentos, otra en la pantalla.
-
-**Por qué no es un invento:** el vocabulario del proyecto ya define IRI como
-*continuación*. No se está renombrando un concepto, se está eligiendo cuál de
-sus dos nombres se enseña.
-
-**Propuesta:** que el operador decida entre las dos salidas.
-
-1. **Renombrar en el plan.** IRI pasa a Continuación en `reglas.json`, en el
-   glosario y en el vocabulario, dejando IRI escrito como nombre anterior para
-   que los documentos viejos sigan entendiéndose.
-2. **Dejarlo como está.** IRI es el nombre del plan y Continuación es cómo se
-   enseña. Entonces conviene que el glosario lo diga con esas palabras, para
-   que nadie crea que son dos cosas.
-
-Mientras no lo decida, **el que manda es el plan**: IRI.
+**Estado:** el plan ya está actualizado (`R-10`, versión 3.8 del 14/09/2026). ✅ **Pasado al portal el 22/09/2026** (`/zonas/#estira`).
 
 ---
 
-## Resueltas
+## 15/09/2026 · La página de la zona apéndice dice solo "5 velas"
 
-*(vacío)*
+Misma página del portal (`/zonas/`, ancla `#apendice`). **Las dos gráficas están bien** — no se tocan.
+
+**Dice hoy:**
+
+> Si el rompimiento **fue con cuerpo** y pasan 5 velas sin consecución, **nace una zona nueva, pegada a
+> la anterior**, llamada zona apéndice […]
+>
+> **Qué lo dispara:** Rompimiento con cuerpo + 5 velas sin consecución
+>
+> *(y al final de la sección, suelto)* O si aparece una nueva estructura antes de las 5 velas, también
+> se genera la zona apéndice.
+
+**El problema:** el disparador promete **un solo final** —las cinco velas— y el segundo camino aparece
+como una nota al pie, después de la ficha. Son **dos finales del mismo rango**, y vale el que llegue
+primero. Tal como está, quien lea solo la ficha esperará cinco velas siempre.
+
+### Texto propuesto, el mismo que quedó en el plan el 15/09/2026
+
+> ### Zona apéndice · rompimiento con cuerpo sin consecución
+>
+> El precio rompe una zona **con cuerpo** —el cierre queda fuera— y la consecución no llega. Eso se
+> puede acabar de dos maneras, y vale **la que llegue primero**:
+>
+> **Una ·** pasan **cinco velas** desde la siguiente a la del rompimiento, y la consecución no ha llegado.
+>
+> **Otra ·** antes de esas cinco velas, el mercado arma una **estructura completa en sentido contrario**:
+> una vela que no da la consecución y se va en contra, otra que hace retroceso, y una tercera que no
+> sigue ese retroceso y vuelve en el sentido de la primera. **La apéndice nace en esa tercera vela**,
+> sin esperar más.
+>
+> En cualquiera de los dos casos **la zona original no se toca** y nace una **segunda zona** sobre la
+> mecha de la vela de rompimiento: un borde es el **borde del cuerpo** de esa vela, el otro es la
+> **punta de su mecha**. Quedan **dos zonas**, la original y su apéndice.
+>
+> La apéndice se dibuja desde la vela de rompimiento, su vela origen, aunque no quede marcada hasta ese
+> momento. Es del **mismo gris** que cualquier otra zona.
+>
+> **La apéndice no nace por acción del precio sobre ella** — es el rastro de un rompimiento que se
+> quedó sin terminar.
+
+**Y una sugerencia de estructura:** las dos secciones de esa página —estirar y apéndice— ahora tienen
+en el plan **el mismo texto salvo una línea**. Merece la pena que el portal lo diga: *lo único que
+cambia es dónde cierra la vela de rompimiento*.
+
+**Estado:** el plan ya está actualizado (`R-11`, versión 3.9 del 15/09/2026). ✅ **Pasado al portal el 22/09/2026** (`/zonas/#apendice`), con la frase sugerida: *lo único que cambia es dónde cierra la vela de rompimiento*.
+
+---
+
+## 22/09/2026 · La checklist cuenta cuatro filtros y enumera cinco
+
+`CHECKLIST_DIARIA.md`, bloque **«Los filtros · basta que falle uno»**. La tabla ya tiene **cinco**
+filas desde que entró la corrida fluida: tope de stop, camino libre, punto de referencia (solo
+Reingreso), corrida fluida (solo IRI) y día de la Fed con un IRI. Pero la nota que va justo debajo
+sigue diciendo:
+
+> Tras rechazar un **IRI** por cualquiera de **los cuatro filtros**, seguir mirando esa misma zona…
+
+**En el portal** la página de filtros ya dice *«Los cinco filtros»* y, en esa nota, *«cualquiera de
+los filtros»*, sin número — así no depende de cuántos haya.
+
+**Propuesta:** quitar el número de esa nota en la checklist, o pasarlo a *cinco*. No lo toco: es el plan.
+
+**Estado:** pendiente de Cowork.
