@@ -52,33 +52,7 @@ Una operación al día es también lo que hace lenta la recuperación: no hay fo
 ### Con cuántos contratos R-04
 
 > **[REGLA DURA]**
-> **Siempre 1 MNQ contrato de MNQ.** No sube porque la cuenta crezca. No baja tras una mala racha. No cambia por convicción.
+> **Siempre 1 MNQ.** No sube porque la cuenta crezca. No baja tras una mala racha. No cambia por convicción.
 > El tamaño solo se puede revisar una vez al año.
 
 Esto tiene una consecuencia aritmética que conviene tener presente: con el tamaño fijo y el tope de riesgo fijo en dólares, **el riesgo porcentual crece a medida que la cuenta cae**. Los mismos $160 son el 5 % de $3.000 y el 11 % de $1.400.
-
----
-
-<!-- id: parada -->
-
-### No hay regla de parada
-
-Este es un hueco declarado del método, y se enseña aquí porque es el único que se nota desde dentro de la operativa.
-
-> **[NO SE HACE]**
-> **El plan no dice cuándo se deja de operar.**
-> No hay límite de pérdida semanal. No hay límite mensual. No hay corte tras una racha de pérdidas. No hay reducción de tamaño cuando la cuenta cae.
-
-La consecuencia se ve mejor con números. Cada una de estas filas es una racha de días perdedores seguidos, todos con su setup válido y su stop correcto:
-
-| Días malos seguidos | Pérdida | Capital | Caída | Para recuperarlo |
-| 4 | $640 | $2.360 | −21 % | +27 % |
-| 6 | $960 | $2.040 | −32 % | +47 % |
-| 10 | $1.600 | $1.400 | −53 % | +114 % |
-| 15 | $2.400 | $600 | −80 % | +400 % |
-
-> **[REGLA DURA]**
-> **Ninguna regla del método se rompe en esa tabla.** Cada día fue un setup válido, ejecutado exactamente como está escrito. El plan permite ese recorrido entero sin emitir una sola señal de alarma.
-> Y una racha de seis pérdidas seguidas, acertando la mitad de las veces, aparece en unos cinco meses de operativa con una probabilidad cercana a la mitad. No es un caso extremo: es lo normal.
-
-El operador dejó esta decisión abierta a propósito, para tomarla con datos reales del registro en vez de con un número inventado.

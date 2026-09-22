@@ -2,9 +2,13 @@
 /**
  * Modulo 8 — Riesgo y tamano.
  *
- * Cierra el recorrido con lo que cuesta cada operacion y con el unico hueco
- * del metodo que se ve desde dentro de la operativa: no hay regla de parada.
- * La tabla de rachas no es un aviso del portal, es aritmetica del propio plan.
+ * Cierra el recorrido con lo que cuesta cada operacion, cuantas veces se
+ * opera y con cuantos contratos.
+ *
+ * La seccion «No hay regla de parada» y su tabla de rachas se BORRARON el
+ * 22/09/2026 (tarea 4 de PENDIENTE_PORTAL.md): decision del operador del
+ * 07/09/2026, los huecos declarados no van al portal. Siguen escritos en el
+ * plan, en PENDIENTES.md y en el acta de cierre.
  */
 import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
@@ -16,15 +20,6 @@ const SECCIONES = [
   { id: 'cuanto', t: 'Cuánto se arriesga' },
   { id: 'cuantas', t: 'Cuántas veces' },
   { id: 'tamano', t: 'Con cuántos contratos' },
-];
-
-// La tabla sale de la aritmetica declarada en el propio plan, no de un
-// calculo del portal.
-const RACHAS = [
-  { dias: 4, perdida: '$640', capital: '$2.360', caida: '−21 %', recuperar: '+27 %' },
-  { dias: 6, perdida: '$960', capital: '$2.040', caida: '−32 %', recuperar: '+47 %' },
-  { dias: 10, perdida: '$1.600', capital: '$1.400', caida: '−53 %', recuperar: '+114 %', duro: true },
-  { dias: 15, perdida: '$2.400', capital: '$600', caida: '−80 %', recuperar: '+400 %', duro: true },
 ];
 ---
 
@@ -94,7 +89,7 @@ const RACHAS = [
 
     <div class="duro">
       <p>
-        <strong>Siempre {v('CONTRATOS')} contrato de MNQ.</strong> No sube
+        <strong>Siempre {v('CONTRATOS')}.</strong> No sube
         porque la cuenta crezca. No baja tras una mala racha. No cambia por
         convicción.
       </p>
@@ -110,25 +105,3 @@ const RACHAS = [
   </section>
 
 </Modulo>
-
-<style>
-
-  .tabla-env { overflow-x: auto; margin: var(--e-5) 0; }
-  .rachas { width: 100%; border-collapse: collapse; font-size: var(--t-3); min-width: 32rem; }
-  .rachas th, .rachas td {
-    padding: var(--e-3) var(--e-4);
-    text-align: right;
-    border-bottom: 1px solid var(--borde-sutil);
-  }
-  .rachas th:first-child, .rachas td:first-child { text-align: left; } /* alineacion-ok: columna de etiquetas de una tabla de cifras */
-  .rachas thead th {
-    font-size: var(--t-1);
-    letter-spacing: var(--track-etiqueta);
-    text-transform: uppercase;
-    color: var(--texto-3);
-    border-bottom-color: var(--borde);
-  }
-  .rachas td { color: var(--texto-2); font-variant-numeric: tabular-nums; }
-  .rachas tr.duro td { color: var(--texto); }
-  .rachas .neg { color: var(--negativo); }
-</style>
