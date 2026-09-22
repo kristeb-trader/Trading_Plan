@@ -38,8 +38,8 @@ Se mira Forex Factory, y solo Forex Factory. Un único calendario evita el probl
 
 #### Qué se anota
 
-1. **¿Hay hoy un evento de la Fed en rojo?** Si lo hay, el día entero cambia de reglas: **Día con la Fed en rojo:** ese día no se opera el setup de continuación. Solo se permite el Reingreso, con todas sus condiciones normales.
-2. **La hora exacta de cada noticia roja.** Solo aplica el rojo: naranja y amarillo no cuentan, no bloquean nada.
+1. **¿Hay hoy un evento de la Fed en rojo?** Si lo hay, el día entero cambia de reglas: **Día con la Fed en rojo:** ese día no se opera el setup de continuación. Solo se permite el **Reingreso**, con todas sus condiciones normales.
+2. **La hora exacta de cada noticia roja.** Solo aplica el **Rojo**: naranja y amarillo no cuentan, no bloquean nada.
 3. **La ventana de cada una:** no se opera cinco minutos antes y cinco después.
 
 ---
@@ -89,18 +89,17 @@ La estrategia ATM de NinjaTrader se deja configurada antes de empezar y no se to
 
 ### Zonas por volumen R-15
 
-Si en el premercado se forma una vela con un volumen por encima del umbral (**> 6.000 contratos en MNQ, > 2.000 contratos en NQ**), se debe marcar una zona. Es la única manera de que nazca una zona sin que haya habido un movimiento y su descanso.
+Si en el premercado se forma una vela con un volumen por encima del umbral (**> 8.000 contratos en MNQ**), se debe marcar una zona. Es la única manera de que nazca una zona sin que haya habido un movimiento y su descanso.
 
 > 🖼 **Gráfico.** Texto alternativo: Vela de premercado con volumen por encima del umbral y la zona que deja
 > Pie: Una vela de premercado por encima del umbral y la zona que deja. La zona se comporta después como cualquier otra.
 
-1. **Se escanea desde las 19:00 hora Colombia** del día anterior, que es la apertura de Tokio, hasta la apertura americana.
+1. **Se escanea desde las 19:00 hora Colombia (apertura de Tokio)** del día anterior, hasta la apertura americana.
 2. **Toda vela que supere el umbral de volumen deja zona.** Todas, no solo las más altas o las más bajas del grupo.
 3. **El color de la vela decide el tipo:** vela alcista deja resistencia sobre su mecha superior; vela bajista deja soporte sobre su mecha inferior.
 4. **Los límites son los de siempre:** del borde del cuerpo a la punta de la mecha.
 
-- **Umbral en MNQ** — **> 6.000 contratos** en una vela de un minuto
-- **Umbral en NQ** — **> 2.000 contratos** en una vela de un minuto
+- **Umbral** — **> 8.000 contratos en MNQ**, en una vela de un minuto
 - **Desde cuándo** — 19:00 hora Colombia (apertura de Tokio)
 - **Hasta cuándo** — La apertura del mercado americano
 
