@@ -2,7 +2,10 @@
 
 Cada término con su definición medible.
 
-> Actualizado: 2026-09-07 · Sub-fase **F1.1 ✅ CERRADA** · **23 términos con sección propia** · 8 descartados · 4 movidos a contextualización
+> Actualizado: 2026-09-14 (c) · Sub-fase **F1.1 ✅ CERRADA** · **24 términos con sección propia** · 8 descartados · 4 movidos a contextualización
+>
+> 🆕 **`CORRIDA FLUIDA`** añadida el 14/09/2026 — el término que decide si un rompimiento se opera.
+> 🔗 **`PUNTO DE CONTROL` y `PUNTO DE REFERENCIA` unificados el 14/09/2026** en un solo término: **punto de referencia**, con la mecánica nueva.
 
 ---
 
@@ -190,7 +193,7 @@ El operador decidió no marcarlo. `R-12` da la misma respuesta sobre datos exact
 
 > 🔑 **En palabras del operador:** *"la vela de las 08:34, a pesar de que es de color blanco, aún no hay retroceso… el mínimo de la vela de las 08:36 es menor a la anterior, por lo tanto ya hay retroceso, y se crea la zona en la vela más alta, que casualmente es la misma vela de las 08:36."*
 
-**Diagrama:** `../05_Backtesting/F1_zona1_10jul.png`
+**Diagrama:** `../02_Assets/galeria/F1_zona1_10jul.png`
 
 
 
@@ -228,7 +231,7 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 | **Vigente** | por defecto, desde que se marca | Bloquea el target · sirve para entrar |
 | **Superada en una dirección** | hubo **rompimiento Y consecución** en ese sentido | Sigue vigente para el otro sentido |
 | **Solo rompimiento, sin consecución** | — | **Sigue vigente** |
-| **Inválida ("menos importante")** | superada en **las dos direcciones**, cada una con **su rompimiento y su consecución** | 🔴 **Ninguno. Inválida es inválida: no cuenta para NADA** — ni bloquea el target, ni sirve para entrar, ni cuenta para medir el 50 % entre zonas *(precisado 27/08/2026)* |
+| **Inválida ("menos importante")** | superada en **las dos direcciones**, cada una con **su rompimiento y su consecución** | 🔴 **Ninguno COMO ZONA** — ni bloquea el target, ni sirve para entrar, ni cuenta para medir el 50 %. 🔵 **Pero sigue ocupando su sitio:** la banda que ya gastó su zona no se reabre porque la zona muera. **Deja de valer como zona; no deja de ocupar el sitio** *(precisado 27/08/2026 · matizado 18/09/2026)* |
 
 > 📌 **"Punto de reacción" = zona vigente.** Es como Chaumer nombra a este mismo concepto en sus sesiones en vivo. No es un término aparte. *(`P-13`, cerrado 24/08/2026.)*
 
@@ -243,15 +246,15 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 | Elemento | Condición medible |
 |---|---|
-| **Disparador** | rompimiento **con mecha** + **el plazo resuelto**: o pasan **5 velas sin consecución**, o antes de eso el mercado **arma una estructura completa en sentido contrario** *(`R-14`; que aplique también aquí lo confirmó el operador el 07/09/2026 — cierra `P-30`)* |
+| **Disparador** | rompimiento **con mecha** + **5 velas sin consecución** |
 | **Acción** | la zona original **crece** hasta la **punta de la mecha** de la vela de rompimiento |
 | **Borde opuesto** | **no se mueve** |
 | **Resultado** | **una sola zona**, más grande. No nace ninguna zona nueva |
 
 > 🔴 **El rompimiento NO se cae al vencer el plazo** *(27/08/2026)*. Vencido el plazo se resuelve la **geometría** (aquí, el estiramiento), pero el rompimiento **sigue esperando su consecución**: si algún día llega, la zona queda traspasada igual.
 
-**Diagramas:** `../02_Assets/diagramas/R-10_extension_apendice.png` · `../04_Web/public/conceptos/24-estructura-antes.png` *(la resolución anticipada)*
-**Regla asociada:** `R-10` · **Estado:** ✅ Confirmada 24/08/2026 · **precisada 27/08/2026** · **disparador precisado 07/09/2026**
+**Diagrama:** `../02_Assets/diagramas/R-10_extension_apendice.png`
+**Regla asociada:** `R-10` · **Estado:** ✅ Confirmada 24/08/2026 · **precisada 27/08/2026**
 
 ---
 
@@ -259,7 +262,7 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 
 | Elemento | Condición medible |
 |---|---|
-| **Disparador** | rompimiento **con cuerpo** + **el plazo resuelto**: o pasan **5 velas sin consecución**, o antes de eso el mercado **arma una estructura completa en sentido contrario** *(`R-14`, precisada 01/09/2026)* |
+| **Disparador** | rompimiento **con cuerpo** —el cierre queda fuera— y la consecución no llega. Se acaba con **lo que llegue primero**: o pasan **cinco velas** desde la siguiente a la del rompimiento, o antes de eso el mercado **arma una estructura completa en sentido contrario** y la apéndice nace en la **tercera** vela *(`R-14`)* |
 | **Acción** | se marca una **zona nueva**, llamada **zona apéndice** |
 | **Zona original** | **no se toca** |
 | **Límites de la apéndice** | del **borde del cuerpo** de la vela de rompimiento al **extremo de su mecha** — es decir, **solo esa mecha** |
@@ -289,10 +292,12 @@ Este par es el mecanismo central de la estrategia. **Sirve para dos cosas a la v
 >
 > Aplica igual al revés, con una resistencia rota hacia arriba.
 
-**Cómo se dibuja:** la apéndice es **del mismo gris que cualquier otra zona** y se dibuja **desde la vela de rompimiento**, que es su vela origen — aunque no esté marcada hasta que el plazo se resuelve.
+**Cómo se dibuja:** la apéndice es **del mismo gris que cualquier otra zona** y se dibuja **desde la vela de rompimiento**, que es su vela origen — aunque no quede marcada hasta ese momento.
+
+> 🔗 **Es la misma regla que la extensión, con un solo cambio.** Las dos arrancan igual y se acaban con los mismos dos finales. Lo único que las separa es **dónde cierra la vela de rompimiento**: dentro, la zona **se estira** y sigue siendo una *(`R-10`)*; fuera, la original queda intacta y **nace la apéndice** *(`R-11`)*. *Reescritas las dos con este texto — `R-10` el 14/09/2026, `R-11` el 15/09/2026.*
 
 **Diagramas:** `../02_Assets/diagramas/apendice_caso1_plazo.png` (por plazo) y `../02_Assets/diagramas/apendice_caso2_estructura.png` (por estructura contraria) · también `R-10_extension_apendice.png`
-**Reglas asociadas:** `R-11` y `R-14` · **Estado:** ✅ Confirmada 24/08/2026 · precisada 27/08/2026 · **ampliada 01/09/2026**
+**Reglas asociadas:** `R-11` y `R-14` · **Estado:** ✅ Confirmada 24/08/2026 · precisada 27/08/2026 · ampliada 01/09/2026 · **reescrita 15/09/2026 (fuera la palabra "plazo")**
 
 ---
 
@@ -395,9 +400,7 @@ Cada zona intermedia que sí llega a marcarse **parte el hueco en dos**. El sigu
 
 Si esa zona nueva **toca** a la existente, `R-13` la convierte automáticamente en una **extensión**. Mismo resultado, descrito desde los dos extremos.
 
-> ✅ **Vale para los dos caminos, sin excepción** *(confirmado 07/09/2026)*. Hasta entonces se había precisado solo sobre la **zona apéndice**; que valiera también para el **estiramiento** estaba escrito por simetría y quedaba anotado como duda abierta. Ya no lo está.
-
-**Regla asociada:** `R-14` · **Estado:** ✅ Confirmada 24/08/2026 · **alcance confirmado a los dos caminos el 07/09/2026**
+**Regla asociada:** `R-14` · **Estado:** ✅ Confirmada 24/08/2026
 
 ---
 
@@ -531,29 +534,106 @@ Por `R-29`, una orden cancelada **no consume el cupo** de `R-28`.
 
 ---
 
+## CORRIDA FLUIDA
+
+**Definición:** una corrida es fluida cuando la secuencia sale bien **tres veces seguidas**:
+
+| | |
+|---|---|
+| **1** | la **corrida** deja su zona al terminar |
+| **2** | el **retroceso no se pasa**: mide menos que su corrida (empate cuenta como que no se pasa) |
+| **3** | la **corrida siguiente rompe** esa zona |
+
+**Para qué sirve:** **solo se entra en el rompimiento de la zona de una corrida fluida.** Es la traducción medible de *"no es fluida"* y *"el mercado está lateral"*.
+
+**Cómo se emparejan:** la vela de apertura declara el sentido. Desde ahí el mercado alterna corrida en ese sentido y retroceso en contra. **Cada corrida se empareja con el retroceso que viene justo después de ella, y las parejas no se solapan.**
+
+**Las dos formas de fallar:**
+
+- **El retroceso se pasa** — mide más que su corrida. Caen **las dos zonas** de esa pareja: la de la corrida y la que deja el propio retroceso pasado.
+- **La corrida siguiente no rompe** — llega a la zona, no puede con ella y se devuelve.
+
+**Cómo se recupera:** en los dos casos, dos pasos en este orden: **primero** la zona queda rota con su consecución —ese es el **rompimiento directo**, y no se opera—; **después** el mercado arma **otro IRI que deje una zona nueva entera más allá de la bloqueada** — por encima para largo, por debajo para corto. Ese IRI nuevo se juzga desde cero con las mismas tres condiciones, y **la fluidez se puede volver a perder**.
+
+**🧭 El bloqueo es del SENTIDO, no de la zona** *(21/09/2026)*. Perdida la fluidez, **no se opera ningún rompimiento en el sentido del día**, sea cual sea la zona — incluidas las de **premercado**, que no tienen corrida detrás. No toca el sentido contrario.
+
+**Palabras del operador (14/09/2026):** *"una corrida alcista fluida, un retroceso normal, y la siguiente corrida que sería la entrada"*. Y sobre el fallo: *"si la siguiente corrida no rompe la zona y se devuelve, uno ya dice que como no fue capaz de romper, el mercado va a estar lateral, entonces toca esperar que haga otro IRI encima de esa zona"*.
+
+> 🔑 **Una zona bloqueada no se muere.** Sigue vigente para todo lo demás: se dibuja, tapa objetivos, hace de borde de banda y se rompe e invalida como cualquier otra. Lo único que se descarta es **entrar en su rompimiento**.
+
+> ⚠️ **No confundir con el tamaño.** Una corrida no es fluida por ser grande. El 14/09/2026 la subida que no valía medía 53,25 puntos contra una bajada de 43,50 — era **más grande** que lo anterior y aun así no servía.
+
+**Regla asociada:** **`R-40`** · Solo afecta a continuaciones; el Reingreso no se toca · **Estado:** ✅ Confirmada 14/09/2026 · **ampliada 21/09/2026**
+
+---
+
+## ROMPIMIENTO DIRECTO
+
+**Definición:** el rompimiento de una zona **mientras el sentido del día está bloqueado** porque se perdió la fluidez. Por parámetros cumple —pasa el tick, llega la consecución—, pero el mercado está lateral y **por contexto pierde probabilidad**.
+
+**Qué se hace:** **no se opera nunca.** Es solo el primer paso para que vuelvan las entradas: después hay que esperar un IRI nuevo entero más allá de la zona, y se entra en ése.
+
+**Palabras del operador (18/09/2026):** *"operativamente por regla cumple, sin embargo no es una corrida limpia porque el mercado está lateral… hay que esperar que el mercado rompa esa zona, haga otro IRI, y se ingresa en ese otro"*.
+
+**Casos reales:** 18/09/2026 a las 8:49 · 21/09/2026 a las 8:37 y a las 8:52.
+
+**Regla asociada:** `R-40` · **Estado:** ✅ Confirmado 21/09/2026
+
+---
+
 ## PUNTO DE REFERENCIA  *(no confundir con punto de reacción)*
 
-**Definición:** el **extremo del retroceso** que dio origen a una zona.
+**Definición:** el **nivel de referencia de un retroceso** — el mínimo más bajo si el retroceso baja, el máximo más alto si sube. **Todos los retrocesos dejan uno**, se dibujen o no.
+
+**Para qué sirve:** **tapa el objetivo de un reingreso.** Si entre la entrada y el objetivo queda vivo un punto de referencia y el objetivo lo pasa, el reingreso no se opera. Si el objetivo cae **justo encima**, se opera. A las entradas de continuación **no** les afecta.
+
+**Cuándo deja de contar:** cuando **una vela cierra más allá** del nivel. Un pinchazo de mecha no lo rompe.
+
+> 🔴 **Es lo único del plan que se rompe por CIERRE.** Todo lo demás —zonas incluidas— se rompe con que la mecha lo pase por un tick. Confirmado por el operador el 14/09/2026.
+
+### 🔗 Unificado el 14/09/2026
+
+Hasta esa fecha había **dos** términos para la misma idea:
+
+| | Qué decía antes | |
+|---|---|---|
+| **Punto de referencia** | el extremo del retroceso que originó **esa** zona · no caducaba | ⬇️ |
+| **Punto de control** | el extremo de **cualquier** retroceso vivo · muere por cierre | ⬇️ |
+| **Unificado** | **el nivel de referencia de cualquier retroceso vivo · muere cuando una vela cierra más allá** | |
+
+**Decisión del operador:** *"punto de control y punto de referencia es lo mismo, podemos unificar esos conceptos, dejemos uno solo: Punto de Referencia."* Queda el **nombre viejo** con la **mecánica nueva**. El término *punto de control* desaparece del plan.
+
+Y las dos frases con las que lo explicó, con tres semanas de diferencia, son el mismo razonamiento:
+
+- 24/08/2026 — *"pueden defender ese nivel y el trade le quita probabilidad, por lo tanto para un reingreso debe tener camino libre para el target"*
+- 14/09/2026 — *"un punto de control es un retroceso que dice que en ese punto se puede volver a presentar como una zona que el precio lo puedan defender para evitar que lo rompan"*
+
+**Lo que cierra de paso:** ya no hace falta que la zona venga de un retroceso, así que **una zona de premercado también puede dar reingreso**.
+
+### Los dos "puntos" que quedan
 
 | | Punto de **reacción** | Punto de **referencia** |
 |---|---|---|
-| **Qué es** | la **zona vigente** | el **extremo del retroceso** que originó esa zona |
-| **Forma** | un rectángulo | una **línea** |
-| **Dónde se cerró** | `P-13`, 24/08/2026 | aquí, 24/08/2026 |
-| **Dónde actúa** | filtro de target de **todo** el plan (`R-21`) | filtro de target **solo del Reingreso** (`R-26`) |
+| **Qué es** | la **zona vigente** | el nivel de referencia de **cualquier retroceso vivo** |
+| **Forma** | un rectángulo | una línea |
+| **Cuántos hay** | los que haya | uno por retroceso |
+| **Se rompe** | mecha, 1 tick | **cierre de vela** |
+| **Tapa el target de** | **todo** el plan (`R-21`) | **solo** el reingreso (`R-41`) |
 
 > ⚠️ **Los nombres se parecen y las cosas no.** Dos términos distintos, dos figuras distintas, dos alcances distintos.
 
 **Cómo se lee según la dirección del reingreso:**
 
-| Reingreso | Zona rota | Punto de referencia | Condición del target |
+| Reingreso | Zona rota | Qué tapa | Condición del target |
 |---|---|---|---|
-| **Alcista** | soporte roto hacia abajo | el **máximo** del retroceso | el target debe quedar **por debajo** |
-| **Bajista** | resistencia rota hacia arriba | el **mínimo** del retroceso | el target debe quedar **por encima** |
+| **Alcista** | soporte roto hacia abajo | el **máximo** de un retroceso vivo | el target debe quedar **por debajo** de él |
+| **Bajista** | resistencia rota hacia arriba | el **mínimo** de un retroceso vivo | el target debe quedar **por encima** de él |
 
-**Por qué existe**, en palabras del operador: *"pueden defender ese nivel y el trade le quita probabilidad, por lo tanto para un reingreso debe tener camino libre para el target"*.
+**Dibujo:** no se dibujan todos — *"la idea es tener el gráfico lo más limpio posible"*. Se dibuja **solo cuando aparece un reingreso**, para comprobar si el objetivo está libre. Flecha punteada, **naranja oscuro `#FF9A3C`**, contraste bajo, extendida hacia la derecha. Al romperse: contraste más leve y se corta **una vela después** de la que lo rompió.
 
-**Regla asociada:** `R-26` · **Diagrama:** `../02_Assets/diagramas/R-26_reingreso.png` · **Estado:** ✅ Confirmada 24/08/2026
+**Caso de origen de la mecánica nueva · 11/09/2026:** reingreso corto a las 9:01, entrada 29.440,25, objetivo 29.405,50. El punto de referencia de la vela de **8:58**, en **29.423,00**, queda en medio. Descartado.
+
+**Reglas asociadas:** `R-41` (definición y filtro) · `R-26` (el setup que lo usa) · **Diagrama:** `../02_Assets/diagramas/R-26_reingreso.png` · **Estado:** ✅ Confirmada 24/08/2026 · 🔗 unificada 14/09/2026
 
 ---
 

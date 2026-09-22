@@ -1,7 +1,7 @@
 # TRADING PLAN — Estrategia Chaumer (MNQ · NinjaTrader 8)
 
-**Versión:** 3.2 — 🏁 **FASE 1 CERRADA · numeración nueva · documento reorganizado por categorías**
-**Última actualización:** 2026-09-07
+**Versión:** 3.11 — 🏁 fase 1 cerrada · 🔴 **TEST CIEGO EN MARCHA** · 40 reglas
+**Última actualización:** 2026-09-21
 **Operador:** Christian
 **Metodología base:** Alfredo Chaumer (*trader_sociologist*)
 **Uso:** personal
@@ -47,7 +47,7 @@
 
 ---
 
-## 🔢 Índice de las 38 reglas, por categoría
+## 🔢 Índice de las 40 reglas, por categoría
 
 *El documento va en este mismo orden: las siete categorías, y dentro de cada una las reglas por número.*
 
@@ -80,6 +80,8 @@
 | `R-25` | Setup IRI: corrida, retroceso, zona, rompimiento de esa zona y consecucion | Setup y entrada |
 | `R-26` | Setup Reingreso: tras un rompimiento con consecucion que falla, el precio recu | Setup y entrada |
 | `R-27` | La direccion de la vela de las 08:31 marca por donde empieza el dia pero no ob | Setup y entrada |
+| `R-40` | Corrida fluida: solo se entra en el rompimiento de la zona de una corrida FLUI | Setup y entrada |
+| `R-41` | Punto de referencia: el objetivo de un REINGRESO no puede pasar del nivel de r | Setup y entrada |
 | `R-28` | Ejecuta como maximo una operacion por sesion | Riesgo, orden y gestión |
 | `R-29` | Manten la orden pendiente hasta que se llene, hasta que se agoten 5 velas sin  | Riesgo, orden y gestión |
 | `R-30` | Una operacion abierta se gestiona hasta stop o target, aunque termine la venta | Riesgo, orden y gestión |
@@ -98,7 +100,7 @@
 
 ## 🚨 ADVERTENCIA DE USO — LEER ANTES DE CONSTRUIR NADA SOBRE ESTE PLAN
 
-**Las 12 sub-fases están cerradas: 38 reglas.** El plan está **completo en reglas y contrastado contra 11 sesiones reales al tick**, corregido vela a vela por el operador.
+**Las 12 sub-fases están cerradas: 40 reglas** *(`R-40` y `R-41` salieron del test ciego, los días 10 y 11 de septiembre de 2026)*. El plan está **completo en reglas y contrastado contra 11 sesiones reales al tick**, corregido vela a vela por el operador.
 
 **Pero NO está probado.** El test ciego de `F1.11` —el único que demuestra que un tercero con este documento en la mano llega a las mismas decisiones que el operador— **no se ha ejecutado**. La fase 1 se cierra sin él, por decisión explícita del operador el 01/09/2026.
 
@@ -120,7 +122,7 @@ Detalle completo del cierre y de lo que quedó fuera: **`CIERRE_FASE_1.md`**.
 
 ---
 
-# 📕 LAS 38 REGLAS, POR CATEGORÍA
+# 📕 LAS 40 REGLAS, POR CATEGORÍA
 
 *Reorganizado el 06/09/2026. Antes este documento seguía el orden en que se construyó el plan (las sub-fases `F1.x`); ahora sigue el orden de las siete categorías, que es el orden en que las reglas se usan durante el día. **Las notas de construcción, los diagramas y las correcciones del auditor no se perdieron: están íntegras en los anexos, al final.***
 
@@ -262,6 +264,33 @@ El filtro de la guía v4 *"más de 5 velas → sobreextendido"* queda **eliminad
 
 *todo lo que tiene que ver con una zona · 14 reglas*
 
+---
+
+## 🔑 CÓMO SE MARCA UNA JORNADA — la secuencia, de principio a fin
+
+> 📌 **Escrito el 08/09/2026, dictado por el operador.** No es una regla nueva: es la **secuencia** que forman `R-16`, `R-12`, `R-17` y `R-18` cuando se leen juntas y en orden. Estaban las cuatro escritas por separado, y **en ningún sitio estaba dicho el recorrido completo**. Ése fue el hueco: el auditor se perdió intentando reconstruirlo, y el motor de auditoría puede estar marcando de más.
+
+**1 · La jornada abre con dos zonas, y ésas son la banda.**
+La primera corrida deja su zona. El retroceso que la mata deja la otra. Entre las dos queda **la banda del día**.
+
+**2 · Dentro de esa banda se marca UNA zona como máximo, en toda la jornada.**
+La del **primer retroceso** que aparezca dentro, y **solo si su movimiento no cruza la mitad** de la banda *(`R-12`)*. Si la cruza, **no se marca ninguna** — y la banda queda cerrada igual, para el resto del día *(`R-17`)*.
+
+**3 · Después de eso, dentro de esa banda no se dibuja NADA más.**
+Ni aunque aparezcan corridas nuevas, ni aunque sus zonas candidatas toquen a las de los bordes. **Una zona viva ocupa su franja de precio**, y mientras esté ahí no nace nada por debajo ni por encima de ella dentro de la banda.
+
+**4 · La ÚNICA forma de que aparezca una zona nueva es superar un extremo.**
+Que el precio **traspase** la resistencia de arriba o el soporte de abajo — **rompimiento + consecución**, no basta con asomarse *(`R-18`)*. Ahí se abre terreno nuevo.
+
+**5 · Y ese traspaso forma una banda nueva, con su propio turno.**
+La zona nueva de fuera y la que se acaba de superar forman **otra banda**, y esa banda **estrena su propia regla de una-sola-zona**, también para el resto del día.
+
+> 🔴 **Lo que esto NO es.** Esto no habla del **estiramiento** ni de la **zona apéndice**. Esos dos son otra cosa: nacen de un **rompimiento sin consecución** cuando el plazo se resuelve — con mecha la zona se estira *(`R-10`)*, con cuerpo nace la apéndice *(`R-11`)*. No se confundan con el marcado de una corrida nueva.
+
+> 💡 **Por qué el gráfico no se llena de rectángulos.** No es por un tope de zonas ni por un criterio de limpieza: es porque **el precio tiene que ganarse el terreno**. Mientras siga dentro de la misma banda, el marcado está cerrado.
+
+---
+
 **── MARCADO — dónde se dibuja una zona ──**
 ## R-09 a R-11 · El bloque de zonas
 
@@ -275,9 +304,9 @@ El filtro de la guía v4 *"más de 5 velas → sobreextendido"* queda **eliminad
 |---|---|---|
 | **R-09 · Zona** | Vela designada = la de máximo más alto (o mínimo más bajo) de la corrida. Se marca **al aparecer el retroceso**. Color irrelevante. Sin mecha → línea. Se extiende a la derecha | ✅ |
 | **R-20 · Rompimiento y consecución** | Rompimiento = **≥1 tick** más allá del borde, cierre irrelevante — **la mecha basta**. **Con cuerpo** = el cierre queda fuera; **con mecha** = no. Consecución = **≥1 tick** más allá del extremo de la vela de rompimiento. 🔴 **El plazo de 5 velas gobierna SOLO la geometría de la zona** (`R-10`/`R-11`) **y la vida de la orden** (`R-29`). **El traspaso de la zona NO tiene plazo:** el rompimiento queda pendiente indefinidamente y, cuando llegue la consecución —aunque sea 25 velas después— la zona queda traspasada en ese sentido. Las dos cosas ocurren sobre el **mismo** rompimiento: primero nace la apéndice o se estira, y más tarde el traspaso se confirma igual *(27/08/2026)* | ✅ |
-| **R-21 · Vigencia** | **Dos estados, sin grises.** **Activa** = cuenta para la operativa. **Inactiva** = traspasada en ambas direcciones **con su consecución cada una**: 🔴 **inválida es inválida — no cuenta para NADA**: ni bloquea el target, ni sirve para entrar, ni cuenta para medir el 50 % entre zonas. Se conserva en tono tenue solo como recuerdo visual. **Las zonas no envejecen** (`D-07`) *(precisado 27/08/2026)* | ✅ |
-| **R-10 · Extensión** | Rompimiento **con mecha** + **plazo resuelto** sin consecución → la zona original **crece** hasta la punta de esa mecha. Queda **una** zona | ✅ |
-| **R-11 · Zona apéndice** | Rompimiento **con cuerpo** + **plazo resuelto** sin consecución → nace una **zona nueva** sobre la mecha de la vela de rompimiento. La original no se toca. Quedan **dos** zonas | ✅ |
+| **R-21 · Vigencia** | **Dos estados, sin grises.** **Activa** = cuenta para la operativa. **Inactiva** = traspasada en ambas direcciones **con su consecución cada una**: 🔴 **no cuenta para nada COMO ZONA** — ni bloquea el target, ni sirve para entrar, ni cuenta para medir el 50 %. 🔵 **Pero sigue ocupando su sitio:** la banda que ya gastó su zona no se reabre porque la zona muera *(`R-17` punto 8, 18/09/2026)*. **Deja de valer como zona; no deja de ocupar el sitio.** Se conserva en tono tenue. **Las zonas no envejecen** (`D-07`) | ✅ |
+| **R-10 · Extensión** | Rompimiento **con mecha** —el cierre se queda dentro— sin consecución, y se acaba con **lo que llegue primero**: cinco velas, o una **estructura completa al contrario**. La zona original **crece** hasta la punta de esa mecha: resistencia solo por arriba, soporte solo por abajo. Queda **una** zona | ✅ |
+| **R-11 · Zona apéndice** | Rompimiento **con cuerpo** —el cierre queda fuera— sin consecución, y se acaba con **lo que llegue primero**: cinco velas, o una **estructura completa al contrario**. Nace una **zona nueva** del **borde del cuerpo** a la **punta de la mecha** de la vela de rompimiento. La original no se toca. Quedan **dos** zonas | ✅ |
 | **R-15 · Zona de premercado** | Única zona que nace **del volumen**, sin corrida ni retroceso. Ventana: **19:00 Col del día anterior** (apertura de Tokio) → **apertura americana**. Umbral **MNQ > 6.000** *(único desde el 06/09/2026; equivalencia con el antiguo NQ > 2.000 sin verificar — `P-32`)*; se marcan **todas** las velas que lo superen. Vela **alcista → resistencia**, **bajista → soporte**. **La regla se apaga al abrir el mercado americano.** Después se comporta como cualquier zona — y eso incluye **hacer de borde de banda** para `R-17` *(confirmado 01/09/2026)* | ✅ |
 | **R-14 · Nueva estructura** | El plazo de 5 velas es un **tope, no una espera**. Si antes se arma una **estructura completa al contrario**, se marca zona ya. Si no, a las 5 velas → `R-10` o `R-11`. **Definición medible de las tres velas en su sección propia, más abajo** | ✅ |
 | **R-13 · Superposición** | Si la zona candidata **toca** una existente **del mismo tipo** —el contacto de bordes cuenta— **no se crea zona nueva: se estira la existente**. 🔴 **Se estira SOLO hacia el nuevo extremo; el otro borde no se mueve** — no se engloba *(26/08/2026)*. Queda **una** zona, con su historial intacto. 🔴 **No se solapan zonas de tipo distinto** mientras una esté vigente: una zona viva **ocupa** su franja de precio *(26/08/2026)* | ✅ |
@@ -288,6 +317,56 @@ El filtro de la guía v4 *"más de 5 velas → sobreextendido"* queda **eliminad
 **Diagramas:** `../02_Assets/diagramas/R-09_zona.png` · `R-20_vigencia.png` · `R-10_extension_apendice.png`
 
 ---
+
+---
+
+### 📝 R-10 · Estirar la zona · rompimiento con mecha sin consecución — **reescrita 14/09/2026**
+
+El precio rompe una zona **con mecha** —el cierre se queda dentro— y la consecución no llega. Eso se puede acabar de dos maneras, y vale **la que llegue primero**:
+
+**Una ·** pasan **cinco velas** desde la siguiente a la del rompimiento, y la consecución no ha llegado.
+
+**Otra ·** antes de esas cinco velas, el mercado arma una **estructura completa en sentido contrario**: una vela que no da la consecución y se va en contra, otra que hace retroceso, y una tercera que no sigue ese retroceso y vuelve en el sentido de la primera. **La zona se estira en esa tercera vela**, sin esperar más.
+
+En cualquiera de los dos casos, la zona se extiende hasta la punta de la mecha que la rompió. **Si es una resistencia se estira solo por arriba; si es un soporte, solo por abajo.** El otro borde no se mueve. Sigue habiendo **una sola zona**, más grande, y conserva su historial.
+
+> 🔴 **Un soporte nunca se estira hacia arriba, ni una resistencia hacia abajo.** Si el precio cruza la zona por el lado contrario, **no hay nada que estirar**: ese cruce no la toca, solo la mata cuando llegue su consecución.
+
+**Qué cambió y por qué.** El enunciado viejo decía *"extiende la zona hasta la punta de esa mecha · el borde opuesto no se mueve"*, sin decir **cuál** borde se mueve. El motor lo resolvía por el lado del rompimiento, y eso estiraba un soporte **hacia arriba** cuando el precio volvía a cruzarlo.
+
+**Caso de origen, 14/09/2026.** El soporte de la vela de 9:10 (29.062,00 – 29.064,75) queda traspasado hacia abajo a las 9:18. A las 10:07 el precio vuelve y lo cruza hacia arriba sin consecución, y el enunciado viejo lo estiraba hasta 29.079,75 — metiéndolo dentro de la resistencia viva de 9:09 (29.071,00 – 29.088,50) y dejando las dos zonas **pisándose** entre 29.071,00 y 29.079,75, contra la prohibición de solapar zonas de tipo distinto.
+
+> 🖼️ **Las gráficas del portal ya estaban bien.** `05-sin-confirmar.png` muestra un soporte creciendo hacia abajo y `24-estructura-antes.png` una resistencia creciendo hacia arriba, de 29.082,00 a 29.096,00. Lo que fallaba era la frase, no el dibujo.
+
+> ✅ **Regresión:** no cambia julio (−77,75 pts en 5 operaciones) ni ninguna de las tres jornadas de septiembre.
+
+**Texto redactado por el operador · Estado:** ✅ confirmada 24/08/2026 · precisada 07/09/2026 (el final llega con lo que ocurra primero) · **reescrita 14/09/2026 (qué borde se mueve)**
+
+### 📝 R-11 · Zona apéndice · rompimiento con cuerpo sin consecución — **reescrita 15/09/2026**
+
+El precio rompe una zona **con cuerpo** —el cierre queda fuera— y la consecución no llega. Eso se puede acabar de dos maneras, y vale **la que llegue primero**:
+
+**Una ·** pasan **cinco velas** desde la siguiente a la del rompimiento, y la consecución no ha llegado.
+
+**Otra ·** antes de esas cinco velas, el mercado arma una **estructura completa en sentido contrario**: una vela que no da la consecución y se va en contra, otra que hace retroceso, y una tercera que no sigue ese retroceso y vuelve en el sentido de la primera. **La apéndice nace en esa tercera vela**, sin esperar más.
+
+En cualquiera de los dos casos **la zona original no se toca** y nace una **segunda zona** sobre la mecha de la vela de rompimiento: un borde es el **borde del cuerpo** de esa vela, el otro es la **punta de su mecha**. Quedan **dos zonas**, la original y su apéndice.
+
+La apéndice se dibuja **desde la vela de rompimiento**, su vela origen, aunque no quede marcada hasta ese momento. Es del **mismo gris** que cualquier otra zona.
+
+> 🔑 **La apéndice no nace por acción del precio sobre ella** — es el rastro de un rompimiento que se quedó sin terminar.
+
+**Es la misma regla que `R-10`, con un solo cambio.** Las dos arrancan igual —rompimiento sin consecución— y las dos se acaban con los mismos dos finales. Lo único que las separa es **dónde cierra la vela de rompimiento**: si el cierre se queda dentro, la zona **se estira** y sigue siendo una; si el cierre queda fuera, la original queda intacta y **nace la apéndice**. Por eso el texto es calcado.
+
+**Qué cambió y por qué.** El enunciado viejo decía *"si el plazo se resuelve sin consecución"* — la misma frase que se había sacado de `R-10` el día anterior por no decir **qué es el plazo**. Ahora los dos finales están escritos completos, uno debajo del otro, igual que en la otra regla. **Palabras del operador:** *"la zona apéndice es básicamente igual que lo que pasa con una zona que se estira cuando hay rompimiento sin consecución. La diferencia es que en este caso el rompimiento no es con mecha, sino con cuerpo por fuera. Los casos son los mismos 2"*.
+
+> ✅ **No cambia nada mecánico.** Es redacción: ni el motor ni ninguna jornada del backtesting se mueven. Julio sigue en −77,75 pts en 5 operaciones y las tres jornadas de septiembre siguen igual.
+
+> 📌 **Siguen pendientes las dos reglas de entrada asociadas**, anotadas desde F1.3 y nunca confirmadas: *"la zona apéndice alta solo sirve para largo"* y *"no se puede entrar entre zonas apéndices"*. Hoy **el motor no las aplica**.
+
+**Diagramas:** `../02_Assets/diagramas/apendice_caso1_plazo.png` *(cinco velas)* y `../02_Assets/diagramas/apendice_caso2_estructura.png` *(estructura contraria)*
+
+**Estado:** ✅ confirmada 24/08/2026 · disparador precisado 07/09/2026 · **reescrita 15/09/2026 (fuera la palabra "plazo")**
 
 ---
 
@@ -392,7 +471,7 @@ Exactamente lo mismo que al vencer el plazo — **solo cambia el momento**:
 | `ventana_inicio` | ESCANEO desde las 19:00 hora Colombia (09:00 JST, apertura de Tokio). Fijo todo el ano. NO confundir con el sombreado gris del indicador Premercado.1, que empieza a las 15:00 Col del dia anterior y es SOLO VISUAL |
 | `ventana_fin` | apertura del mercado americano (inicio de R-02): 08:30 Col en verano EEUU, 09:30 Col en invierno EEUU |
 | `duracion_ventana` | 13h30 en verano EEUU (~810 velas); 14h30 en invierno EEUU (~870 velas) |
-| `umbral_volumen` | 6000 contratos en MNQ. Es el unico umbral desde el 06/09/2026: el de NQ (>2000) se retira con el NQ. ATENCION: la equivalencia entre los dos umbrales NO esta verificada con datos, y las 11 sesiones validadas se marcaron con el umbral de NQ sobre datos de NQ. Ver P-32 |
+| `umbral_volumen` | **`UMBRAL_VOL`, parámetro AJUSTABLE que vive en `PARAMETROS.md`** — no es un número fijo del método. **Valor actual: > 8.000 contratos en MNQ, desde el 14/09/2026.** Anteriores: > 6.000 en MNQ (06/09 → 14/09/2026) · > 2.000 en NQ (hasta 06/09/2026). Lo fija el operador, sin criterio medible y a propósito (`P-37`). **No se cambia con la sesión empezada.** ATENCIÓN: la equivalencia entre umbrales **no está verificada** con datos, y las 11 sesiones validadas se marcaron con el umbral de NQ sobre datos de NQ — ver `P-32` |
 | `indicador` | Volume Up Down (R-03) |
 | `cuantas_se_marcan` | TODAS las velas que superen el umbral, sin seleccionar. No se marca solo el extremo del grupo |
 | `vela_alcista` | RESISTENCIA sobre la mecha superior |
@@ -404,7 +483,15 @@ Exactamente lo mismo que al vencer el plazo — **solo cambia el momento**:
 - **Acción:** Marcar la zona en premercado y tratarla despues como una zona normal.
 - **Excepciones:** Tras la apertura del mercado americano la regla del volumen se APAGA: dentro de sesion solo se marcan zonas por estructura (R-09), sin importar el volumen de la vela.
 - **Nota:** Unica forma de que nazca una zona sin corrida ni retroceso. A diferencia de R-09, aqui el COLOR de la vela decide si es soporte o resistencia. El corte en la apertura no es arbitrario: ese volumen en 1 minuto es raro en premercado y corriente en sesion. Desviacion D-09: Parametros Chaumer dice 'solo marcamos los extremos'; el operador marca todas, y R-13 fusiona las que se tocan. Verificado con datos el 10/07/2026: escaneando desde 15:00 salen 3 velas sobre umbral; desde 19:00 sale 1, la que el operador marco. Las 2 extra son la subasta de cierre del efectivo del dia anterior. | 06/09/2026: retirado el umbral de NQ; queda solo MNQ > 6000. La equivalencia entre ambos no esta verificada — ver P-32.
-- **Estado:** ✅ confirmada · umbral unico MNQ desde el 06/09/2026
+- **Estado:** ✅ confirmada · **umbral paramétrico desde el 14/09/2026**
+
+> 🔵 **El umbral dejó de ser un número del método el 14/09/2026.** Decisión del operador, con sus palabras: *"vamos a dejar en reglas que el umbral del volumen del premercado va a ser paramétrico, porque eso depende de la volatilidad del momento"*. El valor vive en `PARAMETROS.md` y la regla cita el nombre, no la cifra.
+>
+> **Lo que lo motivó**, primera jornada del test ciego (10/09/2026): la vela más fuerte de todo el premercado hizo **7.799** contratos, y todas las que pasaban de 6.000 eran la misma cosa — la reacción al dato de precios al productor de las 7:30. Con el umbral en 6.000 nacían cuatro soportes seguidos, y uno de ellos, el de 29.120,25–29.127,75, **tapaba la resistencia que deja la vela de 8:32** por la prohibición de solapar zonas de tipo distinto (`R-19`, punto 5). Todo el marcado de la mañana se desviaba de ahí. Con el umbral en 8.000 el premercado no deja ninguna zona y el día se lee limpio.
+>
+> 🔴 **Por qué el umbral no es un ajuste fino, es un interruptor.** En esa misma jornada, 6.000 y 8.000 dan dos días distintos — un corto que pierde 37,50 puntos contra un largo que gana 40,50.
+>
+> **`P-37`, cerrado el 14/09/2026:** el operador decidió que **no habrá criterio medible** — *"dejemos que quede paramétrico"*. Lo fija él, igual que `R-37` es criterio libre. 🔴 **La condición que lo hace seguro, y ésa sí es medible: el umbral NUNCA se cambia con la sesión empezada**, y cada cambio se anota con su fecha en `PARAMETROS.md`. Sin esa línea, el umbral se podría mover *después* de ver el día, y eso convertiría el backtesting en ajuste a posteriori.
 
 > 📌 **Sección creada el 06/09/2026** a partir de `reglas.json`. Hasta hoy esta regla vivía **solo como una fila de tabla** — exactamente el hueco que permitió que en septiembre se escribiera una regla duplicada sin que nadie la viera.
 
@@ -446,12 +533,15 @@ Exactamente lo mismo que al vencer el plazo — **solo cambia el momento**:
 | 5 | La banda **no se vuelve a abrir** aunque se mueran las zonas que la formaron |
 | 6 | Solo se marcan zonas que **salgan fuera** de esa banda — y salir fuera es `R-18`, no geometría |
 | 7 | Una **zona de premercado** (`R-15`) cuenta como **borde de banda** igual que cualquier otra *(confirmado 01/09/2026)* |
+| 8 | 🔴 **Una zona inválida sigue ocupando su sitio.** El turno se cuenta sobre **todas** las zonas —activas e inválidas— y también sobre las que se marcaron **antes de que la banda existiera**. Deja de valer como zona; **no deja de ocupar el sitio** *(precisado 18/09/2026)* |
 
 - **Fuente:** Alfredo Chaumer, vía el operador, 27/08/2026. El punto 7 lo confirma el operador el 01/09/2026 sobre el 14/07/2026.
 - **Caso real 8/07/2026:** banda entre el techo del soporte de la vela 8:36 (29.303,50) y el piso de la resistencia de la vela 8:42 (29.374,25); mitad en 29.338,88. El primer retroceso dentro es el de la vela 8:43, que baja a 29.329,75 → no cumple → no se marca y la banda se cierra. Más tarde, el retroceso de la vela 9:09 **sí** cumpliría el 50 %, pero **ya no se marca**: la banda se gastó a las 8:45.
 - **Efecto medido:** en el 8 de julio el día pasa de 13 zonas a 11.
 - **Caso real 14/07/2026 — la banda con borde de premercado:** el soporte de la vela 8:36 (29.685,00–29.693,00) por abajo y la resistencia de premercado de la vela de las 19:31 (29.901,25–29.908,25) por arriba forman una banda de 208,25 puntos con mitad en **29.797,13**. El primer retroceso dentro es el de la vela **8:39**, que sube a **29.798,00** — se pasa de la mitad por **0,875 puntos (3½ ticks)** → no se marca y la banda queda cerrada. Consecuencia: entre las 8:41 y las 9:10 no se marca **nada**. El operador confirma el marcado idéntico.
-- **Estado:** ✅ Confirmada 27/08/2026 · punto 7 (premercado como borde) confirmado 01/09/2026
+- **Caso real 18/09/2026 — el punto 8, y por qué hizo falta escribirlo.** La zona de premercado (29.796,75 – 29.808,75) queda **inválida a las 8:50**. A las 8:54 el auditor marcó una resistencia de 29.804,75 – 29.805,75 justo encima de ella, dentro de la banda que va del soporte de la vela 8:52 (techo 29.791,75) al piso de la apéndice (29.840,75). **El punto 5 ya lo prohibía**, pero el motor no lo veía: contaba el turno solo con las zonas **activas** y solo cuando evaluaba una candidata con vecinas vivas a los dos lados. Palabras del operador: *"una zona inválida ya no cuenta como zona, pero acuérdate de la regla de zonas entre zonas… igual cuando esas zonas ya son inválidas, no se marcan más zonas entre ese espacio"*. Y sobre el alcance, preguntado con gráfico delante: **se cierra la banda entera**, no solo el rectángulo de la zona muerta.
+- **Efecto medido sobre las 18 sesiones marcadas:** se caen **3 zonas** — el soporte de 8:56 del 10/07, el de 9:07 del 10/09 y la resistencia de 8:54 del 18/09. **Ningún resultado cambia:** julio sigue en −77,75 pts en 5 operaciones y septiembre no se mueve. Las dos primeras ni se dibujan, porque nacen después del llenado de su jornada.
+- **Estado:** ✅ Confirmada 27/08/2026 · punto 7 (premercado como borde) confirmado 01/09/2026 · **punto 8 precisado 18/09/2026**
 
 ---
 
@@ -548,7 +638,7 @@ Exactamente lo mismo que al vencer el plazo — **solo cambia el momento**:
 
 # 4 · SETUP Y ENTRADA
 
-*cuándo se opera · 5 reglas*
+*cuándo se opera · 7 reglas*
 ## R-23 · Selección de setup
 
 - **Categoría:** setup
@@ -630,6 +720,169 @@ Exactamente lo mismo que al vencer el plazo — **solo cambia el momento**:
 - **Caso real 9/07/2026:** la vela 8:31 es bajista, pero el mercado sube 190 puntos desde la 8:33. Con el sesgo puesto el día no daba nada; sin sesgo aparece el largo del rompimiento de la vela 8:43, que el operador **sí tomó**.
 - **🟠 Pendiente para contextualización:** cuánto pesa esa *"mayor favorabilidad"* del sentido de la apertura. El operador pidió dejarlo documentado para validarlo en la fase de contexto.
 - **Estado:** ✅ Confirmada 27/08/2026
+
+---
+
+## R-40 · Corrida fluida — solo se opera el rompimiento de una corrida limpia
+
+- **Categoría:** Setup y entrada
+- **Enunciado:** **Solo se entra en el rompimiento de la zona de una corrida FLUIDA.** Una corrida es fluida cuando la secuencia sale bien **tres veces seguidas**: la corrida deja su zona · el retroceso no se pasa · y la corrida siguiente rompe esa zona.
+
+### Cómo se emparejan corrida y retroceso
+
+La vela de apertura declara el sentido. Desde ahí el mercado va alternando: una corrida en ese sentido, su retroceso en contra, otra corrida, otro retroceso. **Cada corrida se empareja con el retroceso que viene justo después de ella, y las parejas no se solapan.** Tras una pareja rota, la cuenta vuelve a empezar con la corrida siguiente.
+
+### Las tres condiciones
+
+| | Condición |
+|---|---|
+| **1** | la **corrida** deja su zona al terminar (`R-09`) |
+| **2** | el **retroceso no se pasa**: mide menos que su corrida. Empate cuenta como que no se pasa |
+| **3** | la **corrida siguiente rompe** esa zona |
+
+Cumplidas las tres, ese rompimiento es la entrada — el cuarto paso del IRI (`R-25`).
+
+Los dos primeros se miden sobre el zigzag: la corrida, de su punto de arranque a su extremo; el retroceso, de ese mismo extremo a su nivel de referencia (`R-06`).
+
+### Las dos formas de fallar
+
+**A · El retroceso se pasa.** Mide más que su corrida. Entonces caen **las dos zonas** de esa pareja: la de la corrida **y la que deja el propio retroceso pasado**.
+
+> *"Cuando el retroceso fue mayor que la corrida bajista, se genera zona de resistencia, y no se debería ingresar en un rompimiento directo"* — operador, 14/09/2026.
+
+**B · La corrida siguiente no rompe.** Llega a la zona, no es capaz de pasarla y se devuelve.
+
+> *"Como no fue capaz de romper, el mercado va a estar lateral"* — operador, 14/09/2026.
+
+### Cómo se recupera
+
+En los dos casos: **se espera a otro IRI que deje una zona nueva entera más allá de la bloqueada** — por encima si se busca largo, por debajo si se busca corto. No basta con que la entrada la supere: **la zona nueva entera** tiene que quedar fuera. Ese IRI nuevo **se juzga desde cero** con estas mismas tres condiciones.
+
+> 🔑 **La zona bloqueada no se muere.** Sigue vigente: se dibuja, tapa objetivos, hace de borde de banda y se rompe e invalida como cualquier otra. Lo único que se descarta es **entrar en su rompimiento**.
+
+> 🔴 **No es un filtro de riesgo disfrazado.** Es independiente de `STOP_MAX`: una entrada puede caber de sobra en el tope y quedar fuera igual. Y solo afecta a las **continuaciones**; el Reingreso no se toca.
+
+### Los cuatro casos que la definieron
+
+**10/09/2026 — falla y se recupera.** La apertura sube 49,50 y el retroceso baja **65,75**: se pasa. Caen la resistencia de 8:32 y el soporte de 8:34. Después llega la secuencia entera —corrida de 79,75, retroceso de solo 32,25, y rompimiento— y su resistencia (29.125,75 – 29.137,50) queda **entera por encima** de la bloqueada (29.118,00 – 29.123,50). Ésa da la entrada del día: largo en 29.145,75, **+40,50 pts**.
+
+**14/09/2026 — falla y no se recupera.** La apertura baja 43,50 y el retroceso sube **53,25**: se pasa. La resistencia de 8:34 no se opera, y en toda la sesión no aparece otro IRI por encima de ella. **NO OPERA.**
+
+**16/07/2026 — la sesión que hubo que corregir.** La apertura sube 71,75 y el retroceso baja **132,25**: se pasa. El corto de 8:40 era el rompimiento directo del soporte que dejó ese retroceso. 🔴 **Esa sesión estaba validada con ese corto (+75,50 pts) desde el 01/09/2026.** El operador la revisó el 14/09 y la dio por mal marcada: *"efectivamente está mal esa entrada, porque no fue un IRI bajista fluido; primero empezó alcista, y luego fue bajista. Esa primera entrada fue arriesgada, se debe esperar que genere otro IRI bajista."*
+
+**11/09/2026** no llega a plantearse: la sesión entera se quedó sin marcar una sola zona.
+
+### Lo que le hizo al backtesting
+
+| | Antes | Después |
+|---|---|---|
+| Julio, 11 sesiones | **−91,00 pts en 9 operaciones** | **−77,75 pts en 5 operaciones** |
+
+Se caen el **7**, el **9**, el **16** y el **20** de julio; el **17** cambia de operación. Quedan intactos el 6, el 10, el 13 y el 15.
+
+> ⚠️ **El total mejora poco y de casualidad.** La regla quita dos perdedoras grandes pero también **las dos ganadoras más grandes de julio**. Lo que hace de verdad, medido, es **operar casi la mitad de días**. Es una decisión de frecuencia, no una mejora demostrada — cinco operaciones no demuestran nada.
+
+> 📌 **Por qué `R-40` y no `R-39`.** El número 39 se gastó el 01/09/2026 con una regla duplicada que se eliminó el 04/09. Reutilizarlo confundiría el historial.
+
+### 🧭 Ampliada 21/09/2026 · el bloqueo es del SENTIDO, y el rompimiento directo
+
+> **Rompimiento directo · cuándo se acaban las entradas en un sentido y cuándo vuelven**
+>
+> **El sentido del día lo declara la vela de apertura.** Si cierra por debajo de donde abrió, el día es bajista y se buscan cortos. Si cierra por encima, alcista y largos.
+>
+> **Lo que se espera:** corrida en ese sentido, retroceso normal, y la corrida siguiente rompiendo la zona que dejó el retroceso. Eso es un movimiento fluido, y ahí se entra.
+>
+> **La fluidez se pierde de dos maneras, y basta una:** el **retroceso se pasa de la corrida** que viene justo antes, o la **corrida siguiente no es capaz de romper** la zona y se devuelve.
+>
+> **El bloqueo no es de esa zona: es del sentido.** Desde ese momento **no se opera ningún rompimiento en el sentido del día**, sea cual sea la zona — incluidas las **zonas de premercado**, que no tienen corrida detrás y a las que por eso no se les puede mirar si su corrida fue limpia. El bloqueo las alcanza igual.
+>
+> **El rompimiento directo.** Con el sentido bloqueado, el mercado acabará rompiendo la zona. **Ese rompimiento no se opera nunca.** Por parámetros cumple, pero el mercado está lateral y por contexto pierde probabilidad.
+>
+> **Cómo vuelven las entradas**, en este orden: **primero**, que la zona quede **rota con su consecución** — el rompimiento directo; **después**, que el mercado arme un **IRI nuevo entero más allá**: una corrida que deje su zona, un retroceso que la confirme, y el rompimiento de esa zona con su consecución. La zona nueva tiene que quedar **entera más allá** de la bloqueada. **Se entra en ese rompimiento, no antes.**
+>
+> **Se puede volver a perder.** El desbloqueo no vale para toda la jornada: cada movimiento se juzga por separado. Si el IRI siguiente tampoco es fluido, se vuelve a bloquear y hay que esperar otro.
+>
+> **Solo el sentido del día.** El bloqueo no toca el sentido contrario.
+
+**Por qué el segundo paso arrastra al primero.** Si el rompimiento fue con mecha y la consecución no llegó, `R-10` estira la zona hasta la punta de esa mecha. Para que el IRI nuevo quede entero más allá, el precio tiene que pasar de esa punta — y eso **es** la consecución. Se dejan escritos los dos porque así lo explica el operador.
+
+**Caso de origen · 18/09/2026.** Abre bajista. La vela de **8:32** deja un retroceso de 38,00 contra una corrida de 29,00 → se acaban los cortos. Las velas de **8:49 y 8:50** rompen la zona de premercado con consecución → **rompimiento directo, no se opera**. La corrida de 8:52 deja el soporte 29.781,50 – 29.791,75, entero por debajo del terreno bloqueado; la de 8:55 lo rompe → **entrada en la de 8:56**, +31,00 pts. Palabras del operador: *"ya no hay fluidez bajista, por lo tanto ya no pienso en cortos; espero que se rompa la zona de soporte, que haga otro IRI, y ahí sí entro"*.
+
+**Primera jornada que lo ejercita entero · 21/09/2026.** Abre alcista. Se pierde a las **8:34** (retroceso de 44,25 contra corrida de 38,75) · rompimiento directo a las **8:37** · se recupera con un largo a las 8:49 que **se cancela antes de llenar** · se **vuelve a perder** a las **8:51** (20,00 contra 16,25) · segundo rompimiento directo a las **8:52** · se recupera con la entrada de las **8:59**, +23,75 pts.
+
+> ⚙️ **El motor.** Para las zonas nacidas de corrida ya se comportaba así: el mapa de fluidez guarda una *barrera* por sentido, y toda zona nueva en ese sentido tiene que quedar entera más allá. Para las zonas de **premercado** coincide porque el motor **nunca** las opera en continuación — que es el agujero todavía abierto de que no anota sus rompimientos. **Acierta por esa razón, no porque aplique la regla.** Cuando se tape ese agujero, habrá que meterlas en el bloqueo explícitamente.
+>
+> ✅ **Regresión:** sin cambios. Julio −77,75 en 5 · septiembre igual.
+
+- **Origen:** test ciego — jornadas del 10, 11 y 14 de septiembre de 2026, y la revisión del 16/07. Ver `05_Backtesting\test_ciego\DISCREPANCIAS.md`
+- **Estado:** ✅ Confirmada 14/09/2026 *(reescrita ese mismo día: la primera redacción emparejaba mal la corrida con el retroceso)* · **ampliada 21/09/2026: bloqueo de sentido y rompimiento directo**
+
+---
+
+## R-41 · Punto de referencia — el objetivo del reingreso no lo pasa
+
+- **Categoría:** Setup y entrada
+- **Enunciado:** **El objetivo de un reingreso no puede pasar del nivel de referencia de un retroceso anterior que siga vivo.** Solo aplica al reingreso.
+- **Condición medible:**
+
+| Variable | Valor |
+|---|---|
+| `que_es_un_punto_de_referencia` | el **nivel de referencia de un retroceso** (`R-06`): el mínimo más bajo si el retroceso baja, el máximo más alto si sube |
+| `cuantos_hay` | **todos** los retrocesos dejan uno, se dibujen o no |
+| `cual_manda` | el punto de referencia **vivo más cercano a la entrada** que quede **entre la entrada y el objetivo**. Los de fuera de ese tramo no estorban. **Ya no se limita al retroceso que originó la zona: vale cualquiera** |
+| `criterio_de_descarte` | si el objetivo **pasa** de ese nivel, el reingreso no se opera. Si cae **justo encima**, se opera |
+| `cuando_se_rompe` | cuando una vela **CIERRA** más allá del nivel. El pinchazo de mecha **no** lo rompe |
+| `efecto_de_estar_roto` | deja de contar; no estorba ningún objetivo a partir de ahí |
+| `alcance` | **solo reingresos (`R-26`)**. Las continuaciones (`R-25`) no lo miran |
+| `relacion_con_los_otros_filtros` | va junto al de **zonas vigentes**. Los dos tienen que pasar |
+
+- **Acción:** al evaluar un reingreso, mirar si entre la entrada y el objetivo queda vivo el nivel de referencia de algún retroceso anterior. Si el objetivo lo pasa, no se opera.
+
+### 🔗 Unificación del 14/09/2026 — de dos conceptos a uno
+
+Hasta el 14/09/2026 el plan tenía **dos** filtros que hacían lo mismo:
+
+| | Antes | Ahora |
+|---|---|---|
+| **Punto de referencia** (`R-26`) | el extremo del retroceso que originó **esa** zona · no caducaba nunca | ⬇️ |
+| **Punto de control** (`R-41`) | el extremo de **cualquier** retroceso vivo · muere por cierre | ⬇️ |
+| **Unificado** | | **el nivel de referencia de cualquier retroceso vivo · muere cuando una vela cierra más allá** |
+
+**Decisión del operador:** *"punto de control y punto de referencia es lo mismo, podemos unificar esos conceptos, dejemos uno solo: Punto de Referencia."* Se queda el **nombre viejo** con la **mecánica nueva**.
+
+Las dos frases que lo justifican son suyas, con tres semanas de diferencia y el mismo razonamiento: *"pueden defender ese nivel y el trade le quita probabilidad, por lo tanto para un reingreso debe tener camino libre para el target"* (24/08/2026) y *"se puede volver a presentar como una zona que el precio lo puedan defender para evitar que lo rompan"* (14/09/2026).
+
+**Lo que cierra de paso:** ya no hace falta que la zona venga de un retroceso, así que **una zona de premercado también puede dar reingreso** — el hueco que había quedado abierto el 11/09.
+
+> ✅ **Probado antes de unificar:** no cambia ninguna de las 11 sesiones de julio (**−91,00 pts en 9 operaciones**), ni el 10/09, ni el 11/09.
+
+### 🔴 Ojo: aquí el rompimiento se lee por el CIERRE
+
+Es la única cosa del plan que **no** se rompe por la mecha. Una zona se rompe con que la mecha la pase por un tick (`R-19`, punto 1); un punto de control **necesita que una vela cierre más allá**. Confirmado por el operador el 14/09/2026. Si algún día esto se olvida, el filtro deja de funcionar: casi todos los puntos de control acaban pinchados por una mecha en algún momento.
+
+### Por qué existe
+
+**Palabras del operador, 14/09/2026:** *"Un punto de control es un retroceso que dice que en ese punto se puede volver a presentar como una zona que el precio lo puedan defender para evitar que lo rompan."*
+
+No es un nivel nuevo que haya que buscar: **es un vértice del zigzag de corridas y retrocesos que el plan ya dibuja**. Lo único que añade esta regla es que ese vértice, además de estar ahí, **tapa el objetivo de un reingreso**.
+
+### Dibujo
+
+No se dibujan todos — el gráfico se llenaría. Se dibuja **solo cuando aparece un reingreso**, para comprobar si el objetivo está libre. Palabras del operador: *"la idea es tener el gráfico lo más limpio posible"*.
+
+| | |
+|---|---|
+| Vivo | flecha punteada, **naranja oscuro `#FF9A3C`**, contraste bajo, extendida hacia la derecha |
+| Roto | contraste más leve y **se corta una vela después** de la que lo rompió |
+
+### Caso de origen · viernes 11/09/2026
+
+Reingreso corto a las **9:01** sobre la zona de premercado de 8:29: entrada **29.440,25**, stop **29.475,00**, objetivo **29.405,50**, riesgo 34,75. El punto de control de la vela de **8:58**, en **29.423,00**, queda en medio — y el objetivo lo pasa. **Descartado.** El operador tampoco lo tomó. Sin esta regla el día habría dado +34,75 pts; con ella, la jornada es **NO OPERA**.
+
+> ✅ **Regresión hecha antes de escribir la regla.** Probada sobre las 11 sesiones de julio (umbral 2.000 sobre NQ) y sobre el 10/09/2026: **no cambia ninguna**. Julio sigue en **−91,00 pts en 9 operaciones**. Y no es un test vacío — **dos de esas nueve son reingresos** (6 y 13 de julio), así que el filtro se probó justo donde muerde.
+
+- **Origen:** test ciego del 14/09/2026 sobre la jornada del 11/09 — ver `05_Backtesting\test_ciego\DISCREPANCIAS.md`
+- **Estado:** ✅ Confirmada 14/09/2026
 
 ---
 
@@ -1274,3 +1527,13 @@ Colombia es **UTC−5 fijo**: no aplica horario de verano. Todo lo demás se mue
 | **3.0** | **2026-09-06** | 🔵 **Dos cambios grandes, ninguna regla nueva.** **(1) Sale el NQ del plan.** Todo se analiza, se marca y se ejecuta en **MNQ**, con **un solo gráfico**: desaparecen el segundo gráfico y el desfase de hasta 3 ticks entre ambos. El umbral de volumen de premercado queda solo en **MNQ > 6.000** — y la equivalencia con el antiguo NQ > 2.000 **no está verificada**, ver `P-32`. El backtesting histórico se hizo con datos de NQ y **no se rehace**, por decisión del operador. **(2) Las 38 reglas se RENUMERAN** para correr seguidas dentro del orden de las siete categorías: antes *Estructura del precio* saltaba de la 11 a la 31. **1.127 referencias cruzadas remapeadas** en 18 archivos, incluidos el historial, el registro cronológico y los nombres de los diagramas. Nuevo **`EQUIVALENCIA_NUMERACION.md`** y nuevo **índice por categoría** en este documento. **No conviven dos numeraciones: toda la documentación usa la nueva.** |
 | **3.1** | **2026-09-06** | 📕 **El documento se reorganiza por categorías.** Hasta hoy seguía el orden en que se construyó el plan —las sub-fases `F1.x`—, así que para leer las cuatro reglas de perímetro había que saltar entre cinco sitios. Ahora el cuerpo del documento son **las siete categorías en su orden de uso durante el día**, y dentro de cada una las reglas por número; **Zonas** va partida en *marcado* y *vigencia*. **Todo el material de construcción se conserva íntegro** —narrativa de cada sub-fase, diagramas, desviaciones y correcciones del auditor— movido a **`📎 ANEXOS Y NOTAS DE CONSTRUCCIÓN`**, al final. **Siete reglas que hasta hoy vivían solo como fila de tabla ganan sección propia** (`R-12`, `R-13`, `R-15`, `R-20`, `R-21`, `R-34`, `R-35`), generadas desde `reglas.json`: ese hueco fue exactamente el que permitió el duplicado de la v2.2. **Ninguna regla cambia. Siguen 38.** |
 | **3.2** | **2026-09-07** | ✅ **`P-30` cerrado: la resolución anticipada del plazo aplica igual en los DOS caminos.** Quedaba sin confirmar si la regla del tope —una estructura completa al contrario resuelve la geometría antes de la quinta vela— valía también para el **rompimiento con mecha**, que estira la zona, o solo para el de **cuerpo**, que hace nacer la apéndice. Estaba escrito por simetría, como extrapolación del auditor. **El operador confirmó que aplica igual.** Corregidos los disparadores de `R-10` y `R-11` en `reglas.json` y en el documento: el gatillo es el plazo **resuelto**, no el plazo **vencido**. Nueva lámina del portal `24-estructura-antes.png` con el caso del estiramiento, y `P-31` —el motor no implementa la resolución anticipada— ampliado a los dos caminos. **Ninguna regla nueva. Siguen 38.** |
+| **3.3** | **2026-09-08** | 🔑 **La secuencia del marcado, escrita por fin de principio a fin.** Al preparar el backtesting de un año el auditor dibujó mal un caso y el operador lo corrigió: en el sitio donde el auditor veía un *estiramiento*, **no se dibuja nada**. De ahí salió lo que faltaba, y no era una regla: era **el recorrido**. La jornada abre con dos zonas que forman **la banda del día**; dentro se marca **una sola zona en toda la jornada** —la del primer retroceso, y solo si respeta la mitad—; después **no se dibuja nada más ahí dentro**; y la **única** forma de abrir terreno nuevo es **traspasar un extremo con rompimiento y consecución**, lo que forma **una banda nueva con su propio turno**. Las cuatro reglas ya lo decían por separado (`R-16`, `R-12`, `R-17`, `R-18`); **en ningún sitio estaba el recorrido completo**, y ése era el hueco. Nueva sección al frente del bloque de zonas. ✅ Cierra `P-25`. 🔴 Nuevo `P-33`: **hay que comprobar que el motor implementa esta secuencia antes del backtesting de un año.** **Ninguna regla nueva ni modificada. Siguen 38.** |
+| **3.4** | **2026-09-14** | 🔴 **Arranca el TEST CIEGO** — cierra el primer hueco declarado del cierre de fase 1. Primera jornada marcada a ciegas: **jueves 10/09/2026**, resultado acordado con el operador: largo, entrada 29.145,75 a las 8:40, stop 29.105,25, riesgo 40,50 → **TARGET en 8:41, +40,50 pts**. Dos cambios en el plan, los dos salidos del día: **(1) `UMBRAL_VOL` pasa a ser parámetro ajustable** y sube a **> 8.000 en MNQ** — abre **`P-37`**, que es el criterio medible de cuándo se cambia; **(2) regla nueva `R-40`** — no se entra en el rompimiento de una zona cuyo retroceso fue mayor que la corrida que la creó; traducción medible de *"no es fluida"* y *"está lateral"*. Queda pendiente repasar las 11 sesiones de julio con `R-40` puesta. **39 reglas** |
+| **3.5** | **2026-09-14** | 🟡 **Segunda jornada del test ciego: viernes 11/09/2026 — NO OPERA, y coincide con el operador.** El día se resuelve entero en la primera vela: el mercado abre dentro del tramo que deja el premercado (suelo 29.317,00 · techo 29.443,00 · medio 29.380,00) y el primer movimiento lo cruza, con lo que ese tramo queda cerrado y **en toda la sesión no se marca ni una zona** — 26 candidatas, 26 descartadas. Regla nueva **`R-41`** salida de ahí: el **punto de control**, que es el nivel de referencia de un retroceso vivo y **tapa el objetivo de un reingreso**. Es la traducción de por qué el operador no tomó el reingreso de las 9:01 (objetivo 29.405,50 contra punto de control 29.423,00). Primera cosa del plan que **se rompe por cierre y no por mecha**. Regresión hecha: no cambia ninguna de las 11 sesiones de julio ni el 10/09. Quedan abiertos dos asuntos del reingreso sobre zona de premercado — ver `PENDIENTES.md`. **40 reglas** |
+| **3.6** | **2026-09-14** | 🔗 **Punto de control y punto de referencia se unifican en uno solo: `PUNTO DE REFERENCIA`.** Decisión del operador — los dos eran el extremo de un retroceso y los dos tapaban el objetivo del reingreso. Se queda el nombre viejo con la mecánica nueva: vale **cualquier** retroceso vivo que quede entre la entrada y el objetivo, y **muere cuando una vela cierra más allá**. Cierra `P-36` y cierra también `P-35`, porque al no exigir que la zona venga de un retroceso, **una zona de premercado ya puede dar reingreso**. Probado: no cambia julio (−91,00 en 9), ni el 10/09, ni el 11/09. Actualizados además `GALERIA.md` (casos **G-22** y **G-23**) y `CHECKLIST_DIARIA.md`. **40 reglas** |
+| **3.7** | **2026-09-14** | 🔴 **`R-40` reescrita entera: nace el término CORRIDA FLUIDA.** La primera redacción emparejaba cada corrida con el movimiento que venía *después*; la buena la empareja con **el retroceso que viene justo después de ella**, sin solapar parejas. Y se añaden las dos formas de fallar —el retroceso se pasa, o la corrida siguiente no es capaz de romper— con una sola recuperación: esperar otro IRI que deje una zona nueva **entera** más allá de la bloqueada. Tercera jornada del test ciego, **lunes 14/09/2026: NO OPERA**. 🔴 **Y obliga a corregir una sesión ya validada: el 16/07/2026 deja de tener operación.** Julio pasa de **−91,00 pts en 9** a **−77,75 en 5**. Nuevo caso **`G-24`** y resultados de julio actualizados en `GALERIA.md`. **40 reglas** |
+| **3.8** | **2026-09-14** | ✅ **`P-37` cerrado: el umbral de volumen queda paramétrico y sin criterio medible, a propósito.** Palabras del operador: *"dejemos que quede paramétrico, hoy lo vamos a dejar de 8.000"*. Lo fija él, como `R-37`. Se escribe al lado la única condición que sí es medible y que lo hace seguro: **el umbral no se cambia con la sesión empezada**, y cada cambio se anota con su fecha. 🔢 Corregido de paso un choque de numeración: ese pendiente se había abierto como `P-33`, número ya ocupado desde el 08/09; **es `P-37`**. 📁 La carpeta `test_ciego\claude\` pasa a llamarse **`test_ciego\Back_claude\`** y se actualizan todas las referencias. **40 reglas** |
+| **3.8** | **2026-09-14** | 📝 **`R-10` reescrita: ahora dice QUÉ BORDE se estira.** *"Si es una resistencia se estira solo por arriba; si es un soporte, solo por abajo"* — texto del operador. El enunciado viejo solo decía que el borde opuesto no se movía, y el motor lo resolvía por el lado del rompimiento: eso **estiraba un soporte hacia arriba** en el cruce de vuelta y dejaba dos zonas de tipo distinto pisándose, contra `R-19`. Detectado en la jornada del 14/09 (soporte de 9:10 metido dentro de la resistencia de 9:09). Se quita además la palabra *"plazo"* del texto: ahora los dos finales —cinco velas, o estructura contraria completa— están escritos uno debajo del otro. ✅ No cambia julio ni septiembre. **40 reglas** |
+| **3.9** | **2026-09-15** | 📝 **`R-11` reescrita: la zona apéndice queda calcada de `R-10`.** Sale la frase *"si el plazo se resuelve"* —la misma que se había quitado de la regla de estirar el día anterior por no decir qué es el plazo— y entran los **dos finales escritos completos**: cinco velas, o estructura completa al contrario, lo que llegue primero. Palabras del operador: *"la zona apéndice es básicamente igual que lo que pasa con una zona que se estira... la diferencia es que el rompimiento no es con mecha, sino con cuerpo por fuera. Los casos son los mismos 2"*. Queda escrito en el plan que **lo único que separa las dos reglas es dónde cierra la vela de rompimiento**. Sección propia para `R-11`, que hasta hoy vivía **solo como fila de tabla**. ✅ Cambio de redacción: no se mueve el motor ni ninguna jornada. Anotada en `PROPUESTAS_AL_PLAN.md` la corrección del portal, que escribe el disparador solo como *"5 velas"*. **40 reglas** |
+| **3.10** | **2026-09-19** | 🧭 **La banda gastada no se reabre — y ahora el motor lo aplica.** `R-17` ya decía en su punto 5 que *"la banda no se vuelve a abrir aunque se mueran las zonas que la formaron"*, pero el motor contaba el turno **solo sobre las zonas activas** y solo cuando evaluaba una candidata con vecinas vivas a los dos lados; y la frase de `R-21` —*"inválida es inválida, no cuenta para NADA"*— empujaba en sentido contrario. Detectado por el operador en la jornada del **18/09**: el auditor marcó una resistencia dentro de la franja de la zona de premercado, inválida desde las 8:50. Se añade el **punto 8** a `R-17` —el turno se cuenta sobre **todas** las zonas, activas e inválidas, y sobre las marcadas antes de que la banda existiera— y se precisa `R-21`: **deja de valer como zona; no deja de ocupar el sitio.** Confirmado además el alcance: se cierra **la banda entera**, no solo el rectángulo de la zona muerta. ✅ Regresión: se caen **3 zonas** en 18 sesiones (10/07, 10/09, 18/09) y **ningún resultado cambia**. **40 reglas** |
+| **3.11** | **2026-09-21** | 🧭 **`R-40` ampliada: el bloqueo es del SENTIDO, y nace el término ROMPIMIENTO DIRECTO.** Paso a paso del operador sobre la jornada del 18/09: cuando el retroceso se pasa de la corrida **se acaban las entradas en el sentido del día** —no solo en esa zona—; el rompimiento que llega después **no se opera nunca** (rompimiento directo); y se vuelve a entrar solo cuando el mercado arma un **IRI nuevo entero más allá**. Alcanza también a las zonas de premercado, que no tienen corrida detrás. Se puede volver a perder, y solo afecta al sentido del día. Primera jornada que lo ejercita entero: **21/09** —se pierde y se recupera dos veces—. Sin cambios en el motor para las zonas de corrida; para las de premercado acierta porque nunca las opera, no porque aplique la regla. ✅ Regresión sin cambios. **40 reglas** |

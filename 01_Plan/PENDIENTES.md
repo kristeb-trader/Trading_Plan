@@ -2,13 +2,21 @@
 
 Reglas sin cerrar y decisiones aplazadas.
 
-> Actualizado: 2026-09-06 · 🏁 **fase 1 cerrada** — **38 reglas** · 23 términos · 13 desviaciones · **32 pendientes abiertos o cerrados**
+> Actualizado: 2026-09-14 (b) · 🏁 fase 1 cerrada · 🔴 **test ciego EN MARCHA** — **40 reglas** · 24 términos · 13 desviaciones · **37 pendientes abiertos o cerrados** · numeración libre a partir de `P-38`
 >
-> 🚨 **Los cuatro huecos declarados del cierre:** `P-29` test ciego no ejecutado · `P-21` sin regla de parada · falta la capa de contextualización · `P-27` las cifras del backtesting no miden la estrategia.
+> 🚨 **Los cuatro huecos declarados del cierre:** ~~`P-29` test ciego no ejecutado~~ → **arrancó el 14/09/2026, primera jornada marcada: 10/09** · `P-21` sin regla de parada · falta la capa de contextualización · `P-27` las cifras del backtesting no miden la estrategia.
 
 ---
 
 ## Abiertos
+
+### 🔧 P-34 · El motor no registra los rompimientos de las zonas de premercado — NUEVO 14/09/2026
+- **Qué pasa:** en `lector.py`, el rompimiento de una zona solo se anota dentro del bloque de continuación, que exige que la zona venga de una corrida. Las zonas de premercado no vienen de ninguna, así que **su rompimiento no se anota nunca** y, como el reingreso nace de un rompimiento que falla, **el motor no puede ver jamás un reingreso sobre una zona de premercado**.
+- **Contradice a `R-15`**, que dice que la zona de premercado se comporta *exactamente igual* que cualquier otra.
+- **Detectado el 11/09/2026:** el reingreso de las 9:01 lo encontré a mano; el motor no lo ve.
+- **Hermano del mismo fallo:** en día de FOMC pasa lo mismo por otra vía — el bloque de continuación se salta entero, así que tampoco se anotan rompimientos y **el motor no puede ver ningún reingreso en día de FOMC**, que es justo el único setup permitido esos días. Arreglarlo hace aparecer una operación el **8 de julio**, sesión ya validada como NO OPERA, así que **no se toca sin decidirlo con el operador**.
+- **Estado:** ⏳ pendiente. No bloquea operar — bloquea el backtesting.
+
 
 ### 🚨 P-21 · No existe regla de parada — HUECO DECLARADO
 - **Estado:** el operador confirma el 24/08/2026 que **no tiene ninguna regla de parada**, y decide dejarlo abierto a propósito para decidirlo con datos reales.
@@ -380,15 +388,43 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 
 # 🔴 Abiertos nuevos · 27/08/2026
 
-## `P-25` · ¿Sirve para entrar una zona ESTIRADA? — ABIERTO 2026-08-27
+## ✅ `P-25` · ¿Sirve para entrar una zona ESTIRADA? — **CERRADO 08/09/2026**
 
-**El hueco:** en el motor solo las zonas que **nacen nuevas** valen como zona de corrida para una entrada de continuación. Cuando una zona candidata se **estira** sobre una existente (`R-13`) en vez de nacer, esa zona no sirve para entrar.
+**La pregunta estaba mal planteada.** Se preguntaba si una zona *estirada* sirve para entrar. Al llevarle el caso al operador con un gráfico, la respuesta fue que **ahí no se dibuja nada en absoluto** — ni zona nueva, ni estiramiento:
 
-**Por qué importa:** apareció en el 7 de julio y **cambió el resultado del día**. No se ha podido comprobar contra un caso limpio porque el caso concreto se resolvió por otra vía (`R-18`).
+> *"ahí no se debe dibujar nada, ninguna zona, porque ya existe una zona de resistencia; para generar una nueva zona de resistencia el precio debe sobrepasar la que ya existe, con rompimiento y consecución."*
 
-**Lo que hay que preguntar:** cuando una corrida termina y su zona, en vez de nacer nueva, se pega a una que ya existía y la estira — ¿esa zona estirada sirve para entrar de continuación?
+Y a continuación dio la secuencia completa:
 
-**Estado:** ⏳ pendiente.
+> *"el precio cuando abre, lo primero que hace es generar una primera zona, y luego la segunda que es el retroceso. Entre esas dos zonas solo se puede crear una zona, solo si ese retroceso que genera esa zona no supera el 50 %; de lo contrario, entre ese rango no se genera ninguna zona. Las únicas zonas que se pueden dibujar es cuando el precio supere alguna de las zonas de los extremos (resistencia o soporte), con rompimiento y consecución; si se puede generar otra zona, de lo contrario no."*
+
+Confirmado además que **el traspaso abre banda nueva, con turno propio, y ese turno vale para toda la jornada**.
+
+### Qué cambia
+
+**Ninguna regla.** Siguen **38**. La secuencia ya estaba repartida entre `R-16`, `R-12`, `R-17` y `R-18`; lo que faltaba era **leerlas juntas y en orden**. Queda escrita como sección propia al principio del capítulo de zonas del plan: *“Cómo se marca una jornada”*.
+
+### El error del auditor que esto corrige
+
+Se estaba tratando el estiramiento como algo que puede pasar **dentro** de una banda ya cerrada. No puede. El estiramiento (`R-10`) y la apéndice (`R-11`) nacen de un **rompimiento sin consecución** cuando el plazo se resuelve — no de una corrida cualquiera que termina donde ya había zona.
+
+**Consecuencia abierta:** hay que comprobar que el motor de auditoría marca así → `P-33`.
+
+**Estado:** ✅ **cerrado.**
+
+---
+
+## `P-33` · El motor no está verificado contra la secuencia de banda y turno — ABIERTO 2026-09-08
+
+Con `P-25` cerrado queda escrita, por primera vez y en un solo sitio, la secuencia de marcado de la jornada: **dos zonas de apertura = la banda · una zona como máximo dentro de ella en toda la jornada · nada más dentro · zona nueva solo por traspaso de un extremo · el traspaso abre banda nueva con turno propio para toda la jornada**.
+
+**Lo que no sabemos:** si `05_Backtesting\lector.py` marca exactamente así. Nunca se comprobó contra esa lectura, porque la lectura no existía escrita.
+
+**Qué hay que hacer:** revisar el marcado del motor contra la secuencia y volver a pasar las **11 sesiones validadas** para ver si alguna zona aparece o desaparece del marcado.
+
+**Qué no se espera que cambie:** las 9 operaciones validadas. Pero hay que comprobarlo.
+
+**Estado:** ⏳ pendiente. **Bloquea el backtesting de un año** — junto con `P-31`, `P-32` y `P-27`.
 
 ---
 
@@ -504,3 +540,52 @@ Con el NQ fuera del plan, el umbral de premercado pasa a ser **> 6.000 contratos
 **Cómo se cierra:** exportar de NinjaTrader el premercado de MNQ de esos mismos 11 días y comprobar si las velas que superan 6.000 en MNQ son las mismas que superaban 2.000 en NQ. Si no coinciden, hay que decidir el umbral bueno **antes** del backtesting de un año.
 
 **Estado:** ⏳ pendiente. **No bloquea operar**, pero sí bloquea dar por buena cualquier cifra agregada de premercado.
+
+---
+
+# ✅ Cerrados el 14/09/2026 por la unificación del punto de referencia
+
+## ✅ `P-36` · El punto de referencia y el punto de control se solapaban — CERRADO
+
+**Estaban duplicados y el operador lo zanjó el mismo día en que se detectó:** *"punto de control y punto de referencia es lo mismo, podemos unificar esos conceptos, dejemos uno solo: Punto de Referencia."*
+
+Los dos eran el extremo de un retroceso, los dos tapaban el objetivo del reingreso y los dos iban en la misma dirección. Se diferenciaban solo en dos detalles, y en los dos ganó la versión nueva:
+
+| | Se queda |
+|---|---|
+| **Qué nivel** | el de **cualquier** retroceso vivo entre la entrada y el objetivo, no solo el que originó la zona |
+| **Caducidad** | **muere cuando una vela cierra más allá** (antes el de referencia no caducaba nunca) |
+
+**Resuelto en `R-41`**, que pasa a llamarse *punto de referencia*. El término *punto de control* desaparece del plan. **Probado antes de unificar:** no cambia ninguna de las 11 sesiones de julio (−91,00 pts en 9 operaciones), ni el 10/09, ni el 11/09.
+
+## ✅ `P-35` · El reingreso sobre zona de premercado no tenía punto de referencia — CERRADO de rebote
+
+**El problema era:** el filtro propio del reingreso exigía que el objetivo cupiera dentro del extremo del retroceso que originó la zona, y una zona de premercado **no nace de ningún retroceso** — nace del volumen. No había contra qué medir.
+
+**Lo cierra la unificación sin tocar nada más:** desde el 14/09/2026 vale el nivel de referencia de **cualquier** retroceso vivo que quede entre la entrada y el objetivo. Ya no hace falta que la zona venga de uno. **Una zona de premercado puede dar reingreso con normalidad.**
+
+**Origen:** 11/09/2026, reingreso de las 9:01 sobre la zona de premercado de las 8:29.
+
+> ⚠️ **Sigue abierto `P-34`**, que es cosa distinta: el motor no anota los rompimientos de las zonas de premercado, así que **no puede ver** ese reingreso aunque la regla ya lo permita.
+
+## ✅ `P-37` · Con qué criterio se cambia el umbral de volumen — CERRADO 14/09/2026, sin criterio medible y a propósito
+
+**La pregunta era:** qué volatilidad se mide, cuándo, y qué número lleva a qué umbral.
+
+**La respuesta del operador (14/09/2026):** *"dejemos que quede paramétrico, hoy lo vamos a dejar de 8.000"*. **No va a haber criterio medible: el umbral lo fija él.**
+
+No es un hueco, es una decisión — y el plan ya tiene otra igual: `R-37`, no operar si no se está bien, también es criterio libre y está aceptada así a propósito.
+
+**La condición que lo hace seguro, y que sí es medible:**
+
+> 🔴 **El umbral NUNCA se cambia con la sesión empezada.** Cada cambio se anota con su fecha en `PARAMETROS.md`.
+
+Sin esa línea, el umbral se podría mover **después** de ver el día, y ése es el único movimiento que convertiría el backtesting en un ejercicio de ajuste a posteriori. Con la sesión ya abierta, el número es el que es.
+
+**Historial del parámetro:** > 2.000 en NQ hasta el 06/09/2026 · > 6.000 en MNQ del 06/09 al 14/09 · **> 8.000 en MNQ desde el 14/09/2026**.
+
+> ⚠️ **`P-32` sigue abierto** y es cosa distinta: nadie ha verificado con datos si el umbral de MNQ marca las mismas velas que marcaba el viejo de NQ.
+
+---
+
+> 🔢 **Nota de numeración, 14/09/2026.** El pendiente del umbral de volumen se abrió ese día como `P-33`, pero ese número ya estaba ocupado desde el 08/09 por *"el motor no está verificado contra la secuencia de banda y turno"*. Se corrigió el mismo día: **el del umbral es `P-37`**. El `P-33` original sigue abierto y no se ha tocado. **El próximo pendiente que se abra es `P-38`.**

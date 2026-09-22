@@ -1,101 +1,94 @@
-# Proyecto Chaumer — instrucciones para Claude Code
+# Proyecto Chaumer
 
-**Qué es esto:** la metodología de trading de Alfredo Chaumer para **MNQ** en NinjaTrader 8, extraída durante la fase 1 a un plan mecánico de **38 reglas medibles**.
+Metodología de trading de Alfredo Chaumer para **MNQ** en NinjaTrader 8, traducida a un plan mecánico de **40 reglas medibles**. Operador: **Christian**. Uso personal.
 
-**Fase actual:** 🚧 **FASE 2 — construir el portal web** en `04_Web\` (hoy vacía).
-**Fase 1:** 🏁 cerrada el 2026-09-01. Ver `01_Plan\CIERRE_FASE_1.md`.
-
-**Operador:** Christian. **Uso:** personal.
+**Fase 1** 🏁 cerrada (el plan) · **Fase 2** 🚧 en curso (el portal, en `04_Web\`) · 🔴 **TEST CIEGO EN MARCHA** desde el 14/09/2026 — protocolo en `05_Backtesting\test_ciego\LEEME_BACK_DIARIO.md`.
 
 ---
 
-## 🔴 Reglas del proyecto — no negociables
+## 🔴 Las cinco reglas del proyecto — no se negocian
 
-1. **No inventes metodología.** Ninguna regla, umbral o comportamiento sale de price action genérico ni de lo que "suele hacerse". Todo lo que hay está en `01_Plan\`. Si algo falta, **falta**: se marca `PENDIENTE`, no se rellena.
-2. **Ningún adjetivo es una regla.** "Fuerte", "sano", "claro" no son criterios. Solo valen ticks, puntos, porcentajes, número de velas y horas exactas.
-3. **No se cambia una regla confirmada** sin pedírselo al operador y esperar su confirmación explícita.
-4. **Los scripts de `05_Backtesting\` son herramientas de auditoría**, nunca de operación. No los conviertas en un bot ni en un ejecutor.
-5. **Los huecos declarados se muestran, no se esconden.** Ver más abajo.
+1. **No inventes metodología.** Ninguna regla ni umbral sale de price action genérico. Si algo falta, **falta**: se marca pendiente, no se rellena.
+2. **Ningún adjetivo es una regla.** "Fuerte", "sano", "claro" no valen. Solo ticks, puntos, porcentajes, número de velas y horas exactas.
+3. **No se cambia una regla confirmada** sin pedírselo al operador y esperar su sí.
+4. **Los scripts de `05_Backtesting\` son de auditoría**, nunca de operación.
+5. **Los huecos declarados quedan escritos en el plan.** El plan está escrito y contrastado, **no probado**: el test ciego nunca se ejecutó, no hay regla de parada, falta la capa de contexto, y las cifras del backtesting no miden la estrategia. Viven en `01_Plan\PENDIENTES.md` y en `01_Plan\CIERRE_FASE_1.md`, y **de ahí no se borran**.
+   🔸 *El **portal** no tiene que enseñarlos — decisión del operador, 07/09/2026. Es su herramienta personal, no un producto. Lo único que sigue en pie: si algún día el portal muestra la cifra del backtesting (**−91,00 pts**), los cuatro motivos van en la misma pantalla.*
 
 ---
 
-## Fuentes de verdad
+## Quién hace qué
 
-| Archivo | Qué es |
+| Cowork (chat) | Claude Code (en `04_Web\`) |
 |---|---|
-| `01_Plan\reglas.json` | **la fuente de verdad legible por máquina.** 38 reglas, **ordenadas por grupo**. Cada una trae `categoria`, `categoria_nombre`, `categoria_descripcion`, `categoria_orden` y —solo en `zonas`— `subcategoria` (`marcado` / `vigencia`). Siete grupos: perímetro (4) · estructura (4) · **zonas (14)** · setup y entrada (5) · riesgo y gestión (7) · filtros (3) · proceso (1). **El portal se construye contra este archivo, y usa esos campos: no escribas nombres de categoría a mano.** |
-| `01_Plan\TRADING_PLAN_CHAUMER.md` | el texto largo. **Reorganizado el 06/09/2026 por categorías**, en el mismo orden que `reglas.json`: primero `📕 LAS 38 REGLAS, POR CATEGORÍA` (7 grupos, Zonas partida en *marcado* y *vigencia*), después `📎 ANEXOS Y NOTAS DE CONSTRUCCIÓN` con la narrativa de las sub-fases, los diagramas y las correcciones del auditor. **Las 38 reglas tienen todas sección propia** |
-| `01_Plan\PARAMETROS.md` | los números que pueden cambiar, en un solo sitio. Las reglas citan el **nombre** del parámetro, no el valor |
-| `01_Plan\GLOSARIO.md` | 23 términos con sección y definición medible |
-| `01_Plan\CHECKLIST_DIARIA.md` | la secuencia real del día en 4 bloques |
-| `01_Plan\GALERIA.md` | 21 casos reales etiquetados |
-| `01_Plan\PENDIENTES.md` | lo que sigue abierto |
-| `01_Plan\CONTEXTUALIZACION.md` | 10 elementos que **NO son reglas y no deben convertirse en reglas** |
-| `01_Plan\ESTADO.md` | **archivo de arranque.** Cabecera con las 38 reglas en una línea cada una, agrupadas por categoría, y el registro cronológico completo de la fase 1 debajo |
-| `01_Plan\CIERRE_FASE_1.md` | **léelo primero.** Qué está probado y qué no |
-| `01_Plan\EQUIVALENCIA_NUMERACION.md` | las reglas se **renumeraron** el 06/09/2026. Si ves un código que no cuadra, tradúcelo aquí |
-| `01_Plan\PROPUESTA_LIMPIEZA_REGLAS.md` | 🟡 **decisión pendiente del operador:** cuatro fusiones que llevarían el plan de **38 a 33 reglas**. **No las apliques ni las anticipes en el portal** — hoy son 38 |
+| Las reglas y el plan · `01_Plan\` | El código del portal |
+| Los gráficos del método (PNG) | Maquetación, compilar, publicar |
+| Auditar sesiones con los datos | **Nada de `01_Plan\`** |
 
-Si `reglas.json` y un `.md` se contradicen, **para y pregunta**. No elijas tú.
+`01_Plan\` es **de solo lectura desde el portal**. Si encuentras una contradicción, escríbela en `04_Web\PROPUESTAS_AL_PLAN.md` y avisa. No la corrijas tú.
 
 ---
 
-## 🚨 Los cuatro huecos declarados — el portal debe mostrarlos
+## Dónde está la verdad, y qué leer para cada cosa
 
-El plan está **escrito y contrastado**, pero **no probado**. Cuatro cosas faltan y el portal no puede presentarse como si estuvieran:
+`01_Plan\reglas.json` es **la fuente de verdad legible por máquina**: 38 reglas ordenadas por grupo, con `categoria`, `categoria_nombre`, `categoria_orden` y —solo en zonas— `subcategoria` (`marcado` / `vigencia`). Siete grupos: perímetro (4) · estructura (4) · **zonas (14)** · setup y entrada (7) · riesgo y gestión (7) · filtros (3) · proceso (1).
 
-1. **El test ciego nunca se ejecutó** (`F1.11`, `P-29`). No hay medida de si el documento se sostiene solo, sin el operador corrigiendo al lado.
-2. **No hay regla de parada** (`P-21`). El plan no dice cuándo se deja de operar en la semana o el mes. Cada operación arriesga el 5,3 % de la cuenta objetivo.
-3. **Falta la capa de contextualización.** En las sesiones grabadas decidió 2 de 4 días de "hoy no opero". Un ejecutor puramente mecánico operará días que el operador no operaría.
-4. **Las cifras del backtesting no miden la estrategia** (`P-27`): 9 operaciones, reglas que cambiaron durante la propia revisión, sin filtro de noticias rojas y sin capa de contexto.
+| Si la tarea es… | Lee SOLO |
+|---|---|
+| una duda de una regla | `reglas.json`, **esa regla** |
+| cambiar un número | `01_Plan\PARAMETROS.md` |
+| una definición | `01_Plan\GLOSARIO.md` |
+| el porqué de una regla | **su sección** en `01_Plan\TRADING_PLAN_CHAUMER.md` |
+| la secuencia del día | `01_Plan\CHECKLIST_DIARIA.md` |
+| qué falta / qué está abierto | `01_Plan\PENDIENTES.md` |
+| casos reales | `01_Plan\GALERIA.md` |
+| lo que NO es regla | `01_Plan\CONTEXTUALIZACION.md` |
+| dónde estamos | `01_Plan\ESTADO.md` (la cabecera basta) |
+| el portal | `04_Web\CLAUDE.md` |
 
-> Si el portal muestra el resultado del backtesting (−91,00 pts en 9 operaciones), **debe mostrar estos motivos en la misma pantalla**.
+> ⚠️ **No abras `TRADING_PLAN_CHAUMER.md` entero.** Son 29.000 tokens. Busca la sección de la regla.
+> Si `reglas.json` y un `.md` se contradicen, **para y pregunta.** No elijas tú.
 
 ---
 
-## Estándar visual — ya fijado por el operador, respétalo
-
-Viene de las gráficas de backtesting que él validó una por una.
+## Estándar visual — fijado por el operador
 
 | | |
 |---|---|
-| Fondo | negro / muy oscuro (`#0B0E14`) |
-| Cuadrícula | **ninguna**. Sí la línea del eje horizontal sobre las horas y la vertical junto a los precios (`#3A4256`) |
-| Velas | 🔵 **azul `#2E86FF` = alcista** · ⬜ **blanca `#FFFFFF` = bajista** |
-| Zonas | **todas del mismo gris `#8B93A7`**, sin distinguir soporte de resistencia por color |
-| Corridas y retrocesos | **línea blanca en zigzag** uniendo cada extremo |
-| La operación | franja roja tenue de la entrada al stop, franja verde tenue de la entrada al objetivo, **solo sobre el tramo de la operación**, no en todo el ancho |
-| Líneas de entrada / stop / objetivo | **no se dibujan.** Con las franjas ya se sabe dónde están. Cuanto más limpio, mejor |
-| Corte del gráfico | se marca hasta la vela del **llenado**; después solo siguen las velas hasta el resultado. Solo llega a las 10:30 si no hubo setup |
-| Otros colores | oro `#F5C542` · rojo `#FF5C5C` · verde `#4ADE80` · cian `#22D3EE` |
+| Fondo | negro `#0B0E14` |
+| Cuadrícula | **ninguna**. Sí la línea del eje horizontal y la vertical de precios (`#3A4256`) |
+| Velas | 🔵 azul `#2E86FF` alcista · ⬜ blanca `#FFFFFF` bajista |
+| Zonas | **todas del mismo gris** `#8B93A7` |
+| Corridas y retrocesos | línea blanca en zigzag uniendo extremos |
+| Puntos de referencia | flecha punteada **naranja oscuro `#FF9A3C`**, contraste bajo, extendida a la derecha. Roto: más tenue y cortado una vela después. **Solo se dibujan cuando hay un reingreso** |
+| La operación | franja roja entrada→stop, verde entrada→objetivo, **solo sobre el tramo** |
+| Líneas de entrada / stop / objetivo | **no se dibujan** |
+| Otros | oro `#F5C542` · rojo `#FF5C5C` · verde `#4ADE80` · naranja `#FF9A3C` |
 
-**Nada de tablas de datos donde quepa una gráfica.** El operador lo pidió explícitamente.
+**Nada de tablas de datos donde quepa una gráfica.**
 
 ---
 
 ## Cómo hablarle al operador
 
-- **Nunca uses los códigos de regla** (`R-31`, `P-22`, `G-12`…) en conversación. Son para los documentos. Al hablar, lenguaje de usuario, claro y no técnico.
+- **Nunca uses códigos de regla** (`R-31`, `P-22`, `G-12`) al hablar. Son para los documentos.
 - Máximo **2 preguntas por turno**.
-- Él corrige vela a vela. **Nada se da por bueno sin su visto bueno explícito.**
-- Tiene contacto directo con Alfredo Chaumer y le consulta cuando algo se traba.
+- Corrige vela a vela. **Nada se da por bueno sin su visto bueno explícito.**
+- Tiene contacto directo con Chaumer y le consulta cuando algo se traba.
 
 ---
 
-## Vocabulario mínimo
+## Vocabulario
 
-**corrida / impulso** · **retroceso** · **zona** (soporte o resistencia) · **rompimiento** (pasar 1 tick del borde; **la mecha basta, el cierre da igual**) · **consecución** (la vela que confirma el rompimiento pasando del extremo de la vela que rompió) · **traspaso** (rompimiento + consecución: recién ahí la zona quedó superada) · **zona apéndice** (nace de un rompimiento con cuerpo cuando el plazo se resuelve: o pasan 5 velas sin consecución, o antes el mercado arma una estructura completa al contrario) · **IRI** (entrada de continuación) · **Reingreso** (entrada tras una consecución fallida, y es **inmediata o no es**) · **punto de referencia** · **inversión de papel** (la zona superada cambia de soporte a resistencia o al revés) · **banda entre zonas** (una sola zona por banda y por jornada).
+**corrida / impulso** · **corrida fluida** *(la corrida deja su zona, el retroceso no se pasa, y la siguiente rompe — solo entonces se opera el rompimiento; R-40, 14/09/2026)* · **retroceso** · **zona** (soporte o resistencia) · **rompimiento** (pasar 1 tick del borde; **la mecha basta**) · **consecución** (pasar del extremo de la vela que rompió) · **traspaso** (rompimiento + consecución) · **zona apéndice** · **IRI** (continuación) · **Reingreso** (inmediato o no es) · **punto de referencia** *(el nivel de referencia de cualquier retroceso vivo; tapa el objetivo del reingreso y muere por CIERRE, no por mecha — unificado 14/09/2026, absorbió al antiguo "punto de control")* · **inversión de papel** · **banda entre zonas**.
 
-Definiciones completas y medibles en `01_Plan\GLOSARIO.md`.
+Definiciones medibles en `01_Plan\GLOSARIO.md`.
 
 ---
 
 ## Datos y motor
 
-- Datos: `05_Backtesting\datos\NQ 09-26.Last.txt` — formato `yyyyMMdd HHmmss;o;h;l;c;v`, **en UTC**.
-- **Horario:** el gráfico del operador es hora Colombia (UTC−5). Ventana operativa **08:31–10:30 Col = 13:31–15:30 UTC**.
-- ⚠️ **El plan opera solo MNQ desde el 06/09/2026** — un gráfico, sin NQ. Pero **los datos de backtesting son de NQ** y así se quedan, por decisión del operador. No intentes 'arreglar' esa diferencia. Ver `P-32`.
-- `05_Backtesting\lector.py` — el motor que reproduce el marcado de zonas y detecta los setups.
-- `05_Backtesting\dia.py` — genera la gráfica estándar de una jornada.
-
-Los dos son **auditoría**. Sirven para verificar el plan, no para operar.
+- `05_Backtesting\datos\NQ 09-26.Last.txt` — `yyyyMMdd HHmmss;o;h;l;c;v`, **en UTC**.
+- **Horario:** el gráfico es hora Colombia (UTC−5). Ventana **08:31–10:30 Col = 13:31–15:30 UTC**.
+- ⚠️ El plan opera **solo MNQ** desde el 06/09/2026. Los datos de backtesting son de **NQ** y así se quedan, por decisión del operador. No intentes arreglar esa diferencia.
+- `lector.py` reproduce el marcado · `dia.py` genera la gráfica de una jornada. **Los dos son auditoría.**

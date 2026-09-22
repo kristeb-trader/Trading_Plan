@@ -3,15 +3,15 @@
 > **Capturas reales del NT8 del operador.** Cada caso etiquetado con las reglas que lo explican.
 > **Imágenes:** `02_Assets\galeria\`
 
-**Abierta:** 2026-08-24 · **cerrada:** 2026-09-01 · **21 casos documentados** · velas de 1 minuto
-
-> ⚠️ Las capturas y las reconstrucciones son **anteriores al 06/09/2026**, cuando el plan analizaba en NQ y ejecutaba en MNQ. **Los puntos son los mismos en los dos instrumentos**; lo que cambia es el valor del punto. No se rehacen, por decisión del operador — ver `P-32`.
+**Abierta:** 2026-08-24 · **24 casos documentados** · gráficos NQ y MNQ 09-26, 1 minuto
+>
+> 🔴 **`G-22` en adelante son del TEST CIEGO** — marcados sin ver lo que hizo el operador, y contrastados después. Son los únicos casos que no se construyeron mirando la respuesta. Gráficos en `05_Backtesting\test_ciego\Back_claude\`.
 
 ---
 
 ## Cómo leer los importes de estas capturas
 
-⚠️ *Estas capturas son anteriores al 06/09/2026, cuando el plan analizaba en NQ y ejecutaba en MNQ. Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto); el operador ejecutaba —y sigue ejecutando— en **MNQ** ($2 por punto). **Los puntos son los mismos en los dos instrumentos**, así que las cifras de la columna «Puntos» siguen siendo válidas tal cual contra `STOP_MAX`.* Para comparar contra `STOP_MAX` = **80 puntos**, hay que convertir:
+Las medidas están tomadas sobre el gráfico de **NQ** ($20 por punto). El operador ejecuta en **MNQ** ($2 por punto). Para comparar contra `STOP_MAX` = **80 puntos**, hay que convertir:
 
 `puntos = $NQ ÷ 20` · `riesgo real MNQ = puntos × $2`
 
@@ -310,7 +310,7 @@ Stop y target marcados a **43 puntos** cada uno — **1:1 correcto** (`R-32`) y 
 
 ## G-12 · 🔴 LA SESIÓN COMPLETA · 6 JULIO 2026 · un IRI rechazado y un Reingreso operado sobre la MISMA zona
 
-**Archivo:** `../05_Backtesting/L6_sesion_completa.png` · **Reglas:** `R-15`, `R-07`, `R-08`, `R-05`, `R-06`, `R-09`, `R-16`, `R-12`, `R-20`, `R-31`, `R-26`, `R-32`, `R-34`
+**Archivo:** `../02_Assets/galeria/L6_sesion_completa.png` · **Reglas:** `R-15`, `R-07`, `R-08`, `R-05`, `R-06`, `R-09`, `R-16`, `R-12`, `R-20`, `R-31`, `R-26`, `R-32`, `R-34`
 
 > **Segunda sesión reconstruida al tick desde datos exactos de NinjaTrader**, vela a vela con el operador. Es el caso que la galería no tenía: **dos setups sobre la misma zona en un intervalo de un minuto — uno se descarta, el otro se opera.**
 
@@ -482,6 +482,12 @@ La vela **8:37** se queda a **cuatro ticks** de llenar (mínimo 29.911,25). El r
 
 ## G-19 · 🟢 SESIÓN COMPLETA · 16 JULIO 2026 · segunda ganadora, con el stop al 94 % del máximo
 
+> 🔴 **RETIRADA EL 14/09/2026.** Esta operación **ya no existe** con las reglas de hoy. La apertura sube 71,75 puntos y el retroceso baja **132,25**: el retroceso se pasa, así que el soporte que deja no se opera en rompimiento directo. El corto de 8:40 era exactamente eso.
+>
+> Palabras del operador al revisarla: *"efectivamente está mal esa entrada, porque no fue un IRI bajista fluido; primero empezó alcista, y luego fue bajista. Esa primera entrada fue arriesgada, se debe esperar que genere otro IRI bajista."*
+>
+> **El caso se conserva entero** porque de él salieron dos precisiones que siguen en pie: que el tope de riesgo es una línea dura sin margen, y que después del llenado se aguanta. Lo que ya no vale es la entrada. **16 de julio pasa a NO OPERA.**
+
 **Operación:** IRI corto · entrada **29.395,50** · stop **29.471,00** · objetivo 29.320,00 · riesgo **75,50 pts** → **TARGET** en la vela de las 8:45 · **+75,50 pts = +151,00 USD**
 
 **Cómo se formó.** La apertura es alcista y se agota en la propia vela de las **8:31**, que sube a **29.532,00** → **resistencia 29.504,75 – 29.532,00**. Desde ahí el precio cae sin pausa hasta **29.399,75** (vela 8:36). Las velas 8:37 y 8:38 rebotan y confirman el retroceso → **soporte 29.399,75 – 29.417,25** sobre la vela 8:36. Ese rebote llega a **29.471,00**, que es lo que fija el stop.
@@ -556,21 +562,126 @@ El soporte de la vela **8:37** (29.126,25 – 29.130,25) lo **rompe la vela 8:40
 
 ---
 
-## Resumen del backtesting día por día — al 01/09/2026 (11 días)
+## G-22 · 🟢 TEST CIEGO · JUEVES 10 SEPTIEMBRE 2026 · la entrada que llega antes no siempre es la buena
+
+**Operación:** IRI largo · entrada **29.145,75** a las 8:40 · stop **29.105,25** · objetivo 29.186,25 · riesgo **40,50 pts** → **TARGET** en la vela siguiente · **+40,50 pts = +81,00 USD**
+**Gráfico:** `05_Backtesting\test_ciego\Back_claude\2026-09-10.png` · **Noticias:** precios al productor 7:30, fuera de la ventana · **Sin Fed**
+
+**Primera jornada del test ciego, y la que trajo dos reglas.**
+
+El día abre alcista: la 8:31 va de 29.089,50 a 29.118,25. La corrida muere en la 8:33 y deja la **resistencia de 8:32 en 29.118,00 – 29.123,50**. La 8:36 la rompe y la 8:37 da la continuación: el plan, tal como estaba escrito, mandaba entrar en **29.133,00** con stop en **29.057,75** — riesgo **75,25 pts**, el 94 % del tope.
+
+**El operador no la tomó.** Su motivo, traducido a número: la corrida de 8:31 a 8:32 sube **49,50 puntos** y el retroceso que la sigue baja **65,75**. El retroceso es mayor que la corrida — o dicho igual, se hunde por debajo de donde arrancó todo. No hay impulso–retroceso–impulso: hay impulso y vuelta atrás. **Nace `R-40`.**
+
+La estructura siguiente sí cumple: corrida de 8:34 a 8:37 de **79,75 pts** contra un retroceso de **32,25**. Su resistencia (29.125,75 – 29.137,50) rompe en la 8:39, la orden se llena en la 8:40 y el objetivo llega en la 8:41.
+
+| | Entrada de 8:36 | Entrada de 8:39 |
+|---|---|---|
+| Corrida que crea la zona | 49,50 pts | 79,75 pts |
+| Retroceso siguiente | **65,75 pts** | 32,25 pts |
+| Riesgo | 75,25 (94 % del tope) | **40,50** |
+| Resultado | +75,25 a las 9:25 | **+40,50 en una vela** |
+
+> 🔑 **La entrada cronológicamente primera no es la buena si su estructura está deshecha.** `R-23` sigue mandando —se toma el primer setup válido— pero `R-40` decide antes cuál es válido.
+
+**Segunda cosa del día:** con el umbral de volumen en 6.000 el premercado dejaba cuatro soportes de la reacción al dato de las 7:30, y uno tapaba la resistencia de 8:32 — el marcado de toda la mañana se desviaba. La vela más fuerte de la noche hizo 7.799 contratos. **El umbral pasa a ser parámetro ajustable** y sube a **8.000**. Ver `P-37`.
+
+**Validación:** *"la gráfica está perfecta, esa es la entrada del día"* (operador, 14/09/2026).
+
+---
+
+## G-23 · ⚪ TEST CIEGO · VIERNES 11 SEPTIEMBRE 2026 · el día que se decidió en la primera vela
+
+**Resultado: NO OPERA.** Coinciden operador y marcado.
+**Gráfico:** `05_Backtesting\test_ciego\Back_claude\2026-09-11.png` · **Noticias:** inflación al consumidor 7:30, fuera de la ventana · **Sin Fed**
+
+**Cero zonas marcadas en toda la sesión. 26 candidatas, 26 descartadas.**
+
+El mercado abre metido dentro del tramo que deja el premercado: suelo en **29.317,00**, techo en **29.443,00**, medio en **29.380,00**. El primer movimiento de la jornada —la bajada de la apertura hasta 29.347,25 en la vela de 8:32— arranca por encima del medio y termina por debajo. Lo cruza, y con eso ese tramo queda cerrado para el resto del día. Las dos horas siguientes el precio se quedó dando vueltas dentro.
+
+> 🔑 **Es `G-17` llevado al extremo.** El 14/07 la banda cerrada dejó media hora sin zonas; aquí dejó **la jornada entera**.
+
+**El caso que trajo la regla.** A las 9:01 había un reingreso corto sobre la zona de premercado de las 8:29: entrada 29.440,25, stop 29.475,00, riesgo 34,75, objetivo 29.405,50 — que habría llegado a las 9:05. **+34,75 pts que no se tomaron.**
+
+El motivo del operador: *"había un punto de control en contra"*. El mínimo de la vela de **8:58**, en **29.423,00**, queda entre la entrada y el objetivo. **Nace `R-41`**, y ese mismo día se unifica con el punto de referencia que ya existía desde agosto: son la misma idea dicha dos veces.
+
+> 🔴 **El punto de referencia es lo único del plan que se rompe por CIERRE**, no por mecha. Si se olvida, el filtro deja de funcionar: casi todos acaban pinchados por una mecha en algún momento.
+
+**Lo que este día dejó abierto:** `P-34` — el motor no anota los rompimientos de las zonas de premercado, así que **no puede ver** ese reingreso. El de las 9:01 se encontró a mano.
+
+---
+
+## G-24 · ⚪ TEST CIEGO · LUNES 14 SEPTIEMBRE 2026 · el día que reescribió la regla
+
+**Resultado: NO OPERA.** El operador tampoco operó.
+**Gráfico:** `05_Backtesting\\test_ciego\\Back_claude\\2026-09-14.png` · **Sin noticias rojas · Sin Fed** · Premercado sin una sola zona: la vela más fuerte de la noche hizo 4.407 contratos.
+
+**El día se resuelve en las cuatro primeras velas.** La apertura baja de 28.924,00 a 28.880,50 — **43,50 puntos**. Y el retroceso sube hasta 28.933,75 — **53,25**. El retroceso se pasa.
+
+Con la regla como estaba escrita esa mañana, el marcado daba un **largo a las 8:45 en 28.945,00, riesgo 64,50, objetivo alcanzado a las 8:49: +64,50 pts.** El operador dijo que no.
+
+### La regla estaba mal emparejada, y este día lo destapó
+
+La primera redacción de `R-40` comparaba cada corrida **con el movimiento que venía después**. Para la resistencia de 8:34 eso daba 53,25 contra 53,25 — empate exacto, y la entrada pasaba el filtro por un pelo.
+
+La lectura buena compara el retroceso **con la corrida que viene justo antes de él**: 53,25 contra 43,50. Se pasa, y la resistencia que deja no se opera.
+
+> 🔑 **Un empate exacto al tick fue lo que dejó ver el error.** Si el retroceso hubiera medido cualquier otra cosa, el fallo de emparejamiento habría seguido escondido.
+
+### Lo que arrastró
+
+Corregir el emparejamiento **cambió el marcado de cinco de las once sesiones de julio**, incluida una que ya estaba validada — el 16 de julio, `G-19`. El operador la revisó con el gráfico delante y la dio por mal marcada. Julio pasa de **−91,00 pts en 9 operaciones** a **−77,75 en 5**.
+
+De aquí sale además el término **corrida fluida**, que es el que gobierna ahora todas las continuaciones.
+
+---
+
+## Resumen del backtesting día por día — remarcado el 14/09/2026 (11 días)
+
+> 🔴 **Esta tabla se rehízo el 14/09/2026** al reescribirse la regla de la corrida fluida. Cuatro días pierden su operación y uno la cambia. Lo que decía antes está justo debajo, para no perder el rastro.
 
 | Día | Setup | Resultado | Puntos |
 |---|---|---|---|
 | **6 jul** | Reingreso corto 8:48 | STOP 8:51 | **−58,75** |
-| **7 jul** | IRI corto 9:43 | STOP 9:48 | **−56,50** |
+| **7 jul** | *(retirado el 14/09 — corrida no fluida)* | NO OPERA | — |
 | **8 jul** | — FOMC | NO OPERA | — |
-| **9 jul** | IRI largo 8:46 | STOP 8:50 | **−59,75** |
+| **9 jul** | *(retirado el 14/09 — corrida no fluida)* | NO OPERA | — |
 | **10 jul** | IRI largo 8:38 | STOP 8:40 | **−53,50** |
 | **13 jul** | Reingreso corto 10:04 | **TARGET 10:09** | **+28,50** |
 | **14 jul** | dos cortos descartados por `STOP_MAX` | NO OPERA | — |
 | **15 jul** | **IRI corto 8:38** | **TARGET 8:39** | **+56,25** |
-| **16 jul** | **IRI corto 8:40** | **TARGET 8:45** | **+75,50** |
-| **17 jul** | IRI corto 8:44 | **STOP 8:49** | **−77,25** |
-| **20 jul** | **IRI corto 8:58** (2 órdenes canceladas antes) | **TARGET 9:02** | **+54,50** |
-| | | **Total** | **−91,00 pts** |
+| **16 jul** | *(el corto de 8:40 se retira el 14/09 — la corrida no era fluida)* | NO OPERA | — |
+| **17 jul** | IRI largo 9:04 *(el corto de 8:44 se retira el 14/09)* | STOP 9:05 | **−50,25** |
+| **20 jul** | *(el corto de 8:58 se retira el 14/09 — corrida no fluida)* | NO OPERA | — |
+| | | **Total** | **−77,75 pts en 5 operaciones** |
+
+## Test ciego — día por día
+
+| Día | Setup | Resultado | Puntos |
+|---|---|---|---|
+| **10 sep** | **IRI largo 8:40** | **TARGET 8:41** | **+40,50** |
+| **11 sep** | ninguna zona marcada en toda la sesión | NO OPERA | — |
+| **14 sep** | la apertura baja 43,50 y el retroceso sube 53,25 — se pasa | NO OPERA | — |
+
+> 🔵 **Estos días sí cuentan distinto.** Los once de julio se marcaron con el operador delante, corrigiendo vela a vela. Éstos se marcaron **a ciegas** y se contrastaron después. Siguen sin tener valor estadístico —son dos— pero son los primeros que prueban el plan en vez de construirlo.
+
+### Lo que decía esta tabla antes del 14/09/2026
+
+| Día | Setup | Resultado | Puntos |
+|---|---|---|---|
+| 6 jul | Reingreso corto 8:48 | STOP 8:51 | −58,75 |
+| 7 jul | IRI corto 9:43 | STOP 9:48 | −56,50 |
+| 8 jul | — FOMC | NO OPERA | — |
+| 9 jul | IRI largo 8:46 | STOP 8:50 | −59,75 |
+| 10 jul | IRI largo 8:38 | STOP 8:40 | −53,50 |
+| 13 jul | Reingreso corto 10:04 | TARGET 10:09 | +28,50 |
+| 14 jul | dos cortos descartados por `STOP_MAX` | NO OPERA | — |
+| 15 jul | IRI corto 8:38 | TARGET 8:39 | +56,25 |
+| 16 jul | IRI corto 8:40 | TARGET 8:45 | +75,50 |
+| 17 jul | IRI corto 8:44 | STOP 8:49 | −77,25 |
+| 20 jul | IRI corto 8:58 | TARGET 9:02 | +54,50 |
+| | | **Total** | **−91,00 pts en 9 operaciones** |
+
+> 🔵 **Por qué se conserva.** Esas once sesiones se marcaron **con el operador delante, corrigiendo vela a vela**, y de ellas salieron la mitad de las reglas del plan. El marcado cambió porque cambió una regla, no porque aquel trabajo estuviera mal hecho. La cifra buena hoy es **−77,75 en 5**; ésta queda como historia.
 
 > ⚠️ **Sin valor estadístico.** Cinco operaciones no dicen nada, las reglas cambiaron varias veces durante la propia revisión, y **falta toda la capa de contextualización** — que es justamente la que hace no operar varios de estos días.

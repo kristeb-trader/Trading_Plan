@@ -3,7 +3,7 @@
 > **Un solo sitio para los números que pueden cambiar.**
 > Las reglas citan el **nombre** del parámetro, no el valor. Se cambia aquí y se propaga a todo el plan.
 
-**Actualizado:** 2026-09-06
+**Actualizado:** 2026-09-14 (b)
 
 ---
 
@@ -32,9 +32,13 @@
 
 ## Volumen y sesión
 
+> 🔵 **`UMBRAL_VOL` es el único parámetro que el operador cambia a mano durante la vida del plan.** El resto se fijaron una vez. Éste depende de la volatilidad del momento, y por eso vive aquí y no dentro de la regla. **`P-37` cerrado el 14/09/2026 sin criterio medible, a propósito:** *"dejemos que quede paramétrico"*. Lo fija el operador, igual que `R-37` es criterio libre. 🔴 **La condición que lo hace seguro: el umbral NUNCA se cambia con la sesión empezada**, y cada cambio se anota con su fecha en la fila de abajo. Sin eso, el umbral se podría mover *después* de ver el día.
+>
+> El cambio del **14/09/2026** salió del test ciego: el 10/09 la vela más fuerte del premercado hizo **7.799** contratos. Con el umbral en 6.000 nacían cuatro soportes que desviaban todo el marcado de la mañana; con 8.000 el premercado no deja ninguna zona y el día se lee limpio.
+
 | Parámetro | Valor actual | Dónde actúa |
 |---|---|---|
-| **`UMBRAL_VOL`** | > 6.000 contratos **en MNQ** | `R-15` — solo premercado. *El umbral de NQ (>2.000) se retiró el 06/09/2026 junto con el NQ. La equivalencia entre ambos **no está verificada** — ver `P-32`* |
+| **`UMBRAL_VOL`** | **> 8.000 contratos en MNQ** *(desde 14/09/2026)* | `R-15` — solo premercado. **Parámetro ajustable, no un número fijo del método.** Historial: >2.000 en NQ hasta el 06/09/2026 · >6.000 en MNQ del 06/09 al 14/09/2026 · **>8.000 en MNQ desde el 14/09/2026**. Lo fija el operador, sin criterio medible y a propósito — ver `P-37`. **No se cambia con la sesión empezada.** La equivalencia entre umbrales **no está verificada** — ver `P-32` |
 | **`PREMERCADO_INICIO`** | 19:00 hora Colombia (apertura de Tokio) | `R-15` |
 | **`VENTANA_OPERATIVA`** | 09:30–11:30 ET | `R-02` |
 | **`CANCELACION_FINAL`** | 11:29 ET | `R-29` |

@@ -3,7 +3,7 @@
 > **Se ejecuta de arriba abajo. No se decide nada que no esté aquí.**
 > Cada línea cita su regla. Si una respuesta es **NO** donde dice parar, **se para** — no se evalúa, no se matiza.
 
-**Versión del plan:** 3.1 · 2026-09-06 · 38 reglas
+**Versión del plan:** 3.7 · 2026-09-14 · **40 reglas**
 
 ---
 
@@ -26,7 +26,8 @@
 |---|---|---|
 | ☐ | Gráfico abierto: **MNQ, 1 minuto**, único indicador **Volume Up Down** | `R-03`, `R-01` |
 | ☐ | Escanear desde **19:00 Col** (apertura de Tokio) hasta la apertura americana | `R-15` |
-| ☐ | Toda vela con **más de 6.000 contratos en MNQ** → marcar zona. **Alcista → resistencia · Bajista → soporte** | `R-15` |
+| ☐ | Toda vela que **supere el umbral de volumen** → marcar zona. **Alcista → resistencia · Bajista → soporte** | `R-15` |
+| ☐ | ⚠️ **Mirar el umbral vigente en `PARAMETROS.md` antes de empezar.** Hoy son **más de 8.000 contratos en MNQ** (desde el 14/09/2026). Es un parámetro ajustable, y **no se cambia con la sesión empezada** | `R-15`, `P-37` |
 | ☐ | Se marcan **todas** las que superen el umbral, no solo los extremos | `R-15`, `D-09` |
 | ☐ | Límites de cada zona: **del borde del cuerpo a la punta de la mecha** | `R-09` |
 | ☐ | Si una zona candidata **toca** otra existente → **estirar la existente**, no crear una nueva | `R-13` |
@@ -44,6 +45,7 @@
 |---|---|---|
 | ☐ | **Primer setup válido.** No se compara con posibles setups posteriores ni se espera uno mejor | `R-23` |
 | ☐ | ¿Es **IRI** o **Reingreso**? | `R-25` / `R-26` |
+| ☐ | *(solo IRI)* **¿La corrida es FLUIDA?** Tres cosas seguidas: la corrida dejó su zona · **el retroceso no se pasó** (mide menos que su corrida) · y **ésta es la corrida siguiente, que la rompe**. Cada corrida se empareja con el retroceso que viene justo después de ella | `R-40` |
 
 ### Medir · anclar la regla en el nivel de entrada
 
@@ -53,13 +55,14 @@
 | ☐ | **Reingreso** | extremo de la **corrida fallida** | `R-32` |
 | ☐ | **Target** = misma distancia, al otro lado. **1:1** | | `R-32` |
 
-### Los cuatro filtros · basta que falle uno
+### Los filtros · basta que falle uno
 
 | ☐ | Filtro | Regla | Si falla |
 |---|---|---|---|
 | ☐ | Stop ≤ **80 puntos** (`STOP_MAX`) | `R-31` | **NO SE OPERA** |
 | ☐ | Target 1:1 **libre de zonas vigentes** | `R-32`, `R-21` | **NO SE OPERA** |
-| ☐ | *(solo Reingreso)* Target dentro del **punto de referencia** | `R-26` | **NO SE OPERA** |
+| ☐ | *(solo Reingreso)* Target **sin pasar del punto de referencia** vivo más cercano que quede entre la entrada y el objetivo — el nivel de referencia de cualquier retroceso. Muere solo cuando **una vela CIERRA** más allá; la mecha no lo rompe | `R-41`, `R-26` | **NO SE OPERA** |
+| ☐ | *(solo IRI)* ¿La corrida es fluida? | `R-40` | **NO SE OPERA ESE ROMPIMIENTO.** La zona sigue viva. Se espera a otro IRI que deje una zona nueva **entera** más allá de ésta — por encima para largo, por debajo para corto |
 | ☐ | ¿Es día de FOMC y el setup es un IRI? | `R-36` | **NO SE OPERA** |
 
 > 🔴 **El target nunca se acorta para que quepa.** No existe media entrada ni ratio reducido.
