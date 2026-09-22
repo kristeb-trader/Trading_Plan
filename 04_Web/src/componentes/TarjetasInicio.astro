@@ -34,7 +34,11 @@ const PUERTAS = [
     sub: 'Cada decisión del método escrita con sus condiciones medibles. Sin adjetivos: ticks, puntos, velas y horas exactas.',
     n: P.reglas().length,
     etiqueta: 'reglas',
-    pie: ['Perímetro', 'Estructura', 'Zonas', 'Riesgo'],
+    // Los siete grupos del plan, en su orden y con su primera palabra
+    // («Setup y entrada» -> «Setup»). Salen de reglas.json: si un grupo
+    // cambia de nombre o aparece otro, la portada lo sigue sola. Tarea 8 de
+    // PENDIENTE_PORTAL.md; antes eran cuatro escritos a mano.
+    pie: P.categorias().map((c) => c.nombre.split(/\s+/)[0].replace(/[,.;:]+$/, '')),
   },
   {
     href: '/galeria',
