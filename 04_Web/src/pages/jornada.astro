@@ -7,8 +7,12 @@
  * de Nueva York y escribirla fija seria un error a fecha conocida.
  */
 import Modulo from '../componentes/Modulo.astro';
+import * as P from '../lib/parsers.mjs';
 import Refs from '../componentes/Refs.astro';
 
+
+// La ventana sale de VENTANA_OPERATIVA, pasada a hora Colombia por el calendario.
+const ventana = P.ventanaOperativa();
 
 const SECCIONES = [
   { id: 'ventana', t: 'Ventana Operativa' },
@@ -22,7 +26,7 @@ const SECCIONES = [
   <section class="ap" id="ventana">
     <h2>Ventana Operativa <Refs cods="R-02" /></h2>
     <p>
-      Se opera durante las <strong> primeras 2 horas del
+      Se opera durante las <strong> primeras {ventana.duracion} del
       mercado americano</strong>. Fuera de esa ventana no se coloca ninguna
       orden, pase lo que pase en el gráfico.
     </p>
@@ -36,11 +40,13 @@ const SECCIONES = [
       <dt>Referencia</dt>
       <dd><strong>La apertura americana</strong>, no el número del reloj</dd>
       <dt>Duración</dt>
-      <dd><strong>120 minutos</strong> exactos</dd>
+      <dd><strong>{ventana.minutos} minutos</strong> exactos</dd>
+      <dt>En el plan</dt>
+      <dd><span class="cifra-en">{ventana.plan}</span>, hora de Nueva York</dd>
       <dt>En pantalla, verano de Nueva York</dt>
-      <dd><span class="cifra-en">08:30 – 10:30</span> hora Colombia</dd>
+      <dd><span class="cifra-en">{ventana.verano}</span> hora Colombia</dd>
       <dt>En pantalla, invierno de Nueva York</dt>
-      <dd><span class="cifra-en">09:30 – 11:30</span> hora Colombia</dd>
+      <dd><span class="cifra-en">{ventana.invierno}</span> hora Colombia</dd>
     </dl>
 
     <div class="duro">

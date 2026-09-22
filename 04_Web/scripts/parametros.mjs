@@ -45,7 +45,7 @@ function fuentes(dir) {
 const existen = new Set(parametros().keys());
 
 // `P.parametro('X')` y el atajo de las paginas `v('X')`.
-const PIDE = /\b(?:parametro|v)\(\s*'([A-Z0-9_]+)'/g;
+const PIDE = /\b(?:parametro|detalleParametro|equivalencias|v)\(\s*'([A-Z0-9_]+)'/g;
 const RESERVA = [
   [/\bv\(\s*'[A-Z0-9_]+'\s*,/, "v('X', reserva)"],
   [/\?\.valor\s*\?\?/, '?.valor ?? reserva'],

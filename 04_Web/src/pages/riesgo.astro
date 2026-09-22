@@ -16,6 +16,9 @@ import Refs from '../componentes/Refs.astro';
 
 const v = (n: string) => P.parametro(n);
 
+// La cuenta objetivo y su porcentaje: bloque «Consecuencias de riesgo» del plan.
+const riesgo = P.consecuenciasRiesgo();
+
 const SECCIONES = [
   { id: 'cuanto', t: 'Cuánto se arriesga' },
   { id: 'cuantas', t: 'Cuántas veces' },
@@ -33,11 +36,11 @@ const SECCIONES = [
 
     <dl class="datos">
       <dt>Tope de stop</dt>
-      <dd><strong>{v('STOP_MAX')}</strong> = 320 ticks = <span class="cifra-en">$160</span> en MNQ</dd>
+      <dd><strong>{v('STOP_MAX')}</strong> = {P.equivalencias('STOP_MAX').join(' = ')}</dd>
       <dt>Objetivo</dt>
       <dd>La misma distancia, al otro lado. Relación {v('RATIO_TARGET')}</dd>
-      <dt>Sobre la cuenta objetivo de $3.000</dt>
-      <dd><strong>5,3 %</strong> por operación</dd>
+      <dt>Sobre la cuenta objetivo de {riesgo.cuenta}</dt>
+      <dd><strong>{riesgo.porcentaje}</strong> por operación</dd>
     </dl>
 
     <figure class="gr">
@@ -95,13 +98,6 @@ const SECCIONES = [
       </p>
       <p>El tamaño solo se puede revisar una vez al año.</p>
     </div>
-
-    <p>
-      Esto tiene una consecuencia aritmética que conviene tener presente: con el
-      tamaño fijo y el tope de riesgo fijo en dólares,
-      <strong>el riesgo porcentual crece a medida que la cuenta cae</strong>. Los
-      mismos $160 son el 5 % de $3.000 y el 11 % de $1.400.
-    </p>
   </section>
 
 </Modulo>

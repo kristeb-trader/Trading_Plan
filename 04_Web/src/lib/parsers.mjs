@@ -425,9 +425,18 @@ export function parametros() {
     const crudo = limpiar(celdas[1]);
     const anot = crudo.match(/\s*\*\(([^)]*)\)\*\s*$/);
 
+    // Y una explicacion tras la raya —«5 velas — es un TOPE, no una espera
+    // obligatoria»— tampoco: metida en una frase, saldria «pasan 5 velas — es
+    // un TOPE… desde la siguiente». El valor es lo de antes de la raya.
+    let valor = anot ? crudo.slice(0, anot.index).trim() : crudo;
+    const raya = valor.indexOf(' — ');
+    const glosa = raya >= 0 ? valor.slice(raya + 3).trim() : null;
+    if (raya >= 0) valor = valor.slice(0, raya).trim();
+
     mapa.set(nombre[1], {
       nombre: nombre[1],
-      valor: anot ? crudo.slice(0, anot.index).trim() : crudo,
+      valor,
+      glosa,
       anotacion: anot ? anot[1] : null,
       detalle,
       resto: detalle.map((d) => d.valor), // compatibilidad con el buscador
@@ -466,6 +475,72 @@ export function parametro(nombre) {
     throw new Error('El parametro ' + nombre + ' existe en PARAMETROS.md pero no tiene valor.');
   }
   return p.valor;
+}
+
+/** Una columna concreta de la fila de un parametro. Falla si no existe. */
+export function detalleParametro(nombre, etiqueta) {
+  parametro(nombre);
+  const d = _parametros.get(nombre).detalle.find((x) => x.etiqueta === etiqueta);
+  if (!d) {
+    throw new Error('El parametro ' + nombre + ' no tiene columna «' + etiqueta + '» en PARAMETROS.md.');
+  }
+  return d.valor;
+}
+
+/** Las equivalencias que el plan da de un parametro: «320 ticks · $160 en MNQ». */
+export function equivalencias(nombre) {
+  return detalleParametro(nombre, 'Equivalencias').split(/\s*·\s*/);
+}
+
+/**
+ * La ventana operativa, en las dos horas de pantalla del operador.
+ *
+ * El plan la da en hora de Nueva York (VENTANA_OPERATIVA, «09:30–11:30 ET»)
+ * y el grafico del operador esta en hora Colombia. La conversion no es un
+ * criterio del metodo, es el calendario: Colombia esta en UTC−5 todo el ano;
+ * Nueva York, en UTC−4 en verano (una hora por delante) y en UTC−5 en
+ * invierno (la misma hora). Si el formato del plan cambia, la compilacion se
+ * cae aqui en vez de pintar una hora mal convertida.
+ */
+export function ventanaOperativa() {
+  const plan = parametro('VENTANA_OPERATIVA');
+  const m = plan.match(/^(\d{1,2}):(\d{2})\s*[–-]\s*(\d{1,2}):(\d{2})\s*ET$/);
+  if (!m) {
+    throw new Error('VENTANA_OPERATIVA no tiene la forma «HH:MM–HH:MM ET»: ' + plan);
+  }
+  const ini = Number(m[1]) * 60 + Number(m[2]);
+  const fin = Number(m[3]) * 60 + Number(m[4]);
+  const hhmm = (min) => String(Math.floor(min / 60)).padStart(2, '0') + ':' + String(min % 60).padStart(2, '0');
+  const minutos = fin - ini;
+  return {
+    plan,
+    minutos,
+    duracion: minutos % 60 === 0 ? (minutos / 60) + ' horas' : minutos + ' minutos',
+    verano: hhmm(ini - 60) + ' – ' + hhmm(fin - 60),
+    invierno: hhmm(ini) + ' – ' + hhmm(fin),
+  };
+}
+
+/**
+ * La cuenta objetivo y lo que arriesga cada operacion sobre ella: el bloque
+ * «Consecuencias de riesgo» de PARAMETROS.md. No son parametros con nombre,
+ * pero son numeros del plan. Falla si el bloque cambia de forma.
+ */
+export function consecuenciasRiesgo() {
+  const bloque = documento('PARAMETROS.md').split(/^## /m)
+    .find((b) => /^Consecuencias de riesgo/i.test(b));
+  if (!bloque) throw new Error('PARAMETROS.md ya no tiene el bloque «Consecuencias de riesgo».');
+  const cuenta = bloque.match(/cuenta objetivo de \*\*([^*]+)\*\*/i);
+  const filas = new Map();
+  for (const linea of bloque.split(/\r?\n/)) {
+    const c = linea.split('|').slice(1, -1).map((x) => x.replace(/\*\*/g, '').trim());
+    if (c.length === 2 && c[0] && !/^-+$/.test(c[0])) filas.set(c[0], c[1]);
+  }
+  const porcentaje = filas.get('Porcentaje del capital');
+  if (!cuenta || !porcentaje) {
+    throw new Error('El bloque «Consecuencias de riesgo» ya no da la cuenta objetivo o el porcentaje.');
+  }
+  return { cuenta: cuenta[1], porcentaje };
 }
 
 // ─────────────────────────────────────────────────────── diagramas

@@ -7,8 +7,11 @@
  * misma estructura, para que la diferencia se vea sola.
  */
 import Modulo from '../componentes/Modulo.astro';
+import * as P from '../lib/parsers.mjs';
 import Refs from '../componentes/Refs.astro';
 
+
+const v = (n: string) => P.parametro(n);
 
 const SECCIONES = [
   { id: 'dos', t: 'Solo hay dos' },
@@ -97,9 +100,9 @@ const SECCIONES = [
     <h3>Reglas de tiempo e invalidación</h3>
     <dl class="datos">
       <dt>Plazo para la consecución (Regla R-14)</dt>
-      <dd>Hay un tope máximo de <strong>5 velas </strong>, contadas a partir de la vela siguiente a la que rompió la zona, para que aparezca la vela de confirmación.</dd>
+      <dd>Hay un tope máximo de <strong>{v('PLAZO_CONSECUCION')}</strong>, contadas a partir de la vela siguiente a la que rompió la zona, para que aparezca la vela de confirmación.</dd>
       <dt>Nota importante</dt>
-      <dd>Las <strong>5 velas</strong> son un límite máximo, no una espera obligatoria. Lo normal es que la consecución ocurra en la primera o segunda vela inmediatamente posterior al rompimiento.</dd>
+      <dd>Las <strong>{v('PLAZO_CONSECUCION')}</strong> son un límite máximo, no una espera obligatoria. Lo normal es que la consecución ocurra en la primera o segunda vela inmediatamente posterior al rompimiento.</dd>
       <dt>Si no llega a tiempo</dt>
       <dd>La entrada queda completamente invalidada. La orden o idea se descarta. La zona deja de funcionar para este setup y sigue su propio camino técnico.</dd>
     </dl>
@@ -215,7 +218,7 @@ const SECCIONES = [
       <dt>Dirección</dt>
       <dd>Contraria a la del rompimiento que falló</dd>
       <dt>Plazo para que aparezca</dt>
-      <dd><strong>Ninguno.</strong> El límite de 5 velas no aplica aquí</dd>
+      <dd><strong>Ninguno.</strong> El límite de {v('PLAZO_CONSECUCION')} no aplica aquí</dd>
       <dt>Dónde va el stop</dt>
       <dd>En el extremo de la <strong>corrida fallida</strong>, la que rompió y no continuó</dd>
       <dt>Filtro propio</dt>
@@ -284,7 +287,7 @@ const SECCIONES = [
           </tr>
           <tr>
             <th>Plazo</th>
-            <td>5 velas para la consecución</td>
+            <td>{v('PLAZO_CONSECUCION')} para la consecución</td>
             <td>Sin plazo para aparecer; inmediato para entrar</td>
           </tr>
           <tr>
