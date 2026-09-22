@@ -7,11 +7,8 @@
  * de Nueva York y escribirla fija seria un error a fecha conocida.
  */
 import Modulo from '../componentes/Modulo.astro';
-import * as P from '../lib/parsers.mjs';
 import Refs from '../componentes/Refs.astro';
 
-const par = P.parametros();
-const v = (n, alt) => par.get(n)?.valor ?? alt;
 
 const SECCIONES = [
   { id: 'ventana', t: 'Ventana Operativa' },

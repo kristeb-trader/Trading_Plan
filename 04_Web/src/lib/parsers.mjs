@@ -438,6 +438,36 @@ export function parametros() {
 }
 
 
+/**
+ * El valor de UN parametro, para escribirlo en una pagina.
+ *
+ * Es la unica puerta: ninguna pagina lee PARAMETROS.md ni lleva un numero de
+ * reserva. Si el parametro no existe en el plan, o viene vacio, la
+ * compilacion SE CAE aqui, con el nombre y la pagina en el mensaje.
+ *
+ * Antes cada pagina hacia `par.get(n)?.valor ?? '80 puntos'`: si el nombre
+ * estaba mal escrito, se pintaba la reserva y nadie se enteraba. Asi paso con
+ * el umbral de volumen durante dias — la pagina pedia un parametro que no
+ * existia y ensenaba un numero viejo como si fuera el vigente. Que la pagina
+ * no compile es mas honesto que eso (tarea 2 de PENDIENTE_PORTAL.md).
+ *
+ * `scripts/parametros.mjs` hace la misma comprobacion sin compilar, y ademas
+ * vigila que nadie vuelva a escribir una reserva a mano.
+ */
+let _parametros = null;
+export function parametro(nombre) {
+  if (!_parametros) _parametros = parametros();
+  const p = _parametros.get(nombre);
+  if (!p) {
+    throw new Error('Se pide el parametro ' + nombre + ', que NO existe en PARAMETROS.md. '
+      + 'Existen: ' + [..._parametros.keys()].join(', '));
+  }
+  if (!p.valor || /^[—–-]+$/.test(p.valor)) {
+    throw new Error('El parametro ' + nombre + ' existe en PARAMETROS.md pero no tiene valor.');
+  }
+  return p.valor;
+}
+
 // ─────────────────────────────────────────────────────── diagramas
 /**
  * Los diagramas del plan vienen escritos en mermaid dentro del documento.

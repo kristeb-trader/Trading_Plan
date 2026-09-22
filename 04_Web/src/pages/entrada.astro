@@ -10,8 +10,7 @@ import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
 import Refs from '../componentes/Refs.astro';
 
-const par = P.parametros();
-const v = (n, alt) => par.get(n)?.valor ?? alt;
+const v = (n: string) => P.parametro(n);
 
 const SECCIONES = [
   { id: 'orden', t: 'Qué orden y dónde' },
@@ -83,7 +82,7 @@ const SECCIONES = [
 
     <dl class="datos">
       <dt>Relación</dt>
-      <dd><strong>{v('RATIO_TARGET', '1:1')}.</strong> El objetivo recorre exactamente lo mismo que el stop</dd>
+      <dd><strong>{v('RATIO_TARGET')}.</strong> El objetivo recorre exactamente lo mismo que el stop</dd>
       <dt>Stop de un IRI</dt>
       <dd>El punto más extremo alcanzado desde que nació la zona hasta la vela de rompimiento</dd>
       <dt>Stop de un Reingreso</dt>
@@ -110,7 +109,7 @@ const SECCIONES = [
     <div class="rejilla dos">
       <div class="tarj">
         <h3>¿El stop cabe?</h3>
-        <p>La distancia hasta el stop no puede pasar de <strong>{v('STOP_MAX', '80 puntos')}</strong>.</p>
+        <p>La distancia hasta el stop no puede pasar de <strong>{v('STOP_MAX')}</strong>.</p>
       </div>
       <div class="tarj">
         <h3>¿El camino está libre?</h3>

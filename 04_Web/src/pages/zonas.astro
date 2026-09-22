@@ -22,11 +22,8 @@
  *   - el PENDIENTE de como se entra sobre una zona apendice ya no se muestra
  */
 import Modulo from '../componentes/Modulo.astro';
-import * as P from '../lib/parsers.mjs';
 import Refs from '../componentes/Refs.astro';
 
-const par = P.parametros();
-const v = (n: string, alt: string) => par.get(n)?.valor ?? alt;
 
 const SECCIONES = [
   { id: 'movimiento', t: 'Corrida y retroceso' },

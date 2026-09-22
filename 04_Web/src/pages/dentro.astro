@@ -9,8 +9,7 @@ import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
 import Refs from '../componentes/Refs.astro';
 
-const par = P.parametros();
-const v = (n, alt) => par.get(n)?.valor ?? alt;
+const v = (n: string) => P.parametro(n);
 
 const SECCIONES = [
   { id: 'llenado', t: 'Al llenarse' },
@@ -40,7 +39,7 @@ const SECCIONES = [
 
     <p>
       El orden importa. Entre el llenado y este ajuste, la posición corre con el
-      valor por defecto de la ATM — <span class="cifra-en">{v('ATM_DEFECTO', '320 ticks')}</span>,
+      valor por defecto de la ATM — <span class="cifra-en">{v('ATM_DEFECTO')}</span>,
       que son 80 puntos. Ese valor es igual al tope de riesgo justo para que
       nunca sea más ajustado que el stop real.
     </p>

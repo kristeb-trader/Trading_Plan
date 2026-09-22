@@ -10,8 +10,7 @@ import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
 import Refs from '../componentes/Refs.astro';
 
-const par = P.parametros();
-const v = (n, alt) => par.get(n)?.valor ?? alt;
+const v = (n: string) => P.parametro(n);
 
 const SECCIONES = [
   { id: 'dia', t: 'No abrir el día' },
@@ -58,7 +57,7 @@ const SECCIONES = [
 
     <ol class="secuencia">
       <li>
-        <strong>El stop no pasa de {v('STOP_MAX', '80 puntos')}.</strong> Se mide
+        <strong>El stop no pasa de {v('STOP_MAX')}.</strong> Se mide
         desde la entrada hasta su referencia estructural. Si lo supera aunque sea
         por un tick, no se opera.
       </li>
@@ -139,7 +138,7 @@ const SECCIONES = [
     <div class="rejilla dos">
       <div class="tarj">
         <h3>Se agota el plazo</h3>
-        <p>Pasan {v('PLAZO_CONSECUCION', '5 velas')} desde el rompimiento sin que el precio llegue al nivel de la orden.</p>
+        <p>Pasan {v('PLAZO_CONSECUCION')} desde el rompimiento sin que el precio llegue al nivel de la orden.</p>
       </div>
       <div class="tarj">
         <h3>El precio vuelve al stop</h3>

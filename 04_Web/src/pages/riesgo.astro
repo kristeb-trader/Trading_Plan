@@ -10,8 +10,7 @@ import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
 import Refs from '../componentes/Refs.astro';
 
-const par = P.parametros();
-const v = (n, alt) => par.get(n)?.valor ?? alt;
+const v = (n: string) => P.parametro(n);
 
 const SECCIONES = [
   { id: 'cuanto', t: 'Cuánto se arriesga' },
@@ -39,9 +38,9 @@ const RACHAS = [
 
     <dl class="datos">
       <dt>Tope de stop</dt>
-      <dd><strong>{v('STOP_MAX', '80 puntos')}</strong> = 320 ticks = <span class="cifra-en">$160</span> en MNQ</dd>
+      <dd><strong>{v('STOP_MAX')}</strong> = 320 ticks = <span class="cifra-en">$160</span> en MNQ</dd>
       <dt>Objetivo</dt>
-      <dd>La misma distancia, al otro lado. Relación {v('RATIO_TARGET', '1:1')}</dd>
+      <dd>La misma distancia, al otro lado. Relación {v('RATIO_TARGET')}</dd>
       <dt>Sobre la cuenta objetivo de $3.000</dt>
       <dd><strong>5,3 %</strong> por operación</dd>
     </dl>
@@ -76,7 +75,7 @@ const RACHAS = [
 
     <dl class="datos">
       <dt>Operaciones por sesión</dt>
-      <dd><strong>{v('OPS_POR_SESION', '1')}, como máximo</strong></dd>
+      <dd><strong>{v('OPS_POR_SESION')}, como máximo</strong></dd>
       <dt>¿Y si la orden se cancela sin llenarse?</dt>
       <dd>No consume el cupo. Se puede esperar otro setup</dd>
       <dt>¿Cambia algo el resultado?</dt>
@@ -95,7 +94,7 @@ const RACHAS = [
 
     <div class="duro">
       <p>
-        <strong>Siempre {v('CONTRATOS', '1')} contrato de MNQ.</strong> No sube
+        <strong>Siempre {v('CONTRATOS')} contrato de MNQ.</strong> No sube
         porque la cuenta crezca. No baja tras una mala racha. No cambia por
         convicción.
       </p>

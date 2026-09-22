@@ -22,8 +22,7 @@ import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
 import Refs from '../componentes/Refs.astro';
 
-const par = P.parametros();
-const v = (n, alt) => par.get(n)?.valor ?? alt;
+const v = (n: string) => P.parametro(n);
 
 const SECCIONES = [
   { id: 'estado', t: 'Cómo estoy hoy' },
@@ -135,13 +134,13 @@ const SECCIONES = [
       <dt>Cuál</dt>
       <dd><strong>K1</strong></dd>
       <dt>Contratos</dt>
-      <dd><strong>{v('CONTRATOS', '1 MNQ')}</strong></dd>
+      <dd><strong>{v('CONTRATOS')}</strong></dd>
       <dt>Auto Breakeven</dt>
       <dd><strong>Apagado</strong></dd>
       <dt>Auto Trail</dt>
       <dd><strong>Apagado</strong></dd>
       <dt>Stop y objetivo por defecto</dt>
-      <dd><strong>{v('ATM_DEFECTO', '320 ticks')}</strong> = 80 puntos = $160</dd>
+      <dd><strong>{v('ATM_DEFECTO')}</strong> = 80 puntos = $160</dd>
     </dl>
 
     <div class="duro">
