@@ -14,9 +14,9 @@ El día paso a paso, desde la vela de las 08:31
 
 <!-- id: ventana -->
 
-### Las dos horas R-02
+### Ventana Operativa R-02
 
-Se opera durante los **120 minutos siguientes a la apertura del mercado americano**. Fuera de esa ventana no se coloca ninguna orden, pase lo que pase en el gráfico.
+Se opera durante las **primeras 2 horas del mercado americano**. Fuera de esa ventana no se coloca ninguna orden, pase lo que pase en el gráfico.
 
 > 🖼 **Gráfico.** Texto alternativo: Una jornada completa con la ventana operativa de dos horas marcada
 > Pie: Una jornada real. La franja marca las dos horas en las que se puede colocar una orden.
@@ -45,17 +45,7 @@ La primera vela después de la apertura — la de las 08:31 en horario de verano
 - **Las velas anteriores** — No sirven de referencia. La estructura del día empieza aquí
 - **¿Puede sostener una zona?** — Sí
 
-#### La vela que abarca a la anterior R-08
-
-Hay un caso que rompe la cuenta: una vela que hace a la vez máximo más alto y mínimo más bajo que la anterior, sin que haya un movimiento vivo. Esa vela **no declara dirección**: pasa a ser la nueva vela origen, y la dirección la da la siguiente.
-
-Si la siguiente vuelve a hacer lo mismo, se repite el mismo criterio, sin límite. Con un movimiento ya vivo esto no aplica: manda el movimiento.
-
----
-
-<!-- id: direccion -->
-
-### Por dónde empieza el día R-27
+#### Por dónde empieza el día R-27
 
 Que la primera vela declare una dirección no significa que haya que operar en ese sentido toda la mañana.
 
