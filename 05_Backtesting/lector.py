@@ -6,12 +6,20 @@ Vive en 05_Backtesting, fuera de 01_Plan.
 """
 TICK = 0.25
 STOP_MAX = 80.0
-UMBRAL_VOL = 2000
+
+# Umbral de volumen del premercado (PARAMETROS.md).
+# PARAMETRO AJUSTABLE desde el 14/09/2026 (R-15): no es un numero fijo del metodo.
+#   MNQ  ->  8000   <- valor del plan desde el 14/09/2026
+#   MNQ  ->  6000   <- valor del 06/09 al 14/09/2026
+#   NQ   ->  2000   <- solo para releer el archivo historico 'NQ 09-26.Last.txt'
+# Para cambiarlo desde fuera:  lector.UMBRAL_VOL = 2000
+# Pendiente P-37: el criterio de ajuste lo fija el operador (cerrado 14/09/2026).
+UMBRAL_VOL = 8000
 PLAZO = 5            # velas para la consecucion
 
 # Dias de FOMC: solo se operan Reingresos, nunca IRI.
 # Julio 2026 confirmado por el operador (26/08/2026). Agosto: PENDIENTE de confirmar.
-FOMC = {'20260708','20260729'}
+FOMC = {'20260708','20260729','20260916'}
 
 def cargar(path):
     V=[]
@@ -82,6 +90,36 @@ def bloqueada(Z, lo, hi, extremo, tipo):
     if tipo=='R': return (extremo > mid), mid, banda
     else:         return (extremo < mid), mid, banda
 
+def en_banda_usada(rangos, lo, hi):
+    """R-17/R-12: una banda entre dos zonas se resuelve con UNA sola zona por jornada.
+    Ya resuelta, no se dibuja NADA mas dentro — y eso incluye la ZONA APENDICE, que
+    hasta el 15/09/2026 se anadia directamente sin pasar por este filtro."""
+    if not rangos: return False
+    for (a, b, zb, za) in rangos:
+        if hi > a + 1e-9 and lo < b - 1e-9: return True
+    return False
+
+def banda_ocupada(Z, lo, hi):
+    """R-12/R-17, precisado 18/09/2026 por el operador.
+
+    Entre una resistencia y un soporte se marca UNA SOLA zona en toda la jornada.
+    Desde que esa banda tiene su zona queda cerrada, y NO se reabre porque los
+    bordes o la zona de dentro queden invalidos: una zona invalida deja de valer
+    como zona, pero NO deja de ocupar el sitio.
+
+    Se mira sobre TODAS las zonas, activas o invalidas — a diferencia de
+    bloqueada(), que solo mira las activas, y de rangos, que solo anota la banda
+    cuando se evalua una candidata dentro de ella. Ese era el hueco: la jornada
+    del 18/09/2026 marcaba la resistencia 29804.75-29805.75 de la vela 8:54
+    dentro de la banda que ya habia gastado la zona de premercado, invalida
+    desde las 8:50."""
+    arr = [z for z in Z if z.lo > hi + 1e-9]
+    aba = [z for z in Z if z.hi < lo - 1e-9]
+    if not arr or not aba: return False
+    za = min(arr, key=lambda z: z.lo)
+    zb = max(aba, key=lambda z: z.hi)
+    return any(z.hi > zb.hi + 1e-9 and z.lo < za.lo - 1e-9 for z in Z)
+
 def anadir(Z, lo, hi, tipo, i, origen, extremo, i_org=None, rangos=None):
     blo, mid, banda = bloqueada(Z, lo, hi, extremo, tipo)
     if rangos is not None:
@@ -99,6 +137,11 @@ def anadir(Z, lo, hi, tipo, i, origen, extremo, i_org=None, rangos=None):
             if lo >= b-1e-9 and not za.arriba:
                 return None, ('salida_sin_consecucion', mid)
         if banda is not None: rangos.append(banda)
+        # La comprobacion va AQUI, despues de anotar la banda: si fuese antes,
+        # la banda no quedaria registrada y una candidata posterior que el
+        # registro habria bloqueado se colaria. (18/09/2026)
+        if banda_ocupada(Z, lo, hi):
+            return None, ('banda_gastada', mid)
     # No se marca nada AL OTRO LADO de una zona viva cuyo rompimiento todavia
     # espera consecucion: hasta que llegue, el mercado no ha salido de esa zona.
     # (confirmado por el operador 27/08/2026, casos 9:13 y 9:44 del 8 de julio)
@@ -176,29 +219,49 @@ def leer_sesion(V, dia):
                     def _ya(t_,a,b_):
                         return any(zz.fin is None and zz.tipo==t_ and abs(zz.lo-a)<1e-9
                                    and abs(zz.hi-b_)<1e-9 for zz in Z)
+                    # R-10 (precisada 14/09/2026): el ESTIRAMIENTO va por el TIPO de zona,
+                    # no por el lado del rompimiento. Una resistencia solo se estira por
+                    # arriba y un soporte solo por abajo. Si el precio cruza la zona por el
+                    # lado contrario —el cruce de vuelta, cuando ya la traspaso una vez— no
+                    # hay nada que estirar: ese cruce no la toca, solo la mata cuando llegue
+                    # su consecucion. Caso de origen: 14/09/2026, soporte de 9:10 cruzado
+                    # hacia arriba a las 10:07, que antes lo estiraba dentro de la
+                    # resistencia viva de 9:09 y dejaba las dos zonas pisandose.
+                    estira_ok = (z.tipo=='R' and d=='arriba') or (z.tipo=='S' and d=='abajo')
                     if d=='abajo':
                         cuerpo = kr['c'] < z.lo
-                        if cuerpo and not _ya('S', kr['l'], min(kr['o'],kr['c'])):
+                        # 15/09/2026: la apendice tambien pasa por el filtro de la banda.
+                        # Hasta hoy se anadia directamente a Z, saltandose anadir(), y nacia
+                        # dentro de bandas ya resueltas — el motor llegaba a RECHAZAR el
+                        # rectangulo como zona por rango_usado y a dibujarlo unas velas
+                        # despues como apendice. Detectado por el operador en la jornada del
+                        # 15/09 (resistencia 29384.75-29388.00 de la vela 9:09, rechazada a
+                        # las 9:10 y dibujada a las 9:14). No cambia ningun resultado:
+                        # julio sigue en -77.75 en 5 y las cuatro jornadas de septiembre
+                        # dan la misma entrada. Solo desaparecen zonas del dibujo.
+                        if cuerpo and not en_banda_usada(rangos, kr['l'], min(kr['o'],kr['c'])) \
+                                and not _ya('S', kr['l'], min(kr['o'],kr['c'])):
                             ap=Zona(kr['l'], min(kr['o'],kr['c']), 'S', i,
                                     f"{col(kr)//100}:{kr['t'][2:4]} ap", ir)
                             Z.append(ap)
                             log.append(f"{col(k)//100}:{k['t'][2:4]} plazo vencido → ZONA "
                                        f"APÉNDICE S {ap.lo:.2f}-{ap.hi:.2f} sobre "
                                        f"{col(kr)//100}:{kr['t'][2:4]}")
-                        elif not cuerpo:
+                        elif not cuerpo and estira_ok:
                             z.lo=min(z.lo,kr['l']); z.hist.append((i,z.lo,z.hi))
                             log.append(f"{col(k)//100}:{k['t'][2:4]} plazo vencido → se ESTIRA "
                                        f"la zona a {z.lo:.2f}-{z.hi:.2f}")
                     else:
                         cuerpo = kr['c'] > z.hi
-                        if cuerpo and not _ya('R', max(kr['o'],kr['c']), kr['h']):
+                        if cuerpo and not en_banda_usada(rangos, max(kr['o'],kr['c']), kr['h']) \
+                                and not _ya('R', max(kr['o'],kr['c']), kr['h']):
                             ap=Zona(max(kr['o'],kr['c']), kr['h'], 'R', i,
                                     f"{col(kr)//100}:{kr['t'][2:4]} ap", ir)
                             Z.append(ap)
                             log.append(f"{col(k)//100}:{k['t'][2:4]} plazo vencido → ZONA "
                                        f"APÉNDICE R {ap.lo:.2f}-{ap.hi:.2f} sobre "
                                        f"{col(kr)//100}:{kr['t'][2:4]}")
-                        elif not cuerpo:
+                        elif not cuerpo and estira_ok:
                             z.hi=max(z.hi,kr['h']); z.hist.append((i,z.lo,z.hi))
                             log.append(f"{col(k)//100}:{k['t'][2:4]} plazo vencido → se ESTIRA "
                                        f"la zona a {z.lo:.2f}-{z.hi:.2f}")
@@ -295,8 +358,12 @@ def leer_sesion(V, dia):
 
 if __name__=='__main__':
     import sys
-    V=cargar('/mnt/user-data/uploads/Chaumer/05_Backtesting/datos/NQ 09-26.Last.txt')
-    r=leer_sesion(V, sys.argv[1] if len(sys.argv)>1 else '20260707')
+    if len(sys.argv) < 3:
+        print('uso:  python lector.py <yyyymmdd> <archivo_de_datos.txt> [umbral]')
+        sys.exit(1)
+    if len(sys.argv) > 3: UMBRAL_VOL = int(sys.argv[3])
+    V=cargar(sys.argv[2])
+    r=leer_sesion(V, sys.argv[1])
     for l in r['log'][:14]: print(l)
     print('--- zonas ---')
     for z in r['Z']: print(('ACTIVA ' if z.activa else 'inactiva'), z)
@@ -331,9 +398,82 @@ def _evaluar(Z,i,tipo,nd,e,st,ref=None):
     if m: return None, " · ".join(m), t, r
     return dict(tipo=tipo,dir=nd,e=e,s=st,t=t,r=r,i=i), None, t, r
 
+def _punto_de_referencia(res, i, e, t, nd):
+    """R-41 (14/09/2026) · Devuelve el PUNTO DE REFERENCIA vivo que estorba el
+    objetivo de un reingreso, o None si el camino esta libre.
+
+    Punto de referencia = nivel de referencia de un retroceso (R-06), que es
+    exactamente un vertice del zigzag. Solo estorban los que quedan ENTRE la
+    entrada y el objetivo; manda el mas cercano a la entrada.
+    UNIFICADO 14/09/2026: absorbe el filtro viejo que vivia en R-26 (el extremo
+    del retroceso que originaba ESA zona). Ya no se limita a ese: vale cualquier
+    retroceso vivo. Por eso a _evaluar se le pasa ref=None.
+    OJO: se rompe cuando una vela CIERRA mas alla, no con la mecha. Es lo unico
+    del plan que se lee por cierre; las zonas se rompen por mecha (R-19 punto 1).
+    Solo aplica a REINGRESOS: las continuaciones no lo miran.
+    """
+    D = res['D']; mejor = None
+    for (j, p) in res['piv']:
+        if j >= i: continue
+        if nd < 0:                                  # objetivo abajo -> mandan los MINIMOS
+            if abs(p - D[j]['l']) > 1e-9: continue
+            if not (t < p < e): continue
+            if any(D[m]['c'] < p for m in range(j+1, i+1)): continue   # roto por cierre
+            mejor = p if mejor is None else max(mejor, p)
+        else:                                       # objetivo arriba -> mandan los MAXIMOS
+            if abs(p - D[j]['h']) > 1e-9: continue
+            if not (e < p < t): continue
+            if any(D[m]['c'] > p for m in range(j+1, i+1)): continue
+            mejor = p if mejor is None else min(mejor, p)
+    return mejor
+
+SOLO_ZONA_DE_CORRIDA = True   # variante en prueba
+
+def _mapa_fluidez(res):
+    """R-40 · Corrida fluida. Las parejas corrida-retroceso NO se solapan: la
+    vela de apertura declara el sentido, asi que las piernas 1,3,5... son
+    corridas y las 2,4,6... sus retrocesos. Tras una pareja rota la cuenta
+    vuelve a empezar con la corrida siguiente."""
+    piv = res['piv']; D = res['D']
+    def caja(n):
+        d = 1 if piv[n][1] > piv[n-1][1] else -1
+        k = D[piv[n][0]]
+        return (d, max(k['o'],k['c']), k['h']) if d > 0 else (d, k['l'], min(k['o'],k['c']))
+    estado = {}; barrera = {1: None, -1: None}
+    def bloquear(n):
+        if n >= len(piv): return
+        d, lo, hi = caja(n); estado[piv[n][0]] = False
+        nb = hi if d > 0 else lo; b = barrera[d]
+        if b is None or ((nb > b) if d > 0 else (nb < b)): barrera[d] = nb
+    for n in range(1, len(piv)-1, 2):
+        corrida   = abs(piv[n][1]   - piv[n-1][1])
+        retroceso = abs(piv[n+1][1] - piv[n][1])
+        if retroceso > corrida:
+            bloquear(n); bloquear(n+1); continue
+        for m, es_corrida in ((n, True), (n+1, False)):
+            if m >= len(piv): break
+            if es_corrida is False and SOLO_ZONA_DE_CORRIDA:
+                bloquear(m); continue
+            d, lo, hi = caja(m); ok = True
+            if m+2 < len(piv):
+                ext = piv[m+2][1]
+                if (ext <= hi) if d > 0 else (ext >= lo): ok = False
+            b = barrera[d]
+            if b is not None and ((lo <= b) if d > 0 else (hi >= b)): ok = False
+            estado[piv[m][0]] = ok
+            if not ok: bloquear(m)
+    return estado
+
+def _veto_R40(res, z):
+    if '_fluidez' not in res: res['_fluidez'] = _mapa_fluidez(res)
+    return not res['_fluidez'].get(z.i_org, False)
+
 def detectar_setups(res, solo_reingresos=False):
     D,Z,b,fin,retros = res['D'],res['Z'],res['b'],res['fin'],res['retros']
     ev=[]; orden=None; trade=None
+    # reingresos evaluados en la jornada: (vela, entrada, objetivo, sentido).
+    # R-41: los puntos de control SOLO se dibujan cuando se presenta un reingreso.
+    res['reingresos']=[]
     def hh(k): return f"{col(k)//100}:{k['t'][2:4]}"
 
     for i in range(b+1, fin+1):
@@ -359,6 +499,15 @@ def detectar_setups(res, solo_reingresos=False):
             # La caducidad se mira ANTES del llenado: pasado el plazo la orden ya no existe.
             if i - o['i'] > PLAZO:
                 ev.append(f"{hh(k)}  orden cancelada — 5 velas sin consecución"); orden=None
+            elif (((k['l'] <= o['s']) and (k['c'] >= k['o'])) if o['dir']>0
+                  else ((k['h'] >= o['s']) and (k['c'] <  k['o']))):
+                # PROPUESTA 14/09/2026, SIN CONFIRMAR POR EL OPERADOR.
+                # La vela toca el nivel de la orden Y el punto del stop. Se aplica la
+                # convencion intravela que el plan ya usa para las zonas (R-19 punto 6):
+                # vela azul = minimo primero, vela blanca = maximo primero. Si el punto
+                # del stop llega antes, la orden se CANCELA (R-29) y no llega a llenarse.
+                ev.append(f"{hh(k)}  orden cancelada — el precio volvió al punto del stop "
+                          f"({o['s']:.2f}) antes de llenar, por el orden dentro de la vela"); orden=None
             elif (k['h']>=o['e']) if o['dir']>0 else (k['l']<=o['e']):
                 trade=dict(**o,i_fill=i,hora=hh(k))
                 ev.append(f"{hh(k)}  ►► SE LLENA el {o['tipo']} {'largo' if o['dir']>0 else 'corto'} en {o['e']:.2f}")
@@ -373,10 +522,10 @@ def detectar_setups(res, solo_reingresos=False):
             # CANCELACION (operador 27/08/2026): un retroceso nuevo NO cancela.
             # Solo cancela (a) que pasen 5 velas sin consecucion, o (b) que el precio
             # vuelva al extremo del retroceso, que es el mismo punto del stop.
-            if (k['l'] <= o['s']) if o['dir']>0 else (k['h'] >= o['s']):
+            if orden and ((k['l'] <= o['s']) if o['dir']>0 else (k['h'] >= o['s'])):
                 ev.append(f"{hh(k)}  orden cancelada — el precio volvió al punto del stop "
                           f"({o['s']:.2f})"); orden=None
-            elif col(k)>=1029:
+            elif orden and col(k)>=1029:
                 ev.append(f"{hh(k)}  orden cancelada — fin de ventana"); orden=None
         if orden: continue
 
@@ -393,7 +542,14 @@ def detectar_setups(res, solo_reingresos=False):
             seg=range(z.roto[1], i+1)
             st = max(D[j]['h'] for j in seg) if nd<0 else min(D[j]['l'] for j in seg)
             e  = k['l']-TICK if nd<0 else k['h']+TICK
-            o,motivo,t,r=_evaluar(Z,i,'Reingreso',nd,e,st,z.ref)
+            # R-41 unificado: el filtro del punto de referencia ya no es el de R-26
+            # (z.ref), por eso va ref=None. Lo aplica _punto_de_referencia, abajo.
+            o,motivo,t,r=_evaluar(Z,i,'Reingreso',nd,e,st,None)
+            if t is not None: res['reingresos'].append((i,e,t,nd))
+            if o is not None:
+                pr=_punto_de_referencia(res,i,e,t,nd)
+                if pr is not None:
+                    o, motivo = None, f"el objetivo pasa del punto de referencia {pr:.2f}" 
             tag=(f"{hh(k)}  REINGRESO {'corto' if nd<0 else 'largo'} · entrada {e:.2f} · stop {st:.2f}"
                  + (f" · objetivo {t:.2f} · riesgo {r:.2f}" if t else ""))
             if o: ev.append(tag+"  ✓ orden enviada"); orden=o
@@ -409,6 +565,16 @@ def detectar_setups(res, solo_reingresos=False):
             elif nd<0 and k['h']>=zlo and k['l'] < zlo-TICK/2: d,e0='abajo', k['l']
             else: continue
             z.roto=(d,i,e0)
+            # R-40 (14/09/2026): no se entra en el rompimiento de una zona cuyo
+            # RETROCESO fue mayor que la CORRIDA que la creo. Ojo al ORDEN de estas
+            # lineas: el rompimiento se REGISTRA (z.roto, arriba) y solo despues se
+            # descarta la ORDEN. Si se filtrase antes, el rompimiento no quedaria
+            # anotado y el reingreso de R-26 —que nace justo de un rompimiento que
+            # falla— se volveria invisible. El veto es solo para ESTA entrada de
+            # continuacion; la zona sigue viva y el reingreso no se toca.
+            if _veto_R40(res, z):
+                ev.append(f"{hh(k)}  rompimiento de {z} ✗ no se opera — la corrida no es fluida (R-40)")
+                break
             # El stop es el extremo que haya hecho el mercado DESDE QUE NACIO LA ZONA
             # HASTA EL ROMPIMIENTO, no solo el techo/suelo del retroceso que la origino.
             # (confirmado por el operador 27/08/2026, caso del 7 de julio a las 9:36)

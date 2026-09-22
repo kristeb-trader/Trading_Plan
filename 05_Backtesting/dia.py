@@ -13,14 +13,14 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import lector, sys, calendar
 
-BG='#0B0E14'; UP='#2E86FF'; DN='#FFFFFF'; GREY='#8B93A7'; GOLD='#F5C542'; RED='#FF5C5C'
+BG='#0B0E14'; UP='#2E86FF'; DN='#FFFFFF'; GREY='#8B93A7'; GOLD='#F5C542'; RED='#FF5C5C'; NAR='#FF9A3C'
 CY='#22D3EE'; GRN='#4ADE80'
 MES={'01':'ENERO','02':'FEBRERO','03':'MARZO','04':'ABRIL','05':'MAYO','06':'JUNIO',
      '07':'JULIO','08':'AGOSTO','09':'SEPTIEMBRE','10':'OCTUBRE','11':'NOVIEMBRE','12':'DICIEMBRE'}
 DIAS=['LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES','SÁBADO','DOMINGO']
 
-def dibujar(dia, salida):
-    V=lector.cargar('/mnt/user-data/uploads/Chaumer/05_Backtesting/datos/NQ 09-26.Last.txt')
+def dibujar(dia, salida, datos):
+    V=lector.cargar(datos)
     fomc = dia in lector.FOMC
     r=lector.leer_sesion(V,dia)
     ev,t=lector.detectar_setups(r, solo_reingresos=fomc)
@@ -85,6 +85,31 @@ def dibujar(dia, salida):
     for yy,txt in etiquetas:
         ax.text(W-.2,yy,txt,color=GREY,fontsize=11,fontweight='bold',ha='right',va='center',zorder=10)
 
+    # ---- puntos de referencia (R-41, unificado 14/09/2026)
+    # Solo se dibujan si en la jornada se presento un reingreso: "la idea es tener
+    # el grafico lo mas limpio posible" (operador, 14/09/2026). Se pintan los que
+    # seguian VIVOS en la vela del reingreso y quedan del lado del objetivo.
+    for (ir, er, tr, ndr) in r.get('reingresos', []):
+        if ir > corte_z: continue
+        for (j, pv) in r['piv']:
+            if j >= ir: continue
+            bajo = abs(pv - D[j]['l']) < 1e-9
+            if (ndr < 0) != bajo: continue
+            fuera = (pv >= er) if ndr < 0 else (pv <= er)
+            if fuera: continue
+            roto = None
+            for m in range(j+1, corte+1):
+                if (D[m]['c'] < pv) if bajo else (D[m]['c'] > pv):
+                    roto = m; break
+            if roto is not None and roto <= ir: continue      # ya estaba roto
+            x0 = max(j-off, -1); x1 = (roto-off+1) if roto is not None else W
+            vivo = roto is None
+            ax.plot([x0, x1], [pv, pv], color=NAR, lw=2.0 if vivo else 1.1,
+                    ls=(0, (2, 3)), alpha=.80 if vivo else .25, zorder=6)
+            ax.text(x1-.3, pv, "punto de referencia", color=NAR, fontsize=10.5,
+                    fontweight='bold', ha='right', va='bottom',
+                    alpha=.9 if vivo else .35, zorder=11)
+
     # ---- zigzag de corridas y retrocesos
     P=[(i-off,p) for (i,p) in r['piv'] if b<=i<=corte]
     if len(P)>1:
@@ -140,6 +165,10 @@ def dibujar(dia, salida):
     return ev,t
 
 if __name__=='__main__':
-    d=sys.argv[1]
-    ev,t=dibujar(d, sys.argv[2] if len(sys.argv)>2 else f'/home/claude/motor/D_{d}.png')
+    if len(sys.argv) < 3:
+        print('uso:  python dia.py <yyyymmdd> <archivo_de_datos.txt> [salida.png] [umbral]')
+        sys.exit(1)
+    d, datos = sys.argv[1], sys.argv[2]
+    if len(sys.argv) > 4: lector.UMBRAL_VOL = int(sys.argv[4])
+    ev,t=dibujar(d, sys.argv[3] if len(sys.argv)>3 else f'D_{d}.png', datos)
     for e in ev: print(' ',e)
