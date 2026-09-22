@@ -23,6 +23,7 @@ Se opera durante las **primeras 2 horas del mercado americano**. Fuera de esa ve
 
 - **Referencia** — **La apertura americana**, no el número del reloj
 - **Duración** — **120 minutos** exactos
+- **En el plan** — 09:30–11:30 ET, hora de Nueva York
 - **En pantalla, verano de Nueva York** — 08:30 – 10:30 hora Colombia
 - **En pantalla, invierno de Nueva York** — 09:30 – 11:30 hora Colombia
 
@@ -44,6 +45,12 @@ La primera vela después de la apertura — la de las 08:31 en horario de verano
 - **Qué papel tiene** — Es la **vela origen**. El primer movimiento se mide desde su mínimo si es alcista, desde su máximo si es bajista
 - **Las velas anteriores** — No sirven de referencia. La estructura del día empieza aquí
 - **¿Puede sostener una zona?** — Sí
+
+#### La vela que abarca a la anterior R-08
+
+Hay un caso que rompe la cuenta: una vela que hace a la vez máximo más alto y mínimo más bajo que la anterior, sin que haya un movimiento vivo. Esa vela **no declara dirección**: pasa a ser la nueva vela origen, y la dirección la da la siguiente.
+
+Si la siguiente vuelve a hacer lo mismo, se repite el mismo criterio, sin límite. Con un movimiento ya vivo esto no aplica: manda el movimiento.
 
 #### Por dónde empieza el día R-27
 
