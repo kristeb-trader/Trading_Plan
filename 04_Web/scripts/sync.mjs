@@ -100,6 +100,34 @@ try {
 }
 copiar(ORIGEN_REGLAS, path.join(DEST_CONTENIDO, 'reglas.json'));
 
+// ---------------------------------------------------------- indice de reglas
+// Una linea por regla: numero, grupo y enunciado. Sirve para leer UNA regla
+// sin cargar las cuarenta: reglas.json pesa unos 88 KB y esto, unos 6.
+// Tarea 6 de PENDIENTE_PORTAL.md. Se genera siempre, asi que no se desvia.
+{
+  const lineas = [
+    '# Índice de reglas',
+    '',
+    '> **Generado por `scripts/sync.mjs` desde `01_Plan/reglas.json`. No se edita.**',
+    '> Una línea por regla: número · grupo · enunciado. Para el detalle —condiciones,',
+    '> excepciones, nota— abre ESA regla en `reglas.json`, no el archivo entero.',
+    '',
+    reglas.length + ' reglas.',
+    '',
+  ];
+  for (const r of reglas) {
+    const grupo = (r.categoria_nombre || r.categoria || '—')
+      + (r.subcategoria ? ' (' + r.subcategoria + ')' : '');
+    const enunciado = String(r.enunciado || '').replace(/\s+/g, ' ').trim();
+    lineas.push(r.id + ' · ' + grupo + ' · ' + enunciado);
+  }
+  fs.writeFileSync(
+    destinoSeguro(path.join(DEST_CONTENIDO, 'reglas_indice.md')),
+    lineas.join('\n') + '\n',
+    'utf8',
+  );
+}
+
 // ----------------------------------------------------------------- subfases
 const DIR_SUBFASES = path.join(PLAN, 'subfases');
 let subfases = 0;
@@ -186,6 +214,7 @@ fs.writeFileSync(
 console.log('sync');
 console.log('  documentos    ' + docsCopiados + '/' + DOCUMENTOS.length);
 console.log('  reglas.json   ' + reglas.length + ' reglas');
+console.log('  indice        src/content/reglas_indice.md');
 console.log('  subfases      ' + subfases);
 console.log('  imagenes      ' + imagenes.length);
 console.log('  test ciego    ' + jornadas.length + ' jornadas');
