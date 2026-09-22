@@ -1,34 +1,64 @@
 ---
 /**
- * Galeria de casos.
+ * Casos reales — la galeria y el test ciego, en una sola pagina.
  *
- * 21 casos reales. La cabecera del documento dice 11: se cuenta lo que hay y
- * el archivo no se toca.
+ * Unificadas el 22/09/2026 a peticion del operador: «son lo mismo, casos de
+ * backtesting hechos desde Claude». Tres bloques, en este orden:
  *
- * La imagen se resuelve SOLO por nombre de archivo, y las graficas de
- * sesiones/ ganan siempre porque llevan el estandar visual vigente. Un caso
- * sin imagen se muestra igual, con su texto: nada de placeholders.
+ *   1. Test ciego        las jornadas marcadas a ciegas, la mas reciente
+ *                        primero. Las que tienen caso en la galeria salen
+ *                        UNA vez, con el texto del caso dentro.
+ *   2. Sesiones          las completas de julio, marcadas con el operador.
+ *   3. Ejemplos          un caso por setup, filtro o descarte.
+ *
+ * El reparto lo hace P.casosReales() leyendo el titulo que da el plan.
+ *
+ * Las anclas no cambian: un caso sigue en /galeria#G-xx (las fichas de
+ * regla y las observaciones enlazan asi), y una jornada del test ciego en
+ * /galeria#AAAA-MM-DD. La direccion vieja /test-ciego redirige al bloque 1.
+ *
+ * La imagen de un caso se resuelve SOLO por nombre de archivo, y las graficas
+ * de sesiones/ ganan siempre porque llevan el estandar visual vigente. Un
+ * caso sin imagen se muestra igual, con su texto: nada de placeholders.
+ *
+ * Sin totales de resultado, a proposito: el agregado del backtesting no sale
+ * en el portal (decision del operador, 22/09/2026). Cada jornada va sola.
  */
 import Marco from '../componentes/Marco.astro';
 import Icono from '../componentes/Icono.astro';
 import * as P from '../lib/parsers.mjs';
 
-const casos = P.galeria().map((c) => ({ ...c, html: P.markdownRico(c.cuerpo) }));
-const conImagen = casos.filter((c) => c.imagen).length;
-const conEstandar = casos.filter((c) => c.estandarActual).length;
+const { testCiego, sesiones, ejemplos, total } = P.casosReales();
+const conHtml = (c) => (c ? { ...c, html: P.markdownRico(c.cuerpo) } : null);
+
+const bloqueTest = testCiego.map((x) => ({ jornada: x.jornada, caso: conHtml(x.caso) }));
+const bloqueSesiones = sesiones.map(conHtml);
+const bloqueEjemplos = ejemplos.map(conHtml);
+
+const todosLosCasos = [...bloqueTest.map((x) => x.caso).filter(Boolean), ...bloqueSesiones, ...bloqueEjemplos];
+const conImagen = bloqueTest.length
+  + [...bloqueSesiones, ...bloqueEjemplos].filter((c) => c.imagen).length;
+
+// Si todas las sesiones son de julio, el bloque lo dice; si algun dia hay de
+// otro mes, pasa a llamarse por lo que son.
+const soloJulio = sesiones.length > 0 && sesiones.every((c) => /JULIO/i.test(c.titulo));
+const tituloSesiones = soloJulio ? 'Sesiones de julio' : 'Sesiones completas';
 
 // Reglas citadas por algun caso, para el filtro. Ordenadas por numero.
-const reglasCitadas = [...new Set(casos.flatMap((c) => c.reglas))]
+const reglasCitadas = [...new Set(todosLosCasos.flatMap((c) => c.reglas))]
   .sort((a, b) => Number(a.slice(2)) - Number(b.slice(2)));
+
+// El color del resultado solo distingue tres palabras que el plan ya escribe.
+const tono = (r) => (/TARGET/i.test(r) ? 'ok' : /STOP/i.test(r) ? 'mal' : 'aviso');
 ---
 
-<Marco titulo="Galería">
+<Marco titulo="Casos reales">
   <header class="cab entra">
-    <h1>{casos.length} casos reales</h1>
+    <h1>{total} casos reales</h1>
     <p class="lead">
-      Capturas del gráfico del operador, etiquetadas con las reglas que las
-      explican. Es el material con el que se entrena el ojo y con el que se
-      resuelven las dudas de marcado.
+      Jornadas y sesiones de verdad, marcadas vela a vela y etiquetadas con las
+      reglas que las explican. Es el material con el que se entrena el ojo y con
+      el que se resuelven las dudas de marcado.
     </p>
     <p class="apunte">{conImagen} llevan gráfica.</p>
   </header>
@@ -44,38 +74,118 @@ const reglasCitadas = [...new Set(casos.flatMap((c) => c.reglas))]
     <p class="vacio" data-vacio hidden>Ningún caso cita esa regla.</p>
   </div>
 
-  <div class="casos">
-    {casos.map((c, i) => (
-      <article class="caso entra" id={c.id} data-reglas={c.reglas.join(' ')} data-obs-tipo="caso" data-obs-id={c.id} data-obs-titulo={c.titulo}
-               style={`--retraso:${Math.min(i, 6) * 45}ms`}>
-        <header class="c-cab">
-          <span class="c-id mono">{c.id}</span>
-          <h2 class="c-t">{c.titulo}</h2>
-          {c.estandarActual
-            ? <span class="marca-estado ok c-est">estándar vigente</span>
-            : c.imagen && <span class="marca-estado info c-est">gráfica anterior</span>}
-        </header>
+  <!-- 1 · Test ciego ───────────────────────────────────────────────── -->
+  <section class="bloque" id="test-ciego" data-bloque>
+    <header class="b-cab">
+      <h2 class="b-t">Test ciego <span class="b-n mono">{bloqueTest.length}</span></h2>
+      <p class="b-lead">
+        Cada jornada la marca Claude a ciegas, sin saber qué hizo el operador, y
+        después se contrastan las dos lecturas. La más reciente primero. El
+        gráfico lo genera la herramienta de auditoría: su cabecera dice si hubo
+        operación.
+      </p>
+    </header>
 
-        {c.imagen && (
-          <button class="c-fig" type="button" data-lupa={c.imagen} data-titulo={c.titulo}>
-            <img src={c.imagen} alt={`Gráfico del caso ${c.id}: ${c.titulo}`} loading="lazy" />
-            <span class="c-lupa"><Icono nombre="magnifying-glass-plus" /> Ampliar</span>
-          </button>
-        )}
+    <div class="casos">
+      {bloqueTest.map(({ jornada: j, caso: c }, i) => (
+        <article
+          class="caso entra"
+          id={c ? c.id : j.fecha}
+          data-reglas={c ? c.reglas.join(' ') : ''}
+          data-obs-tipo={c ? 'caso' : undefined}
+          data-obs-id={c ? c.id : undefined}
+          data-obs-titulo={c ? c.titulo : undefined}
+          style={`--retraso:${Math.min(i, 6) * 45}ms`}
+        >
+          {c && j && <span class="ancla" id={j.fecha} aria-hidden="true"></span>}
+          <header class="c-cab">
+            {c && <span class="c-id mono">{c.id}</span>}
+            <h3 class="c-t">{j ? j.titulo : c.titulo}</h3>
+            {j?.veredicto && (
+              <span class:list={['j-res', tono(j.veredicto.resultado)]}>{j.veredicto.resultado}</span>
+            )}
+          </header>
+          {c && j && <p class="c-lema">{j.caso.lema}</p>}
 
-        <div class="c-cuerpo md" set:html={c.html} />
+          {(j ? j.imagen : c.imagen) && (
+            <button class="c-fig" type="button" data-lupa={j ? j.imagen : c.imagen} data-titulo={j ? j.titulo : c.titulo}>
+              <img src={j ? j.imagen : c.imagen} alt={`Gráfico del test ciego: ${j ? j.titulo : c.titulo}`} loading={i < 2 ? 'eager' : 'lazy'} />
+              <span class="c-lupa"><Icono nombre="magnifying-glass-plus" /> Ampliar</span>
+            </button>
+          )}
 
-        {c.reglas.length > 0 && (
-          <footer class="c-pie">
-            <span class="etiqueta">Reglas que lo explican</span>
-            <span class="c-refs">
-              {c.reglas.filter(P.hayRegla).map((id) => <a class="ref" href={`/reglas/${id}`}>{id}</a>)}
-            </span>
-          </footer>
-        )}
-      </article>
-    ))}
-  </div>
+          {j?.veredicto && (
+            <p class="j-ver">
+              <span class="etiqueta">Veredicto</span>
+              <span>{j.veredicto.setup}</span>
+              {j.veredicto.puntos && j.veredicto.puntos !== '—' && (
+                <span class="j-pts mono">{j.veredicto.puntos} pts</span>
+              )}
+            </p>
+          )}
+
+          {c && <div class="c-cuerpo md" set:html={c.html} />}
+
+          {c && c.reglas.length > 0 && (
+            <footer class="c-pie">
+              <span class="etiqueta">Reglas que lo explican</span>
+              <span class="c-refs">
+                {c.reglas.filter(P.hayRegla).map((id) => <a class="ref" href={`/reglas/${id}`}>{id}</a>)}
+              </span>
+            </footer>
+          )}
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- 2 y 3 · Sesiones y ejemplos: la tarjeta de caso de siempre ─────── -->
+  {[
+    { id: 'sesiones', titulo: tituloSesiones, casos: bloqueSesiones,
+      lead: 'Sesiones completas marcadas con el operador delante, corrigiendo vela a vela.' },
+    { id: 'ejemplos', titulo: 'Ejemplos del método', casos: bloqueEjemplos,
+      lead: 'Un caso por cada setup, filtro o descarte del método.' },
+  ].filter((b) => b.casos.length > 0).map((b) => (
+    <section class="bloque" id={b.id} data-bloque>
+      <header class="b-cab">
+        <h2 class="b-t">{b.titulo} <span class="b-n mono">{b.casos.length}</span></h2>
+        <p class="b-lead">{b.lead}</p>
+      </header>
+
+      <div class="casos">
+        {b.casos.map((c, i) => (
+          <article class="caso entra" id={c.id} data-reglas={c.reglas.join(' ')} data-obs-tipo="caso" data-obs-id={c.id} data-obs-titulo={c.titulo}
+                   style={`--retraso:${Math.min(i, 6) * 45}ms`}>
+            <header class="c-cab">
+              <span class="c-id mono">{c.id}</span>
+              <h3 class="c-t">{c.titulo}</h3>
+              {c.estandarActual
+                ? <span class="marca-estado ok c-est">estándar vigente</span>
+                : c.imagen && <span class="marca-estado info c-est">gráfica anterior</span>}
+            </header>
+
+            {c.imagen && (
+              <button class="c-fig" type="button" data-lupa={c.imagen} data-titulo={c.titulo}>
+                <img src={c.imagen} alt={`Gráfico del caso ${c.id}: ${c.titulo}`} loading="lazy" />
+                <span class="c-lupa"><Icono nombre="magnifying-glass-plus" /> Ampliar</span>
+              </button>
+            )}
+
+            <div class="c-cuerpo md" set:html={c.html} />
+
+            {c.reglas.length > 0 && (
+              <footer class="c-pie">
+                <span class="etiqueta">Reglas que lo explican</span>
+                <span class="c-refs">
+                  {c.reglas.filter(P.hayRegla).map((id) => <a class="ref" href={`/reglas/${id}`}>{id}</a>)}
+                </span>
+              </footer>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
 
   <!-- Lupa. dialog nativo: cierra con Esc y devuelve el foco solo. -->
   <dialog class="lupa" data-lupa-dlg aria-label="Gráfico ampliado">
@@ -90,7 +200,10 @@ const reglasCitadas = [...new Set(casos.flatMap((c) => c.reglas))]
 <script is:inline>
   (function () {
     // ── filtro por regla ────────────────────────────────────────────────
+    // Una jornada del test ciego sin caso no cita reglas: con un filtro
+    // puesto se oculta, y un bloque que se queda vacio se oculta entero.
     var casos = document.querySelectorAll('.caso');
+    var bloques = document.querySelectorAll('[data-bloque]');
     var vacio = document.querySelector('[data-vacio]');
     document.querySelectorAll('[data-regla]').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -102,6 +215,9 @@ const reglasCitadas = [...new Set(casos.flatMap((c) => c.reglas))]
           var ver = !id || (' ' + c.getAttribute('data-reglas') + ' ').indexOf(' ' + id + ' ') >= 0;
           c.hidden = !ver;
           if (ver) n++;
+        });
+        bloques.forEach(function (bl) {
+          bl.hidden = !bl.querySelector('.caso:not([hidden])');
         });
         vacio.hidden = n > 0;
       });
@@ -149,9 +265,26 @@ const reglasCitadas = [...new Set(casos.flatMap((c) => c.reglas))]
   }
   .vacio { color: var(--texto-2); font-size: var(--t-3); margin: var(--e-5) 0 0; }
 
+  /* ── bloques ─────────────────────────────────────────────────────────── */
+  .bloque { margin-bottom: var(--e-8); scroll-margin-top: 6rem; }
+  .bloque[hidden] { display: none; }
+  .b-cab { margin-bottom: var(--e-5); }
+  .b-t {
+    display: flex; align-items: baseline; gap: var(--e-3);
+    margin: 0; font-size: var(--t-7);
+  }
+  .b-n {
+    font-size: var(--t-2); font-weight: var(--peso-fuerte); color: var(--texto-3);
+    padding: var(--e-1) var(--e-3);
+    border-radius: var(--radio-pill);
+    border: 1px solid var(--borde-sutil);
+  }
+  .b-lead { margin: var(--e-3) 0 0; color: var(--texto-2); }
+
   /* ── casos ───────────────────────────────────────────────────────────── */
   .casos { display: grid; gap: var(--e-6); }
   .caso {
+    position: relative;
     padding: var(--e-6);
     border-radius: var(--radio-4);
     background: var(--vidrio-fondo);
@@ -160,7 +293,9 @@ const reglasCitadas = [...new Set(casos.flatMap((c) => c.reglas))]
     scroll-margin-top: 6rem;
   }
   .caso[hidden] { display: none; }
-  .caso:target { box-shadow: var(--halo-azul); }
+  .caso:target, .caso:has(.ancla:target) { box-shadow: var(--halo-azul); }
+  /* El segundo ancla de una jornada con caso: la de su fecha. */
+  .ancla { position: absolute; top: 0; scroll-margin-top: 6rem; }
 
   .c-cab { display: flex; align-items: baseline; gap: var(--e-3); flex-wrap: wrap; margin-bottom: var(--e-5); }
   .c-id {
@@ -171,6 +306,27 @@ const reglasCitadas = [...new Set(casos.flatMap((c) => c.reglas))]
   }
   .c-t { margin: 0; font-size: var(--t-6); flex: 1; min-width: 12rem; }
   .c-est { flex: none; }
+  .c-lema { margin: calc(var(--e-3) * -1) 0 var(--e-5); color: var(--texto-2); }
+
+  /* El resultado de una jornada: tres tonos y la palabra del plan dentro.
+     No es solo color: la palabra dice lo mismo. */
+  .j-res {
+    flex: none;
+    padding: var(--e-1) var(--e-3);
+    border-radius: var(--radio-pill);
+    border: 1px solid currentColor;
+    font-size: var(--t-2); font-weight: var(--peso-fuerte);
+    letter-spacing: var(--track-etiqueta);
+  }
+  .j-res.ok    { color: var(--positivo); background: color-mix(in srgb, var(--positivo) 10%, transparent); }
+  .j-res.mal   { color: var(--negativo); background: color-mix(in srgb, var(--negativo) 10%, transparent); }
+  .j-res.aviso { color: var(--aviso);    background: color-mix(in srgb, var(--aviso) 10%, transparent); }
+
+  .j-ver {
+    display: flex; align-items: baseline; gap: var(--e-3); flex-wrap: wrap;
+    margin: 0 0 var(--e-5); max-width: none; color: var(--texto);
+  }
+  .j-pts { color: var(--texto-2); }
 
   /* La gráfica es el contenido: ocupa el ancho y se amplía al pulsarla. */
   .c-fig {

@@ -136,13 +136,17 @@ export function galeria() {
       const fechaTest = /TEST CIEGO/i.test(limpio) ? fechaDeTitulo(limpio) : null;
       const deTest = fechaTest ? jornadasTestCiego().find((j) => j.fecha === fechaTest) : null;
       const img = manifiesto.casos[id] || (deTest ? { url: deTest.url, actual: true } : null);
+      // El caso termina donde empieza una seccion de primer nivel: en el plan,
+      // «# LO QUE ESTA GALERIA VALIDA» y «NO TIENE TODAVIA» son de la galeria
+      // entera y caian dentro de G-11, la primera sesion de julio.
+      const cuerpo = b.cuerpo.split(/^# /m)[0];
       return {
         id,
         titulo: limpio.replace(/^G-\d{1,2}\s*[·-]?\s*/, ''),
-        cuerpo: b.cuerpo,
+        cuerpo,
         imagen: img ? img.url : null,
         estandarActual: img ? Boolean(img.actual) : false,
-        reglas: [...new Set(b.cuerpo.match(/R-\d{1,2}/g) || [])],
+        reglas: [...new Set(cuerpo.match(/R-\d{1,2}/g) || [])],
       };
     });
 }
@@ -208,6 +212,46 @@ export function testCiego() {
       caso: caso ? { id: caso.id, lema: caso.titulo.split(/\s+·\s+/).slice(-1)[0] } : null,
     };
   }).reverse();
+}
+
+/**
+ * Casos reales: la galeria y el test ciego, en una sola pagina y en tres
+ * bloques. Pedido por el operador el 22/09/2026: «son lo mismo, casos de
+ * backtesting hechos desde Claude».
+ *
+ *   testCiego   las jornadas del test ciego, la mas reciente primero. Si una
+ *               tiene caso en la galeria (por la fecha del titulo), va UNA vez,
+ *               con el texto del caso dentro. Un caso del test ciego sin
+ *               grafico de jornada entra igual, como caso.
+ *   sesiones    los casos de «SESION COMPLETA»: las de julio, marcadas con el
+ *               operador delante.
+ *   ejemplos    el resto: un caso por setup, filtro o descarte.
+ *
+ * El reparto se lee del titulo que da el plan; aqui no se clasifica nada a
+ * mano.
+ */
+export function casosReales() {
+  const casos = galeria();
+  const jornadas = testCiego();
+  const esTest = (c) => /TEST CIEGO/i.test(c.titulo);
+  const esSesion = (c) => /SESI[OÓ]N COMPLETA/i.test(c.titulo);
+  const enJornada = new Set(jornadas.filter((j) => j.caso).map((j) => j.caso.id));
+
+  const testCiegoBloque = [
+    ...jornadas.map((j) => ({
+      jornada: j,
+      caso: j.caso ? casos.find((c) => c.id === j.caso.id) || null : null,
+    })),
+    ...casos.filter((c) => esTest(c) && !enJornada.has(c.id)).map((c) => ({ jornada: null, caso: c })),
+  ];
+  const sesiones = casos.filter((c) => !esTest(c) && esSesion(c));
+  const ejemplos = casos.filter((c) => !esTest(c) && !esSesion(c));
+  return {
+    testCiego: testCiegoBloque,
+    sesiones,
+    ejemplos,
+    total: testCiegoBloque.length + sesiones.length + ejemplos.length,
+  };
 }
 
 // ─────────────────────────────────────────────────────────────── pendientes

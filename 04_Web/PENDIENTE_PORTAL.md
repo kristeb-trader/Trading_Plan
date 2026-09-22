@@ -131,6 +131,25 @@ Mientras tanto: **no toques `..\02_Assets\diagramas\` ni el manifiesto que asign
 
 ## Hecho
 
+### Casos reales y test ciego, una sola página — 22/09/2026
+
+Pedido del operador, fuera de la lista: «son lo mismo, casos de backtesting hechos desde Claude».
+
+- **`/galeria`** tiene ahora tres bloques, con el test ciego primero: **Test ciego** (9 jornadas, la más
+  reciente arriba), **Sesiones de julio** (11) y **Ejemplos del método** (10). **30 tarjetas, sin
+  duplicados.** Las jornadas del 10, 11 y 14/09 tienen caso en la galería y salen una sola vez, con el
+  texto del caso dentro. El reparto lo hace `P.casosReales()` leyendo el título que da el plan.
+- **Las anclas no cambian:** `/galeria#G-xx` para un caso y `/galeria#AAAA-MM-DD` para una jornada.
+- **`/test-ciego`** es ahora solo una redirección al bloque; con fecha, a su jornada.
+- **El menú** pierde «Test ciego», y «Casos reales» cuenta 30. **La tarjeta de la portada** dice 30 y
+  enseña los tres bloques en vez de «IRI · Reingreso · Descartes», que estaban escritos a mano.
+
+**Un fallo que ya estaba publicado y salió al revisar:** las dos tablas de `GALERIA.md` sobre la
+galería entera —«Lo que esta galería valida» y «Lo que no tiene todavía»— son secciones de primer nivel,
+y el lector las pegaba al final de **G-11**. Además, G-11 heredaba sus reglas y el filtro lo sacaba con
+reglas que no trata. Ahora el texto de un caso termina donde empieza una sección de primer nivel.
+
+
 > ✅ **Las nueve tareas de la lista aprobada, cerradas el 22/09/2026.**
 
 ### 9 · Limpiar lo huérfano — 22/09/2026

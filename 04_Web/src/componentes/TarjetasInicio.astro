@@ -46,9 +46,10 @@ const PUERTAS = [
     tono: '#F472B6',
     titulo: 'Casos reales',
     sub: 'Sesiones de verdad, marcadas vela a vela: las que se operaron, las que se descartaron y por qué.',
-    n: P.galeria().length,
+    n: P.casosReales().total,
     etiqueta: 'casos',
-    pie: ['IRI', 'Reingreso', 'Descartes'],
+    // Los tres bloques de la pagina, desde que test ciego y galeria se unieron.
+    pie: ['Test ciego', 'Sesiones', 'Ejemplos'],
   },
 ];
 ---

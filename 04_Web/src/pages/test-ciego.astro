@@ -1,219 +1,27 @@
 ---
 /**
- * Test ciego — las jornadas que Claude marca sin saber que hizo el operador.
+ * /test-ciego ya no es una pagina: desde el 22/09/2026 el test ciego es el
+ * primer bloque de «Casos reales» (a peticion del operador). Esto solo
+ * redirige, para que un enlace guardado no caiga en la portada.
  *
- * Pedido por el operador el 22/09/2026: una seccion propia con cada jornada,
- * su grafico y su veredicto. NO va en la bitacora de backtesting: aquella es
- * el backtesting que hace el operador a mano, y mezclar las dos ensuciaria su
- * registro.
- *
- * De donde sale cada cosa:
- *   - el grafico: 05_Backtesting/test_ciego/Back_claude/AAAA-MM-DD.png, que
- *     genera Cowork con la herramienta de auditoria. Lo trae el copiador.
- *   - el veredicto en texto: SOLO del plan (la tabla del test ciego de
- *     GALERIA.md). Si una jornada no esta ahi todavia, sale solo el grafico,
- *     cuya cabecera ya dice si hubo operacion. Aqui no se redacta ninguno.
- *   - el caso de la galeria, si la jornada tiene uno.
- *
- * Sin totales, a proposito: el resultado agregado del backtesting no sale en
- * el portal (decision del operador, 22/09/2026). Cada jornada va sola.
+ * Una jornada que venia con su fecha —/test-ciego#2026-09-10— sigue
+ * llegando a su tarjeta: la galeria tiene la misma ancla.
  */
-import Marco from '../componentes/Marco.astro';
-import Icono from '../componentes/Icono.astro';
-import * as P from '../lib/parsers.mjs';
-
-const jornadas = P.testCiego();
-
-// El color del resultado solo distingue tres casos que el plan ya escribe
-// con esas palabras: objetivo, stop y no opera.
-const tono = (r: string) =>
-  /TARGET/i.test(r) ? 'ok' : /STOP/i.test(r) ? 'mal' : 'aviso';
+const destino = '/galeria/#test-ciego';
 ---
 
-<Marco titulo="Test ciego">
-  <header class="cab entra">
-    <h1>Test ciego</h1>
-    <p class="lead">
-      Cada jornada la marca Claude a ciegas, sin saber qué hizo el operador, y
-      después se contrastan las dos lecturas. El gráfico lo genera la
-      herramienta de auditoría: su cabecera dice si hubo operación.
-    </p>
-    <p class="apunte">{jornadas.length} jornadas, la más reciente primero.</p>
-  </header>
-
-  <div class="jornadas">
-    {jornadas.map((j, i) => (
-      <article class="jornada entra" id={j.fecha} style={`--retraso:${Math.min(i, 6) * 45}ms`}>
-        <header class="j-cab">
-          <h2 class="j-t">{j.titulo}</h2>
-          {j.veredicto && (
-            <span class:list={['j-res', tono(j.veredicto.resultado)]}>{j.veredicto.resultado}</span>
-          )}
-        </header>
-
-        <button class="j-fig" type="button" data-lupa={j.imagen} data-titulo={j.titulo}>
-          <img src={j.imagen} alt={`Gráfico del test ciego del ${j.titulo.toLowerCase()}`} loading={i < 2 ? 'eager' : 'lazy'} />
-          <span class="j-lupa"><Icono nombre="magnifying-glass-plus" /> Ampliar</span>
-        </button>
-
-        {(j.veredicto || j.caso) && (
-          <footer class="j-pie">
-            {j.veredicto && (
-              <p class="j-ver">
-                <span class="etiqueta">Veredicto</span>
-                <span>{j.veredicto.setup}</span>
-                {j.veredicto.puntos && j.veredicto.puntos !== '—' && (
-                  <span class="j-pts mono">{j.veredicto.puntos} pts</span>
-                )}
-              </p>
-            )}
-            {j.caso && (
-              <a class="j-caso" href={`/galeria#${j.caso.id}`}>
-                <span class="mono">{j.caso.id}</span> {j.caso.lema}
-                <Icono nombre="arrow-right" />
-              </a>
-            )}
-          </footer>
-        )}
-      </article>
-    ))}
-  </div>
-
-  {jornadas.length === 0 && (
-    <p class="vacio">Todavía no hay jornadas: la carpeta del test ciego está vacía.</p>
-  )}
-
-  <!-- Lupa: la misma de la galeria. dialog nativo, cierra con Esc. -->
-  <dialog class="lupa" data-lupa-dlg aria-label="Gráfico ampliado">
-    <button class="lupa-x" type="button" data-lupa-cerrar aria-label="Cerrar">
-      <Icono nombre="x" />
-    </button>
-    <img data-lupa-img src="" alt="" />
-    <p class="lupa-t meta" data-lupa-titulo></p>
-  </dialog>
-</Marco>
-
-<script is:inline>
-  (function () {
-    var dlg = document.querySelector('[data-lupa-dlg]');
-    var img = document.querySelector('[data-lupa-img]');
-    var tit = document.querySelector('[data-lupa-titulo]');
-    if (!dlg) return;
-    document.querySelectorAll('[data-lupa]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        img.src = b.getAttribute('data-lupa');
-        img.alt = b.getAttribute('data-titulo') || '';
-        tit.textContent = b.getAttribute('data-titulo') || '';
-        dlg.showModal();
-      });
-    });
-    document.querySelector('[data-lupa-cerrar]').addEventListener('click', function () { dlg.close(); });
-    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
-    dlg.addEventListener('close', function () { img.src = ''; });
-  })();
-</script>
-
-<style>
-  .cab { margin-bottom: var(--e-7); }
-  .lead { font-size: var(--t-5); color: var(--texto-2); margin: var(--e-4) 0 var(--e-4); }
-  .vacio { color: var(--texto-2); font-size: var(--t-3); }
-
-  .jornadas { display: grid; gap: var(--e-6); }
-  .jornada {
-    padding: var(--e-6);
-    border-radius: var(--radio-4);
-    background: var(--vidrio-fondo);
-    background-image: var(--vidrio-brillo);
-    border: 1px solid var(--vidrio-borde);
-    scroll-margin-top: 6rem;
-  }
-  .jornada:target { box-shadow: var(--halo-azul); }
-
-  .j-cab {
-    display: flex; align-items: baseline; justify-content: space-between;
-    gap: var(--e-3); flex-wrap: wrap; margin-bottom: var(--e-5);
-  }
-  .j-t { margin: 0; font-size: var(--t-6); }
-
-  /* El resultado, como marca: tres tonos y la palabra del plan dentro.
-     No es solo color: la palabra dice lo mismo. */
-  .j-res {
-    flex: none;
-    padding: var(--e-1) var(--e-3);
-    border-radius: var(--radio-pill);
-    border: 1px solid currentColor;
-    font-size: var(--t-2); font-weight: var(--peso-fuerte);
-    letter-spacing: var(--track-etiqueta);
-  }
-  .j-res.ok    { color: var(--positivo); background: color-mix(in srgb, var(--positivo) 10%, transparent); }
-  .j-res.mal   { color: var(--negativo); background: color-mix(in srgb, var(--negativo) 10%, transparent); }
-  .j-res.aviso { color: var(--aviso);    background: color-mix(in srgb, var(--aviso) 10%, transparent); }
-
-  .j-fig {
-    position: relative; display: block; width: 100%;
-    padding: 0; margin: 0;
-    border: 1px solid var(--vidrio-borde);
-    border-radius: var(--radio-3);
-    overflow: hidden;
-    background: var(--n-950);
-    cursor: zoom-in;
-    transition: border-color var(--normal), box-shadow var(--normal);
-  }
-  .j-fig:hover { border-color: color-mix(in srgb, var(--acento) 45%, transparent); box-shadow: var(--halo-azul); }
-  .j-fig img { width: 100%; display: block; }
-  .j-lupa {
-    position: absolute; right: var(--e-3); bottom: var(--e-3);
-    display: inline-flex; align-items: center; gap: var(--e-2);
-    padding: var(--e-2) var(--e-3);
-    border-radius: var(--radio-pill);
-    background: rgba(10, 12, 17, 0.82);
-    backdrop-filter: blur(6px);
-    border: 1px solid var(--vidrio-borde);
-    font-size: var(--t-1); color: var(--texto-2);
-    opacity: 0; transition: opacity var(--normal);
-  }
-  .j-fig:hover .j-lupa, .j-fig:focus-visible .j-lupa { opacity: 1; }
-
-  .j-pie {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: var(--e-4); flex-wrap: wrap;
-    margin-top: var(--e-5); padding-top: var(--e-4);
-    border-top: 1px solid var(--borde-sutil);
-  }
-  .j-ver {
-    display: flex; align-items: baseline; gap: var(--e-3); flex-wrap: wrap;
-    margin: 0; max-width: none; color: var(--texto);
-  }
-  .j-pts { color: var(--texto-2); }
-  .j-caso {
-    display: inline-flex; align-items: center; gap: var(--e-2);
-    color: var(--acento); font-size: var(--t-3);
-  }
-  .j-caso:hover { color: var(--acento-vivo); }
-  .j-caso .mono { font-weight: var(--peso-fuerte); }
-
-  /* ── lupa ────────────────────────────────────────────────────────────── */
-  .lupa {
-    width: min(96vw, 100rem); max-width: none;
-    padding: 0; border: 0; background: none;
-    color: var(--texto);
-  }
-  .lupa::backdrop { background: rgba(5, 8, 14, 0.88); backdrop-filter: blur(4px); }
-  .lupa img { width: 100%; border-radius: var(--radio-3); border: 1px solid var(--vidrio-borde); }
-  .lupa-t { margin: var(--e-3) 0 0; text-align: center; }
-  .lupa-x {
-    position: absolute; top: var(--e-3); right: var(--e-3); z-index: 2;
-    display: flex; padding: var(--e-2);
-    border-radius: var(--radio-pill);
-    background: rgba(10, 12, 17, 0.75);
-    border: 1px solid var(--vidrio-borde);
-    color: var(--texto-2); cursor: pointer;
-    transition: background var(--normal), color var(--normal);
-  }
-  .lupa-x:hover { background: var(--elevado); color: var(--texto); }
-
-  @media (max-width: 760px) {
-    .jornada { padding: var(--e-5); }
-    .j-lupa { opacity: 1; }
-  }
-</style>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Test ciego · ahora en Casos reales</title>
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${destino}`} />
+    <link rel="canonical" href="/galeria/" />
+    <script is:inline define:vars={{ destino }}>
+      location.replace(location.hash && location.hash.length > 1 ? '/galeria/' + location.hash : destino);
+    </script>
+  </head>
+  <body>
+    <p>El test ciego está ahora en <a href="/galeria/#test-ciego">Casos reales</a>.</p>
+  </body>
+</html>
