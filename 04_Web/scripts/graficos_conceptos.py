@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# ─────────────────────────────────────────────────────────────────────────
+# ⚠️  NO SE EJECUTA DESDE EL PORTAL.
+#
+#     Los diagramas del metodo (public/conceptos/) se hacen en Cowork, donde
+#     se revisan mirandolos uno por uno. Este script es de cuando se dibujaban
+#     desde aqui: se conserva como referencia, no como herramienta.
+#     Nota anadida el 22/09/2026 (tarea 9 de PENDIENTE_PORTAL.md).
+# ─────────────────────────────────────────────────────────────────────────
 """
 graficos_conceptos.py — dibuja los gráficos que explican la estrategia.
 

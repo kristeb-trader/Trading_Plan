@@ -120,74 +120,6 @@ export function categorias() {
  */
 export const ENLACES_CRUZADOS = new Map([['R-20', ['setup_entrada']]]);
 
-// ─────────────────────────────────────────────────────────────── sub-fases
-/** El indice declarado por el propio documento, en su orden (no el numerico). */
-export function subfasesDeclaradas() {
-  const t = documento('TRADING_PLAN_CHAUMER.md');
-  const tabla = t.split(/^## Estado de construcci[oó]n/im)[1] || '';
-  const corte = tabla.split(/^---/m)[0] || '';
-  const filas = [];
-  for (const linea of corte.split(/\r?\n/)) {
-    const m = linea.match(/^\|\s*\*{0,2}(F1\.\d{1,2})\*{0,2}\s*\|([^|]*)\|([^|]*)\|/);
-    if (m) filas.push({ id: m[1], titulo: m[2].trim(), estado: m[3].trim() });
-  }
-  return filas;
-}
-
-/**
- * Las secciones que existen de verdad en el cuerpo, en el orden del documento.
- *
- * OJO: dentro de una sub-fase hay encabezados del MISMO nivel, porque cada
- * regla es un encabezado de nivel 2. Si se corta por nivel, cada sub-fase se
- * queda en su entradilla y se pierde toda la explicacion. Por eso se corta de
- * un encabezado de sub-fase al siguiente, sea cual sea el nivel de lo que
- * haya en medio.
- */
-export function subfasesEnElCuerpo() {
-  const t = documento('TRADING_PLAN_CHAUMER.md');
-  const lineas = t.split(/\r?\n/);
-
-  const marcas = [];
-  let enCodigo = false;
-  lineas.forEach((linea, i) => {
-    if (/^\s*```/.test(linea)) enCodigo = !enCodigo;
-    if (enCodigo) return;
-    const m = linea.match(/^(#{1,3})\s+(.*)$/);
-    if (!m) return;
-    const limpio = tituloLimpio(m[2]);
-    const id = limpio.match(/^(F1\.\d{1,2})\b/);
-    if (id) marcas.push({ i, nivel: m[1].length, id: id[1], limpio });
-  });
-
-  return marcas.map((m, k) => {
-    const hasta = k + 1 < marcas.length ? marcas[k + 1].i : lineas.length;
-    return {
-      id: m.id,
-      titulo: m.limpio.replace(/^F1\.\d{1,2}\s*[·-]?\s*/, ''),
-      nivel: m.nivel,
-      cuerpo: lineas.slice(m.i + 1, hasta).join('\n').trim(),
-    };
-  });
-}
-
-// ─────────────────────────────────────────────────────────────── glosario
-/** Un termino es un encabezado de nivel 2 cuya primera palabra va en mayusculas.
- *  Asi quedan fuera «Regla del glosario», «Colores de las velas» y
- *  «Preguntas abiertas heredadas», que son secciones, no terminos. */
-export function glosario() {
-  const t = documento('GLOSARIO.md');
-  return partirPorEncabezado(t, [2])
-    .map((b) => ({ ...b, limpio: tituloLimpio(b.titulo) }))
-    .filter((b) => {
-      const primera = b.limpio.split(/[\s(*]/)[0].replace(/[^\p{L}]/gu, '');
-      return primera.length > 1 && primera === primera.toUpperCase();
-    })
-    .map((b) => ({
-      termino: b.limpio.replace(/\s*\*\(.*$/, '').trim(),
-      titulo: b.limpio,
-      cuerpo: b.cuerpo,
-    }));
-}
 
 // ─────────────────────────────────────────────────────────────── galeria
 export function galeria() {
@@ -674,23 +606,6 @@ export function diagramas() {
   return partes.filter((p) => p.n > 0);
 }
 
-// ─────────────────────────────────────────────── backtesting + los 4 huecos
-/** Las cifras y sus cuatro motivos SIEMPRE juntos. Ninguna pagina puede
- *  pedir una sin la otra: es un solo objeto a proposito. */
-export function backtesting() {
-  const t = documento('CIERRE_FASE_1.md');
-  const total = t.match(/\*\*([-−]?[\d.,]+\s*pts)\*\*/);
-  const ops = t.match(/Total\s+(\d+)\s+operaciones/i);
-  const huecos = partirPorEncabezado(t, [3])
-    .filter((b) => /·\s*`?[FP]1?\.?\d|^\d\s*·/.test(b.titulo) || /^\d+\s*·/.test(tituloLimpio(b.titulo)))
-    .map((b) => ({ titulo: tituloLimpio(b.titulo), cuerpo: b.cuerpo }));
-  return {
-    total: total ? total[1] : null,
-    operaciones: ops ? Number(ops[1]) : null,
-    huecos,
-  };
-}
-
 
 // ──────────────────────────────── la regla dentro del documento largo
 /** Mapa id -> { titulo, cuerpo } con la seccion que explica cada regla en
@@ -785,10 +700,6 @@ export function notasParametros() {
   return salida;
 }
 
-/** El acta de cierre completa, para renderizarla entera. */
-export function documentoCierre() {
-  return documento('CIERRE_FASE_1.md');
-}
 
 /** Quita las referencias de codigo de un titulo ya renderizado.
  *

@@ -29,17 +29,11 @@ console.log('     campos presentes: accion ' + conCampo('accion') + ' · priorid
   + ' · nota ' + conCampo('nota') + ' · excepciones ' + conCampo('excepciones')
   + ' · fuente ' + conCampo('fuente') + ' · pendiente ' + conCampo('pendiente'));
 
-// --- sub-fases
-const declaradas = P.subfasesDeclaradas();
-const enCuerpo = P.subfasesEnElCuerpo();
-console.log('\nSUB-FASES');
-linea('en el indice', declaradas.length, declaradas.map((s) => s.id).join(' '));
-linea('con seccion en el cuerpo', enCuerpo.length, enCuerpo.map((s) => s.id).join(' '));
-const sinCuerpo = declaradas.filter((d) => !enCuerpo.some((c) => c.id === d.id)).map((d) => d.id);
-if (sinCuerpo.length) linea('sin cuerpo propio', sinCuerpo.length, sinCuerpo.join(' '));
+// Sub-fases, glosario y backtesting ya no se cuentan: sus lectores se
+// borraron el 22/09/2026 con la pagina que los usaba (tarea 9 de
+// PENDIENTE_PORTAL.md). El portal no los ensena.
 
 // --- resto de documentos
-const glo = P.glosario();
 const gal = P.galeria();
 const pen = P.pendientes();
 const ctx = P.contextualizacion();
@@ -48,7 +42,6 @@ const par = P.parametros();
 const dia = P.diagramas();
 
 console.log('\nDOCUMENTOS');
-linea('terminos de glosario', glo.length);
 linea('casos de galeria', gal.length, gal.filter((c) => c.imagen).length + ' con imagen · '
   + gal.filter((c) => c.estandarActual).length + ' con el estandar actual');
 linea('pendientes abiertos', pen.filter((p) => p.abierto).length,
@@ -64,19 +57,11 @@ linea('parametros', par.size, [...par.keys()].join(' '));
 linea('diagramas mermaid', dia.reduce((a, d) => a + d.n, 0),
   dia.map((d) => d.archivo + ':' + d.n).join(' · '));
 
-// --- backtesting: cifras y motivos, siempre juntos
-const bt = P.backtesting();
-console.log('\nBACKTESTING');
-linea('resultado', bt.total || '?', bt.operaciones + ' operaciones');
-linea('motivos que lo invalidan', bt.huecos.length);
-
 // --- contraste con lo que dicen las cabeceras
 console.log('\nDESAJUSTES CON LAS CABECERAS  (se muestran, no se corrigen)');
 const desajustes = [
   ['GALERIA.md dice 11 casos', gal.length],
   ['el guion dice 8 pendientes abiertos', pen.filter((p) => p.abierto).length],
-  ['el plan dice 12 sub-fases', declaradas.length],
-  ['CLAUDE.md decia 24 terminos', glo.length],
   ['el guion dice 2 diagramas', dia.reduce((a, d) => a + d.n, 0)],
 ];
 for (const [dice, hay] of desajustes) console.log('  ' + dice.padEnd(38) + '-> hay ' + hay);

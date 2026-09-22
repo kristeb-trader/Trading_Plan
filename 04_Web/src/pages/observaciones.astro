@@ -77,12 +77,13 @@ import Icono from '../componentes/Icono.astro';
 
     // Las anclas de termino y pendiente no llevan a ningun sitio desde el
     // 06/09/2026: esas paginas se retiraron. Caen en `general`, que es la
-    // portada, en vez de a un enlace roto.
+    // portada, en vez de a un enlace roto. Las de sub-fase, igual desde el
+    // 22/09/2026, cuando se borro la pagina del plan por sub-fases.
     var RUTA = {
       regla: function (id) { return '/reglas/' + id; },
       caso: function (id) { return '/galeria#' + id; },
       parametro: function (id) { return '/parametros#' + id; },
-      subfase: function (id) { return '/plan#' + id; },
+      subfase: function () { return '/'; },
       general: function () { return '/'; },
     };
     var NOMBRE = {
