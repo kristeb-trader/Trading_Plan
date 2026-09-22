@@ -12,6 +12,12 @@ _Historia/
 # --- datos de mercado exportados de NinjaTrader ---
 05_Backtesting/datos/
 
+# --- graficos del backtesting manual: se quedan en disco ---
+# Decision del operador, 22/09/2026. Son 33 MB de PNG solo en 2025 y
+# crecen cada dia; en git quedarian para siempre en el historial. La
+# bitacora del portal guarda sus imagenes aparte, en Cloudflare R2.
+05_Backtesting/05_01_Operativo/Back_*/
+
 # --- módulo web (fase 2) ---
 04_Web/node_modules/
 04_Web/dist/
