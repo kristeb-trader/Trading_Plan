@@ -2,7 +2,7 @@
 
 > **Archivo de arranque.** Léelo primero cada sesión. Detalle completo en `TRADING_PLAN_CHAUMER.md` y `GLOSARIO.md`.
 
-**v3.11** · 2026-09-21 · **40 reglas** · **25 términos** · 🏁 FASE 1 CERRADA · 🔴 **TEST CIEGO EN MARCHA** · 🚧 FASE 2 en curso: portal web en `04_Web\`
+**v3.12** · 2026-09-23 · **40 reglas** · **26 términos** · 🏁 FASE 1 CERRADA · 🔴 **TEST CIEGO EN MARCHA** · 🚧 FASE 2 en curso: portal web en `04_Web\`
 
 > 🔴 **El test ciego arrancó el 14/09/2026.** Primera jornada: **10/09/2026** — largo, entrada 29.145,75 a las 8:40, riesgo 40,50 → objetivo en 8:41, **+40,50 pts**. Protocolo en `05_Backtesting\test_ciego\LEEME_BACK_DIARIO.md`; diferencias en `DISCREPANCIAS.md`. Con esto **se cierra el primero de los cuatro huecos declarados**; siguen abiertos los otros tres. Ver `CIERRE_FASE_1.md`.
 > 📅 **Tercera jornada: lunes 14/09/2026 — NO OPERA.** De ella sale la reescritura de **`R-40`** y el término **corrida fluida**. 🔴 **Obligó a corregir una sesión ya validada:** el 16/07/2026 deja de tener operación, y julio pasa de **−91,00 pts en 9** a **−77,75 en 5**.
@@ -11,6 +11,7 @@
 > 📝 **15/09/2026 — `R-11`, la zona apéndice, reescrita.** Queda **calcada de `R-10`**: sale la frase *"si el plazo se resuelve"* y entran los dos finales completos —cinco velas, o estructura completa al contrario, lo que llegue primero—. Lo único que separa las dos reglas es **dónde cierra la vela de rompimiento**. Cambio de redacción: **no se mueve el motor ni ninguna jornada**.
 > 🧭 **19/09/2026 — la banda gastada no se reabre, y el motor ya lo aplica.** La regla estaba escrita desde el 27/08 pero el motor contaba el turno solo con las zonas **vivas**, y la frase de que una zona inválida *"no cuenta para nada"* empujaba al revés. Ahora: **deja de valer como zona; no deja de ocupar el sitio.** Se caen 3 zonas en 18 sesiones y **ningún resultado cambia**.
 > 🧭 **21/09/2026 — ROMPIMIENTO DIRECTO.** Cuando se pierde la fluidez **se acaban las entradas en el sentido del día**, no solo en esa zona. El rompimiento que llega después **no se opera nunca**; se vuelve a entrar con un IRI nuevo entero más allá. Alcanza a las zonas de premercado. Se puede volver a perder.
+> 🏷️ **23/09/2026 — el setup IRI pasa a llamarse CONTINUACIÓN.** Solo el nombre: `R-25` no cambia. **IRI** queda como la **estructura** (corrida que deja zona, retroceso, corrida que la rompe). Cuatro nombres: Continuación alcista/bajista · Reingreso alcista/bajista. Desaparece la etiqueta «Apertura» y se cierra `P-20`.
 > 🔢 Numeración nueva desde el 06/09/2026 — traducción en `_Historia\EQUIVALENCIA_NUMERACION.md`.
 
 ## Las 40 reglas confirmadas, por categoría
@@ -61,7 +62,7 @@
 |---|---|
 | `R-23` | **Primer setup válido**, sin comparar |
 | `R-24` | Stop Market a 1 tick de la vela de rompimiento, al cierre de esa vela |
-| `R-25` | **IRI**: corrida→retroceso→zona→rompimiento→consecución = entrada · plazo 5 velas · filtro: zona vigente |
+| `R-25` | **Continuación**: un IRI (corrida→retroceso→zona→rompimiento) + consecución = entrada · plazo 5 velas · filtro: zona vigente |
 | `R-26` | **Reingreso**: rompimiento falla→precio atraviesa la zona entera→consecución = entrada · **inmediato o no es** |
 | `R-27` | La vela de apertura **no sesga la jornada**: se opera en los dos sentidos |
 | `R-40` | **Corrida fluida:** solo se opera el rompimiento de una corrida limpia — la corrida deja su zona, el retroceso **no se pasa**, y la siguiente **rompe**. Si falla, se espera otro IRI con zona nueva **entera** más allá. Solo continuación |
@@ -84,7 +85,7 @@
 | ID | En una línea |
 |---|---|
 | `R-35` | Noticia roja Forex Factory: no operar ±5 min; la orden pendiente se cancela |
-| `R-36` | **Día FOMC** (Forex Factory en rojo): IRI prohibido todo el día, solo Reingreso |
+| `R-36` | **Día FOMC** (Forex Factory en rojo): Continuación prohibida todo el día, solo Reingreso |
 | `R-37` | Enfermo o mentalmente mal → no operar · **criterio libre, sin número** |
 
 ### 7 · Proceso diario (1)

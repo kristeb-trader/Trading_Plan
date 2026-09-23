@@ -3,7 +3,7 @@
 > **Se ejecuta de arriba abajo. No se decide nada que no esté aquí.**
 > Cada línea cita su regla. Si una respuesta es **NO** donde dice parar, **se para** — no se evalúa, no se matiza.
 
-**Versión del plan:** 3.7 · 2026-09-14 · **40 reglas**
+**Versión del plan:** 3.12 · 2026-09-23 · **40 reglas**
 
 ---
 
@@ -12,7 +12,7 @@
 | ☐ | Comprobación | Regla | Si falla |
 |---|---|---|---|
 | ☐ | **¿Estoy bien, física y mentalmente?** | `R-37` | **NO → no se opera hoy.** Se cierra aquí |
-| ☐ | Forex Factory: **¿hay evento de la Fed en rojo hoy?** | `R-36` | **SÍ → hoy solo Reingreso. IRI prohibido todo el día** |
+| ☐ | Forex Factory: **¿hay evento de la Fed en rojo hoy?** | `R-36` | **SÍ → hoy solo Reingreso. Continuación prohibida todo el día** |
 | ☐ | Forex Factory: anotar la **hora de cada noticia roja** | `R-35` | — |
 | ☐ | Calcular las ventanas **T−5 → T+5** y marcar las que caigan dentro de la ventana operativa | `R-35` | — |
 
@@ -44,14 +44,14 @@
 | ☐ | Acción | Regla |
 |---|---|---|
 | ☐ | **Primer setup válido.** No se compara con posibles setups posteriores ni se espera uno mejor | `R-23` |
-| ☐ | ¿Es **IRI** o **Reingreso**? | `R-25` / `R-26` |
-| ☐ | *(solo IRI)* **¿La corrida es FLUIDA?** Tres cosas seguidas: la corrida dejó su zona · **el retroceso no se pasó** (mide menos que su corrida) · y **ésta es la corrida siguiente, que la rompe**. Cada corrida se empareja con el retroceso que viene justo después de ella | `R-40` |
+| ☐ | ¿Es **Continuación** o **Reingreso**? | `R-25` / `R-26` |
+| ☐ | *(solo Continuación)* **¿La corrida es FLUIDA?** Tres cosas seguidas: la corrida dejó su zona · **el retroceso no se pasó** (mide menos que su corrida) · y **ésta es la corrida siguiente, que la rompe**. Cada corrida se empareja con el retroceso que viene justo después de ella | `R-40` |
 
 ### Medir · anclar la regla en el nivel de entrada
 
 | ☐ | Setup | Dónde va el stop | Regla |
 |---|---|---|---|
-| ☐ | **IRI** | extremo del **retroceso** | `R-32` |
+| ☐ | **Continuación** | extremo del **retroceso** | `R-32` |
 | ☐ | **Reingreso** | extremo de la **corrida fallida** | `R-32` |
 | ☐ | **Target** = misma distancia, al otro lado. **1:1** | | `R-32` |
 
@@ -62,12 +62,12 @@
 | ☐ | Stop ≤ **80 puntos** (`STOP_MAX`) | `R-31` | **NO SE OPERA** |
 | ☐ | Target 1:1 **libre de zonas vigentes** | `R-32`, `R-21` | **NO SE OPERA** |
 | ☐ | *(solo Reingreso)* Target **sin pasar del punto de referencia** vivo más cercano que quede entre la entrada y el objetivo — el nivel de referencia de cualquier retroceso. Muere solo cuando **una vela CIERRA** más allá; la mecha no lo rompe | `R-41`, `R-26` | **NO SE OPERA** |
-| ☐ | *(solo IRI)* ¿La corrida es fluida? | `R-40` | **NO SE OPERA ESE ROMPIMIENTO.** La zona sigue viva. Se espera a otro IRI que deje una zona nueva **entera** más allá de ésta — por encima para largo, por debajo para corto |
-| ☐ | ¿Es día de FOMC y el setup es un IRI? | `R-36` | **NO SE OPERA** |
+| ☐ | *(solo Continuación)* ¿La corrida es fluida? | `R-40` | **NO SE OPERA ESE ROMPIMIENTO.** La zona sigue viva. Se espera a otro IRI que deje una zona nueva **entera** más allá de ésta — por encima para largo, por debajo para corto |
+| ☐ | ¿Es día de FOMC y el setup es una **Continuación**? | `R-36` | **NO SE OPERA** |
 
 > 🔴 **El target nunca se acorta para que quepa.** No existe media entrada ni ratio reducido.
 
-> 🟠 **Si un setup se descarta, la zona NO queda vacía.** Tras rechazar un **IRI** por cualquiera de los cuatro filtros, **seguir mirando esa misma zona**: si el rompimiento falla y el precio la atraviesa entera hasta salir por el borde contrario, ahí hay un **Reingreso** (`R-26`) — y puede llegar en la **misma vela**. Caso real: `G-12`, 06/07/2026, IRI descartado y Reingreso operado con un minuto de diferencia.
+> 🟠 **Si un setup se descarta, la zona NO queda vacía.** Tras rechazar una **Continuación** por cualquiera de los cuatro filtros, **seguir mirando esa misma zona**: si el rompimiento falla y el precio la atraviesa entera hasta salir por el borde contrario, ahí hay un **Reingreso** (`R-26`) — y puede llegar en la **misma vela**. Caso real: `G-12`, 06/07/2026, IRI descartado y Reingreso operado con un minuto de diferencia.
 
 ### Enviar
 
@@ -116,7 +116,7 @@ entrada · salida · niveles · hora · resultado
 ### Manual
 | Campo | Por qué |
 |---|---|
-| **Setup**: `IRI Apertura` / `IRI Continuación` / `Reingreso` | sin esto no se pueden separar estadísticas por setup |
+| **Setup**: `Continuación` / `Reingreso` · **Dirección**: alcista / bajista | sin esto no se pueden separar estadísticas por setup |
 | **Imagen** de la operativa | `F1.10`, galería de casos |
 | **Errores** cometidos | detecta desviaciones del plan |
 | **Observaciones** | |

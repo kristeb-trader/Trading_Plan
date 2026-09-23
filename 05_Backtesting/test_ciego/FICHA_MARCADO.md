@@ -1,6 +1,6 @@
 # FICHA DE MARCADO — generada automáticamente
 
-> ⚙️ **No editar a mano.** Generada desde `01_Plan/reglas.json` el 2026-09-21 con `generar_ficha.py`.
+> ⚙️ **No editar a mano.** Generada desde `01_Plan/reglas.json` el 2026-09-23 con `generar_ficha.py`.
 > Si algo aquí contradice a `reglas.json`, manda `reglas.json` — y vuelve a generar la ficha.
 
 **40 reglas.** Aquí van sin el porqué ni los ejemplos: solo lo que hay que aplicar.
@@ -246,13 +246,13 @@
 - `reentrada_tras_T+5` → si el setup sigue vivo se vuelve a colocar la orden. Sujeto a P-19 (conflicto con el reloj de 5 velas de R-20)
 - ▶️ **acción:** No colocar orden dentro de la ventana. Si ya hay orden pendiente sin llenar, se CANCELA al entrar T-5. Pasado T+5, si el setup sigue vivo, se vuelve a colocar la orden.
 
-**`R-36`** · En dia de FOMC no se opera IRI. Solo se permite Reingreso.
+**`R-36`** · En dia de FOMC no se opera Continuacion. Solo se permite Reingreso.
 - `definicion_dia_FOMC` → cualquier dia en que Forex Factory marque en ROJO un evento de la Fed. Incluye decision de tipos, actas y discursos de Powell si aparecen en rojo
 - `fuente` → Forex Factory, la misma unica fuente de R-35
 - `alcance` → el DIA ENTERO, no solo la hora del anuncio
-- `IRI` → PROHIBIDO (R-25)
+- `Continuacion` → PROHIBIDO (R-25)
 - `Reingreso` → PERMITIDO (R-26), con todas sus condiciones normales
-- ▶️ **acción:** Ese dia solo se busca Reingreso. Un IRI valido se deja pasar aunque cumpla todo.
+- ▶️ **acción:** Ese dia solo se busca Reingreso. Una Continuacion valida se deja pasar aunque cumpla todo.
 
 **`R-37`** · No se opera estando enfermo o sin encontrarse bien mentalmente.
 - `criterio` → LIBRE. Juicio del operador, sin condicion medible. Decision consciente del operador el 24/08/2026
@@ -297,21 +297,21 @@
 **`R-31`** · Ejecuta con la ATM K1 al valor de ATM_DEFECTO y ajusta stop y target a mano tras el llenado, en ese orden.
 - `ATM` → K1 · 1 contrato MNQ · Auto Breakeven OFF · Auto Trail OFF
 - `defecto` → ATM_DEFECTO = 320 ticks = 80 puntos = $160. Igual a STOP_MAX a proposito: el stop provisional nunca debe ser mas ajustado que el estructural
-- `filtro_previo_al_envio` <= → STOP_MAX = 80 puntos. La distancia se mide entre la ENTRADA y el stop estructural de R-32: IRI = el extremo alcanzado DESDE QUE NACIO LA ZONA hasta la vela de rompimiento (corregido 27/08/2026; NO es solo el extremo del retroceso que la origino). Reingreso = extremo de la CORRIDA FALLIDA.
+- `filtro_previo_al_envio` <= → STOP_MAX = 80 puntos. La distancia se mide entre la ENTRADA y el stop estructural de R-32: Continuacion = el extremo alcanzado DESDE QUE NACIO LA ZONA hasta la vela de rompimiento (corregido 27/08/2026; NO es solo el extremo del retroceso que la origino). Reingreso = extremo de la CORRIDA FALLIDA.
 - `tras_el_llenado` → 1o el stop a su referencia estructural, 2o el target a distancia 1:1 (R-32)
 - ▶️ **acción:** Verificar distancia antes de enviar. Si supera 240 ticks, no operar. Tras el llenado arrastrar stop y luego target. No volver a moverlos.
 
 **`R-32`** · Ancla la regla en el nivel de entrada, mide el stop hasta su referencia estructural y pon el target a esa misma distancia.
 - `ancla` → el nivel de ENTRADA (la consecucion)
-- `stop_IRI_largo` → el punto MAS BAJO alcanzado desde que nacio la zona hasta la vela de rompimiento
-- `stop_IRI_corto` → el punto MAS ALTO alcanzado desde que nacio la zona hasta la vela de rompimiento
+- `stop_Continuacion_alcista` → el punto MAS BAJO alcanzado desde que nacio la zona hasta la vela de rompimiento
+- `stop_Continuacion_bajista` → el punto MAS ALTO alcanzado desde que nacio la zona hasta la vela de rompimiento
 - `stop_Reingreso_largo` → el punto MAS BAJO de la corrida fallida (la que rompio la zona y no continuo)
 - `stop_Reingreso_corto` → el punto MAS ALTO de la corrida fallida
 - `target` → RATIO_TARGET = 1:1. La misma distancia del stop, medida desde la entrada al otro lado
 - `filtro_1_riesgo` <= → STOP_MAX = 80 puntos
 - `filtro_2_zonas` → el target 1:1 debe estar LIBRE de zonas vigentes (R-21). Camino de recorrido sin nada en contra
 - `filtro_3_punto_de_referencia` → solo Reingreso: el objetivo debe caber dentro del punto de referencia, definido en R-41 (unificado 14/09/2026)
-- `stop_IRI` → punto mas extremo alcanzado desde que nacio la zona hasta la vela de rompimiento, no solo el extremo del retroceso que la origino
+- `stop_Continuacion` → punto mas extremo alcanzado desde que nacio la zona hasta la vela de rompimiento, no solo el extremo del retroceso que la origino
 - ▶️ **acción:** Si CUALQUIERA de los tres filtros falla, la entrada queda INVALIDADA y no se opera. El target NUNCA se acorta para que quepa.
 
 **`R-33`** · Una vez ajustados stop y target, NO se gestiona la posicion. Nunca.
@@ -352,16 +352,16 @@
 - `orden_limite` → prohibida
 - ▶️ **acción:** Colocar la orden Stop Market en el Chart Trader de MNQ y esperar. No perseguir el precio a mano.
 
-**`R-25`** · Setup IRI: corrida, retroceso, zona, rompimiento de esa zona y consecucion. La consecucion es la entrada.
+**`R-25`** · Setup Continuacion: un IRI —corrida, retroceso, zona y rompimiento de esa zona— y su consecucion. La consecucion es la entrada.
 - `paso_1` → corrida (R-05)
 - `paso_2` → retroceso (R-06)
 - `paso_3` → se marca la zona en la vela extrema de la corrida (R-09). Alcista: RESISTENCIA. Bajista: SOPORTE
 - `paso_4` → rompimiento de ESA zona por >=1 tick, en el sentido de la corrida (R-20)
 - `paso_5_entrada` → consecucion: >=1 tick mas alla del extremo de la vela de rompimiento (R-20 + R-24)
 - `plazo` <= → 5 velas desde la siguiente a la de rompimiento. Lo habitual es la 1a o 2a
-- `zona_requerida` → SI. La zona la genera el propio impulso del paso 1. No existe IRI sin zona
-- `filtro_de_target` → solo zona vigente (R-21). El punto de referencia NO aplica al IRI
-- `etiquetas_NT8` → IRI Apertura e IRI Continuacion: MISMA mecanica, la etiqueta es solo estadistica (P-20)
+- `zona_requerida` → SI. La zona la genera el propio impulso del paso 1. No existe Continuacion sin zona
+- `filtro_de_target` → solo zona vigente (R-21). El punto de referencia NO aplica a la Continuacion
+- `direcciones` → Continuacion alcista / Continuacion bajista. La etiqueta Apertura desaparece (decision del operador 23/09/2026; cierra P-20)
 - ▶️ **acción:** Colocar Stop Market al cierre de la vela de rompimiento, en el nivel de consecucion (R-24). Bajista: espejo exacto.
 - ⚠️ **excepción:** Si a la 6a vela no hubo consecucion, la ENTRADA queda invalidada. El destino de la ZONA lo deciden R-10/R-11.
 
@@ -385,7 +385,7 @@
 - `condicion_1_la_corrida` → la corrida deja su zona al terminar (R-09)
 - `condicion_2_el_retroceso_no_se_pasa` <= → el retroceso mide MENOS que su corrida. Se miden los dos sobre el zigzag: la corrida de su punto de arranque a su extremo, y el retroceso de ese mismo extremo a su nivel de referencia (R-06). Empate = no se pasa
 - `condicion_3_la_siguiente_rompe` → la corrida siguiente ROMPE la zona de la primera. Si no es capaz y se devuelve, el mercado esta lateral
-- `entrada` → el rompimiento de esa zona por la corrida siguiente. Es el paso 4 del IRI (R-25)
+- `entrada` → el rompimiento de esa zona por la corrida siguiente. Es el paso 4 de la Continuacion (R-25)
 - `fallo_A_el_retroceso_se_pasa` → si el retroceso mide MAS que su corrida, caen LAS DOS zonas de la pareja: la de la corrida y la que deja el propio retroceso pasado. Palabras del operador 14/09/2026: 'cuando el retroceso fue mayor que la corrida bajista, se genera zona de resistencia, y no se deberia ingresar en un rompimiento directo'
 - `fallo_B_no_rompe` → si la corrida siguiente no rompe la zona y se devuelve, esa zona queda bloqueada. Palabras del operador: 'como no fue capaz de romper, el mercado va a estar lateral'
 - `como_se_recupera` → DOS pasos, en este orden. PRIMERO: la zona bloqueada queda rota CON SU CONSECUCION — ese rompimiento es el ROMPIMIENTO DIRECTO y NO se opera nunca. DESPUES: el mercado arma un IRI nuevo entero mas alla — corrida que deja su zona, retroceso que la confirma, y rompimiento de esa zona con su consecucion. La zona nueva tiene que quedar ENTERA mas alla de la bloqueada: por encima si se busca largo, por debajo si se busca corto. Se entra en ESE rompimiento, no antes. En la practica el segundo paso arrastra al primero: si el rompimiento fue con mecha y no llego la consecucion, R-10 estira la zona hasta la punta de la mecha, y para que el IRI nuevo quede entero mas alla el precio tiene que pasar de esa punta, que es la consecucion. CONFIRMADO 14/09/2026 · dos pasos explicitados 21/09/2026

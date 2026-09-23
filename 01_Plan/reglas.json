@@ -1314,7 +1314,7 @@
  {
   "id": "R-25",
   "categoria": "setup_entrada",
-  "enunciado": "Setup IRI: corrida, retroceso, zona, rompimiento de esa zona y consecucion. La consecucion es la entrada.",
+  "enunciado": "Setup Continuacion: un IRI —corrida, retroceso, zona y rompimiento de esa zona— y su consecucion. La consecucion es la entrada.",
   "condiciones": [
    {
     "variable": "paso_1",
@@ -1355,19 +1355,19 @@
    {
     "variable": "zona_requerida",
     "operador": "=",
-    "valor": "SI. La zona la genera el propio impulso del paso 1. No existe IRI sin zona",
+    "valor": "SI. La zona la genera el propio impulso del paso 1. No existe Continuacion sin zona",
     "timeframe": "1m"
    },
    {
     "variable": "filtro_de_target",
     "operador": "=",
-    "valor": "solo zona vigente (R-21). El punto de referencia NO aplica al IRI",
+    "valor": "solo zona vigente (R-21). El punto de referencia NO aplica a la Continuacion",
     "timeframe": "1m"
    },
    {
-    "variable": "etiquetas_NT8",
+    "variable": "direcciones",
     "operador": "=",
-    "valor": "IRI Apertura e IRI Continuacion: MISMA mecanica, la etiqueta es solo estadistica (P-20)",
+    "valor": "Continuacion alcista / Continuacion bajista. La etiqueta Apertura desaparece (decision del operador 23/09/2026; cierra P-20)",
     "timeframe": "-"
    }
   ],
@@ -1376,8 +1376,8 @@
    "Si a la 6a vela no hubo consecucion, la ENTRADA queda invalidada. El destino de la ZONA lo deciden R-10/R-11."
   ],
   "prioridad": 1,
-  "estado": "confirmada",
-  "nota": "El IRI es autocontenido: el setup crea la zona que despues rompe. Impulso-Retroceso-Impulso; el segundo impulso es la entrada.",
+  "estado": "confirmada · renombrada de IRI a Continuacion el 23/09/2026 (solo el nombre, nada operativo)",
+  "nota": "La Continuacion es autocontenida: el setup crea la zona que despues rompe. Se construye sobre un IRI (Impulso-Retroceso-Impulso): el segundo impulso rompe la zona y su consecucion es la entrada. Hasta el 23/09/2026 el setup se llamaba IRI.",
   "categoria_nombre": "Setup y entrada",
   "categoria_descripcion": "cuándo se opera",
   "categoria_orden": 4
@@ -1440,7 +1440,7 @@
   "excepciones": [],
   "prioridad": 1,
   "estado": "Confirmada 24/08/2026, plazo anadido 27/08/2026",
-  "nota": "Es la contraria del IRI: el IRI opera el rompimiento que funciona, el Reingreso el que fallo. Unico setup del plan con un segundo filtro de target. La orden muere solo por R-29.",
+  "nota": "Es la contraria de la Continuacion: la Continuacion opera el rompimiento que funciona, el Reingreso el que fallo. Unico setup del plan con un segundo filtro de target. La orden muere solo por R-29.",
   "categoria_nombre": "Setup y entrada",
   "categoria_descripcion": "cuándo se opera",
   "categoria_orden": 4
@@ -1501,7 +1501,7 @@
    {
     "variable": "entrada",
     "operador": "=",
-    "valor": "el rompimiento de esa zona por la corrida siguiente. Es el paso 4 del IRI (R-25)",
+    "valor": "el rompimiento de esa zona por la corrida siguiente. Es el paso 4 de la Continuacion (R-25)",
     "timeframe": "1m"
    },
    {
@@ -1650,7 +1650,7 @@
   "excepciones": [],
   "prioridad": 1,
   "estado": "confirmada",
-  "nota": "Palabras del operador el 14/09/2026: 'un punto de control es un retroceso que dice que en ese punto se puede volver a presentar como una zona que el precio lo puedan defender para evitar que lo rompan'. CASO DE ORIGEN, 11/09/2026: reingreso corto a las 9:01 sobre la zona de premercado de 8:29, entrada 29440.25, stop 29475.00, objetivo 29405.50. El punto de control de la vela de 8:58, en 29423.00, queda en medio: descartado. El operador tampoco lo tomo. Sin esta regla el dia habria dado +34.75 pts. REGRESION: probada sobre las 11 sesiones de julio (umbral 2000 sobre NQ) y sobre el 10/09/2026 — NO cambia ninguna. Julio sigue en -91.00 pts en 9 operaciones, y DOS de esas nueve son reingresos (6 y 13 de julio), asi que el filtro se probo donde muerde. Ver 05_Backtesting/test_ciego/DISCREPANCIAS.md del 11/09/2026. || UNIFICADO 14/09/2026 por decision del operador: 'punto de control y punto de referencia es lo mismo, dejemos uno solo: Punto de Referencia'. Se queda el NOMBRE viejo con la MECANICA nueva (cualquier retroceso vivo, muere por cierre).",
+  "nota": "Palabras del operador el 14/09/2026: 'un punto de control es un retroceso que dice que en ese punto se puede volver a presentar como una zona que el precio lo puedan defender para evitar que lo rompan'. CASO DE ORIGEN, 11/09/2026: Reingreso bajista a las 9:01 sobre la zona de premercado de 8:29, entrada 29440.25, stop 29475.00, objetivo 29405.50. El punto de control de la vela de 8:58, en 29423.00, queda en medio: descartado. El operador tampoco lo tomo. Sin esta regla el dia habria dado +34.75 pts. REGRESION: probada sobre las 11 sesiones de julio (umbral 2000 sobre NQ) y sobre el 10/09/2026 — NO cambia ninguna. Julio sigue en -91.00 pts en 9 operaciones, y DOS de esas nueve son reingresos (6 y 13 de julio), asi que el filtro se probo donde muerde. Ver 05_Backtesting/test_ciego/DISCREPANCIAS.md del 11/09/2026. || UNIFICADO 14/09/2026 por decision del operador: 'punto de control y punto de referencia es lo mismo, dejemos uno solo: Punto de Referencia'. Se queda el NOMBRE viejo con la MECANICA nueva (cualquier retroceso vivo, muere por cierre).",
   "categoria_nombre": "Setup y entrada",
   "categoria_descripcion": "cuándo se opera",
   "categoria_orden": 4
@@ -1784,7 +1784,7 @@
    {
     "variable": "filtro_previo_al_envio",
     "operador": "<=",
-    "valor": "STOP_MAX = 80 puntos. La distancia se mide entre la ENTRADA y el stop estructural de R-32: IRI = el extremo alcanzado DESDE QUE NACIO LA ZONA hasta la vela de rompimiento (corregido 27/08/2026; NO es solo el extremo del retroceso que la origino). Reingreso = extremo de la CORRIDA FALLIDA.",
+    "valor": "STOP_MAX = 80 puntos. La distancia se mide entre la ENTRADA y el stop estructural de R-32: Continuacion = el extremo alcanzado DESDE QUE NACIO LA ZONA hasta la vela de rompimiento (corregido 27/08/2026; NO es solo el extremo del retroceso que la origino). Reingreso = extremo de la CORRIDA FALLIDA.",
     "timeframe": "1m"
    },
    {
@@ -1815,13 +1815,13 @@
     "timeframe": "1m"
    },
    {
-    "variable": "stop_IRI_largo",
+    "variable": "stop_Continuacion_alcista",
     "operador": "=",
     "valor": "el punto MAS BAJO alcanzado desde que nacio la zona hasta la vela de rompimiento",
     "timeframe": "1m"
    },
    {
-    "variable": "stop_IRI_corto",
+    "variable": "stop_Continuacion_bajista",
     "operador": "=",
     "valor": "el punto MAS ALTO alcanzado desde que nacio la zona hasta la vela de rompimiento",
     "timeframe": "1m"
@@ -1863,7 +1863,7 @@
     "timeframe": "1m"
    },
    {
-    "variable": "stop_IRI",
+    "variable": "stop_Continuacion",
     "operador": "=",
     "valor": "punto mas extremo alcanzado desde que nacio la zona hasta la vela de rompimiento, no solo el extremo del retroceso que la origino",
     "timeframe": "1m"
@@ -1873,7 +1873,7 @@
   "excepciones": [],
   "prioridad": 1,
   "estado": "Corregida 27/08/2026 · json alineado 04/09/2026",
-  "nota": "Geometria: el stop del Reingreso mide contra la corrida fallida, que esta al otro lado de la zona, asi que incluye el ancho de la zona entera y tiende a ser mayor que el de un IRI. El filtro STOP_MAX muerde mas en Reingreso. | CORREGIDO 04/09/2026: este archivo seguia diciendo \"el extremo del retroceso\", la definicion anterior al 27/08/2026. El texto del plan ya tenia la buena; el json no. Caso real 7/07/2026: con la vieja el riesgo daba 71,50 pts y la entrada pasaba; con la correcta da 86,25 y queda DESCARTADA por STOP_MAX.",
+  "nota": "Geometria: el stop del Reingreso mide contra la corrida fallida, que esta al otro lado de la zona, asi que incluye el ancho de la zona entera y tiende a ser mayor que el de una Continuacion. El filtro STOP_MAX muerde mas en Reingreso. | CORREGIDO 04/09/2026: este archivo seguia diciendo \"el extremo del retroceso\", la definicion anterior al 27/08/2026. El texto del plan ya tenia la buena; el json no. Caso real 7/07/2026: con la vieja el riesgo daba 71,50 pts y la entrada pasaba; con la correcta da 86,25 y queda DESCARTADA por STOP_MAX.",
   "categoria_nombre": "Riesgo, orden y gestión",
   "categoria_descripcion": "cuánto y hasta dónde",
   "categoria_orden": 5
@@ -2040,7 +2040,7 @@
  {
   "id": "R-36",
   "categoria": "filtros",
-  "enunciado": "En dia de FOMC no se opera IRI. Solo se permite Reingreso.",
+  "enunciado": "En dia de FOMC no se opera Continuacion. Solo se permite Reingreso.",
   "condiciones": [
    {
     "variable": "definicion_dia_FOMC",
@@ -2061,7 +2061,7 @@
     "timeframe": "-"
    },
    {
-    "variable": "IRI",
+    "variable": "Continuacion",
     "operador": "=",
     "valor": "PROHIBIDO (R-25)",
     "timeframe": "-"
@@ -2073,11 +2073,11 @@
     "timeframe": "-"
    }
   ],
-  "accion": "Ese dia solo se busca Reingreso. Un IRI valido se deja pasar aunque cumpla todo.",
+  "accion": "Ese dia solo se busca Reingreso. Una Continuacion valida se deja pasar aunque cumpla todo.",
   "excepciones": [],
   "prioridad": 1,
   "estado": "confirmada",
-  "nota": "Convive con R-35: un evento rojo de la Fed dispara las dos reglas, el veto de IRI todo el dia y el bloqueo de +/-5 min. Misma fuente unica, sin conflicto de calendarios. El operador descarta el setup que persigue continuacion y conserva el que opera rompimientos fallidos.",
+  "nota": "Convive con R-35: un evento rojo de la Fed dispara las dos reglas, el veto de Continuacion todo el dia y el bloqueo de +/-5 min. Misma fuente unica, sin conflicto de calendarios. El operador descarta el setup que persigue continuacion y conserva el que opera rompimientos fallidos.",
   "categoria_nombre": "Filtros de no-operar",
   "categoria_descripcion": "los días que no",
   "categoria_orden": 6

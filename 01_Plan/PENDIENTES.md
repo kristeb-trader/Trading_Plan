@@ -2,7 +2,7 @@
 
 Reglas sin cerrar y decisiones aplazadas.
 
-> Actualizado: 2026-09-14 (b) · 🏁 fase 1 cerrada · 🔴 **test ciego EN MARCHA** — **40 reglas** · 24 términos · 13 desviaciones · **37 pendientes abiertos o cerrados** · numeración libre a partir de `P-38`
+> Actualizado: 2026-09-23 · 🏁 fase 1 cerrada · 🔴 **test ciego EN MARCHA** — **40 reglas** · 24 términos · 13 desviaciones · **37 pendientes abiertos o cerrados** · numeración libre a partir de `P-38`
 >
 > 🚨 **Los cuatro huecos declarados del cierre:** ~~`P-29` test ciego no ejecutado~~ → **arrancó el 14/09/2026, primera jornada marcada: 10/09** · `P-21` sin regla de parada · falta la capa de contextualización · `P-27` las cifras del backtesting no miden la estrategia.
 
@@ -40,7 +40,8 @@ Reglas sin cerrar y decisiones aplazadas.
 - **Acción pendiente:** decidir con datos reales del registro.
 - **Sub-fase:** F1.10, o antes si el operador quiere cerrarlo.
 
-### P-20 · Dónde termina "la apertura" — MENOR, no bloqueante
+### ✅ P-20 · Dónde termina "la apertura" — **CERRADO 23/09/2026**
+- ✅ **CERRADO 23/09/2026 por decisión del operador.** La etiqueta Apertura desaparece: el setup es **Continuación**, alcista o bajista. No queda nada que clasificar.
 - **Origen:** `IRI Apertura` vs `IRI Continuación` (24/08/2026).
 - **Situación:** las dos tienen **la misma mecánica**. La etiqueta no cambia ninguna condición de entrada, stop ni target.
 - **Lo que falta:** el número de velas o la hora en que deja de ser "apertura".
@@ -142,7 +143,7 @@ Reglas sin cerrar y decisiones aplazadas.
 
 ### D-13 · El Giro como tipo de entrada — DESCARTADO
 - **El curso lo enseña** con regla propia: *"entre el break a favor y el break en contra deben haber 4 velas, siendo el giro la 5ª"*.
-- **El operador (24/08/2026):** *"Giro fuera del plan"*. Solo opera **IRI** y **Reingreso**.
+- **El operador (24/08/2026):** *"Giro fuera del plan"*. Solo opera **IRI** y **Reingreso** *(desde el 23/09/2026 el setup IRI se llama **Continuación**)*.
 - **Corrección del auditor:** yo tenía inventariados **4 tipos de entrada** (Continuación, Reingreso, Giro, Patrón de Apertura). Son **2 familias y 2 mecánicas**. El "Patrón de Apertura" no era una familia aparte: es `IRI Apertura`.
 - **Riesgo:** ninguno. Es una entrada que no ejecuta.
 
@@ -331,7 +332,7 @@ Entre `P-01`, `D-03`, `D-04` y `D-05`, la lista de filtros de target del materia
 | **El retroceso que generó la zona** | Es el que define la estructura que se está operando |
 | **El último retroceso antes de la entrada** | Es el nivel cuya perforación demuestra que el movimiento no aguantó, y el que el operador tiene delante en el momento de entrar |
 
-**Cómo apareció.** El 06/07/2026 el IRI se completó a las 8:47 con entrada en 29.959,75. Los dos candidatos daban:
+**Cómo apareció.** El 06/07/2026 la Continuación se completó a las 8:47 con entrada en 29.959,75. Los dos candidatos daban:
 
 - mín retroceso 2 (8:43) = 29.845,75 → **114,00 pts**
 - mín retroceso 1 (8:37) = 29.786,00 → **173,75 pts**

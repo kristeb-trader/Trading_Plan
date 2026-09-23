@@ -1,7 +1,7 @@
 # TRADING PLAN — Estrategia Chaumer (MNQ · NinjaTrader 8)
 
-**Versión:** 3.11 — 🏁 fase 1 cerrada · 🔴 **TEST CIEGO EN MARCHA** · 40 reglas
-**Última actualización:** 2026-09-21
+**Versión:** 3.12 — 🏁 fase 1 cerrada · 🔴 **TEST CIEGO EN MARCHA** · 40 reglas
+**Última actualización:** 2026-09-23
 **Operador:** Christian
 **Metodología base:** Alfredo Chaumer (*trader_sociologist*)
 **Uso:** personal
@@ -15,7 +15,7 @@
 | **F1.0** | Perímetro y contexto operativo | ✅ **Cerrada** — `R-01` a `R-04` confirmadas |
 | **F1.1** | Glosario y definiciones operativas | ✅ **CERRADA** — 24 términos definidos · 8 descartados · 4 movidos a contextualización |
 | **F1.2** | Lectura de contexto y sesgo direccional | ✅ **CERRADA SIN REGLAS** — ver nota |
-| **F1.3** | Identificación del setup | ✅ **CERRADA** — `R-25` IRI y `R-26` Reingreso confirmadas |
+| **F1.3** | Identificación del setup | ✅ **CERRADA** — `R-25` Continuación *(antes IRI)* y `R-26` Reingreso confirmadas |
 | **F1.4** | Gatillo de entrada | ✅ **CERRADA SIN REGLAS NUEVAS** — ya cubierta por `R-24`, `R-20`, `R-25`, `R-26`, `R-29` |
 | **F1.5** | Stop loss y objetivos | ✅ **CERRADA** — `R-32` + `R-31` corregida + `PARAMETROS.md` |
 | **F1.12** | Estructura y marcado | ✅ **CERRADA** — el bloque de zonas (`R-09` a `R-22`) · `R-29`, `R-20`, `R-21`, `R-12`, `R-13`, `R-26`, `R-32` corregidas |
@@ -77,7 +77,7 @@
 | `R-22` | La vela que confirma un traspaso no abre a la vez el rompimiento del lado cont | Zonas · vigencia |
 | `R-23` | Toma el primer setup valido cuya orden se llene | Setup y entrada |
 | `R-24` | Entra siempre con orden stop en reposo colocada al cierre de la vela de rompim | Setup y entrada |
-| `R-25` | Setup IRI: corrida, retroceso, zona, rompimiento de esa zona y consecucion | Setup y entrada |
+| `R-25` | Setup Continuación: un IRI —corrida, retroceso, zona y rompimiento de esa zona— y su consecución | Setup y entrada |
 | `R-26` | Setup Reingreso: tras un rompimiento con consecucion que falla, el precio recu | Setup y entrada |
 | `R-27` | La direccion de la vela de las 08:31 marca por donde empieza el dia pero no ob | Setup y entrada |
 | `R-40` | Corrida fluida: solo se entra en el rompimiento de la zona de una corrida FLUI | Setup y entrada |
@@ -90,7 +90,7 @@
 | `R-33` | Una vez ajustados stop y target, NO se gestiona la posicion | Riesgo, orden y gestión |
 | `R-34` | Al llenarse la orden termina el ANALISIS del dia, no solo la operativa | Riesgo, orden y gestión |
 | `R-35` | No operes en la ventana de +/-5 minutos alrededor de una noticia roja de Forex | Filtros de no-operar |
-| `R-36` | En dia de FOMC no se opera IRI | Filtros de no-operar |
+| `R-36` | En dia de FOMC no se opera Continuación | Filtros de no-operar |
 | `R-37` | No se opera estando enfermo o sin encontrarse bien mentalmente | Filtros de no-operar |
 | `R-38` | Ejecuta la sesion siguiendo la checklist diaria en orden, y registra TODAS las | Proceso diario |
 
@@ -658,10 +658,13 @@ Exactamente lo mismo que al vencer el plazo — **solo cambia el momento**:
 - **Excepciones:** ninguna
 - **Estado:** ✅ Confirmada
 
-## R-25 · Setup IRI *(Impulso–Retroceso–Impulso)*
+## R-25 · Setup Continuación
+
+> Hasta el 23/09/2026 este setup se llamaba **IRI**. Cambió el nombre, nada operativo. Ahora **IRI** *(Impulso–Retroceso–Impulso)* es **la estructura**: una corrida deja su zona, el precio retrocede y la corrida siguiente rompe esa zona. **La Continuación es un IRI fluido (`R-40`) más su consecución**, que es la entrada.
 
 - **Categoría:** setup
-- **Enunciado:** Corrida, retroceso, zona, rompimiento de esa zona y consecución. La consecución es la entrada.
+- **Enunciado:** Un IRI —corrida, retroceso, zona y rompimiento de esa zona— y su consecución. La consecución es la entrada.
+- **Direcciones:** **Continuación alcista** (compra) · **Continuación bajista** (venta).
 - **Condición medible:**
 
 | # | Paso | Regla |
@@ -673,13 +676,13 @@ Exactamente lo mismo que al vencer el plazo — **solo cambia el momento**:
 | 5 | **Consecución** ≥1 tick más allá del extremo de la vela de rompimiento ← **ENTRADA** | `R-20` + `R-24` |
 
 - **Plazo:** **5 velas** desde la siguiente a la de rompimiento. Lo habitual es la 1ª o la 2ª (`C-09`).
-- **Zona requerida:** **sí** — y la genera el propio impulso del paso 1. **No existe IRI sin zona.**
-- **Filtro de target:** solo **zona vigente** (`R-21`). El punto de referencia **no** aplica al IRI.
+- **Zona requerida:** **sí** — y la genera el propio impulso del paso 1. **No existe Continuación sin zona.**
+- **Filtro de target:** solo **zona vigente** (`R-21`). El punto de referencia **no** aplica a la Continuación.
 - **Acción:** Stop Market al cierre de la vela de rompimiento, en el nivel de consecución (`R-24`). Bajista: espejo exacto.
 - **Excepciones:** si a la 6ª vela no hubo consecución, la **entrada** queda invalidada. El destino de la **zona** lo deciden `R-10`/`R-11`.
-- **Estado:** ✅ Confirmada 24/08/2026
+- **Estado:** ✅ Confirmada 24/08/2026 · renombrada 23/09/2026
 
-> 🔑 **El IRI es autocontenido:** el propio setup crea la zona que después rompe.
+> 🔑 **La Continuación es autocontenida:** el propio setup crea la zona que después rompe.
 
 ---
 
@@ -707,7 +710,7 @@ Exactamente lo mismo que al vencer el plazo — **solo cambia el momento**:
 - **Estado:** ✅ Confirmada 24/08/2026 · **plazo añadido 27/08/2026**
 - **Diagrama:** `02_Assets\diagramas\R-26_reingreso.png`
 
-> 🔑 **Es la contraria del IRI:** el IRI opera el rompimiento que **funciona**; el Reingreso, el que **falló**.
+> 🔑 **Es la contraria de la Continuación:** la Continuación opera el rompimiento que **funciona**; el Reingreso, el que **falló**.
 
 ---
 
@@ -740,7 +743,7 @@ La vela de apertura declara el sentido. Desde ahí el mercado va alternando: una
 | **2** | el **retroceso no se pasa**: mide menos que su corrida. Empate cuenta como que no se pasa |
 | **3** | la **corrida siguiente rompe** esa zona |
 
-Cumplidas las tres, ese rompimiento es la entrada — el cuarto paso del IRI (`R-25`).
+Cumplidas las tres, ese rompimiento es la entrada — el cuarto paso de la Continuación (`R-25`).
 
 Los dos primeros se miden sobre el zigzag: la corrida, de su punto de arranque a su extremo; el retroceso, de ese mismo extremo a su nivel de referencia (`R-06`).
 
@@ -877,7 +880,7 @@ No se dibujan todos — el gráfico se llenaría. Se dibuja **solo cuando aparec
 
 ### Caso de origen · viernes 11/09/2026
 
-Reingreso corto a las **9:01** sobre la zona de premercado de 8:29: entrada **29.440,25**, stop **29.475,00**, objetivo **29.405,50**, riesgo 34,75. El punto de control de la vela de **8:58**, en **29.423,00**, queda en medio — y el objetivo lo pasa. **Descartado.** El operador tampoco lo tomó. Sin esta regla el día habría dado +34,75 pts; con ella, la jornada es **NO OPERA**.
+Reingreso bajista a las **9:01** sobre la zona de premercado de 8:29: entrada **29.440,25**, stop **29.475,00**, objetivo **29.405,50**, riesgo 34,75. El punto de control de la vela de **8:58**, en **29.423,00**, queda en medio — y el objetivo lo pasa. **Descartado.** El operador tampoco lo tomó. Sin esta regla el día habría dado +34,75 pts; con ella, la jornada es **NO OPERA**.
 
 > ✅ **Regresión hecha antes de escribir la regla.** Probada sobre las 11 sesiones de julio (umbral 2.000 sobre NQ) y sobre el 10/09/2026: **no cambia ninguna**. Julio sigue en **−91,00 pts en 9 operaciones**. Y no es un test vacío — **dos de esas nueve son reingresos** (6 y 13 de julio), así que el filtro se probó justo donde muerde.
 
@@ -926,7 +929,7 @@ Reingreso corto a las **9:01** sobre la zona de premercado de 8:29: entrada **29
 - **Categoría:** gestión
 - **Enunciado:** Ejecuta con la ATM `K1` al valor de `ATM_DEFECTO` y ajusta stop y target a mano tras el llenado, en ese orden.
 - **Condición medible:** ATM **`K1`** · **1 contrato MNQ** · Auto Breakeven **OFF** · Auto Trail **OFF** · defecto **`ATM_DEFECTO` = 320 ticks**.
-- **Filtro previo al envío:** el stop estructural debe ser **≤ `STOP_MAX` = 80 puntos**. IRI → distancia entrada ↔ extremo del **retroceso**. Reingreso → distancia entrada ↔ extremo de la **corrida fallida**. Si lo supera **aunque sea por 1 tick, no se opera**.
+- **Filtro previo al envío:** el stop estructural debe ser **≤ `STOP_MAX` = 80 puntos**. Continuación → distancia entrada ↔ extremo del **retroceso**. Reingreso → distancia entrada ↔ extremo de la **corrida fallida**. Si lo supera **aunque sea por 1 tick, no se opera**.
 - **Tras el llenado:** 1º el stop a su referencia estructural · 2º el target a 1:1 (`R-32`).
 - **Acción:** una vez ajustados, stop y target **no se vuelven a mover**.
 - **Estado:** ✅ Confirmada *(riesgo residual aceptado en `P-09`)*
@@ -954,15 +957,15 @@ Reingreso corto a las **9:01** sobre la zona de premercado de 8:29: entrada **29
 
 ### Dónde va el stop — **corregido 27/08/2026**
 
-| Setup | Largo | Corto |
+| Setup | Alcista (compra) | Bajista (venta) |
 |---|---|---|
-| **IRI** | punto **más bajo alcanzado desde que nació la zona hasta el rompimiento** | punto **más alto alcanzado desde que nació la zona hasta el rompimiento** |
+| **Continuación** | punto **más bajo alcanzado desde que nació la zona hasta el rompimiento** | punto **más alto alcanzado desde que nació la zona hasta el rompimiento** |
 | **Reingreso** | punto **más bajo de la corrida fallida** | punto **más alto de la corrida fallida** |
 
 > 🔴 **No es solo el extremo del retroceso que originó la zona.** Cuenta **todo** lo que el precio haya hecho mientras la zona estuvo viva, hasta la vela de rompimiento. Si la zona aguanta muchas velas y el precio se aleja más que en su retroceso original, el stop se va con él.
 > **Caso real 7/07/2026:** el soporte de la vela 9:27 se rompe con la vela 9:36. El retroceso que lo originó (9:28–9:30) tenía su techo en 29.313,00 — ese era el stop con la redacción vieja. Pero la vela 9:32 subió hasta **29.327,75**. Con la regla correcta el riesgo pasa de 71,50 a **86,25 pts** y **la entrada queda descartada por `STOP_MAX`**.
 
-> **Geometría:** el stop del Reingreso mide contra la corrida que rompió la zona y falló — al **otro lado** de la zona. Incluye el ancho de la zona entera, así que **tiende a ser mayor** que el de un IRI. El filtro `STOP_MAX` muerde más en Reingreso.
+> **Geometría:** el stop del Reingreso mide contra la corrida que rompió la zona y falló — al **otro lado** de la zona. Incluye el ancho de la zona entera, así que **tiende a ser mayor** que el de una Continuación. El filtro `STOP_MAX` muerde más en Reingreso.
 
 ### Los tres filtros que pueden anular la operación
 
@@ -1059,20 +1062,20 @@ Reingreso corto a las **9:01** sobre la zona de premercado de 8:29: entrada **29
 ## R-36 · Día de FOMC
 
 - **Categoría:** filtro
-- **Enunciado:** En día de FOMC **no se opera IRI. Solo se permite Reingreso.**
+- **Enunciado:** En día de FOMC **no se opera Continuación. Solo se permite Reingreso.**
 
 | | |
 |---|---|
 | **Qué es un día de FOMC** | cualquier día en que **Forex Factory** marque en **rojo** un evento de la Fed — decisión de tipos, actas o discursos de Powell |
 | **Fuente** | Forex Factory, **la misma única fuente de `R-35`** |
 | **Alcance** | el **día entero**, no solo la hora del anuncio |
-| **IRI** (`R-25`) | ❌ **prohibido** |
+| **Continuación** (`R-25`) | ❌ **prohibida** |
 | **Reingreso** (`R-26`) | ✅ **permitido**, con todas sus condiciones normales |
 
-- **Acción:** ese día solo se busca Reingreso. **Un IRI válido se deja pasar aunque cumpla todo.**
+- **Acción:** ese día solo se busca Reingreso. **Una Continuación válida se deja pasar aunque cumpla todo.**
 - **Estado:** ✅ Confirmada 24/08/2026
 
-> 🔑 **Convive con `R-35` sin conflicto.** Un evento rojo de la Fed dispara las dos: el veto de IRI durante todo el día **y** el bloqueo de ±5 minutos. Misma fuente única, así que no hay dos calendarios que puedan discrepar.
+> 🔑 **Convive con `R-35` sin conflicto.** Un evento rojo de la Fed dispara las dos: el veto de Continuación durante todo el día **y** el bloqueo de ±5 minutos. Misma fuente única, así que no hay dos calendarios que puedan discrepar.
 >
 > **La lógica del filtro:** el operador descarta el setup que **persigue continuación** y conserva el que **opera rompimientos fallidos** — justo el comportamiento que domina un mercado a la espera de la Fed.
 
@@ -1150,21 +1153,16 @@ Dos motivos, y los dos son estructurales:
 
 **Fuente:** el selector de setups del propio NinjaTrader del operador (captura en `02_Assets\`).
 
-| Familia | Variante | Dirección | Mecánica |
-|---|---|---|---|
-| **IRI** *(Impulso–Retroceso–Impulso)* | **Apertura** | alcista / bajista | 🔗 **idéntica a Continuación** |
-| **IRI** | **Continuación** | alcista / bajista | 🔗 **idéntica a Apertura** |
-| **Reingreso** | — | alcista / bajista | distinta |
+| Setup | Dirección | Mecánica |
+|---|---|---|
+| **Continuación** | alcista / bajista | se construye sobre un IRI fluido |
+| **Reingreso** | alcista / bajista | distinta: opera el rompimiento que falló |
 
-**6 entradas en el menú → 2 mecánicas distintas.** El espejo alcista/bajista no se documenta por separado: `R-05`, `R-06` y `R-09` ya establecen que todo se refleja exacto.
+**4 entradas en el menú → 2 mecánicas.** El espejo alcista/bajista no se documenta por separado: `R-05`, `R-06` y `R-09` ya establecen que todo se refleja exacto.
 
-### `IRI Apertura` vs `IRI Continuación` — no es una distinción operativa
+**Hasta el 23/09/2026 el menú tenía 6 entradas:** *IRI Apertura* e *IRI Continuación* eran la misma mecánica con dos etiquetas, solo para estadística. El operador quitó la etiqueta Apertura y renombró el setup: *"Vamos a dejar solamente 2 Setups: 1. Continuación (Antes IRI) 2. Reingreso, y las respectivas direcciones (Alcista y Bajista)."* Con eso se cierra `P-20`.
 
-> *"Son la misma mecánica, solo que IRI Apertura se da cuando es la apertura, y el otro IRI ya se da durante la jornada operativa."* — Operador, 24/08/2026
-
-**El plan escribe UNA sola regla de IRI.** La etiqueta Apertura/Continuación existe solo para el **registro estadístico**, no cambia ninguna condición de entrada, stop o target.
-
-> 📌 **`P-20` (menor).** Dónde termina "la apertura" y empieza "la jornada" no tiene número. **No bloquea nada operativo** — solo afecta a cómo se clasifica una operación ya ejecutada. Se cerrará en `F1.9` (proceso diario) o `F1.10`.
+> *Historia:* *"Son la misma mecánica, solo que IRI Apertura se da cuando es la apertura, y el otro IRI ya se da durante la jornada operativa."* — Operador, 24/08/2026
 
 ---
 
@@ -1214,7 +1212,7 @@ El gatillo ya estaba escrito repartido entre reglas anteriores. El operador conf
 
 ## Los dos setups, uno al lado del otro
 
-| | **IRI** | **Reingreso** |
+| | **Continuación** | **Reingreso** |
 |---|---|---|
 | **Qué opera** | el rompimiento que **funciona** | el rompimiento que **falló** |
 | **Dirección** | a favor del rompimiento | **contraria** |
@@ -1311,7 +1309,7 @@ Este plan **no es "Chaumer como se enseña"**, es **"Chaumer como lo opera Chris
 | **D-10** | Zona de desequilibrio (término del curso) | **No usa el término** → descartado |
 | **D-11** | Fractal y manipulación (términos del curso) | **No usa los términos** → descartados |
 | **D-12** | Sesión europea (fuente de zonas críticas en el curso) | **No la mira** → descartada |
-| **D-13** | **Giro** como tipo de entrada (*"4 velas entre el break a favor y el break en contra, el giro es la 5ª"*) | **No lo opera** → descartado. Solo hay IRI y Reingreso |
+| **D-13** | **Giro** como tipo de entrada (*"4 velas entre el break a favor y el break en contra, el giro es la 5ª"*) | **No lo opera** → descartado. Solo hay Continuación y Reingreso |
 
 ### 🔴 El bloque de volumen queda cerrado
 
@@ -1430,12 +1428,12 @@ En la capa de contextualización viven hoy: **sobreextensión** (`C-01`), volume
 
 | | |
 |---|---|
-| **Qué hizo el auditor** | Tras descartar el IRI de la 8:47 por `STOP_MAX`, siguió analizando corridas, retrocesos y zonas hasta la 8:53, y planteó dos preguntas sobre `R-21` y `R-12` |
+| **Qué hizo el auditor** | Tras descartar la Continuación de la 8:47 por `STOP_MAX`, siguió analizando corridas, retrocesos y zonas hasta la 8:53, y planteó dos preguntas sobre `R-21` y `R-12` |
 | **Qué se le pasó** | Que **esa misma vela 8:47** era una **vela de reingreso** perfecta: se dio la vuelta, atravesó la resistencia entera y salió por el borde inferior. `R-26` estaba escrita y confirmada desde el 24/08 |
 | **Quién lo detectó** | El **operador**: *"yo creo que dejaste pasar un setup de Reingreso"* |
 | **El daño** | El trade **válido y operado del día**. Y por `R-34`, todo el análisis posterior a la 8:48 que el auditor presentó **no existía**: el operador ya habría cerrado NT8 |
-| **La causa** | El auditor trató el descarte del IRI como *"aquí no hay nada"* en vez de *"aquí no hay ESTE setup"*. Solo había buscado **un** setup por zona |
-| **Lección** | *Un setup descartado no vacía la zona. Tras rechazar un IRI hay que comprobar de inmediato si el rompimiento fallido abre un Reingreso — es la contraria exacta, y llega en las velas siguientes.* Recogido en la checklist |
+| **La causa** | El auditor trató el descarte de la Continuación como *"aquí no hay nada"* en vez de *"aquí no hay ESTE setup"*. Solo había buscado **un** setup por zona |
+| **Lección** | *Un setup descartado no vacía la zona. Tras rechazar una Continuación hay que comprobar de inmediato si el rompimiento fallido abre un Reingreso — es la contraria exacta, y llega en las velas siguientes.* Recogido en la checklist |
 
 ## Anexo · Horarios de mercado en hora Colombia
 
@@ -1537,3 +1535,4 @@ Colombia es **UTC−5 fijo**: no aplica horario de verano. Todo lo demás se mue
 | **3.9** | **2026-09-15** | 📝 **`R-11` reescrita: la zona apéndice queda calcada de `R-10`.** Sale la frase *"si el plazo se resuelve"* —la misma que se había quitado de la regla de estirar el día anterior por no decir qué es el plazo— y entran los **dos finales escritos completos**: cinco velas, o estructura completa al contrario, lo que llegue primero. Palabras del operador: *"la zona apéndice es básicamente igual que lo que pasa con una zona que se estira... la diferencia es que el rompimiento no es con mecha, sino con cuerpo por fuera. Los casos son los mismos 2"*. Queda escrito en el plan que **lo único que separa las dos reglas es dónde cierra la vela de rompimiento**. Sección propia para `R-11`, que hasta hoy vivía **solo como fila de tabla**. ✅ Cambio de redacción: no se mueve el motor ni ninguna jornada. Anotada en `PROPUESTAS_AL_PLAN.md` la corrección del portal, que escribe el disparador solo como *"5 velas"*. **40 reglas** |
 | **3.10** | **2026-09-19** | 🧭 **La banda gastada no se reabre — y ahora el motor lo aplica.** `R-17` ya decía en su punto 5 que *"la banda no se vuelve a abrir aunque se mueran las zonas que la formaron"*, pero el motor contaba el turno **solo sobre las zonas activas** y solo cuando evaluaba una candidata con vecinas vivas a los dos lados; y la frase de `R-21` —*"inválida es inválida, no cuenta para NADA"*— empujaba en sentido contrario. Detectado por el operador en la jornada del **18/09**: el auditor marcó una resistencia dentro de la franja de la zona de premercado, inválida desde las 8:50. Se añade el **punto 8** a `R-17` —el turno se cuenta sobre **todas** las zonas, activas e inválidas, y sobre las marcadas antes de que la banda existiera— y se precisa `R-21`: **deja de valer como zona; no deja de ocupar el sitio.** Confirmado además el alcance: se cierra **la banda entera**, no solo el rectángulo de la zona muerta. ✅ Regresión: se caen **3 zonas** en 18 sesiones (10/07, 10/09, 18/09) y **ningún resultado cambia**. **40 reglas** |
 | **3.11** | **2026-09-21** | 🧭 **`R-40` ampliada: el bloqueo es del SENTIDO, y nace el término ROMPIMIENTO DIRECTO.** Paso a paso del operador sobre la jornada del 18/09: cuando el retroceso se pasa de la corrida **se acaban las entradas en el sentido del día** —no solo en esa zona—; el rompimiento que llega después **no se opera nunca** (rompimiento directo); y se vuelve a entrar solo cuando el mercado arma un **IRI nuevo entero más allá**. Alcanza también a las zonas de premercado, que no tienen corrida detrás. Se puede volver a perder, y solo afecta al sentido del día. Primera jornada que lo ejercita entero: **21/09** —se pierde y se recupera dos veces—. Sin cambios en el motor para las zonas de corrida; para las de premercado acierta porque nunca las opera, no porque aplique la regla. ✅ Regresión sin cambios. **40 reglas** |
+| **3.12** | **2026-09-23** | 🏷️ **El setup IRI pasa a llamarse CONTINUACIÓN.** Decisión del operador (22/09, confirmada el 23/09): *"Vamos a dejar solamente 2 Setups: 1. Continuación (Antes IRI) 2. Reingreso, y las respectivas direcciones (Alcista y Bajista)."* **Solo cambia el nombre, nada operativo**: `R-25` conserva su número y sus condiciones. **IRI** queda como nombre de **la estructura** —corrida que deja zona, retroceso, corrida que la rompe—; la Continuación es un IRI fluido más su consecución. **Quedan cuatro nombres:** Continuación alcista · Continuación bajista · Reingreso alcista · Reingreso bajista. **Desaparece la etiqueta «Apertura»** → se cierra `P-20`. En las operaciones la dirección se escribe **alcista / bajista**, no largo / corto. Las citas y las entradas anteriores de este registro **se quedan con el nombre de entonces**. Tocados: `R-25`, `R-26`, `R-31`, `R-32`, `R-36`, `R-40`, `R-41` (solo texto), glosario, checklist, galería, pendientes y estado. **40 reglas** |

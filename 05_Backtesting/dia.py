@@ -132,13 +132,13 @@ def dibujar(dia, salida, datos):
         ax.add_patch(Rectangle((rx0,min(t['e'],t['t'])),rx1-rx0,abs(t['t']-t['e']),
                      facecolor=GRN,alpha=.13,edgecolor='none',zorder=1))
         der = x < N*0.55
-        ax.annotate(f"{t['tipo']} {'largo' if t['dir']>0 else 'corto'} · {t['hora']}",
+        ax.annotate(f"{t['tipo']} {'alcista' if t['dir']>0 else 'bajista'} · {t['hora']}",
                     xy=(x+(.4 if der else -.4),t['e']),
                     xytext=(x+(2.0 if der else -2.0),t['e']+t['dir']*(yhi-ylo)*.07),color=cres,fontsize=13,
                     fontweight='bold',ha='left' if der else 'right',va='center',
                     arrowprops=dict(arrowstyle='-|>',color=cres,lw=1.8,mutation_scale=14),zorder=11)
         sig='+' if (t['pts'] or 0)>=0 else ''
-        sub=(f"Operación · {t['tipo']} {'largo' if t['dir']>0 else 'corto'} a las {t['hora']} · "
+        sub=(f"Operación · {t['tipo']} {'alcista' if t['dir']>0 else 'bajista'} a las {t['hora']} · "
              f"entrada {t['e']:.2f} · stop {t['s']:.2f} · objetivo {t['t']:.2f} · "
              f"riesgo {t['r']:.2f} pts   →   {t['res']} en {t.get('h_out','')} · "
              f"{sig}{t['pts']:.2f} pts = {sig}{t['pts']*2:.2f} USD")

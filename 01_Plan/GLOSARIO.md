@@ -2,8 +2,9 @@
 
 Cada término con su definición medible.
 
-> Actualizado: 2026-09-14 (c) · Sub-fase **F1.1 ✅ CERRADA** · **24 términos con sección propia** · 8 descartados · 4 movidos a contextualización
+> Actualizado: 2026-09-23 · Sub-fase **F1.1 ✅ CERRADA** · **26 términos con sección propia** · 8 descartados · 4 movidos a contextualización
 >
+> 🏷️ **23/09/2026 — el setup IRI pasa a llamarse `CONTINUACIÓN`.** `IRI` se queda como nombre de la **estructura** (impulso–retroceso–impulso) sobre la que se construye.
 > 🆕 **`CORRIDA FLUIDA`** añadida el 14/09/2026 — el término que decide si un rompimiento se opera.
 > 🔗 **`PUNTO DE CONTROL` y `PUNTO DE REFERENCIA` unificados el 14/09/2026** en un solo término: **punto de referencia**, con la mecánica nueva.
 
@@ -631,25 +632,37 @@ Y las dos frases con las que lo explicó, con tres semanas de diferencia, son el
 
 **Dibujo:** no se dibujan todos — *"la idea es tener el gráfico lo más limpio posible"*. Se dibuja **solo cuando aparece un reingreso**, para comprobar si el objetivo está libre. Flecha punteada, **naranja oscuro `#FF9A3C`**, contraste bajo, extendida hacia la derecha. Al romperse: contraste más leve y se corta **una vela después** de la que lo rompió.
 
-**Caso de origen de la mecánica nueva · 11/09/2026:** reingreso corto a las 9:01, entrada 29.440,25, objetivo 29.405,50. El punto de referencia de la vela de **8:58**, en **29.423,00**, queda en medio. Descartado.
+**Caso de origen de la mecánica nueva · 11/09/2026:** Reingreso bajista a las 9:01, entrada 29.440,25, objetivo 29.405,50. El punto de referencia de la vela de **8:58**, en **29.423,00**, queda en medio. Descartado.
 
 **Reglas asociadas:** `R-41` (definición y filtro) · `R-26` (el setup que lo usa) · **Diagrama:** `../02_Assets/diagramas/R-26_reingreso.png` · **Estado:** ✅ Confirmada 24/08/2026 · 🔗 unificada 14/09/2026
 
 ---
 
-## IRI  *(Impulso–Retroceso–Impulso)*
+## CONTINUACIÓN
 
-Uno de los **dos únicos setups** del plan. **Opera el rompimiento que funciona.**
+Uno de los **dos únicos setups** del plan. **Opera el rompimiento que funciona.** Hasta el 23/09/2026 se llamaba **IRI**.
 
-Es **autocontenido**: el propio setup crea la zona que después rompe.
+Es **autocontenido**: el propio setup crea la zona que después rompe. Se construye sobre un **IRI** —la estructura, ver abajo— que tiene que ser **fluido** (`R-40`):
 
 `R-05` corrida → `R-06` retroceso → `R-09` zona → `R-20` rompimiento → **consecución = entrada**
+
+**Direcciones:** **Continuación alcista** (compra) · **Continuación bajista** (venta).
 
 **Plazo:** 5 velas. Lo habitual es la 1ª o la 2ª.
 
 > El operador observa que una consecución en la vela 3 o 4 *"significa que el precio no tiene fuerza"*. **No es regla** — no hay número que ejecutar y la orden ya está en reposo. Va a `CONTEXTUALIZACION.md`.
 
-**Regla asociada:** `R-25` · **Estado:** ✅ Confirmada 24/08/2026
+**Regla asociada:** `R-25` · **Estado:** ✅ Confirmada 24/08/2026 · renombrada 23/09/2026
+
+---
+
+## IRI  *(Impulso–Retroceso–Impulso)*
+
+**La estructura, no el setup.** Una corrida deja su zona, el precio retrocede, y la corrida siguiente rompe esa zona. No se opera por sí sola: es lo que tiene que pasar para que exista una **Continuación**, que es este IRI más su consecución.
+
+Para que sea operable tiene que ser **fluido** (`R-40`): el retroceso no se pasa.
+
+**Estado:** término redefinido por el operador el 23/09/2026. Antes era el nombre del setup.
 
 ---
 

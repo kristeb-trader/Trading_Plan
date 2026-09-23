@@ -17,7 +17,7 @@ STOP_MAX = 80.0
 UMBRAL_VOL = 8000
 PLAZO = 5            # velas para la consecucion
 
-# Dias de FOMC: solo se operan Reingresos, nunca IRI.
+# Dias de FOMC: solo se operan Reingresos, nunca Continuacion (antes IRI).
 # Julio 2026 confirmado por el operador (26/08/2026). Agosto: PENDIENTE de confirmar.
 FOMC = {'20260708','20260729','20260916'}
 
@@ -510,7 +510,7 @@ def detectar_setups(res, solo_reingresos=False):
                           f"({o['s']:.2f}) antes de llenar, por el orden dentro de la vela"); orden=None
             elif (k['h']>=o['e']) if o['dir']>0 else (k['l']<=o['e']):
                 trade=dict(**o,i_fill=i,hora=hh(k))
-                ev.append(f"{hh(k)}  ►► SE LLENA el {o['tipo']} {'largo' if o['dir']>0 else 'corto'} en {o['e']:.2f}")
+                ev.append(f"{hh(k)}  ►► SE LLENA el {o['tipo']} {'alcista' if o['dir']>0 else 'bajista'} en {o['e']:.2f}")
                 for j in range(i,fin+1):
                     kk=D[j]
                     pier=(kk['l']<=trade['s']) if trade['dir']>0 else (kk['h']>=trade['s'])
@@ -550,14 +550,14 @@ def detectar_setups(res, solo_reingresos=False):
                 pr=_punto_de_referencia(res,i,e,t,nd)
                 if pr is not None:
                     o, motivo = None, f"el objetivo pasa del punto de referencia {pr:.2f}" 
-            tag=(f"{hh(k)}  REINGRESO {'corto' if nd<0 else 'largo'} · entrada {e:.2f} · stop {st:.2f}"
+            tag=(f"{hh(k)}  REINGRESO {'bajista' if nd<0 else 'alcista'} · entrada {e:.2f} · stop {st:.2f}"
                  + (f" · objetivo {t:.2f} · riesgo {r:.2f}" if t else ""))
             if o: ev.append(tag+"  ✓ orden enviada"); orden=o
             else: ev.append(tag+f"  ✗ descartado — {motivo}")
             break
         if orden: continue
 
-        # ---------- ROMPIMIENTO -> IRI ----------
+        # ---------- ROMPIMIENTO -> CONTINUACION (el setup que se llamaba IRI) ----------
         for z in ([] if solo_reingresos else vivas):
             if z.roto or not z.de_corrida or z.r_ini is None: continue
             zlo,zhi=z.en(i); nd=z.dir
@@ -581,8 +581,8 @@ def detectar_setups(res, solo_reingresos=False):
             seg=list(range(z.r_ini, i+1))
             st = min(D[j]['l'] for j in seg) if nd>0 else max(D[j]['h'] for j in seg)
             e=e0+TICK*nd
-            o,motivo,t,r=_evaluar(Z,i,'IRI',nd,e,st)
-            tag=(f"{hh(k)}  IRI {'largo' if nd>0 else 'corto'} · entrada {e:.2f} · stop {st:.2f}"
+            o,motivo,t,r=_evaluar(Z,i,'Continuación',nd,e,st)
+            tag=(f"{hh(k)}  CONTINUACIÓN {'alcista' if nd>0 else 'bajista'} · entrada {e:.2f} · stop {st:.2f}"
                  + (f" · objetivo {t:.2f} · riesgo {r:.2f}" if t else ""))
             if o: ev.append(tag+"  ✓ orden enviada"); orden=o
             else: ev.append(tag+f"  ✗ descartado — {motivo}")
