@@ -23,8 +23,8 @@ La entrada no se hace a mano. Se deja una orden puesta y se espera a que el merc
 
 - **Tipo de orden** — **Stop Market.** Buy Stop para largos, Sell Stop para cortos
 - **Cuándo se coloca** — Al **cierre de la vela de rompimiento**, ni antes ni después
-- **A qué nivel, en largo** — Máximo de esa vela **+ 1 tick**
-- **A qué nivel, en corto** — Mínimo de esa vela **− 1 tick**
+- **A qué nivel, en largo** — Máximo de esa vela **+ 1 tick** (0,25 puntos)
+- **A qué nivel, en corto** — Mínimo de esa vela **− 1 tick** (0,25 puntos)
 - **Dónde se lee el nivel** — En el gráfico de **MNQ**, no en el de NQ
 - **Desde dónde se manda** — Desde el Chart Trader de MNQ
 
@@ -46,11 +46,11 @@ Los dos se miden desde el nivel de entrada, y en este orden: primero el stop, qu
 > Pie: La distancia hasta el stop, repetida al otro lado. Esa es toda la aritmética.
 
 1. **Se ancla en la entrada.** Todo se mide desde ahí.
-2. **Se coloca el stop en su referencia estructural.** En un IRI, el punto más extremo que alcanzó el precio **desde que nació la zona hasta la vela que rompió** — no solo el extremo del retroceso que la originó. En un Reingreso, el extremo de la corrida fallida.
+2. **Se coloca el stop en su referencia estructural.** En una Continuación, el punto más extremo que alcanzó el precio **desde que nació la zona hasta la vela que rompió** — no solo el extremo del retroceso que la originó. En un Reingreso, el extremo de la corrida fallida.
 3. **Se mide esa distancia** y se pone el objetivo a la misma distancia al otro lado.
 
 - **Relación** — **1:1.** El objetivo recorre exactamente lo mismo que el stop
-- **Stop de un IRI** — El punto más extremo alcanzado desde que nació la zona hasta la vela de rompimiento
+- **Stop de una Continuación** — El punto más extremo alcanzado desde que nació la zona hasta la vela de rompimiento
 - **Stop de un Reingreso** — El extremo de la corrida que rompió y no continuó
 
 > **[NO SE HACE]**
@@ -75,7 +75,7 @@ Con el stop y el objetivo ya medidos, y **antes** de tocar el botón, se comprue
 
 > **[FICHA]**
 > #### ¿Es día de la Fed?
-> Ese día el IRI no se opera.
+> Ese día la Continuación no se opera.
 
 > **[FICHA]**
 > #### ¿Hay noticia cerca?

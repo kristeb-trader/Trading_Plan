@@ -24,7 +24,7 @@ Hay dos cosas que se deciden antes de mirar un solo gráfico, y las dos pueden c
 
 > **[FICHA]**
 > #### Día de la Fed
-> Si Forex Factory marca en rojo un evento de la Fed, ese día **el IRI queda prohibido**. Solo se permite **Reingreso**.
+> Si Forex Factory marca en rojo un evento de la Fed, ese día **la Continuación queda prohibida**. Solo se permite **Reingreso**.
 
 El veto del día de la Fed dura **toda la jornada**, no solo la hora del anuncio, e incluye decisión de tipos, actas y discursos de **Powell** siempre que aparezcan en rojo.
 
@@ -39,8 +39,8 @@ Con el setup identificado y el stop y el objetivo ya medidos, se pasan cinco com
 1. **El stop no pasa de 80 puntos.** Se mide desde la entrada hasta su referencia estructural. Si lo supera aunque sea por un tick, no se opera.
 2. **El camino al objetivo está libre de zonas vivas.** Una sola zona viva entre la entrada y el objetivo descarta la operación.
 3. **Solo en Reingreso:** el objetivo no pasa del punto de referencia vivo más cercano que quede entre la entrada y el objetivo. Solo lo rompe una vela que cierre más allá; la mecha no cuenta.
-4. **Solo en IRI:** la corrida es fluida. Si no lo es, ese rompimiento no se opera; la zona sigue viva y se espera otro IRI que deje una zona nueva entera más allá.
-5. **No es día de la Fed con un IRI delante.**
+4. **Solo en Continuación:** la corrida es fluida. Si no lo es, ese rompimiento no se opera; la zona sigue viva y se espera otro IRI que deje una zona nueva entera más allá.
+5. **No es día de la Fed con una Continuación delante.**
 
 > 🖼 **Gráfico.** Texto alternativo: Un setup válido descartado porque el stop estructural supera el tope de riesgo
 > Pie: Un setup que cumple todo menos el tope de riesgo. El stop estructural queda por encima del máximo, y no se opera.
@@ -77,7 +77,7 @@ Una orden puesta que todavía no se ha llenado muere con lo primero que llegue d
 
 > **[FICHA]**
 > #### Se agota el plazo
-> Pasan 5 velas — es un TOPE, no una espera obligatoria desde el rompimiento sin que el precio llegue al nivel de la orden.
+> Pasan 5 velas desde el rompimiento sin que el precio llegue al nivel de la orden.
 
 > **[FICHA]**
 > #### El precio vuelve al stop
@@ -106,8 +106,8 @@ Una orden cancelada **no consume el cupo del día**: se puede esperar otro setup
 
 ### Descartado no es vacío
 
-Cuando un IRI se descarta por cualquiera de los filtros, la zona no se abandona. **Se sigue mirando**.
+Cuando una Continuación se descarta por cualquiera de los filtros, la zona no se abandona. **Se sigue mirando**.
 
 > **[REGLA DURA]**
 > Si el rompimiento falla y el precio atraviesa la zona entera hasta salir por el borde contrario, ahí hay un **Reingreso** — y puede llegar en la misma vela.
-> Caso real del 6 de julio: un IRI descartado y un Reingreso operado con un minuto de diferencia sobre la misma zona.
+> Caso real del 6 de julio: una Continuación descartada y un Reingreso operado con un minuto de diferencia sobre la misma zona.

@@ -144,3 +144,9 @@ cambia.**
 
 Orden: Cowork cambia el plan, `lector.py` y las imágenes → el portal se cambia el mismo día → el
 operador renombra su selector de NinjaTrader.
+
+### 23/09/2026 · Una línea del cambio que quedó a medias
+
+`CHECKLIST_DIARIA.md`, línea 70, al final: *«Caso real: `G-12`, 06/07/2026, **IRI descartado** y
+Reingreso operado con un minuto de diferencia.»* → **«Continuación descartada y Reingreso operado…»**.
+Sale publicada en la checklist del portal. Detalle en `CAMBIO_IRI_A_CONTINUACION.md` §9.

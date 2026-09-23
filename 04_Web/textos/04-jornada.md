@@ -73,7 +73,7 @@ Abierto el mercado, la sesión es una repetición del mismo ciclo hasta que apar
 
 1. **Se sigue la estructura.** Movimiento, retroceso, movimiento. Cada movimiento que termina deja su zona.
 2. **Se marcan las zonas conforme aparecen.** Ya no por volumen: dentro de sesión solo nacen por estructura.
-3. **Se vigila si alguna zona se rompe.** Un rompimiento abre la posibilidad de un IRI; un rompimiento con consecución que luego falla abre la de un Reingreso.
+3. **Se vigila si alguna zona se rompe.** Un rompimiento abre la posibilidad de una Continuación; un rompimiento con consecución que luego falla abre la de un Reingreso.
 4. **Aparece un setup:** se mide, se pasan los filtros y, si los pasa, se manda la orden.
 5. **Con la orden puesta se vigila,** porque hay varias cosas que la cancelan.
 6. **Si la orden se llena, el día se acabó.** No solo la operativa: también el análisis.

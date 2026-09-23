@@ -32,7 +32,7 @@ export const MODULOS = [
     slug: 'setups',
     titulo: 'Setups operativos',
     corto: 'Setups operativos',
-    sub: 'Los dos únicos setups que se operan: IRI y Reingreso',
+    sub: 'Los dos únicos setups que se operan: Continuación y Reingreso',
     icono: 'target',
   },
   {

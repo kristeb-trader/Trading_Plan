@@ -2,9 +2,15 @@
 /**
  * Modulo 3 — Setups operativos.
  *
- * Solo hay dos, y son el reverso el uno del otro: el IRI opera el rompimiento
- * que funciona y el Reingreso el que fallo. Se explican por separado y con la
- * misma estructura, para que la diferencia se vea sola.
+ * Solo hay dos, y son el reverso el uno del otro: la Continuacion opera el
+ * rompimiento que funciona y el Reingreso el que fallo. Se explican por
+ * separado y con la misma estructura, para que la diferencia se vea sola.
+ *
+ * El 23/09/2026 el setup IRI paso a llamarse Continuacion (decision del
+ * operador; nada operativo cambia). IRI nombra ahora la ESTRUCTURA —impulso,
+ * retroceso, impulso— sobre la que se construye la Continuacion. La seccion
+ * se llama #continuacion y conserva #iri como ancla muda, para no romper un
+ * enlace guardado. Ver CAMBIO_IRI_A_CONTINUACION.md.
  */
 import Modulo from '../componentes/Modulo.astro';
 import * as P from '../lib/parsers.mjs';
@@ -15,7 +21,7 @@ const v = (n: string) => P.parametro(n);
 
 const SECCIONES = [
   { id: 'dos', t: 'Solo hay dos' },
-  { id: 'iri', t: 'IRI' },
+  { id: 'continuacion', t: 'Continuación' },
   { id: 'fluida', t: 'Corrida fluida' },
   { id: 'reingreso', t: 'Reingreso' },
   { id: 'comparar', t: 'Diferencias' },
@@ -33,8 +39,8 @@ const SECCIONES = [
 
     <div class="rejilla dos">
       <div class="tarj">
-        <span class="tarj-n">IRI</span>
-        <h3>Continuación</h3>
+        <span class="tarj-n">Continuación</span>
+        <h3>Rompimiento que funciona</h3>
         <p>El precio rompe una zona y sigue. Se opera <strong>a favor</strong> del rompimiento.</p>
       </div>
       <div class="tarj">
@@ -45,7 +51,7 @@ const SECCIONES = [
     </div>
 
     <figure class="gr">
-      <img src="/conceptos/27-setup-iri.png" alt="Lámina del setup IRI: un impulso deja la zona, el precio retrocede y el segundo impulso la rompe; la entrada va en la vela que confirma" loading="eager" />
+      <img src="/conceptos/27-setup-continuacion.png" alt="Lámina del setup Continuación: sobre un IRI fluido —impulso, retroceso, impulso— el segundo impulso rompe la zona y la entrada va en la vela que confirma" loading="eager" />
     </figure>
 
     <figure class="gr">
@@ -61,14 +67,20 @@ const SECCIONES = [
     </div>
   </section>
 
-  <section class="ap" id="iri">
-    <h2>IRI (Impulso - Retroceso - Impulso) <Refs cods="R-25" /></h2>
+  <section class="ap" id="continuacion">
+    <span class="ancla-vieja" id="iri" aria-hidden="true"></span>
+    <h2>Continuación <Refs cods="R-25" /></h2>
     <h3>El concepto fundamental</h3>
     <p>
-      El IRI (Impulso - Retroceso - Impulso) es un modelo de entrada
-      autocontenido. Significa que no necesitas buscar referencias del pasado
-      ni indicadores externos: el propio movimiento del precio crea en tiempo
-      real la zona que va a romper.
+      La Continuación es un modelo de entrada autocontenido. Significa que no
+      necesitas buscar referencias del pasado ni indicadores externos: el
+      propio movimiento del precio crea en tiempo real la zona que va a romper.
+    </p>
+    <p>
+      Se construye sobre un <strong>IRI (Impulso - Retroceso - Impulso)</strong>:
+      una corrida deja su zona, el precio retrocede y la corrida siguiente
+      rompe esa zona. El IRI es la estructura, y no se opera por sí solo; la
+      Continuación es ese IRI más su consecución, que es la entrada.
     </p>
 
     <p>La lógica de la entrada es simple:</p>
@@ -87,13 +99,13 @@ const SECCIONES = [
     <ol class="secuencia">
       <li><strong>Una corrida (Impulso 1).</strong> Es el movimiento inicial donde el precio avanza con fuerza en una dirección.</li>
       <li><strong>Un retroceso.</strong> El movimiento se detiene a descansar o “respirar”. Este punto define el extremo opuesto temporal.</li>
-      <li><strong>La zona.</strong> Se marca el nivel exacto en la vela extrema que dejó la corrida antes de empezar a retroceder. <strong>Sin zona marcada en la vela extrema, no existe el IRI.</strong></li>
+      <li><strong>La zona.</strong> Se marca el nivel exacto en la vela extrema que dejó la corrida antes de empezar a retroceder. <strong>Sin zona marcada en la vela extrema, no existe la Continuación.</strong></li>
       <li><strong>Rompimiento.</strong> El precio reanuda la marcha y rompe esa misma zona en el sentido del movimiento original por al menos un tick.</li>
       <li><strong>Confirmación / consecución (la entrada).</strong> La entrada se ejecuta en la vela que da la consecución. Esto ocurre cuando una vela sobrepasa el extremo de la vela que rompió la zona.</li>
     </ol>
 
     <figure class="gr">
-      <img src="/conceptos/04-romper-confirmar.png" alt="Un IRI completo: movimiento, retroceso, zona, rompimiento y consecución" loading="eager" />
+      <img src="/conceptos/04-romper-confirmar.png" alt="Una Continuación completa: movimiento, retroceso, zona, rompimiento y consecución" loading="eager" />
       <figcaption class="meta">Los cinco pasos sobre una sesión real. La vela de la consecución es la que entra.</figcaption>
     </figure>
 
@@ -124,7 +136,7 @@ const SECCIONES = [
   <section class="ap" id="fluida">
     <h2>Corrida fluida <Refs cods="R-40" /></h2>
     <p>
-      El IRI solo se opera si la corrida que lo arma es <strong>fluida</strong>.
+      La Continuación solo se opera si la corrida que la arma es <strong>fluida</strong>.
       La secuencia tiene que salir bien tres veces seguidas; si falla una, ese
       rompimiento no se opera.
     </p>
@@ -132,7 +144,7 @@ const SECCIONES = [
     <ol class="secuencia">
       <li><strong>La corrida deja su zona</strong> al terminar.</li>
       <li><strong>El retroceso no se pasa.</strong> Mide menos que su corrida. Se miden los dos sobre el zigzag: la corrida desde su arranque hasta su extremo, y el retroceso desde ese mismo extremo hasta su nivel de referencia. Si empatan, no se pasa.</li>
-      <li><strong>La corrida siguiente rompe esa zona.</strong> Ese es el rompimiento que opera el IRI.</li>
+      <li><strong>La corrida siguiente rompe esa zona.</strong> Ese es el rompimiento que opera la Continuación.</li>
     </ol>
 
     <dl class="datos">
@@ -141,7 +153,7 @@ const SECCIONES = [
       <dt>Cómo se emparejan</dt>
       <dd>Cada corrida con el retroceso que viene justo después de ella. Las parejas no se solapan: tras una pareja rota, la cuenta empieza de nuevo con la corrida siguiente</dd>
       <dt>A qué setup afecta</dt>
-      <dd>Solo al IRI. El Reingreso no se toca</dd>
+      <dd>Solo a la Continuación. El Reingreso no se toca</dd>
       <dt>El tope de riesgo</dt>
       <dd>No tiene nada que ver. Una entrada puede caber de sobra en el tope y quedar fuera igual</dd>
     </dl>
@@ -197,7 +209,7 @@ const SECCIONES = [
   <section class="ap" id="reingreso">
     <h2>Reingreso · rompimiento fallido <Refs cods="R-26" /></h2>
     <p>
-      Es el contrario exacto del IRI. Aquí el rompimiento se confirmó pero el
+      Es el contrario exacto de la Continuación. Aquí el rompimiento se confirmó pero el
       precio <strong>no continuó</strong>: se dio la vuelta y se comió la zona
       entera. Se opera esa vuelta.
     </p>
@@ -211,7 +223,7 @@ const SECCIONES = [
       <li><strong>Sobre una zona hubo rompimiento y confirmación.</strong> El traspaso está hecho.</li>
       <li><strong>El precio no continúa</strong> en esa dirección.</li>
       <li><strong>El precio atraviesa la zona entera y sobrepasa el borde contrario.</strong> No basta con tocarla ni con meterse dentro: tiene que salir por el otro lado. Esa vela hace de vela de rompimiento del Reingreso.</li>
-      <li><strong>Confirmación: y esa es la entrada.</strong> Una vela pasa el extremo de la vela anterior, igual que en el IRI.</li>
+      <li><strong>Confirmación: y esa es la entrada.</strong> Una vela pasa el extremo de la vela anterior, igual que en la Continuación.</li>
     </ol>
 
     <dl class="datos">
@@ -272,7 +284,7 @@ const SECCIONES = [
     <div class="tabla-env">
       <table class="comp">
         <thead>
-          <tr><th></th><th>IRI</th><th>Reingreso</th></tr>
+          <tr><th></th><th>Continuación</th><th>Reingreso</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -319,7 +331,7 @@ const SECCIONES = [
         <strong>El stop del Reingreso suele salir más ancho.</strong> Se mide
         contra la corrida fallida, que está al otro lado de la zona, así que
         incluye la zona entera. Por eso el tope de riesgo descarta más
-        Reingresos que IRIs.
+        Reingresos que Continuaciones.
       </p>
     </div>
   </section>

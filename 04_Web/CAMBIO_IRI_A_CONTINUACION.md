@@ -3,12 +3,14 @@
 | | |
 |---|---|
 | **Versión** | v1 · 23/09/2026 |
-| **Estado** | ✅ Decisiones **aprobadas por el operador** (23/09/2026) · ⏳ pendiente de ejecutar |
+| **Estado** | ✅ Decisiones **aprobadas por el operador** (23/09/2026) · ✅ **① Cowork hecho el 23/09/2026** (ver §8) · ✅ **② portal hecho el 23/09/2026** (ver §9) · ⏳ ③ NinjaTrader |
 | **Orden** | ① Cowork: plan, auditoría e imágenes → ② Claude Code: portal, el mismo día → ③ operador: NinjaTrader |
 | **Quién lo escribe** | Claude Code, desde el portal. El portal **no edita `01_Plan\`**: esto es el encargo para Cowork |
 
 **Registro de versiones**
 - **v1 · 23/09/2026** — primera versión, tras el diagnóstico y el sí del operador.
+- **v2 · 23/09/2026** — Cowork ejecuta la fase ①. Lo hecho y lo que el portal tiene que saber, en §8.
+- **v3 · 23/09/2026** — el portal ejecuta la fase ②. Lo hecho y lo que queda, en §9.
 
 ---
 
@@ -219,6 +221,52 @@ desaparece: el setup es Continuación, alcista o bajista. No queda nada que clas
 
 En NinjaTrader, el selector de setups pasa de 6 entradas a 4: **Continuación Alcista · Continuación
 Bajista · Reingreso Alcista · Reingreso Bajista**. Después, una captura nueva para `02_Assets\`.
+
+---
+
+## 8 · Fase ① hecha por Cowork — 23/09/2026
+
+**Plan (`01_Plan\`), versión 3.12:** `reglas.json`, `TRADING_PLAN_CHAUMER.md`, `GLOSARIO.md` (26 términos: la entrada IRI partida en CONTINUACIÓN + IRI), `CHECKLIST_DIARIA.md`, `GALERIA.md`, `PENDIENTES.md` (`P-20` cerrado) y `ESTADO.md`. Citas, historial, `CONTEXTUALIZACION.md` y `CIERRE_FASE_1.md` sin tocar, como pedía §2. **Siguen 40 reglas.**
+
+**⚠️ Tres cosas que el portal tiene que saber:**
+
+1. **Nombres de variable que cambian en `reglas.json`** — si algún parser o vigilante los lee por nombre, hay que actualizarlo:
+   - `R-25`: `etiquetas_NT8` → **`direcciones`** (lo pedía §3.2)
+   - `R-36`: `IRI` → **`Continuacion`** (lo pedía §3.4)
+   - `R-32`: `stop_IRI_largo` → **`stop_Continuacion_alcista`** · `stop_IRI_corto` → **`stop_Continuacion_bajista`** · `stop_IRI` → **`stop_Continuacion`**. *No estaban en el anexo; se cambiaron por coherencia con D1 y D4.*
+2. **`R-25` estado:** ahora dice *"confirmada · renombrada de IRI a Continuacion el 23/09/2026 (solo el nombre, nada operativo)"*.
+3. **Imagen nueva:** `public\conceptos\27-setup-continuacion.png`. La vieja `27-setup-iri.png` **sigue en su sitio** hasta que P1 cambie la ruta; después se puede borrar.
+
+**Auditoría (`05_Backtesting\`):** `lector.py` y `dia.py` escriben ya «Continuación alcista/bajista» y «Reingreso alcista/bajista». La etiqueta también estaba en `dia.py` (cabecera y flecha de la gráfica), que el §4 no nombraba. **Regresión: 20 jornadas (11 de julio + 9 del test ciego), el motor da exactamente los mismos eventos y las mismas operaciones con el código viejo y el nuevo.** `FICHA_MARCADO.md` regenerada: solo cambian los nombres.
+
+**Gráficas regeneradas:** las 6 del test ciego con operación (10, 15, 17, 18, 21 y 22 de septiembre) — antes de tocarlas se comprobó que las viejas eran **idénticas píxel a píxel** a lo que da el motor, así que solo cambia la etiqueta. Y 4 de julio: 6, 10, 13 y 15.
+
+**⏳ Pendiente de decisión del operador:**
+- **Julio 7, 9, 16, 17 y 20** (`02_Assets\galeria\sesiones\`): esas gráficas se dibujaron **antes del 14/09** y enseñan operaciones que la regla de la corrida fluida retiró. Regenerarlas no cambiaría solo la etiqueta: cambiaría la operación que muestran. **No se han tocado.**
+- **G-02:** es una captura real del NinjaTrader del operador con el rótulo *«SETUP IRI APERTURA BAJISTA»* dibujado a mano por él. **No se ha tocado.**
+- **G-01…G-04:** el renombrado de archivos está en `_renombrar_galeria_continuacion.ps1` (raíz del proyecto), porque desde Cowork no se puede renombrar en el disco. `GALERIA.md` ya apunta a los nombres nuevos.
+
+---
+
+## 9 · Fase ② hecha por el portal — 23/09/2026
+
+| Fase | Hecho | Verificado |
+|---|---|---|
+| **P1 · páginas** | Setups: la sección es **Continuación** (`#continuacion`), explica el IRI como la estructura con el texto del glosario, y la tarjeta de «Solo hay dos» dice *Continuación · Rompimiento que funciona*. La lámina apunta a `27-setup-continuacion.png`. Filtros (5), Mecánica de entrada (3), Jornada (1) y el subtítulo del módulo | `npm run verificar` en verde, 56 páginas |
+| **Ancla vieja** | `/setups#iri` sigue abriendo el apartado de Continuación. Arreglado en `Modulo.astro` para todos los módulos: un ancla que vive **dentro** de un apartado abre ese apartado (antes caía en el primero) | navegador: `#iri` → apartado 2 de 5 |
+| **P2 · textos y sellos** | `textos/03`, `04`, `05` y `06` regenerados. Entran también dos arreglos anteriores que no habían llegado a los textos: el tick con su valor en puntos y la frase del plazo de la orden. `R-25` y `R-36` revisadas y selladas: solo cambió el nombre | `referencias` y `aprobados` en verde |
+| **P3 · vigilante** | `scripts/nombres.mjs`, dentro de `npm run verificar`: falla si el HTML dice «IRI largo/corto/alcista/bajista», «IRI Apertura», «IRI Continuación», «setup IRI», «IRI prohibido» o «Reingreso largo/corto». Las citas textuales entre comillas quedan fuera | una página de prueba con tres frases viejas y una cita: caza las tres, deja pasar la cita |
+| **P4 · lo automático** | Casos reales, fichas de regla y filtro leen el plan: las tarjetas dicen «Continuación alcista 8:40» y los cuatro ejemplos «CONTINUACIÓN ALCISTA/BAJISTA», con sus imágenes renombradas | navegador |
+| **P5 · instrucciones** | `CLAUDE.md` de la raíz, vocabulario | — |
+
+**Una línea que se le pasó a ①** (el portal no edita el plan): `CHECKLIST_DIARIA.md` línea 70, al final —
+*«Caso real: `G-12`, 06/07/2026, **IRI descartado** y Reingreso operado…»* → **«Continuación descartada y
+Reingreso operado…»**. Sale publicada en la página de la checklist. El vigilante no la caza porque «IRI
+descartado» no es una de sus formas: se añadió solo lo inequívoco.
+
+**Lo que queda de «IRI» en el portal** después del cambio son 28 frases, revisadas una a una: todas son la
+estructura («esperar un IRI nuevo entero más allá», «se construye sobre un IRI»), citas textuales, o
+notas del propio plan que cuentan el cambio de nombre.
 
 ---
 

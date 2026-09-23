@@ -214,8 +214,15 @@ const destinoFinal = siguiente
     }
 
     function porHash(mover) {
-      var id = location.hash.replace('#', '');
+      var id = decodeURIComponent(location.hash.replace('#', ''));
       var i = pasos.indexOf(id);
+      // Un ancla que vive DENTRO de un apartado abre ese apartado. Es lo que
+      // mantiene vivo /setups#iri, la direccion de la seccion antes de que el
+      // setup se llamara Continuacion (23/09/2026).
+      if (i < 0 && id) {
+        var el = document.getElementById(id);
+        for (var j = 0; el && j < secs.length; j++) if (secs[j].contains(el)) { i = j; break; }
+      }
       pintar(i >= 0 ? i : 0, mover);
     }
 
