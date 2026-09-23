@@ -128,3 +128,19 @@ los filtros»*, sin número — así no depende de cuántos haya.
 **Propuesta:** quitar el número de esa nota en la checklist, o pasarlo a *cinco*. No lo toco: es el plan.
 
 **Estado:** pendiente de Cowork.
+
+---
+
+## 23/09/2026 · El setup IRI pasa a llamarse Continuación — ENCARGO APROBADO POR EL OPERADOR
+
+**No es una contradicción encontrada: es un cambio de nombre que el operador ya decidió** (22/09,
+confirmado el 23/09). El encargo completo, con los textos propuestos y las 177 líneas clasificadas
+una a una, está en **`CAMBIO_IRI_A_CONTINUACION.md`**, en esta misma carpeta.
+
+En una línea: el setup se llama **Continuación** (alcista / bajista), igual que el **Reingreso**
+(alcista / bajista). **IRI** pasa a nombrar la estructura —impulso, retroceso, impulso— sobre la que
+se construye la Continuación. Desaparece la etiqueta «Apertura» y se cierra `P-20`. **Nada operativo
+cambia.**
+
+Orden: Cowork cambia el plan, `lector.py` y las imágenes → el portal se cambia el mismo día → el
+operador renombra su selector de NinjaTrader.
