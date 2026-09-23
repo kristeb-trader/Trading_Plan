@@ -24,6 +24,7 @@ _Historia/
 04_Web/.astro/
 04_Web/src/content/
 04_Web/public/assets/
+04_Web/public/min/
 
 # --- general ---
 node_modules/

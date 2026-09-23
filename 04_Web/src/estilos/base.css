@@ -87,7 +87,7 @@ main .banner :is(h1, p, dt, dd) {
 /* Lo que va centrado a proposito sigue centrado: la cabecera de cada pagina
    y de cada modulo, y las etiquetas que dibuja mermaid dentro de un <svg>,
    que no son texto de lectura. */
-main :is(.cab, .mod-cab, .lupa) :is(p, h1, h2, h3),
+main :is(.cab, .mod-cab) :is(p, h1, h2, h3),
 main svg :is(p, span, div) {
   text-align: center;
   text-align-last: center;

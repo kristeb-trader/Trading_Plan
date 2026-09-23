@@ -206,7 +206,7 @@ Un solo campo que filtra a la vez por **texto libre** (enunciado, condiciones, a
 
 **Filtro por regla:** se extraen los `R-xx` citados en cada caso y se construye el índice en los dos sentidos.
 
-**Lightbox:** pantalla completa, teclado, `Esc` para cerrar. Sin librería.
+**Índice y visor** *(22/09/2026, sustituye al lightbox)*: la página es una rejilla de miniaturas por pestañas (test ciego · sesiones · ejemplos) y cada caso se estudia en un `<dialog>` modal con la gráfica a la izquierda y el texto al lado, con flechas, teclado, deslizar y `Esc`. Las miniaturas las genera `scripts/miniaturas.mjs` en `public/min/`. Sin librería.
 
 ---
 

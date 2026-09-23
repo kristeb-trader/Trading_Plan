@@ -131,6 +131,31 @@ Mientras tanto: **no toques `..\02_Assets\diagramas\` ni el manifiesto que asign
 
 ## Hecho
 
+### Casos reales: índice y visor — 22/09/2026
+
+Pedido del operador: «ya tiene muchas gráficas y es difícil hacer scroll». Diagnóstico medido: la página
+tenía **46 pantallas** de alto (41.500 px), con las 30 gráficas y los 30 textos abiertos a la vez, y
+cargaba 8 MB de imágenes. Propuesta aprobada completa, con el texto al lado de la gráfica.
+
+- **Tres pestañas** (Test ciego · Sesiones · Ejemplos) con su cuenta, y en cada una una **rejilla de
+  miniaturas**: gráfica, fecha o título, resultado y setup. La página mide ahora **1,6 pantallas** en
+  escritorio y unas 2 en el móvil, donde la tarjeta es una fila.
+- **El visor:** al pulsar una tarjeta se abre casi a pantalla completa, con la gráfica a la izquierda y
+  el texto al lado con su propio scroll. Flechas en pantalla y del teclado, deslizar en el móvil, tira de
+  miniaturas abajo y «Ampliar gráfica» para verla sola. `Esc`, el aspa y el «atrás» del navegador lo
+  cierran igual.
+- **Los enlaces siguen iguales:** `/galeria#G-xx` y `/galeria#AAAA-MM-DD` abren el visor en ese caso;
+  `/galeria#sesiones` abre la pestaña.
+- **El filtro por regla** pasa a un desplegable con el enunciado de cada regla. Cada pestaña cuenta lo
+  que queda.
+- **Miniaturas:** `scripts/miniaturas.mjs` (con `sharp`) las genera en cada compilación en `public/min/`,
+  unos 450 KB en total. Solo rehace las que cambiaron de contenido. La gráfica grande solo se descarga
+  al abrir el visor.
+- **Se quitan del texto** las rutas de archivo del plan («Archivo: …png» y «Gráfico: 05_Backtesting\…»):
+  eran para quien escribe el plan, y la ruta sin espacios abría huecos en el justificado. Solo en el
+  portal: `GALERIA.md` no se toca.
+- **Comentar sobre una selección** sigue funcionando dentro del visor: el globo se muda al diálogo.
+
 ### Casos reales y test ciego, una sola página — 22/09/2026
 
 Pedido del operador, fuera de la lista: «son lo mismo, casos de backtesting hechos desde Claude».

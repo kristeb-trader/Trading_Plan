@@ -124,9 +124,16 @@ import Icono from './Icono.astro';
         var caja = el && el.closest('[data-obs-tipo]');
         if (!caja) { globo.hidden = true; return; }
 
+        // Dentro de un <dialog> modal (el visor de Casos reales) el globo
+        // tiene que vivir en el propio dialogo: fuera quedaria debajo, y el
+        // resto de la pagina esta inerte. Ahi se mide contra el dialogo.
+        var modal = caja.closest('dialog');
+        var casa = modal || document.body;
+        if (globo.parentNode !== casa) casa.appendChild(globo);
         var r = sel.getRangeAt(0).getBoundingClientRect();
-        globo.style.top = (window.scrollY + r.top - 44) + 'px';
-        globo.style.left = (window.scrollX + r.left + r.width / 2) + 'px';
+        var o = modal ? modal.getBoundingClientRect() : { top: -window.scrollY, left: -window.scrollX };
+        globo.style.top = (r.top - o.top - 44) + 'px';
+        globo.style.left = (r.left - o.left + r.width / 2) + 'px';
         globo.hidden = false;
         globo.onclick = function () {
           abrir({
