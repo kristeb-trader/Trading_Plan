@@ -30,8 +30,9 @@ Christian** con los días, y solo aprende lo que Christian aprueba.
 - El coach es **solo para él**.
 - Casi todo se automatiza; lo manual queda en sus decisiones.
 - La data del día sale de **NinjaTrader, exportada al final** de la sesión, no escrita minuto a minuto.
-- Se trata como **módulo del portal (fase 2)**, no como la fase 3 "agente de backtesting". Lo propuse y
-  él no lo objetó; si lo quiere de otra forma, se cambia aquí.
+- 🟡 **Pendiente de decidir:** si el coach es un **módulo del portal (fase 2)** o **la fase 3** "agente de
+  backtesting" de `FASES.md`. Recomendado: módulo del portal, porque el coach analiza la ejecución del operador
+  y la fase 3 mide la estrategia. La construcción es la misma en los dos casos.
 
 ---
 
