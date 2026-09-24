@@ -56,7 +56,7 @@ metodología y **deja observaciones escritas**.
 > pasa al **Trading Journal**, dentro de una carpeta `chaumer/`. El **portal** sigue siendo su propia web y
 > queda como **pantalla** para Alfredo. Alfredo no tiene acceso al Journal.
 > La disciplina y la historia del Journal no se tocan; desde el 24/09 empieza una etapa nueva con las reglas del plan.
-> Diseño: `E:\Proyectos\Trading Journal\docs\disenos6-09-24-unificacion-chaumer.md`. Se ejecuta desde una sesión en el Journal.
+> Diseño: `E:/Proyectos/Trading Journal/docs/disenos/2026-09-24-unificacion-chaumer.md`. Se ejecuta desde una sesión en el Journal.
 
 **Ahora mismo:** el operador está recorriendo el portal **por partes** y
 reportando cambios por partes. El avance de esa revisión se lleva en

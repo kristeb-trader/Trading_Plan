@@ -1,7 +1,7 @@
 # Trading Coach — diseño
 
 **Versión:** v1.2 · **Estado:** 🔵 **REEMPLAZADO el 24/09/2026.** El operador decidió unificar todo en el Trading Journal: el coach vive allí, sobre el que ya existe. Este documento queda como referencia de las salvaguardas, la memoria con aprobación y la cadena diaria, que el diseño de la unificación reutiliza.
-**Diseño que manda ahora:** `E:\Proyectos\Trading Journal\docs\disenos6-09-24-unificacion-chaumer.md`
+**Diseño que manda ahora:** `E:/Proyectos/Trading Journal/docs/disenos/2026-09-24-unificacion-chaumer.md`
 **Escrito:** 23/09/2026, a partir de la conversación con el operador de ese mismo día.
 
 | Versión | Fecha | Qué cambió |
