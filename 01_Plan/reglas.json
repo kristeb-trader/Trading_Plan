@@ -1721,13 +1721,19 @@
     "operador": "=",
     "valor": "la caducidad se comprueba ANTES del llenado: pasado el plazo la orden no existe y no puede llenarse",
     "timeframe": "1m"
+   },
+   {
+    "variable": "misma_vela_toca_orden_y_stop",
+    "operador": "=",
+    "valor": "si una misma vela toca el nivel de la orden y el punto del stop, se aplica el orden de la vela (el mismo de R-19 punto 6): vela AZUL, primero el minimo; vela BLANCA, primero el maximo. Si llega antes al nivel de la orden, la orden se LLENA, y el stop puede saltar en esa misma vela. Si llega antes al stop, la orden se CANCELA sin llenarse. CONFIRMADO 23/09/2026",
+    "timeframe": "1m"
    }
   ],
   "accion": "Cancelar al ocurrir lo PRIMERO de las tres causas. El cupo de R-28 no se consume; se puede esperar un setup nuevo dentro de la ventana de R-02.",
   "excepciones": [],
   "prioridad": 2,
-  "estado": "REESCRITA 27/08/2026 - la redaccion anterior decia lo contrario en los dos puntos",
-  "nota": "Cierra P-19. El retroceso nuevo es el mismo evento que dispara R-14: marca zona nueva Y mata la orden pendiente. Un evento, dos consecuencias. | PRECISADO 04/09/2026: la cancelacion se mide contra el stop de R-32, no contra el extremo del retroceso.",
+  "estado": "REESCRITA 27/08/2026 - la redaccion anterior decia lo contrario en los dos puntos · misma vela orden+stop confirmado 23/09/2026",
+  "nota": "Cierra P-19. El retroceso nuevo es el mismo evento que dispara R-14: marca zona nueva Y mata la orden pendiente. Un evento, dos consecuencias. | PRECISADO 04/09/2026: la cancelacion se mide contra el stop de R-32, no contra el extremo del retroceso. || 23/09/2026: el orden de la vela, confirmado para las zonas el 26/08, se aplicaba tambien a las ordenes desde el 14/09 como PROPUESTA del auditor sin confirmar. El operador lo confirma sobre la jornada del 23/09: vela azul de 8:36 que baja a 30922,00 (llena el corto en 30925,75) y despues sube a 30957,00 (salta el stop en 30954,00). Palabras del operador: 'fue un stop valido, la vela primero bajo, hizo consecucion y la misma vela despues subio al stop'. Leida al reves, la orden se habria cancelado y el dia habria sido otro: diferencia de 75,75 puntos.",
   "categoria_nombre": "Riesgo, orden y gestión",
   "categoria_descripcion": "cuánto y hasta dónde",
   "categoria_orden": 5

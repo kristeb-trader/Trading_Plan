@@ -501,7 +501,7 @@ def detectar_setups(res, solo_reingresos=False):
                 ev.append(f"{hh(k)}  orden cancelada — 5 velas sin consecución"); orden=None
             elif (((k['l'] <= o['s']) and (k['c'] >= k['o'])) if o['dir']>0
                   else ((k['h'] >= o['s']) and (k['c'] <  k['o']))):
-                # PROPUESTA 14/09/2026, SIN CONFIRMAR POR EL OPERADOR.
+                # CONFIRMADO POR EL OPERADOR 23/09/2026 (R-29) — era propuesta desde el 14/09.
                 # La vela toca el nivel de la orden Y el punto del stop. Se aplica la
                 # convencion intravela que el plan ya usa para las zonas (R-19 punto 6):
                 # vela azul = minimo primero, vela blanca = maximo primero. Si el punto

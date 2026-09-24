@@ -286,6 +286,7 @@
 - `cancelacion_3_hora` → 11:29:00 ET
 - `NO_es_causa_de_cancelacion` → la aparicion de un retroceso nuevo. Un retroceso nuevo deja la orden intacta
 - `orden_de_comprobacion` → la caducidad se comprueba ANTES del llenado: pasado el plazo la orden no existe y no puede llenarse
+- `misma_vela_toca_orden_y_stop` → si una misma vela toca el nivel de la orden y el punto del stop, se aplica el orden de la vela (el mismo de R-19 punto 6): vela AZUL, primero el minimo; vela BLANCA, primero el maximo. Si llega antes al nivel de la orden, la orden se LLENA, y el stop puede saltar en esa misma vela. Si llega antes al stop, la orden se CANCELA sin llenarse. CONFIRMADO 23/09/2026
 - ▶️ **acción:** Cancelar al ocurrir lo PRIMERO de las tres causas. El cupo de R-28 no se consume; se puede esperar un setup nuevo dentro de la ventana de R-02.
 
 **`R-30`** · Una operacion abierta se gestiona hasta stop o target, aunque termine la ventana operativa.
