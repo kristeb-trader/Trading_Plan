@@ -6,7 +6,7 @@
 > Las fases 3 y 4 **están declaradas, no definidas**. Aquí solo consta lo que el
 > operador ha dicho. Nada más. Cuando llegue el momento se detallan con él.
 
-**Actualizado:** 2026-09-23
+**Actualizado:** 2026-09-24
 
 ---
 
@@ -49,7 +49,14 @@ metodología y **deja observaciones escritas**.
 |---|---|
 | Dónde vive | `04_Web\` |
 | Seguimiento | **`04_Web\ESTADO_FASE_2.md`** |
-| Módulo nuevo | **Trading Coach**: conversar con Claude sobre la propia operativa. Solo para el operador. Decidido el 2026-09-23 que va **dentro del portal**. Diseño en `04_Web\DISENO_COACH.md` |
+| Módulo nuevo | ~~Trading Coach dentro del portal~~ — **reemplazado el 2026-09-24**: el coach vive en el Trading Journal |
+
+> 🔀 **Decidido por el operador el 2026-09-24: un solo proyecto por debajo, dos webs por encima.**
+> Todo lo importante (el plan, el motor, el backtesting, las bases de datos, el coach, y las fases 3 y 4)
+> pasa al **Trading Journal**, dentro de una carpeta `chaumer/`. El **portal** sigue siendo su propia web y
+> queda como **pantalla** para Alfredo. Alfredo no tiene acceso al Journal.
+> La disciplina y la historia del Journal no se tocan; desde el 24/09 empieza una etapa nueva con las reglas del plan.
+> Diseño: `E:\Proyectos\Trading Journal\docs\disenos6-09-24-unificacion-chaumer.md`. Se ejecuta desde una sesión en el Journal.
 
 **Ahora mismo:** el operador está recorriendo el portal **por partes** y
 reportando cambios por partes. El avance de esa revisión se lleva en

@@ -1,12 +1,14 @@
 # Trading Coach — diseño
 
-**Versión:** v1.1 · **Estado:** 🟡 **PROPUESTO — esperando la aprobación del operador.** No se ha tocado código.
+**Versión:** v1.2 · **Estado:** 🔵 **REEMPLAZADO el 24/09/2026.** El operador decidió unificar todo en el Trading Journal: el coach vive allí, sobre el que ya existe. Este documento queda como referencia de las salvaguardas, la memoria con aprobación y la cadena diaria, que el diseño de la unificación reutiliza.
+**Diseño que manda ahora:** `E:\Proyectos\Trading Journal\docs\disenos6-09-24-unificacion-chaumer.md`
 **Escrito:** 23/09/2026, a partir de la conversación con el operador de ese mismo día.
 
 | Versión | Fecha | Qué cambió |
 |---|---|---|
 | v1 | 23/09/2026 | Primera versión |
 | v1.1 | 23/09/2026 | El operador decide: coach dentro del portal; la fase 3 es el agente diario que reemplaza el test ciego. Nuevo apartado 12 |
+| v1.2 | 24/09/2026 | Reemplazado: todo se unifica en el Trading Journal y el portal queda como pantalla para Alfredo |
 
 > Si el código y este documento se contradicen, **manda este documento**. Si algo de aquí resulta
 > inviable al implementarlo, primero se corrige el documento y se avisa; no se improvisa otra cosa.
