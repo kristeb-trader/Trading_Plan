@@ -1,11 +1,12 @@
 # Trading Coach — diseño
 
-**Versión:** v1 · **Estado:** 🟡 **PROPUESTO — esperando la aprobación del operador.** No se ha tocado código.
+**Versión:** v1.1 · **Estado:** 🟡 **PROPUESTO — esperando la aprobación del operador.** No se ha tocado código.
 **Escrito:** 23/09/2026, a partir de la conversación con el operador de ese mismo día.
 
 | Versión | Fecha | Qué cambió |
 |---|---|---|
 | v1 | 23/09/2026 | Primera versión |
+| v1.1 | 23/09/2026 | El operador decide: coach dentro del portal; la fase 3 es el agente diario que reemplaza el test ciego. Nuevo apartado 12 |
 
 > Si el código y este documento se contradicen, **manda este documento**. Si algo de aquí resulta
 > inviable al implementarlo, primero se corrige el documento y se avisa; no se improvisa otra cosa.
@@ -30,9 +31,8 @@ Christian** con los días, y solo aprende lo que Christian aprueba.
 - El coach es **solo para él**.
 - Casi todo se automatiza; lo manual queda en sus decisiones.
 - La data del día sale de **NinjaTrader, exportada al final** de la sesión, no escrita minuto a minuto.
-- 🟡 **Pendiente de decidir:** si el coach es un **módulo del portal (fase 2)** o **la fase 3** "agente de
-  backtesting" de `FASES.md`. Recomendado: módulo del portal, porque el coach analiza la ejecución del operador
-  y la fase 3 mide la estrategia. La construcción es la misma en los dos casos.
+- El coach es un **módulo del portal (fase 2)**. **Decidido por el operador el 23/09/2026.**
+  La fase 3 es otra cosa: el agente diario que reemplaza el test ciego (apartado 12).
 
 ---
 
@@ -373,6 +373,27 @@ Cada fase se verifica sola. Al cerrar cada una: `npm run verificar`, commit, pus
 | 5 | `lector.py` tiene cambios sin confirmar en git ahora mismo | la huella del motor en cada ficha deja constancia de qué versión la produjo | 2 |
 
 ---
+
+## 12 · Relación con las fases 3 y 4
+
+**Fase 3 — el agente diario (decidido por el operador el 23/09/2026):** backtesting lo más automático posible,
+todos los días, y **reemplaza el test ciego** que hoy se hace a mano en Cowork. Tendrá su propio diseño; aquí
+solo consta cómo encaja con el coach.
+
+| | Agente (fase 3) | Coach (este documento) |
+|---|---|---|
+| Responde | ¿qué decía el plan hoy? | ¿qué hice yo frente a eso? |
+| Corre | solo, a las 10:50, antes de que registres nada. Es ciego por construcción | contigo, cuando quieras |
+
+- **La cadena diaria es común** (exportador, tarea de Windows, motor, subida): fases 0 y 2 de este documento.
+  Se construye una vez y el agente se engancha a ella.
+- **La ficha del día cambia de productor:** hoy es solo la salida del motor. Cuando exista el agente, será la
+  salida del agente: el motor más la revisión con IA de sus agujeros conocidos. El coach no cambia; lee la ficha igual.
+- **El test ciego tiene dos mitades**, y hoy las hace Cowork: marcar el día a ciegas, y comparar con lo tuyo y
+  anotar en `DISCREPANCIAS.md`. La primera la hará el agente. La segunda encaja con el coach. Se decide en el diseño de la fase 3.
+
+**Fase 4 — el bot en NinjaTrader:** no toca este diseño. La regla del portal *"no manda órdenes ni se conecta
+a la cuenta"* sigue en pie para el portal y para el coach; el bot vivirá fuera de los dos.
 
 ## 11 · Para aprobar
 

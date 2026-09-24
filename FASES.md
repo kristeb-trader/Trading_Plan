@@ -6,7 +6,7 @@
 > Las fases 3 y 4 **están declaradas, no definidas**. Aquí solo consta lo que el
 > operador ha dicho. Nada más. Cuando llegue el momento se detallan con él.
 
-**Actualizado:** 2026-09-01
+**Actualizado:** 2026-09-23
 
 ---
 
@@ -49,6 +49,7 @@ metodología y **deja observaciones escritas**.
 |---|---|
 | Dónde vive | `04_Web\` |
 | Seguimiento | **`04_Web\ESTADO_FASE_2.md`** |
+| Módulo nuevo | **Trading Coach**: conversar con Claude sobre la propia operativa. Solo para el operador. Decidido el 2026-09-23 que va **dentro del portal**. Diseño en `04_Web\DISENO_COACH.md` |
 
 **Ahora mismo:** el operador está recorriendo el portal **por partes** y
 reportando cambios por partes. El avance de esa revisión se lleva en
@@ -63,6 +64,15 @@ reportando cambios por partes. El avance de esa revisión se lleva en
 ### Lo único que consta
 
 > Crear un **agente de IA para backtesting** de la estrategia.
+
+**Ampliado por el operador el 2026-09-23:**
+
+> Un agente que haga el backtesting **lo más automático posible**, que **corra
+> todos los días** y que **reemplace el test ciego** que hoy se hace a mano en
+> Cowork.
+
+Consta también que **comparte con el Trading Coach la cadena diaria**:
+exportación de NinjaTrader, motor y subida. Esa cadena se construye una sola vez.
 
 ### Lo que ya existe y le sirve de base
 
@@ -105,6 +115,9 @@ qué entrega y cómo se valida. **No se rellena por deducción.**
 
 > Crear un **bot de trading que siga la estrategia directamente en
 > NinjaTrader**.
+
+**Reafirmado por el operador el 2026-09-23:** que opere **de manera automática**
+en NinjaTrader.
 
 ### Restricción que ya está en firme
 
